@@ -1,9 +1,6 @@
 #pragma once
 #include <string>
 
-class Potion {
-public:
-	Potion(const std::string& name): name(name) {}
-	
+struct Potion {
 	std::string name;
 };
