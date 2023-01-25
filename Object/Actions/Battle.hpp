@@ -6,21 +6,18 @@
 template<typename T>
 concept Damagable = requires (T x) { x.dmg; };
 
-template<typename T, bool B = Damagable<T>>
-struct Battle;
-
+namespace {
 template<typename T>
-struct Battle<T, true>: T {
-	Battle(const std::string& name, Damage dmg, auto ...args): T(name, dmg, std::forward<decltype(args)>(args)...) {}
-};
-
-template<typename T>
-struct Battle<T, false>: T {
-	Battle(const std::string& name, Damage dmg, auto ...args): T(name, std::forward<decltype(args)>(args)...), dmg(dmg) {}
+struct Battle_: T {
+	Battle_(const std::string& name, Damage dmg, auto ...args): T(name, std::forward<decltype(args)>(args)...), dmg(dmg) {}
 
 	Damage dmg{};
 };
+}
 
-template<typename T> struct Object::Attack<Battle<T>>: Object::Attack<Accept>, Object::Defend<T>, Object::Heal<T> {
+template<typename T>
+using Battle = std::conditional_t< Damagable<T>, T, Battle_<T> >;
+
+template<typename T> struct Object::Attack<Battle_<T>>: Object::Attack<Accept>, Object::Defend<T>, Object::Heal<T> {
 	using Object::Attack<Accept>::operator();
 };

@@ -6,21 +6,18 @@
 template<typename T>
 concept Livable = requires (T x) { x.hp; };
 
-template<typename T, bool B = Livable<T>>
-struct Living;
-
+namespace {
 template<typename T>
-struct Living<T, true>: T {
-	Living(const std::string& name, Hp hp, auto ...args): T(name, hp, std::forward<decltype(args)>(args)...) {}
-};
-
-template<typename T>
-struct Living<T, false>: T {
-	Living(const std::string& name, Hp hp, auto ...args): T(name, std::forward<decltype(args)>(args)...), hp(hp) {}
+struct Living_: T {
+	Living_(const std::string& name, Hp hp, auto ...args): T(name, std::forward<decltype(args)>(args)...), hp(hp) {}
 
 	Hp hp{};
 };
+}
 
-template<typename T> struct Object::Get<Living<T>>: Object::Attack<T>, Object::Defend<T>, Object::Heal<T>, Object::Get<Accept> {
+template<typename T>
+using Living = std::conditional_t< Livable<T>, T, Living_<T> >;
+
+template<typename T> struct Object::Get<Living_<T>>: Object::Attack<T>, Object::Defend<T>, Object::Heal<T>, Object::Get<Accept> {
 	using Object::Get<Accept>::operator();
 };

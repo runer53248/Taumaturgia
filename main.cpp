@@ -20,6 +20,12 @@ public:
 };
 
 int main() {
+
+	static_assert(std::is_same_v<CustomWeapon, Battle<CustomWeapon>>);
+	static_assert(std::is_same_v<CustomWeapon, Battle<Battle<CustomWeapon>>>);
+	static_assert(not std::is_same_v<Enemy, Battle<Enemy>>);
+	static_assert(std::is_same_v<Battle<Enemy>, Battle<Battle<Enemy>>>);
+
 	std::vector< Object > backpack;
 	
 	auto sword = Battle<Weapon>( "SWORD", Damage{16});
