@@ -20,7 +20,7 @@ struct Attack {
 };
 
 template<>
-struct Attack<Accept> { // attack specialization
+struct Attack<Accept> {
 	bool operator()(auto& obj, Object* owner, Object* target) {
 		std::cout << "(Attack: " << obj.dmg << " dmg) ";
 		return true;

@@ -25,7 +25,7 @@ struct Get {
 };
 
 template<>
-struct Get<Accept> { // get specialization
+struct Get<Accept> {
 	std::optional<int*const> operator()(auto& obj, Parameter param) {
         if (param == Parameter::Hp){
             std::cout << obj.name << "(HP: " << obj.hp << ")";

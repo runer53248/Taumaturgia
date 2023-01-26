@@ -2,18 +2,14 @@
 #include <vector>
 
 struct Player{
-	Player(const std::string& name): name(name) {}
 	std::string name;
 };
 
 struct Enemy{
-	Enemy(const std::string& name): name(name) {}
 	std::string name;
 };
 
-class CustomWeapon {
-public:
-	CustomWeapon(const std::string& name, Damage dmg): name(name), dmg(dmg) {}
+struct CustomWeapon {
 	std::string name;
 	Damage dmg{};
 };

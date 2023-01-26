@@ -20,7 +20,7 @@ struct Heal {
 };
 
 template<>
-struct Heal<Accept> { // heal specialization
+struct Heal<Accept> {
 	bool operator()(auto& obj, int amount, Object* owner, Object* target) {
 		std::cout << "(Healing: " << obj.cureHp <<" of " << amount << ") ";
 		return true;

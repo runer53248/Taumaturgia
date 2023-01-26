@@ -20,7 +20,7 @@ struct Defend {
 };
 
 template<>
-struct Defend<Accept> { // defend specialization
+struct Defend<Accept> {
 	bool operator()(auto& obj, Object* owner, Object* target) {
 		std::cout << "(Defend: " << obj.ac << " AC) ";
 		return true;
