@@ -52,6 +52,8 @@ int main() {
 	backpack.emplace_back( Cure<Potion>( "HEALING_POTION", Hp{20}));
 	backpack.emplace_back( Cure<Potion>( "SMALL_HEALING_POTION", Hp{10}));
 	backpack.emplace_back( Protection<Potion>( "SHIELD_POTION", AC{4}));
+	backpack.emplace_back( Scroll( "USELESS_SCROLL" ));
+	backpack.emplace_back( Scroll( "EMPTY_SCROLL" ));
 	backpack.emplace_back( Battle<Scroll>( "SLEEP_SCROLL", Damage{0} ));
 	backpack.emplace_back( Battle<Cure<Scroll>>( "VAMPIRIC_TOUCH_SCROLL", Damage{30}, Hp{15}));
 

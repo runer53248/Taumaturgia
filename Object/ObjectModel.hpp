@@ -1,29 +1,13 @@
 #pragma once
 #include "Object.hpp"
 
-template<typename T, 
-        AttackStrategable<T> ATTACK_STRATEGY,
-        DefendStrategable<T> DEFEND_STRATEGY,
-        HealStrategable<T> HEAL_STRATEGY,
-        GetStrategable<T> GET_STRATEGY> 
-Object::ObjectModel<T, ATTACK_STRATEGY, DEFEND_STRATEGY, HEAL_STRATEGY, GET_STRATEGY>::ObjectModel(const T& type) : 
-    type( type ) {}
-
-template<typename T, 
-        AttackStrategable<T> ATTACK_STRATEGY,
-        DefendStrategable<T> DEFEND_STRATEGY,
-        HealStrategable<T> HEAL_STRATEGY,
-        GetStrategable<T> GET_STRATEGY> 
-std::string Object::ObjectModel<T, ATTACK_STRATEGY, DEFEND_STRATEGY, HEAL_STRATEGY, GET_STRATEGY>::name() const { 
+template<Nameable T> 
+std::string Object::ObjectModel<T>::name() const { 
     return type.name; 
 }
 
-template<typename T, 
-        AttackStrategable<T> ATTACK_STRATEGY,
-        DefendStrategable<T> DEFEND_STRATEGY,
-        HealStrategable<T> HEAL_STRATEGY,
-        GetStrategable<T> GET_STRATEGY>
-bool Object::ObjectModel<T, ATTACK_STRATEGY, DEFEND_STRATEGY, HEAL_STRATEGY, GET_STRATEGY>::attack(Object* owner, Object* target) {
+template<Nameable T>
+bool Object::ObjectModel<T>::attack(Object* owner, Object* target) {
     if (not attackFunc()) {
         return false;
     }
@@ -54,12 +38,8 @@ bool Object::ObjectModel<T, ATTACK_STRATEGY, DEFEND_STRATEGY, HEAL_STRATEGY, GET
     return true;
 }
 
-template<typename T, 
-        AttackStrategable<T> ATTACK_STRATEGY,
-        DefendStrategable<T> DEFEND_STRATEGY,
-        HealStrategable<T> HEAL_STRATEGY,
-        GetStrategable<T> GET_STRATEGY> 
-bool Object::ObjectModel<T, ATTACK_STRATEGY, DEFEND_STRATEGY, HEAL_STRATEGY, GET_STRATEGY>::defend(Object* owner, Object* target) {
+template<Nameable T> 
+bool Object::ObjectModel<T>::defend(Object* owner, Object* target) {
     if (not defendFunc()) {
         return false;
     }
@@ -88,12 +68,8 @@ bool Object::ObjectModel<T, ATTACK_STRATEGY, DEFEND_STRATEGY, HEAL_STRATEGY, GET
     return true;
 }
 
-template<typename T, 
-        AttackStrategable<T> ATTACK_STRATEGY,
-        DefendStrategable<T> DEFEND_STRATEGY,
-        HealStrategable<T> HEAL_STRATEGY,
-        GetStrategable<T> GET_STRATEGY> 
-bool Object::ObjectModel<T, ATTACK_STRATEGY, DEFEND_STRATEGY, HEAL_STRATEGY, GET_STRATEGY>::heal(int amount, Object* owner, Object* target) {
+template<Nameable T> 
+bool Object::ObjectModel<T>::heal(int amount, Object* owner, Object* target) {
     if (not healFunc()) {
         return false;
     }
@@ -121,11 +97,7 @@ bool Object::ObjectModel<T, ATTACK_STRATEGY, DEFEND_STRATEGY, HEAL_STRATEGY, GET
     return true;
 }
 
-template<typename T, 
-        AttackStrategable<T> ATTACK_STRATEGY,
-        DefendStrategable<T> DEFEND_STRATEGY,
-        HealStrategable<T> HEAL_STRATEGY,
-        GetStrategable<T> GET_STRATEGY> 
-std::optional<int*const> Object::ObjectModel<T, ATTACK_STRATEGY, DEFEND_STRATEGY, HEAL_STRATEGY, GET_STRATEGY>::get(Parameter param) {
+template<Nameable T> 
+std::optional<int*const> Object::ObjectModel<T>::get(Parameter param) {
     return getFunc(type, param);
 }

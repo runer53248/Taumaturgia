@@ -6,6 +6,11 @@
 enum class Parameter;
 class Object;
 
+template<typename T>
+concept Nameable = requires (T t) { 
+	{t.name} -> std::convertible_to<std::string>;
+};
+
 template<typename Strategy, typename UserType>
 concept AttackStrategable = requires (Strategy strategy, UserType& type, Object* owner, Object* target) { 
 	{strategy.operator()(type, owner, target)} -> std::same_as<bool>;
@@ -30,6 +35,9 @@ concept GetStrategable = requires (Strategy strategy, UserType& type, Parameter 
 	{strategy.operator()()} -> std::same_as<bool>;
 };
 
+template<class T>
+concept Strategable = AttackStrategable<Attack<T>, T> && DefendStrategable<Defend<T>, T> && HealStrategable<Heal<T>, T> && GetStrategable<Get<T>, T>;
+
 template<typename T> struct Attack;
 template<typename T> struct Defend;
 template<typename T> struct Heal;
@@ -38,7 +46,7 @@ template<typename T> struct Get;
 class Object {
 private:
 	struct ObjectConcept {
-		virtual ~ObjectConcept() {}
+		virtual ~ObjectConcept() = default;
 
 		virtual std::string name() const = 0;
 
@@ -48,14 +56,11 @@ private:
         virtual std::optional<int*const> get(Parameter param) = 0;
 	};
 
-	template<typename T, 
-			AttackStrategable<T> ATTACK_STRATEGY,
-			DefendStrategable<T> DEFEND_STRATEGY,
-			HealStrategable<T> HEAL_STRATEGY,
-            GetStrategable<T> GET_STRATEGY> 
+	template<Nameable T> 
+	requires Strategable<T>
 	struct ObjectModel : ObjectConcept {
 	public:
-		ObjectModel(const T& type);
+		ObjectModel(const T& type) : type( type ) {}
 		~ObjectModel() override = default;
 		
 		std::string name() const override;
@@ -67,22 +72,18 @@ private:
 
 	private:
 		T type;
-		ATTACK_STRATEGY attackFunc{};
-		DEFEND_STRATEGY defendFunc{};
-		HEAL_STRATEGY healFunc{};
-        GET_STRATEGY getFunc{};
+		Attack<T> attackFunc{};
+		Defend<T> defendFunc{};
+		Heal<T> healFunc{};
+        Get<T> getFunc{};
 	};
 
    	std::shared_ptr<ObjectConcept> object;
 
 public:
-	template<typename T, 
-			AttackStrategable<T> ATTACK_STRATEGY = Attack<T>,
-			DefendStrategable<T> DEFEND_STRATEGY = Defend<T>,
-			HealStrategable<T> HEAL_STRATEGY = Heal<T>,
-			GetStrategable<T> GET_STRATEGY = Get<T>> 
+	template<Nameable T> 
 	Object(const T& obj) : 
-		object( new ObjectModel<T, ATTACK_STRATEGY, DEFEND_STRATEGY, HEAL_STRATEGY, GET_STRATEGY>( obj ) ) {}
+		object( new ObjectModel<T>( obj ) ) {}
 
 	std::string name() const { 
 		return object->name();
