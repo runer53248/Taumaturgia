@@ -78,12 +78,12 @@ private:
         Get<T> getFunc{};
 	};
 
-   	std::shared_ptr<ObjectConcept> object;
+   	std::unique_ptr<ObjectConcept> object;
 
 public:
 	template<Nameable T> 
 	Object(const T& obj) : 
-		object( new ObjectModel<T>( obj ) ) {}
+		object( std::make_unique<ObjectModel<T>>(obj) ) {}
 
 	std::string name() const { 
 		return object->name();
