@@ -1,13 +1,9 @@
 #pragma once
 #include <memory>
-#include <iostream>
 #include <optional>
 #include <concepts>
 
-enum class Parameter {
-    Hp
-};
-
+enum class Parameter;
 class Object;
 
 template<typename Strategy, typename UserType>
@@ -33,6 +29,11 @@ concept GetStrategable = requires (Strategy strategy, UserType& type, Parameter 
 	{strategy.operator()(type, param)} -> std::same_as<std::optional<int*const>>;
 	{strategy.operator()()} -> std::same_as<bool>;
 };
+
+template<typename T> struct Attack;
+template<typename T> struct Defend;
+template<typename T> struct Heal;
+template<typename T> struct Get;
 
 class Object {
 private:
@@ -75,11 +76,6 @@ private:
    	std::shared_ptr<ObjectConcept> object;
 
 public:
-	template<typename T> struct Attack;
-	template<typename T> struct Defend;
-	template<typename T> struct Heal;
-    template<typename T> struct Get;
-
 	template<typename T, 
 			AttackStrategable<T> ATTACK_STRATEGY = Attack<T>,
 			DefendStrategable<T> DEFEND_STRATEGY = Defend<T>,

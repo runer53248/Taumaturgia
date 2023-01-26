@@ -1,5 +1,4 @@
-#include "Object/ObjectActions.hpp"
-#include "Object/Actions/Living.hpp"
+#include "ObjectActions.hpp"
 #include <vector>
 
 struct Player{

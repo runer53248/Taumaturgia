@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "../Strategies/Attack.hpp"
+#include "Strategies/Strategies.hpp"
 #include "../Types/Damage.hpp"
 
 template<typename T>
@@ -19,6 +19,6 @@ struct Battle_: T {
 template<typename T>
 using Battle = std::conditional_t< Damagable<T>, T, Battle_<T> >;
 
-template<typename T> struct Object::Attack<Battle_<T>>: Object::Attack<Accept>, Object::Defend<T>, Object::Heal<T> {
-	using Object::Attack<Accept>::operator();
+template<typename T> struct Attack<Battle_<T>>: Attack<Accept>, Defend<T>, Heal<T> {
+	using Attack<Accept>::operator();
 };

@@ -1,12 +1,15 @@
 #pragma once
-#include "../Object.hpp"
+#include <iostream>
 
 struct Accept;
 
-template<template<class> typename T, typename U> struct Object::Heal<T<U>>: Object::Heal<U> {};
+template<typename T> struct Heal;
+struct Object;
+
+template<template<class> typename T, typename U> struct Heal<T<U>>: Heal<U> {};
 
 template<typename T>
-struct Object::Heal {
+struct Heal {
     bool operator()(T& type, auto... args) {
         return false;
     }
@@ -17,7 +20,7 @@ struct Object::Heal {
 };
 
 template<>
-struct Object::Heal<Accept> { // heal specialization
+struct Heal<Accept> { // heal specialization
 	bool operator()(auto& obj, int amount, Object* owner, Object* target) {
 		std::cout << "(Healing: " << obj.cureHp <<" of " << amount << ") ";
 		return true;
