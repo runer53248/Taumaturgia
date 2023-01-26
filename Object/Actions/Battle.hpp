@@ -3,9 +3,6 @@
 #include "Strategies/Strategies.hpp"
 #include "../Types/Damage.hpp"
 
-template<typename T>
-concept Damagable = requires (T x) { x.dmg; };
-
 namespace {
 template<typename T>
 struct Battle_: T {

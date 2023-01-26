@@ -3,9 +3,6 @@
 #include "Strategies/Strategies.hpp"
 #include "../Types/AC.hpp"
 
-template <typename T>
-concept Protectable = requires (T x) { x.ac; };
-
 namespace {
 template <typename T>
 struct Protection_: T {

@@ -14,6 +14,18 @@ struct CustomWeapon {
 	Damage dmg{};
 };
 
+template<>
+struct Attack<CustomWeapon> {
+	bool operator()(auto& obj, Object* owner, Object* target) {
+		std::cout << "(custom Attack: " << obj.dmg << " dmg) ";
+		return true;
+	}
+
+	bool operator()() {
+		return true;
+	}
+};
+
 int main() {
 
 	static_assert(std::is_same_v<CustomWeapon, Battle<CustomWeapon>>);
@@ -37,8 +49,8 @@ int main() {
 	auto custom_bad = CustomWeapon( "Custom_SWORD_bad", Damage{32});;
 	auto custom_good = Battle<CustomWeapon>( "Custom_SWORD_good", Damage{32});
 	static_assert(sizeof(custom_bad) == sizeof(custom_good));
-	backpack.emplace_back( custom_bad ); // will not attack with this - but have dmg
-	backpack.emplace_back( custom_good ); // will not attack either !!! - Battle is not used as Strategy provider
+	backpack.emplace_back( custom_bad ); // not valid now // will not attack with this - but have dmg
+	backpack.emplace_back( custom_good ); // not valid now // will not attack either !!! - Battle is not used as Strategy provider
 	
 	auto gustav = Living<Cure<Living<Cure<Weapon>>>>( "GUSTAV_INTELIGENT_SWORD", Hp{20}/*, Hp{20}, Damage{32}*/);
 	gustav.name = "Franco The Inteligent Sword";

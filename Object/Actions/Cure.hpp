@@ -3,9 +3,6 @@
 #include "Strategies/Strategies.hpp"
 #include "../Types/Hp.hpp"
 
-template<typename T>
-concept Curable = requires (T x) { x.cureHp; };
-
 namespace {
 template<typename T>
 struct Cure_: T {

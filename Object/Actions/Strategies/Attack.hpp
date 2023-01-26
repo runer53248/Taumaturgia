@@ -19,9 +19,12 @@ struct Attack {
 	}
 };
 
+template<typename T>
+concept Damagable = requires (T x) { x.dmg; };
+
 template<>
 struct Attack<Accept> {
-	bool operator()(auto& obj, Object* owner, Object* target) {
+	bool operator()(Damagable auto& obj, Object* owner, Object* target) {
 		std::cout << "(Attack: " << obj.dmg << " dmg) ";
 		return true;
 	}

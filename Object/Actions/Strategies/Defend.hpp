@@ -19,9 +19,12 @@ struct Defend {
 	}
 };
 
+template <typename T>
+concept Protectable = requires (T x) { x.ac; };
+
 template<>
 struct Defend<Accept> {
-	bool operator()(auto& obj, Object* owner, Object* target) {
+	bool operator()(Protectable auto& obj, Object* owner, Object* target) {
 		std::cout << "(Defend: " << obj.ac << " AC) ";
 		return true;
 	}

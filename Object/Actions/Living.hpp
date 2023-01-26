@@ -3,9 +3,6 @@
 #include "Strategies/Strategies.hpp"
 #include "../Types/Hp.hpp"
 
-template<typename T>
-concept Livable = requires (T x) { x.hp; };
-
 namespace {
 template<typename T>
 struct Living_: T {

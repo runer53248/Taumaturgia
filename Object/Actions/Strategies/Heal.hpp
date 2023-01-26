@@ -19,9 +19,12 @@ struct Heal {
 	}
 };
 
+template<typename T>
+concept Curable = requires (T x) { x.cureHp; };
+
 template<>
 struct Heal<Accept> {
-	bool operator()(auto& obj, int amount, Object* owner, Object* target) {
+	bool operator()(Curable auto& obj, int amount, Object* owner, Object* target) {
 		std::cout << "(Healing: " << obj.cureHp <<" of " << amount << ") ";
 		return true;
 	}

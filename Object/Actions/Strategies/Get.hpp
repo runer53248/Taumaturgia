@@ -24,9 +24,12 @@ struct Get {
 	}
 };
 
+template<typename T>
+concept Livable = requires (T x) { x.hp; };
+
 template<>
 struct Get<Accept> {
-	std::optional<int*const> operator()(auto& obj, Parameter param) {
+	std::optional<int*const> operator()(Livable auto& obj, Parameter param) {
         if (param == Parameter::Hp){
             std::cout << obj.name << "(HP: " << obj.hp << ")";
             return reinterpret_cast<int*const>(&obj.hp);
