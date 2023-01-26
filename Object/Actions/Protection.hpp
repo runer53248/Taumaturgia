@@ -10,6 +10,7 @@ namespace {
 template <typename T>
 struct Protection_: T {
 	Protection_(const std::string& name, AC ac, auto ...args): T(name, std::forward<decltype(args)>(args)...), ac(ac) {}
+	Protection_(const std::string& name, auto ...args): T(name, std::forward<decltype(args)>(args)...){}
 
 	AC ac{};
 };

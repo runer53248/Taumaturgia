@@ -10,6 +10,7 @@ namespace {
 template<typename T>
 struct Battle_: T {
 	Battle_(const std::string& name, Damage dmg, auto ...args): T(name, std::forward<decltype(args)>(args)...), dmg(dmg) {}
+	Battle_(const std::string& name, auto ...args): T(name, std::forward<decltype(args)>(args)...) {}
 
 	Damage dmg{};
 };

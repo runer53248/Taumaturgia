@@ -10,6 +10,7 @@ namespace {
 template<typename T>
 struct Cure_: T {
 	Cure_(const std::string& name, Hp cureHp, auto ...args): T(name, std::forward<decltype(args)>(args)...), cureHp(cureHp) {}
+	Cure_(const std::string& name, auto ...args): T(name, std::forward<decltype(args)>(args)...) {}
 
 	Hp cureHp{};
 };

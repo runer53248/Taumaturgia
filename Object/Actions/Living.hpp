@@ -10,6 +10,7 @@ namespace {
 template<typename T>
 struct Living_: T {
 	Living_(const std::string& name, Hp hp, auto ...args): T(name, std::forward<decltype(args)>(args)...), hp(hp) {}
+	Living_(const std::string& name, auto ...args): T(name, std::forward<decltype(args)>(args)...) {}
 
 	Hp hp{};
 };
