@@ -81,11 +81,7 @@ public:
 			DefendStrategable<T> DEFEND_STRATEGY = Defend<T>,
 			HealStrategable<T> HEAL_STRATEGY = Heal<T>,
 			GetStrategable<T> GET_STRATEGY = Get<T>> 
-	Object( const T& obj, 
-			ATTACK_STRATEGY atack = ATTACK_STRATEGY{}, 
-			DEFEND_STRATEGY defend = DEFEND_STRATEGY{}, 
-			HEAL_STRATEGY heal = HEAL_STRATEGY{},
-            GET_STRATEGY get = GET_STRATEGY{}) : 
+	Object(const T& obj) : 
 		object( new ObjectModel<T, ATTACK_STRATEGY, DEFEND_STRATEGY, HEAL_STRATEGY, GET_STRATEGY>( obj ) ) {}
 
 	std::string name() const { 
