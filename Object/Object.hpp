@@ -2,9 +2,36 @@
 #include <memory>
 #include <iostream>
 #include <optional>
+#include <concepts>
 
 enum class Parameter {
     Hp
+};
+
+class Object;
+
+template<typename Strategy, typename UserType>
+concept AttackStrategable = requires (Strategy strategy, UserType& type, Object* owner, Object* target) { 
+	{strategy.operator()(type, owner, target)} -> std::same_as<bool>;
+	{strategy.operator()()} -> std::same_as<bool>;
+};
+
+template<typename Strategy, typename UserType>
+concept DefendStrategable = requires (Strategy strategy, UserType& type, Object* owner, Object* target) { 
+	{strategy.operator()(type, owner, target)} -> std::same_as<bool>;
+	{strategy.operator()()} -> std::same_as<bool>;
+};
+
+template<typename Strategy, typename UserType>
+concept HealStrategable = requires (Strategy strategy, UserType& type, int amount, Object* owner, Object* target) { 
+	{strategy.operator()(type, amount, owner, target)} -> std::same_as<bool>;
+	{strategy.operator()()} -> std::same_as<bool>;
+};
+
+template<typename Strategy, typename UserType>
+concept GetStrategable = requires (Strategy strategy, UserType& type, Parameter param) { 
+	{strategy.operator()(type, param)} -> std::same_as<std::optional<int*const>>;
+	{strategy.operator()()} -> std::same_as<bool>;
 };
 
 class Object {
@@ -21,10 +48,10 @@ private:
 	};
 
 	template<typename T, 
-			typename ATTACK_STRATEGY,
-			typename DEFEND_STRATEGY,
-			typename HEAL_STRATEGY,
-            typename GET_STRATEGY> 
+			AttackStrategable<T> ATTACK_STRATEGY,
+			DefendStrategable<T> DEFEND_STRATEGY,
+			HealStrategable<T> HEAL_STRATEGY,
+            GetStrategable<T> GET_STRATEGY> 
 	struct ObjectModel : ObjectConcept {
 	public:
 		ObjectModel(const T& type);
@@ -39,10 +66,10 @@ private:
 
 	private:
 		T type;
-		ATTACK_STRATEGY attackFunc;
-		DEFEND_STRATEGY defendFunc;
-		HEAL_STRATEGY healFunc;
-        GET_STRATEGY getFunc;
+		ATTACK_STRATEGY attackFunc{};
+		DEFEND_STRATEGY defendFunc{};
+		HEAL_STRATEGY healFunc{};
+        GET_STRATEGY getFunc{};
 	};
 
    	std::shared_ptr<ObjectConcept> object;
@@ -54,10 +81,10 @@ public:
     template<typename T> struct Get;
 
 	template<typename T, 
-			typename ATTACK_STRATEGY = Attack<T>,
-			typename DEFEND_STRATEGY = Defend<T>,
-			typename HEAL_STRATEGY = Heal<T>,
-			typename GET_STRATEGY = Get<T>> 
+			AttackStrategable<T> ATTACK_STRATEGY = Attack<T>,
+			DefendStrategable<T> DEFEND_STRATEGY = Defend<T>,
+			HealStrategable<T> HEAL_STRATEGY = Heal<T>,
+			GetStrategable<T> GET_STRATEGY = Get<T>> 
 	Object( const T& obj, 
 			ATTACK_STRATEGY atack = ATTACK_STRATEGY{}, 
 			DEFEND_STRATEGY defend = DEFEND_STRATEGY{}, 
