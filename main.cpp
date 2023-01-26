@@ -17,6 +17,11 @@ struct CustomWeapon {
 int main() {
 
 	static_assert(std::is_same_v<CustomWeapon, Battle<CustomWeapon>>);
+
+	static_assert(std::is_same_v<Attack<CustomWeapon>, Attack<Battle<CustomWeapon>>>); // TODO should take attack(accept) strategy if not have any - now both dont have
+	static_assert(not std::is_same_v<Attack<Weapon>, Attack<Battle<CustomWeapon>>>); // TODO should have same attack(accept) strategy
+	static_assert(not std::is_same_v<Attack<Weapon>, Attack<Cure<Weapon>>>); // TODO should have same attack(accept) strategy after wrapping
+
 	static_assert(std::is_same_v<CustomWeapon, Battle<Battle<CustomWeapon>>>);
 	static_assert(not std::is_same_v<Enemy, Battle<Enemy>>);
 	static_assert(std::is_same_v<Battle<Enemy>, Battle<Battle<Enemy>>>);
@@ -87,7 +92,7 @@ int main() {
 
 	Object franco{gustav};
 	franco.attack(&franco, &enemy);
-	franco.attack(&franco, &enemy);
+	attack(franco, &franco, &enemy);
 
 	Object npc( Living<Player>("Npc", Hp{5}) );
 	franco.defend(&npc); // npc can't defend with franco - ignored
