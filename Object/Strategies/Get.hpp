@@ -1,5 +1,5 @@
 #pragma once
-#include "Object.hpp"
+#include "../Object.hpp"
 
 struct Accept;
 
@@ -16,7 +16,8 @@ struct Object::Get {
 	}
 };
 
-template<> struct Object::Get<Accept> { // get specialization
+template<>
+struct Object::Get<Accept> { // get specialization
 	std::optional<int*const> operator()(auto& obj, Parameter param) {
         if (param == Parameter::Hp){
             std::cout << obj.name << "(HP: " << obj.hp << ")";

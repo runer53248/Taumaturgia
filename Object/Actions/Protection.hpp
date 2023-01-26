@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "../Defend.hpp"
+#include "../Strategies/Defend.hpp"
 #include "../Types/AC.hpp"
 
 template <typename T>

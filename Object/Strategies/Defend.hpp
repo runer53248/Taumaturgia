@@ -1,12 +1,12 @@
 #pragma once
-#include "Object.hpp"
+#include "../Object.hpp"
 
 struct Accept;
 
-template<template<class> typename T, typename U> struct Object::Attack<T<U>>: Object::Attack<U> {};
+template<template<class> typename T, typename U> struct Object::Defend<T<U>>: Object::Defend<U> {};
 
 template<typename T>
-struct Object::Attack {
+struct Object::Defend {
     bool operator()(T& type, auto... args) {
         return false;
     }
@@ -16,9 +16,10 @@ struct Object::Attack {
 	}
 };
 
-template<> struct Object::Attack<Accept> { // attack specialization
+template<>
+struct Object::Defend<Accept> { // defend specialization
 	bool operator()(auto& obj, Object* owner, Object* target) {
-		std::cout << "(Attack: " << obj.dmg << " dmg) ";
+		std::cout << "(Defend: " << obj.ac << " AC) ";
 		return true;
 	}
 

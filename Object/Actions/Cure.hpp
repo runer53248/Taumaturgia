@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "../Heal.hpp"
+#include "../Strategies/Heal.hpp"
 #include "../Types/Hp.hpp"
 
 template<typename T>

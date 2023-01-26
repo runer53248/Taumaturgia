@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "../Attack.hpp"
+#include "../Strategies/Attack.hpp"
 #include "../Types/Damage.hpp"
 
 template<typename T>

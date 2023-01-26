@@ -1,5 +1,5 @@
 #pragma once
-#include "Object.hpp"
+#include "../Object.hpp"
 
 struct Accept;
 
@@ -16,7 +16,8 @@ struct Object::Heal {
 	}
 };
 
-template<> struct Object::Heal<Accept> { // heal specialization
+template<>
+struct Object::Heal<Accept> { // heal specialization
 	bool operator()(auto& obj, int amount, Object* owner, Object* target) {
 		std::cout << "(Healing: " << obj.cureHp <<" of " << amount << ") ";
 		return true;
