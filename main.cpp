@@ -32,8 +32,8 @@ int main() {
 	auto custom_bad = CustomWeapon( "Custom_SWORD_bad", Damage{32});;
 	auto custom_good = Battle<CustomWeapon>( "Custom_SWORD_good", Damage{32});
 	static_assert(sizeof(custom_bad) == sizeof(custom_good));
-	backpack.emplace_back( custom_bad ); // will not attack with this
-	backpack.emplace_back( custom_good ); // now will attack
+	backpack.emplace_back( custom_bad ); // will not attack with this - but have dmg
+	backpack.emplace_back( custom_good ); // will not attack either !!! - Battle is not used as Strategy provider
 	
 	auto gustav = Living<Cure<Living<Cure<Weapon>>>>( "GUSTAV_INTELIGENT_SWORD", Hp{20}/*, Hp{20}, Damage{32}*/);
 	gustav.name = "Franco The Inteligent Sword";
