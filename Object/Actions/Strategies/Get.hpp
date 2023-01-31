@@ -7,14 +7,14 @@ enum class Parameter {
 };
 
 struct Accept;
-
-template<typename T> struct Get;
 struct Object;
 
-template<template<class> typename T, typename U> struct Get<T<U>>: Get<U> {};
-
 template<typename T>
-struct Get {
+concept Livable = requires (T x) { x.hp; };
+
+namespace {
+template<typename T>
+struct Get_ {
     std::optional<int*const> operator()(T& type, Parameter param) {
         return {};
     }
@@ -24,11 +24,8 @@ struct Get {
 	}
 };
 
-template<typename T>
-concept Livable = requires (T x) { x.hp; };
-
 template<>
-struct Get<Accept> {
+struct Get_<Accept> {
 	std::optional<int*const> operator()(Livable auto& obj, Parameter param) {
         if (param == Parameter::Hp){
             std::cout << obj.name << "(HP: " << obj.hp << ")";
@@ -41,3 +38,10 @@ struct Get<Accept> {
 		return true;
 	}
 };
+}
+
+template<typename T>
+using GetStrategy = std::conditional_t< 
+	Livable<T>, // is type Livable
+	Get_<Accept>, // default strategy
+	Get_<T> >; // not Livable

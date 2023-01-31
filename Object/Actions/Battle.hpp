@@ -1,12 +1,12 @@
 #pragma once
 #include <string>
-#include "Strategies/Strategies.hpp"
+#include "Strategies/Attack.hpp"
 #include "../Types/Damage.hpp"
 
 namespace {
 template<typename T>
 struct Battle_: T {
-	Battle_(const std::string& name, Damage dmg, auto ...args): T(name, std::forward<decltype(args)>(args)...), dmg(dmg) {}
+	Battle_(const std::string& name, Damage dmg, auto ...args): T{name, std::forward<decltype(args)>(args)...}, dmg(dmg) {}
 	Battle_(const std::string& name, auto ...args): T(name, std::forward<decltype(args)>(args)...) {}
 
 	Damage dmg{};
@@ -16,6 +16,5 @@ struct Battle_: T {
 template<typename T>
 using Battle = std::conditional_t< Damagable<T>, T, Battle_<T> >;
 
-template<typename T> struct Attack<Battle_<T>>: Attack<Accept>, Defend<T>, Heal<T> {
-	using Attack<Accept>::operator();
-};
+// template<typename T> struct Attack<Battle_<T>>: Attack<Accept> {};
+// template<Damagable T> struct Attack<T>: Attack<Accept> {};

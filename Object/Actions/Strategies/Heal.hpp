@@ -2,14 +2,14 @@
 #include <iostream>
 
 struct Accept;
-
-template<typename T> struct Heal;
 struct Object;
 
-template<template<class> typename T, typename U> struct Heal<T<U>>: Heal<U> {};
-
 template<typename T>
-struct Heal {
+concept Curable = requires (T x) { x.cureHp; };
+
+namespace {
+template<typename T>
+struct Heal_ {
     bool operator()(T& type, auto... args) {
         return false;
     }
@@ -19,11 +19,8 @@ struct Heal {
 	}
 };
 
-template<typename T>
-concept Curable = requires (T x) { x.cureHp; };
-
 template<>
-struct Heal<Accept> {
+struct Heal_<Accept> {
 	bool operator()(Curable auto& obj, int amount, Object* owner, Object* target) {
 		std::cout << "(Healing: " << obj.cureHp <<" of " << amount << ") ";
 		return true;
@@ -33,3 +30,10 @@ struct Heal<Accept> {
 		return true;
 	}
 };
+}
+
+template<typename T>
+using HealStrategy = std::conditional_t< 
+	Curable<T>, // is type Curable
+	Heal_<Accept>, // default strategy
+	Heal_<T> >; // not Curable

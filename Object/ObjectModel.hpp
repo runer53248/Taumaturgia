@@ -2,11 +2,13 @@
 #include "Object.hpp"
 
 template<Nameable T> 
+requires Strategable<T>
 std::string Object::ObjectModel<T>::name() const { 
     return type.name; 
 }
 
 template<Nameable T>
+requires Strategable<T>
 bool Object::ObjectModel<T>::attack(Object* owner, Object* target) {
     if (not attackFunc()) {
         return false;
@@ -39,6 +41,7 @@ bool Object::ObjectModel<T>::attack(Object* owner, Object* target) {
 }
 
 template<Nameable T> 
+requires Strategable<T>
 bool Object::ObjectModel<T>::defend(Object* owner, Object* target) {
     if (not defendFunc()) {
         return false;
@@ -69,6 +72,7 @@ bool Object::ObjectModel<T>::defend(Object* owner, Object* target) {
 }
 
 template<Nameable T> 
+requires Strategable<T>
 bool Object::ObjectModel<T>::heal(int amount, Object* owner, Object* target) {
     if (not healFunc()) {
         return false;
@@ -98,6 +102,7 @@ bool Object::ObjectModel<T>::heal(int amount, Object* owner, Object* target) {
 }
 
 template<Nameable T> 
+requires Strategable<T>
 std::optional<int*const> Object::ObjectModel<T>::get(Parameter param) {
     return getFunc(type, param);
 }

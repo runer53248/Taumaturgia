@@ -2,14 +2,14 @@
 #include <iostream>
 
 struct Accept;
-
-template<typename T> struct Attack;
 struct Object;
 
-template<template<class> typename T, typename U> struct Attack<T<U>>: Attack<U> {};
-
 template<typename T>
-struct Attack {
+concept Damagable = requires (T x) { x.dmg; };
+
+namespace {
+template<typename T>
+struct Attack_ {
     bool operator()(T& type, auto... args) {
         return false;
     }
@@ -19,11 +19,8 @@ struct Attack {
 	}
 };
 
-template<typename T>
-concept Damagable = requires (T x) { x.dmg; };
-
 template<>
-struct Attack<Accept> {
+struct Attack_<Accept> {
 	bool operator()(Damagable auto& obj, Object* owner, Object* target) {
 		std::cout << "(Attack: " << obj.dmg << " dmg) ";
 		return true;
@@ -33,3 +30,10 @@ struct Attack<Accept> {
 		return true;
 	}
 };
+}
+
+template<typename T>
+using AttackStrategy = std::conditional_t< 
+	Damagable<T>, // is type damagable
+	Attack_<Accept>, // default strategy
+	Attack_<T> >; // not damagable

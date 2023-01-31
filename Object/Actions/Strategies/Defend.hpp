@@ -2,14 +2,14 @@
 #include <iostream>
 
 struct Accept;
-
-template<typename T> struct Defend;
 struct Object;
 
-template<template<class> typename T, typename U> struct Defend<T<U>>: Defend<U> {};
+template <typename T>
+concept Protectable = requires (T x) { x.ac; };
 
+namespace {
 template<typename T>
-struct Defend {
+struct Defend_ {
     bool operator()(T& type, auto... args) {
         return false;
     }
@@ -19,11 +19,8 @@ struct Defend {
 	}
 };
 
-template <typename T>
-concept Protectable = requires (T x) { x.ac; };
-
 template<>
-struct Defend<Accept> {
+struct Defend_<Accept> {
 	bool operator()(Protectable auto& obj, Object* owner, Object* target) {
 		std::cout << "(Defend: " << obj.ac << " AC) ";
 		return true;
@@ -33,3 +30,10 @@ struct Defend<Accept> {
 		return true;
 	}
 };
+}
+
+template<typename T>
+using DefendStrategy = std::conditional_t< 
+	Protectable<T>, // is type Protectable
+	Defend_<Accept>, // default strategy
+	Defend_<T> >; // not Protectable

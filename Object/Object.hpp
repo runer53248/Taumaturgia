@@ -36,12 +36,7 @@ concept GetStrategable = requires (Strategy strategy, UserType& type, Parameter 
 };
 
 template<class T>
-concept Strategable = AttackStrategable<Attack<T>, T> && DefendStrategable<Defend<T>, T> && HealStrategable<Heal<T>, T> && GetStrategable<Get<T>, T>;
-
-template<typename T> struct Attack;
-template<typename T> struct Defend;
-template<typename T> struct Heal;
-template<typename T> struct Get;
+concept Strategable = AttackStrategable<AttackStrategy<T>, T> && DefendStrategable<DefendStrategy<T>, T> && HealStrategable<HealStrategy<T>, T> && GetStrategable<GetStrategy<T>, T>;
 
 class Object {
 private:
@@ -72,10 +67,10 @@ private:
 
 	private:
 		T type;
-		Attack<T> attackFunc{};
-		Defend<T> defendFunc{};
-		Heal<T> healFunc{};
-        Get<T> getFunc{};
+		AttackStrategy<T> attackFunc{};
+		DefendStrategy<T> defendFunc{};
+		HealStrategy<T> healFunc{};
+        GetStrategy<T> getFunc{};
 	};
 
    	std::unique_ptr<ObjectConcept> object;
