@@ -33,7 +33,4 @@ struct Attack_<Accept> {
 }
 
 template<typename T>
-using AttackStrategy = std::conditional_t< 
-	Damagable<T>, // is type damagable
-	Attack_<Accept>, // default strategy
-	Attack_<T> >; // not damagable
+using AttackStrategy = std::conditional_t< Damagable<T>, Attack_<Accept>, Attack_<T> >;

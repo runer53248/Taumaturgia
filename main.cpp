@@ -88,23 +88,23 @@ int main() {
 
 	std::cout << '\n';
 	std::cout << "Items I can attack with:" << '\n';
-	for( auto item = backpack.begin(); item != backpack.end(); ++item ) {
+	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
 		// caled from hidden friend
-		if( attack(*item, &player, &enemy) ) {}
+		if ( attack(*item, &player, &enemy) ) {}
 	}
 	std::cout << '\n';
 
 	std::cout << "Items I can defend with:" << '\n';
-	for( auto item = backpack.begin(); item != backpack.end(); ++item ) {
+	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
 		// caled from hidden friend
-		if( defend(*item, &player/*, &player*/) ) {}
+		if ( defend(*item, &player/*, &player*/) ) {}
 	}
 	std::cout << '\n';
 
 	std::cout << "Items I can heal with:" << '\n';
-	for( auto item = backpack.begin(); item != backpack.end(); ++item ) {
+	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
 		// called by method
-		if( item->heal(100, &player/*, &player*/) ) {}
+		if ( item->heal(100, &player/*, &player*/) ) {}
 	}
 	std::cout << '\n';
 

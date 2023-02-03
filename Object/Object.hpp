@@ -44,7 +44,6 @@ private:
 		virtual ~ObjectConcept() = default;
 
 		virtual std::string name() const = 0;
-
 		virtual bool attack(Object* owner, Object* target = nullptr) = 0;
 		virtual bool defend(Object* owner, Object* target = nullptr) = 0;
 		virtual bool heal(int amount, Object* owner, Object* target = nullptr) = 0;

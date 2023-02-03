@@ -41,7 +41,4 @@ struct Get_<Accept> {
 }
 
 template<typename T>
-using GetStrategy = std::conditional_t< 
-	Livable<T>, // is type Livable
-	Get_<Accept>, // default strategy
-	Get_<T> >; // not Livable
+using GetStrategy = std::conditional_t< Livable<T>, Get_<Accept>, Get_<T> >;

@@ -33,7 +33,4 @@ struct Defend_<Accept> {
 }
 
 template<typename T>
-using DefendStrategy = std::conditional_t< 
-	Protectable<T>, // is type Protectable
-	Defend_<Accept>, // default strategy
-	Defend_<T> >; // not Protectable
+using DefendStrategy = std::conditional_t< Protectable<T>, Defend_<Accept>, Defend_<T> >;

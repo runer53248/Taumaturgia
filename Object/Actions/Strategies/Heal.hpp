@@ -33,7 +33,4 @@ struct Heal_<Accept> {
 }
 
 template<typename T>
-using HealStrategy = std::conditional_t< 
-	Curable<T>, // is type Curable
-	Heal_<Accept>, // default strategy
-	Heal_<T> >; // not Curable
+using HealStrategy = std::conditional_t< Curable<T>, Heal_<Accept>, Heal_<T> >;
