@@ -29,6 +29,7 @@ struct Weapon {
 
 struct Player{
 	std::string name;
+	AC ac{10, BodyLocation::ALL};
 };
 
 struct Enemy{
@@ -52,9 +53,8 @@ struct CustomWeapon { // is not Damagable but still counts as AttackStrategable 
 	};
 };
 
-template <>
-struct AttackStrategy_<CustomWeapon> {
-	// bool operator()(Damagingable auto& obj, Object* owner, Object* target) { // if geted Damagable property
+template <> struct AttackStrategy_<CustomWeapon> {
+	// bool operator()(Damagingable auto& obj, Object* owner, Object* target) { // when got Damagable property
 	// 	return true;
 	// }
 
@@ -66,10 +66,10 @@ struct AttackStrategy_<CustomWeapon> {
 		auto hp_opt = suspect->get(Parameter::Hp);
 
 		if (hp_opt) {
-			auto* hp_ptr = hp_opt.value();
+			auto* hp_ptr = std::get<int*const>(hp_opt.value());
 
-			if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) { // if geted Damagable property
-				*hp_ptr -= static_cast<int>(obj.dmg);
+			if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) { // when got Damagable property
+				*hp_ptr -= obj.dmg.value();
 			}
 
 			for (auto& other : obj.others) {
@@ -80,30 +80,34 @@ struct AttackStrategy_<CustomWeapon> {
 	}
 
 	bool operator()(Damagingable auto& obj, auto* hp_ptr) { // sub attacks
-		*hp_ptr -= static_cast<int>(obj.dmg);
+		*hp_ptr -= obj.dmg.value();
 
-		std::cout << "\t\t for " << obj.dmg << " dmg";
+		std::cout << "\t\t for " << obj.dmg.value() << " dmg";
 		std::cout << " with " << static_cast<std::string>(obj.name) << '\n';
 		return true;
 	}
 };
 
 int main() {
-	auto print_hp = [](const auto* const value) {
-		std::cout << "(Hp: " << *value << ")\n";
-		return std::optional{value};
+	auto print_hp = [](const auto& value) {
+		auto* value_ptr = std::get<int*const>(value);
+		std::cout << "(Hp: " << *value_ptr << ")\n";
+		return std::optional{value_ptr};
 	};
-	auto print_cure_hp = [](const auto* const value) {
-		std::cout << "(Cure Hp: " << *value << ")\n";
-		return std::optional{value};
+	auto print_cure_hp = [](const auto& value) {
+		auto* value_ptr = std::get<int*const>(value);
+		std::cout << "(Cure Hp: " << *value_ptr << ")\n";
+		return std::optional{value_ptr};
 	};
-	auto print_ac = [](const auto* const value) {
-		std::cout << "(Ac: " << *value << ")\n";
-		return std::optional{value};
+	auto print_ac = [](const auto& value) {
+		auto value_ref = std::get<std::reference_wrapper<AC>>(value);
+		std::cout << "(Ac: " << value_ref.get().value() << ") ";
+		return std::optional{value_ref};
 	};
-	auto print_dmg = [](const auto* const value) {
-		std::cout << "(Damage: " << *value << ")\n";
-		return std::optional{value};
+	auto print_dmg = [](const auto& value) {
+		auto* value_ptr = std::get<int*const>(value);
+		std::cout << "(Damage: " << *value_ptr << ")\n";
+		return std::optional{value_ptr};
 	};
 	auto print_person = [&](auto&& person){
 		std::cout << person.name();
@@ -116,6 +120,7 @@ int main() {
 		} else {
 			std::cout << " [unliving] ";
 		}
+		person.get(Parameter::Ac).and_then(print_ac);
 		person.get(Parameter::Hp).and_then(print_hp);
 	};
 
@@ -149,40 +154,45 @@ int main() {
 
 	backpack.push_back( std::move(gustav_obj) );
 
-	auto gustav_2 = Living<Healing<Living<Healing<Weapon>>>>( Name{"GUSTAV_INTELIGENT_SWORD"}, Hp{20}/*, Hp{20}*/, Damage{32});
+	auto gustav_2 = Living<Healing<Living<Healing<Weapon>>>>( Name{"GUSTAV_INTELIGENT_SWORD"},/*hp*/ Hp{20},/*cureHp*/ Hp{30}, Damage{32});
+	if (gustav_2.hp != Hp{20}) throw;
+	if (gustav_2.cureHp != Hp{30}) throw;
+	static_assert(std::is_same_v< decltype(gustav_2), Living<Healing<Weapon>> >);
 	backpack.emplace_back( gustav_2 );
 
-	backpack.emplace_back( Armor{ Name{"CHAIN_MAIL"}, AC{8}});
+	backpack.emplace_back( Armor{ Name{"CHAIN_MAIL"}, AC{8, BodyLocation::Body}});
 	backpack.emplace_back( Protecting<Armor>{ Name{"HALF_PLATE"}, AC{12}});
-	backpack.emplace_back( Helmet{ Name{"VIKING_HELM"}, AC{2} });
-	backpack.emplace_back( Damaging<Helmet>( Name{"BATTLE_HELM"} , Damage{10}, AC{2}));
+	backpack.emplace_back( Helmet{ Name{"VIKING_HELM"}, AC{2, BodyLocation::Head} });
+	backpack.emplace_back( Damaging<Helmet>( Name{"BATTLE_HELM"} , Damage{10}, AC{4, BodyLocation::Head}));
 	backpack.emplace_back( Healing<Potion>( Name{"HEALING_POTION"}, Hp{20}));
 	backpack.emplace_back( Healing<Potion>{ Name{"SMALL_HEALING_POTION"}, Hp{10}});
-	backpack.emplace_back( Protecting<Potion>( Name{"SHIELD_POTION"}, AC{4}));
+	backpack.emplace_back( Protecting<Potion>( Name{"SHIELD_POTION"}, AC{4, BodyLocation::Internal}));
 	backpack.emplace_back( Scroll{ Name{"USELESS_SCROLL"} });
 	backpack.emplace_back( Scroll{ Name{"EMPTY_SCROLL"} });
 	backpack.emplace_back( Damaging<Scroll>( Name{"SLEEP_SCROLL"}, Damage{0} ));
 	backpack.emplace_back( Damaging<Healing<Scroll>>( Name{"VAMPIRIC_TOUCH_SCROLL"}, Damage{30}, Hp{15}));
 
 	Object player( Living<Player>{Name{"Knight"}, Hp{100}} );
+	print_person(player);
 	Object enemy( Living<Enemy>{Name{"Ogr"}, Hp{180}} );
+	print_person(enemy);
 	Object enemy_2( Enemy{Name{"Ogr 2"}} );
+	print_person(enemy_2);
+	std::cout << "\n\n";
 
 	std::cout << "Items I can attack with:" << '\n';
 	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
-		// caled from hidden friend
 		if ( item->can_attack ) {
-			std::cout << player.name()
-			<< " attack " << enemy.name()
-			<< " with " << item->name();
+			std::cout << player.name() << " attack " << enemy.name() << " with " << item->name();
 			if (auto dmg_opt = item->get(Parameter::Damage)) {
-				std::cout << " for "
-				<< *dmg_opt.value()
-				<< " dmg";
+				auto* value_ptr = std::get<int*const>(dmg_opt.value());
+				std::cout << " for " << *value_ptr << " dmg";
 			}
 			std::cout << '\n';
-			item->attack(&player, &enemy);
-
+			auto result = item->attack(&player, &enemy);
+			if (not result) {
+				std::cout << " attack miss ";
+			}
 			print_person(enemy);
 		}
 	}
@@ -190,27 +200,25 @@ int main() {
 
 	std::cout << "Items I can defend with:" << '\n';
 	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
-		// caled from hidden friend
 		if ( item->defend(&player/*, &player*/) ) {
-			std::cout << player.name()
-			<< " defend self with " << item->name();
+			std::cout << player.name() << " defend self with " << item->name();
 			if (auto ac_opt = item->get(Parameter::Ac)) {
-				std::cout << " for " << *ac_opt.value() << " AC";
+				const AC& value_ref = std::get<std::reference_wrapper<AC>>(ac_opt.value());
+				std::cout << " for " << value_ref.value() << " AC";
 			}
 			std::cout << '\n';
+			print_person(player);
 		}
 	}
 	std::cout << '\n';
 
 	std::cout << "Items I can heal with:" << '\n';
 	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
-		// called by method
 		if ( item->heal(100, &player/*, &player*/) ) {
-			std::cout << player.name()
-			<< " heal self with "
-			<< item->name();
+			std::cout << player.name() << " heal self with " << item->name();
 			if (auto cureHp_opt = item->get(Parameter::CureHp)) {
-				std::cout << " for " << *cureHp_opt.value() << " Hp";
+				auto* value_ptr = std::get<int*const>(cureHp_opt.value());
+				std::cout << " for " << *value_ptr << " Hp";
 			}
 			std::cout << '\n';
 

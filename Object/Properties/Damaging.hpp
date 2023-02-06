@@ -4,7 +4,6 @@
 
 template <typename T>
 struct Damaging_: T {
-	using battle_type = T;
 	Damaging_(const Name& name, Damage dmg, auto ...args): T{name, std::forward<decltype(args)>(args)...}, dmg(dmg) {}
 	Damaging_(const Name& name, auto ...args): T{name, std::forward<decltype(args)>(args)...} {}
 

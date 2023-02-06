@@ -7,6 +7,8 @@ struct Name {
     operator std::string() { return value_; }
     operator std::string() const { return value_; }
 
+    auto operator<=>(const Name& rhs) const = default;
+
 private:
     std::string value_{};
 };

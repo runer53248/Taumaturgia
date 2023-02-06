@@ -3,8 +3,10 @@
 struct Damage {
     Damage() = default;
     explicit Damage(int value) : value_{value} {}
-    operator int() { return value_; }
-    operator int() const { return value_; }
+    auto& value() { return value_; }
+    auto value() const { return value_; }
+
+    auto operator<=>(const Damage& rhs) const = default;
     
 private:
     int value_{};

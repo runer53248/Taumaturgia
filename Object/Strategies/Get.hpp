@@ -1,6 +1,7 @@
 #pragma once
 #include <concepts>
 #include <optional>
+#include <variant>
 #include "../Concepts/Livingable.hpp"
 #include "../Concepts/Healingable.hpp"
 #include "../Concepts/Protectingable.hpp"
@@ -19,9 +20,11 @@ struct Object;
 template <typename T>
 struct GetStrategy_ {};
 
+using get_result_type = std::variant<int *const, std::reference_wrapper<AC>>;
+
 template <template<typename> typename Strategy, typename UserType>
 concept GetStrategable = requires (Strategy<UserType> strategy, UserType& type, Parameter param) {
-	{strategy.template operator()<Parameter::Hp>(type)} -> std::same_as<std::optional<int*const>>;
+	{strategy.template operator()<Parameter::Hp>(type)} -> std::same_as<std::optional<get_result_type>>;
 };
 
 template <typename T>
@@ -38,5 +41,5 @@ using GetStrategy = std::conditional_t<
 
 template <> struct GetStrategy_<Default> {
 	template<Parameter P>
-	std::optional<int *const> operator()(Getable auto &obj);
+	std::optional<get_result_type> operator()(Getable auto &obj);
 };
