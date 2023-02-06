@@ -66,21 +66,21 @@ template <> struct AttackStrategy_<CustomWeapon> {
 		auto hp_opt = suspect->get(Parameter::Hp);
 
 		if (hp_opt) {
-			auto* hp_ptr = std::get<int*const>(hp_opt.value());
+			auto hp_ref = std::get<std::reference_wrapper<int>>(hp_opt.value());
 
 			if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) { // when got Damagable property
-				*hp_ptr -= obj.dmg.value();
+				hp_ref -= obj.dmg.value();
 			}
 
 			for (auto& other : obj.others) {
-				operator()(other, hp_ptr);
+				operator()(other, hp_ref);
 			}
 		}
 		return true;
 	}
 
-	bool operator()(Damagingable auto& obj, auto* hp_ptr) { // sub attacks
-		*hp_ptr -= obj.dmg.value();
+	bool operator()(Damagingable auto& obj, auto hp_ref) { // sub attacks
+		hp_ref -= obj.dmg.value();
 
 		std::cout << "\t\t for " << obj.dmg.value() << " dmg";
 		std::cout << " with " << static_cast<std::string>(obj.name) << '\n';
@@ -90,14 +90,14 @@ template <> struct AttackStrategy_<CustomWeapon> {
 
 int main() {
 	auto print_hp = [](const auto& value) {
-		auto* value_ptr = std::get<int*const>(value);
-		std::cout << "(Hp: " << *value_ptr << ")\n";
-		return std::optional{value_ptr};
+		auto value_ref = std::get<std::reference_wrapper<int>>(value);
+		std::cout << "(Hp: " << value_ref << ")\n";
+		return std::optional{value_ref};
 	};
 	auto print_cure_hp = [](const auto& value) {
-		auto* value_ptr = std::get<int*const>(value);
-		std::cout << "(Cure Hp: " << *value_ptr << ")\n";
-		return std::optional{value_ptr};
+		auto value_ref = std::get<std::reference_wrapper<int>>(value);
+		std::cout << "(Cure Hp: " << value_ref << ")\n";
+		return std::optional{value_ref};
 	};
 	auto print_ac = [](const auto& value) {
 		auto value_ref = std::get<std::reference_wrapper<AC>>(value);
@@ -105,9 +105,9 @@ int main() {
 		return std::optional{value_ref};
 	};
 	auto print_dmg = [](const auto& value) {
-		auto* value_ptr = std::get<int*const>(value);
-		std::cout << "(Damage: " << *value_ptr << ")\n";
-		return std::optional{value_ptr};
+		auto value_ref = std::get<std::reference_wrapper<int>>(value);
+		std::cout << "(Damage: " << value_ref << ")\n";
+		return std::optional{value_ref};
 	};
 	auto print_person = [&](auto&& person){
 		std::cout << person.name();
@@ -185,8 +185,8 @@ int main() {
 		if ( item->can_attack ) {
 			std::cout << player.name() << " attack " << enemy.name() << " with " << item->name();
 			if (auto dmg_opt = item->get(Parameter::Damage)) {
-				auto* value_ptr = std::get<int*const>(dmg_opt.value());
-				std::cout << " for " << *value_ptr << " dmg";
+				auto value_ref = std::get<std::reference_wrapper<int>>(dmg_opt.value());
+				std::cout << " for " << value_ref << " dmg";
 			}
 			std::cout << '\n';
 			auto result = item->attack(&player, &enemy);
@@ -217,8 +217,8 @@ int main() {
 		if ( item->heal(100, &player/*, &player*/) ) {
 			std::cout << player.name() << " heal self with " << item->name();
 			if (auto cureHp_opt = item->get(Parameter::CureHp)) {
-				auto* value_ptr = std::get<int*const>(cureHp_opt.value());
-				std::cout << " for " << *value_ptr << " Hp";
+				auto value_ref = std::get<std::reference_wrapper<int>>(cureHp_opt.value());
+				std::cout << " for " << value_ref << " Hp";
 			}
 			std::cout << '\n';
 

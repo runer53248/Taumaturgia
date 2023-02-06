@@ -155,9 +155,9 @@ bool AttackStrategy_<Default>::operator()(Damagingable auto &obj, Object *owner,
     auto *suspect = Whom(owner, target);
     auto is_success = suspect->get(Parameter::Hp)
         .and_then([&](auto&& variant) {
-            auto* value_ptr = std::get<int*const>(variant);
-            *value_ptr -= obj.dmg.value();
-            return std::optional{value_ptr};
+            auto value_ref = std::get<std::reference_wrapper<int>>(variant);
+            value_ref -= obj.dmg.value();
+            return std::optional{value_ref};
         });
     return is_success.has_value();
 }
@@ -183,9 +183,9 @@ bool HealStrategy_<Default>::operator()(Healingable auto &obj, int amount, Objec
     auto *suspect = Whom(owner, target);
     auto is_success = suspect->get(Parameter::Hp)
         .and_then([&](auto&& variant) {
-            auto* value_ptr = std::get<int*const>(variant);
-            *value_ptr += obj.cureHp.value();
-            return std::optional{value_ptr};
+            auto value_ref = std::get<std::reference_wrapper<int>>(variant);
+            value_ref += obj.cureHp.value();
+            return std::optional{value_ref};
         });
     return is_success.has_value();
 }
@@ -193,15 +193,14 @@ bool HealStrategy_<Default>::operator()(Healingable auto &obj, int amount, Objec
 template <Parameter P>
 std::optional<get_result_type> GetStrategy_<Default>::operator()(Getable auto &obj) {
     using type = std::remove_reference_t<decltype(obj)>;
-    using result_type = int *const;
     if constexpr (P == Parameter::Hp) {
         if constexpr (Livingable<type>) {
-            return &obj.hp.value();
+            return std::ref(obj.hp.value());
         }
     }
     if constexpr (P == Parameter::CureHp) {
         if constexpr (Healingable<type>) {
-            return &obj.cureHp.value();
+            return std::ref(obj.cureHp.value());
         }
     }
     if constexpr (P == Parameter::Ac) {
@@ -211,7 +210,7 @@ std::optional<get_result_type> GetStrategy_<Default>::operator()(Getable auto &o
     }
     if constexpr (P == Parameter::Damage) {
         if constexpr (Damagingable<type>) {
-            return &obj.dmg.value();
+            return std::ref(obj.dmg.value());
         }
     }
     return {};

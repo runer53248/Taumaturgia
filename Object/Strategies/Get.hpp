@@ -20,7 +20,7 @@ struct Object;
 template <typename T>
 struct GetStrategy_ {};
 
-using get_result_type = std::variant<int *const, std::reference_wrapper<AC>>;
+using get_result_type = std::variant<std::reference_wrapper<int>, std::reference_wrapper<AC>>;
 
 template <template<typename> typename Strategy, typename UserType>
 concept GetStrategable = requires (Strategy<UserType> strategy, UserType& type, Parameter param) {
