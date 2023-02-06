@@ -3,9 +3,9 @@
 struct AC {
     AC() = default;
     explicit AC(int value) : value_{value} {}
-    operator int() {
-        return value_;
-    }
+    operator int() { return value_; }
+    operator int() const { return value_; }
+    
 private:
     int value_{};
 };

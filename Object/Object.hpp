@@ -2,41 +2,8 @@
 #include <memory>
 #include <optional>
 #include <concepts>
-
-enum class Parameter;
-class Object;
-
-template<typename T>
-concept Nameable = requires (T t) { 
-	{t.name} -> std::convertible_to<std::string>;
-};
-
-template<typename Strategy, typename UserType>
-concept AttackStrategable = requires (Strategy strategy, UserType& type, Object* owner, Object* target) { 
-	{strategy.operator()(type, owner, target)} -> std::same_as<bool>;
-	{strategy.operator()()} -> std::same_as<bool>;
-};
-
-template<typename Strategy, typename UserType>
-concept DefendStrategable = requires (Strategy strategy, UserType& type, Object* owner, Object* target) { 
-	{strategy.operator()(type, owner, target)} -> std::same_as<bool>;
-	{strategy.operator()()} -> std::same_as<bool>;
-};
-
-template<typename Strategy, typename UserType>
-concept HealStrategable = requires (Strategy strategy, UserType& type, int amount, Object* owner, Object* target) { 
-	{strategy.operator()(type, amount, owner, target)} -> std::same_as<bool>;
-	{strategy.operator()()} -> std::same_as<bool>;
-};
-
-template<typename Strategy, typename UserType>
-concept GetStrategable = requires (Strategy strategy, UserType& type, Parameter param) { 
-	{strategy.operator()(type, param)} -> std::same_as<std::optional<int*const>>;
-	{strategy.operator()()} -> std::same_as<bool>;
-};
-
-template<class T>
-concept Strategable = AttackStrategable<AttackStrategy<T>, T> && DefendStrategable<DefendStrategy<T>, T> && HealStrategable<HealStrategy<T>, T> && GetStrategable<GetStrategy<T>, T>;
+#include "Concepts/Namingable.hpp"
+#include "Strategies/Strategies.hpp"
 
 class Object {
 private:
@@ -44,68 +11,198 @@ private:
 		virtual ~ObjectConcept() = default;
 
 		virtual std::string name() const = 0;
+		virtual std::optional<bool> alive() const = 0;
 		virtual bool attack(Object* owner, Object* target = nullptr) = 0;
 		virtual bool defend(Object* owner, Object* target = nullptr) = 0;
 		virtual bool heal(int amount, Object* owner, Object* target = nullptr) = 0;
         virtual std::optional<int*const> get(Parameter param) = 0;
 	};
 
-	template<Nameable T> 
-	requires Strategable<T>
+	template <Namingable T>
 	struct ObjectModel : ObjectConcept {
 	public:
-		ObjectModel(const T& type) : type( type ) {}
+		ObjectModel(const T& type) : type_( type ) {}
 		~ObjectModel() override = default;
 		
 		std::string name() const override;
-
+		std::optional<bool> alive() const override;
 		bool attack(Object* owner, Object* target) override;
 		bool defend(Object* owner, Object* target) override;
 		bool heal(int amount, Object* owner, Object* target) override;
         std::optional<int*const> get(Parameter param) override;
 
 	private:
-		T type;
-		AttackStrategy<T> attackFunc{};
-		DefendStrategy<T> defendFunc{};
-		HealStrategy<T> healFunc{};
-        GetStrategy<T> getFunc{};
+		T type_;
+		AliveStrategy<T> aliveStrategy_{};
+		AttackStrategy<T> attackStrategy_{};
+		DefendStrategy<T> defendStrategy_{};
+		HealStrategy<T> healStrategy_{};
+        GetStrategy<T> getStrategy_{};
 	};
 
-   	std::unique_ptr<ObjectConcept> object;
+   	std::unique_ptr<ObjectConcept> object_;
 
 public:
-	template<Nameable T> 
+	const bool can_alive{};
+	const bool can_attack{};
+	const bool can_defend{};
+	const bool can_heal{};
+	const bool can_get{};
+
+	template <Namingable T> 
 	Object(const T& obj) : 
-		object( std::make_unique<ObjectModel<T>>(obj) ) {}
+		object_( std::make_unique<ObjectModel<T>>(obj) ),
+		can_alive{AliveStrategable<AliveStrategy, T>},
+		can_attack{AttackStrategable<AttackStrategy, T>},
+		can_defend{DefendStrategable<DefendStrategy, T>},
+		can_heal{HealStrategable<HealStrategy, T>},
+		can_get{GetStrategable<GetStrategy, T>} {}
 
 	std::string name() const { 
-		return object->name();
+		return object_->name();
 	}
-
-    bool attack(Object* owner, auto... args) {
-        return object->attack(owner, std::forward<decltype(args)>(args)...);
+	std::optional<bool> alive() {
+		if (not can_alive) { return {}; }
+        return object_->alive();
     }
-    bool defend(auto... args) {
-        return object->defend(std::forward<decltype(args)>(args)...);
+    bool attack(Object *owner, Object *target = nullptr) {
+		if (not can_attack) { return false; }
+        return object_->attack(owner, target);
     }
-    bool heal(int amount, Object* owner, auto... args) {
-        return object->heal(amount, owner, std::forward<decltype(args)>(args)...);
+    bool defend(Object *owner, Object *target = nullptr) {
+		if (not can_defend) { return false; }
+        return object_->defend(owner, target);
+    }
+    bool heal(int amount, Object *owner, Object *target = nullptr) {
+		if (not can_heal) { return false; }
+        return object_->heal(amount, owner, target);
     }
     std::optional<int*const> get(Parameter param) {
-        return object->get(param);
-    }
-
-	friend bool attack(const Object& obj,Object* owner,  auto... args) {
-		return obj.object->attack(owner, std::forward<decltype(args)>(args)...);
-	}
-	friend bool defend(const Object& obj, auto... args) {
-		return obj.object->defend(std::forward<decltype(args)>(args)...); 
-	}
-	friend bool heal(const Object& obj, int amount, Object* owner, auto... args) {
-		return obj.object->heal(amount, owner, std::forward<decltype(args)>(args)...); 
-	}
-    friend std::optional<int*const> get(const Object& obj, Parameter param) {
-        return obj.object->get(param);
+		if (not can_get) { return {}; }
+        return object_->get(param);
     }
 };
+
+template <Namingable T>
+std::string Object::ObjectModel<T>::name() const { 
+    return type_.name; 
+}
+
+template <Namingable T>
+std::optional<bool> Object::ObjectModel<T>::alive() const {
+    if constexpr (AliveStrategable< AliveStrategy, T>) {
+        return aliveStrategy_(type_);
+    }
+    return {};
+}
+
+template <Namingable T>
+bool Object::ObjectModel<T>::attack(Object* owner, Object* target) {
+    if constexpr (AttackStrategable< AttackStrategy, T>) {
+        return attackStrategy_(type_, owner, target);
+    }
+    return false;
+}
+
+template <Namingable T>
+bool Object::ObjectModel<T>::defend(Object* owner, Object* target) {
+    if constexpr (DefendStrategable< DefendStrategy, T>) {
+        return defendStrategy_(type_, owner, target);
+    }
+    return false;
+}
+
+template <Namingable T>
+bool Object::ObjectModel<T>::heal(int amount, Object* owner, Object* target) {
+    if constexpr (HealStrategable< HealStrategy, T>) {
+        return healStrategy_(type_, amount, owner, target);
+    }
+    return false;
+}
+
+template <Namingable T>
+std::optional<int*const> Object::ObjectModel<T>::get(Parameter param) {
+    if constexpr (GetStrategable< GetStrategy, T>) {
+        switch (param) {
+            case Parameter::Ac:
+                return getStrategy_.template operator()<Parameter::Ac>(type_);
+            case Parameter::Damage:
+                return getStrategy_.template operator()<Parameter::Damage>(type_);
+            case Parameter::Hp:
+                return getStrategy_.template operator()<Parameter::Hp>(type_);
+            case Parameter::CureHp:
+                return getStrategy_.template operator()<Parameter::CureHp>(type_);
+        };
+    }
+    return {};
+}
+
+inline Object* Whom(Object *const owner, Object *const target) {
+    if ((owner == target) or not target) {
+        return owner;
+    }
+    return target;
+}
+
+std::optional<bool> AliveStrategy_<Default>::operator()(Livingable auto &obj) const {
+    return obj.hp > 0;
+}
+
+bool AttackStrategy_<Default>::operator()(Damagingable auto &obj, Object *owner, Object *target) {
+    if (not owner) {
+        return false;
+    }
+    auto *suspect = Whom(owner, target);
+    auto is_success = suspect->get(Parameter::Hp)
+        .and_then([&](auto&& hp_ptr) {
+            *hp_ptr -= static_cast<int>(obj.dmg);
+            return std::optional{hp_ptr};
+        });
+    return is_success.has_value();
+}
+
+bool DefendStrategy_<Default>::operator()(Protectingable auto &obj, Object *owner, Object *target) {
+    if (not owner) {
+        return false;
+    }
+    return true;
+}
+
+bool HealStrategy_<Default>::operator()(Healingable auto &obj, int amount, Object *owner, Object *target) {
+    if (not owner) {
+        return false;
+    }
+    auto *suspect = Whom(owner, target);
+    auto is_success = suspect->get(Parameter::Hp)
+        .and_then([&](auto&& hp_ptr) {
+            *hp_ptr += static_cast<int>(obj.cureHp);
+            return std::optional{hp_ptr};
+        });
+    return is_success.has_value();
+}
+
+template <Parameter P>
+std::optional<int *const> GetStrategy_<Default>::operator()(Getable auto &obj) {
+    using type = std::remove_reference_t<decltype(obj)>;
+    if constexpr (P == Parameter::Hp) {
+        if constexpr (Livingable<type>) {
+            return reinterpret_cast<int *const>(&obj.hp);
+        }
+    }
+    if constexpr (P == Parameter::CureHp) {
+        if constexpr (Healingable<type>) {
+            return reinterpret_cast<int *const>(&obj.cureHp);
+        }
+    }
+    if constexpr (P == Parameter::Ac) {
+        if constexpr (Protectingable<type>) {
+            return reinterpret_cast<int *const>(&obj.ac);
+        }
+    }
+    if constexpr (P == Parameter::Damage) {
+        if constexpr (Damagingable<type>) {
+            return reinterpret_cast<int *const>(&obj.dmg);
+        }
+    }
+    return {};
+}
