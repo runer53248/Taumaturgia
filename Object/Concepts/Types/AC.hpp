@@ -23,12 +23,6 @@ struct AC {
         values_.at(static_cast<size_t>(location_)) = value;
     }
 
-    auto value() {
-        if (location_ == BodyLocation::ALL) {
-            return std::accumulate(values_.cbegin(), values_.cend(), 0);
-        }
-        return values_.at(static_cast<size_t>(location_));
-    }
     auto value() const {
         if (location_ == BodyLocation::ALL) {
             return std::accumulate(values_.cbegin(), values_.cend(), 0);
@@ -42,7 +36,6 @@ struct AC {
         return values_.at(static_cast<size_t>(location));
     }
 
-    auto location() { return location_; }
     auto location() const { return location_; }
 
     auto operator<=>(const AC& rhs) const = default;
