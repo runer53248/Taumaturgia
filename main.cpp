@@ -25,7 +25,14 @@ int main() {
 	Object gustav_obj{gustav};
 
 	std::cout << gustav_obj.name() << '\n';
-	gustav_obj.get(Parameter::Hp).and_then(print_hp);
+	[](const auto& obj) { // get const version
+		obj.get(Parameter::Hp).and_then(print_hp);
+		obj.get(Parameter::CureHp).and_then(print_cure_hp);
+		obj.get(Parameter::Ac).and_then(print_ac);
+		obj.get(Parameter::Damage).and_then(print_dmg);
+	} (gustav_obj);
+
+	gustav_obj.get(Parameter::Hp).and_then(print_hp); // get non-const version
 	gustav_obj.get(Parameter::CureHp).and_then(print_cure_hp);
 	gustav_obj.get(Parameter::Ac).and_then(print_ac);
 	gustav_obj.get(Parameter::Damage).and_then(print_dmg);
