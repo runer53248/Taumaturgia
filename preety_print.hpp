@@ -1,7 +1,7 @@
 #pragma once
 
 auto print_hp = [](const auto& value) {
-    const Hp& hp = Get<const Hp>(value);
+    const Hp& hp = Get<Hp>(value);
     std::cout << "(Hp: " << hp.value() << ")\n";
     return std::optional{true};
 
@@ -11,7 +11,7 @@ auto print_hp = [](const auto& value) {
     // });
 };
 auto print_cure_hp = [](const auto& value) {
-    const Hp& cureHp = Get<const Hp>(value);
+    const Hp& cureHp = Get<Hp>(value);
     std::cout << "(Cure Hp: " << cureHp.value() << ")\n";
     return std::optional{true};
 
@@ -21,7 +21,7 @@ auto print_cure_hp = [](const auto& value) {
     // });
 };
 auto print_ac = [](const auto& value) {
-    const AC& ac = Get<const AC>(value);
+    const AC& ac = Get<AC>(value);
     std::cout << "(Ac: " << ac.value() << ") ";
     return std::optional{true};
 
@@ -31,7 +31,7 @@ auto print_ac = [](const auto& value) {
     // });
 };
 auto print_dmg = [](const auto& value) {
-    const Damage& damage = Get<const Damage>(value);
+    const Damage& damage = Get<Damage>(value);
     std::cout << "(Damage: " << damage.value() << ")\n";
     return std::optional{true};
 
@@ -51,6 +51,6 @@ auto print_person = [](const auto& person){
     } else {
         std::cout << " [unliving] ";
     }
-    person.getConst(Parameter::Ac).and_then(print_ac);
-    person.getConst(Parameter::Hp).and_then(print_hp);
+    person.get(Parameter::Ac).and_then(print_ac);
+    person.get(Parameter::Hp).and_then(print_hp);
 };

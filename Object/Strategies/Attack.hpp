@@ -23,5 +23,5 @@ using AttackStrategy = std::conditional_t<
 	AttackStrategy_<T> >;
 
 template <> struct AttackStrategy_<Default> {
-    bool operator()(Damagingable auto &obj, Object *owner, Object *target);
+    bool operator()(Damagingable auto &obj, Object *owner, Object *target) const;
 };

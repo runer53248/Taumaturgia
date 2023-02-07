@@ -46,14 +46,20 @@ auto Visit(T&& type) {
 	return Vis<G, T>{std::forward<T>(type)}.result;
 }
 
-template <gettable G, typename T>
-G& Get(T& type) {
+template <gettable G>
+const G& Get(const get_const_result_type& type) {
+	return std::get<std::reference_wrapper<const G>>(type);
+}
+
+template <gettable G>
+G& Get(const get_result_type& type) {
 	return std::get<std::reference_wrapper<G>>(type);
 }
 
 template <template<typename> typename Strategy, typename UserType>
-concept GetStrategable = requires (Strategy<UserType> strategy, UserType& type, Parameter param) {
+concept GetStrategable = requires (Strategy<UserType> strategy, UserType& type, const UserType& ctype, Parameter param) {
 	{strategy.template operator()<Parameter::Hp>(type)} -> std::same_as<std::optional<get_result_type>>;
+	{strategy.template operator()<Parameter::Hp>(ctype)} -> std::same_as<std::optional<get_const_result_type>>;
 };
 
 template <typename T>
@@ -69,9 +75,6 @@ using GetStrategy = std::conditional_t<
 	GetStrategy_<T> >;
 
 template <> struct GetStrategy_<Default> {
-	template<Parameter P>
-	std::optional<get_result_type> operator()(Getable auto &obj);
-
-	template<Parameter P>
-	std::optional<get_const_result_type> operator()(Getable auto const &obj) const;
+	template <Parameter P>
+	auto operator()(Getable auto &obj) const; // for const and non-const calls
 };

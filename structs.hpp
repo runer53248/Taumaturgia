@@ -54,7 +54,7 @@ template <> struct AttackStrategy_<CustomWeapon> {
 	// 	return true;
 	// }
 
-	bool operator()(auto& obj, Object* owner, Object* target) { // CustomWeapon is not Damagable but can be
+	bool operator()(auto& obj, Object* owner, Object* target) const { // CustomWeapon is not Damagable but can be
 		if (not owner) {
 			return false;
 		}
@@ -74,7 +74,7 @@ template <> struct AttackStrategy_<CustomWeapon> {
 		return true;
 	}
 
-	bool operator()(Damagingable auto& obj, Hp& hp_ref) { // sub attacks
+	bool operator()(Damagingable auto& obj, Hp& hp_ref) const { // sub attacks
 		hp_ref.value() -= obj.dmg.value();
 
 		std::cout << "\t\t for " << obj.dmg.value() << " dmg";

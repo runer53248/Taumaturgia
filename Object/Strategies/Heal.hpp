@@ -23,5 +23,5 @@ using HealStrategy = std::conditional_t<
 	HealStrategy_<T> >;
 
 template <> struct HealStrategy_<Default> {
-    bool operator()(Healingable auto &obj, int amount, Object *owner, Object *target);
+    bool operator()(Healingable auto &obj, int amount, Object *owner, Object *target) const;
 };

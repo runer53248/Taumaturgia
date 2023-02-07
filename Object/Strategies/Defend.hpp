@@ -23,5 +23,5 @@ using DefendStrategy = std::conditional_t<
 	DefendStrategy_<T> >;
 
 template <> struct DefendStrategy_<Default> {
-    bool operator()(Protectingable auto &obj, Object *owner, Object *target);
+    bool operator()(Protectingable auto &obj, Object *owner, Object *target) const;
 };
