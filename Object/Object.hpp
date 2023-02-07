@@ -5,6 +5,8 @@
 #include "Concepts/Namingable.hpp"
 #include "Strategies/Strategies.hpp"
 
+#include <experimental/propagate_const>
+
 class Object {
 private:
 	struct ObjectConcept {
@@ -16,6 +18,7 @@ private:
 		virtual bool defend(Object* owner, Object* target = nullptr) = 0;
 		virtual bool heal(int amount, Object* owner, Object* target = nullptr) = 0;
         virtual std::optional<get_result_type> get(Parameter param) = 0;
+        virtual std::optional<get_const_result_type> getConst(Parameter param) const = 0;
 	};
 
 	template <Namingable T>
@@ -30,6 +33,7 @@ private:
 		bool defend(Object* owner, Object* target) override;
 		bool heal(int amount, Object* owner, Object* target) override;
         std::optional<get_result_type> get(Parameter param) override;
+        std::optional<get_const_result_type> getConst(Parameter param) const override;
 
 	private:
 		T type_;
@@ -40,7 +44,7 @@ private:
         GetStrategy<T> getStrategy_{};
 	};
 
-   	std::unique_ptr<ObjectConcept> object_;
+   	std::experimental::propagate_const<std::unique_ptr<ObjectConcept>> object_;
 
 public:
 	const bool can_alive{};
@@ -61,7 +65,7 @@ public:
 	std::string name() const { 
 		return object_->name();
 	}
-	std::optional<bool> alive() {
+	std::optional<bool> alive() const {
 		if (not can_alive) { return {}; }
         return object_->alive();
     }
@@ -80,6 +84,11 @@ public:
     std::optional<get_result_type> get(Parameter param) {
 		if (not can_get) { return {}; }
         return object_->get(param);
+    }
+
+    std::optional<get_const_result_type> getConst(Parameter param) const {
+		if (not can_get) { return {}; }
+        return object_->getConst(param);
     }
 };
 
@@ -137,6 +146,23 @@ std::optional<get_result_type> Object::ObjectModel<T>::get(Parameter param) {
     return {};
 }
 
+template <Namingable T>
+std::optional<get_const_result_type> Object::ObjectModel<T>::getConst(Parameter param) const {
+    if constexpr (GetStrategable< GetStrategy, T>) {
+        switch (param) {
+            case Parameter::Ac:
+                return getStrategy_.template operator()<Parameter::Ac>(type_);
+            case Parameter::Damage:
+                return getStrategy_.template operator()<Parameter::Damage>(type_);
+            case Parameter::Hp:
+                return getStrategy_.template operator()<Parameter::Hp>(type_);
+            case Parameter::CureHp:
+                return getStrategy_.template operator()<Parameter::CureHp>(type_);
+        };
+    }
+    return {};
+}
+
 inline Object* Whom(Object *const owner, Object *const target) {
     if ((owner == target) or not target) {
         return owner;
@@ -155,7 +181,7 @@ bool AttackStrategy_<Default>::operator()(Damagingable auto &obj, Object *owner,
     auto *suspect = Whom(owner, target);
     auto is_success = suspect->get(Parameter::Hp)
         .and_then([&](auto&& variant) {
-            Hp& value_ref = std::get<std::reference_wrapper<Hp>>(variant);
+            Hp& value_ref = Get<Hp>(variant);
             value_ref.value() -= obj.dmg.value();
             return std::optional{value_ref};
         });
@@ -169,7 +195,7 @@ bool DefendStrategy_<Default>::operator()(Protectingable auto &obj, Object *owne
     auto *suspect = Whom(owner, target);
     auto is_success = suspect->get(Parameter::Ac)
         .and_then([&](auto&& variant) {
-            AC& ac_ref = std::get<std::reference_wrapper<AC>>(variant);
+            AC& ac_ref = Get<AC>(variant);
             ac_ref.value(obj.ac.location()) = obj.ac.value();
             return std::optional{variant};
         });
@@ -183,7 +209,7 @@ bool HealStrategy_<Default>::operator()(Healingable auto &obj, int amount, Objec
     auto *suspect = Whom(owner, target);
     auto is_success = suspect->get(Parameter::Hp)
         .and_then([&](auto&& variant) {
-            Hp& value_ref = std::get<std::reference_wrapper<Hp>>(variant);
+            Hp& value_ref = Get<Hp>(variant);
             value_ref.value() += obj.cureHp.value();
             return std::optional{value_ref};
         });
@@ -192,6 +218,32 @@ bool HealStrategy_<Default>::operator()(Healingable auto &obj, int amount, Objec
 
 template <Parameter P>
 std::optional<get_result_type> GetStrategy_<Default>::operator()(Getable auto &obj) {
+    using type = std::remove_reference_t<decltype(obj)>;
+    if constexpr (P == Parameter::Hp) {
+        if constexpr (Livingable<type>) {
+            return std::ref(obj.hp);
+        }
+    }
+    if constexpr (P == Parameter::CureHp) {
+        if constexpr (Healingable<type>) {
+            return std::ref(obj.cureHp);
+        }
+    }
+    if constexpr (P == Parameter::Ac) {
+        if constexpr (Protectingable<type>) {
+            return std::ref(obj.ac);
+        }
+    }
+    if constexpr (P == Parameter::Damage) {
+        if constexpr (Damagingable<type>) {
+            return std::ref(obj.dmg);
+        }
+    }
+    return {};
+}
+
+template <Parameter P>
+std::optional<get_const_result_type> GetStrategy_<Default>::operator()(Getable auto const &obj) const {
     using type = std::remove_reference_t<decltype(obj)>;
     if constexpr (P == Parameter::Hp) {
         if constexpr (Livingable<type>) {
