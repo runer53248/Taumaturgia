@@ -155,8 +155,8 @@ bool AttackStrategy_<Default>::operator()(Damagingable auto &obj, Object *owner,
     auto *suspect = Whom(owner, target);
     auto is_success = suspect->get(Parameter::Hp)
         .and_then([&](auto&& variant) {
-            auto value_ref = std::get<std::reference_wrapper<int>>(variant);
-            value_ref -= obj.dmg.value();
+            Hp& value_ref = std::get<std::reference_wrapper<Hp>>(variant);
+            value_ref.value() -= obj.dmg.value();
             return std::optional{value_ref};
         });
     return is_success.has_value();
@@ -183,8 +183,8 @@ bool HealStrategy_<Default>::operator()(Healingable auto &obj, int amount, Objec
     auto *suspect = Whom(owner, target);
     auto is_success = suspect->get(Parameter::Hp)
         .and_then([&](auto&& variant) {
-            auto value_ref = std::get<std::reference_wrapper<int>>(variant);
-            value_ref += obj.cureHp.value();
+            Hp& value_ref = std::get<std::reference_wrapper<Hp>>(variant);
+            value_ref.value() += obj.cureHp.value();
             return std::optional{value_ref};
         });
     return is_success.has_value();
@@ -195,12 +195,12 @@ std::optional<get_result_type> GetStrategy_<Default>::operator()(Getable auto &o
     using type = std::remove_reference_t<decltype(obj)>;
     if constexpr (P == Parameter::Hp) {
         if constexpr (Livingable<type>) {
-            return std::ref(obj.hp.value());
+            return std::ref(obj.hp);
         }
     }
     if constexpr (P == Parameter::CureHp) {
         if constexpr (Healingable<type>) {
-            return std::ref(obj.cureHp.value());
+            return std::ref(obj.cureHp);
         }
     }
     if constexpr (P == Parameter::Ac) {
@@ -210,7 +210,7 @@ std::optional<get_result_type> GetStrategy_<Default>::operator()(Getable auto &o
     }
     if constexpr (P == Parameter::Damage) {
         if constexpr (Damagingable<type>) {
-            return std::ref(obj.dmg.value());
+            return std::ref(obj.dmg);
         }
     }
     return {};

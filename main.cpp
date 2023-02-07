@@ -26,7 +26,6 @@ struct Weapon {
 	Damage dmg{};
 };
 
-
 struct Player{
 	std::string name;
 	AC ac{10, BodyLocation::ALL};
@@ -66,10 +65,10 @@ template <> struct AttackStrategy_<CustomWeapon> {
 		auto hp_opt = suspect->get(Parameter::Hp);
 
 		if (hp_opt) {
-			auto hp_ref = std::get<std::reference_wrapper<int>>(hp_opt.value());
+			Hp& hp_ref = std::get<std::reference_wrapper<Hp>>(hp_opt.value());
 
 			if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) { // when got Damagable property
-				hp_ref -= obj.dmg.value();
+				hp_ref.value() -= obj.dmg.value();
 			}
 
 			for (auto& other : obj.others) {
@@ -79,8 +78,8 @@ template <> struct AttackStrategy_<CustomWeapon> {
 		return true;
 	}
 
-	bool operator()(Damagingable auto& obj, auto hp_ref) { // sub attacks
-		hp_ref -= obj.dmg.value();
+	bool operator()(Damagingable auto& obj, Hp& hp_ref) { // sub attacks
+		hp_ref.value() -= obj.dmg.value();
 
 		std::cout << "\t\t for " << obj.dmg.value() << " dmg";
 		std::cout << " with " << static_cast<std::string>(obj.name) << '\n';
@@ -90,23 +89,23 @@ template <> struct AttackStrategy_<CustomWeapon> {
 
 int main() {
 	auto print_hp = [](const auto& value) {
-		auto value_ref = std::get<std::reference_wrapper<int>>(value);
-		std::cout << "(Hp: " << value_ref << ")\n";
+		Hp& value_ref = std::get<std::reference_wrapper<Hp>>(value);
+		std::cout << "(Hp: " << value_ref.value() << ")\n";
 		return std::optional{value_ref};
 	};
 	auto print_cure_hp = [](const auto& value) {
-		auto value_ref = std::get<std::reference_wrapper<int>>(value);
-		std::cout << "(Cure Hp: " << value_ref << ")\n";
+		Hp& value_ref = std::get<std::reference_wrapper<Hp>>(value);
+		std::cout << "(Cure Hp: " << value_ref.value() << ")\n";
 		return std::optional{value_ref};
 	};
 	auto print_ac = [](const auto& value) {
-		auto value_ref = std::get<std::reference_wrapper<AC>>(value);
-		std::cout << "(Ac: " << value_ref.get().value() << ") ";
+		AC& value_ref = std::get<std::reference_wrapper<AC>>(value);
+		std::cout << "(Ac: " << value_ref.value() << ") ";
 		return std::optional{value_ref};
 	};
 	auto print_dmg = [](const auto& value) {
-		auto value_ref = std::get<std::reference_wrapper<int>>(value);
-		std::cout << "(Damage: " << value_ref << ")\n";
+		Damage& value_ref = std::get<std::reference_wrapper<Damage>>(value);
+		std::cout << "(Damage: " << value_ref.value() << ")\n";
 		return std::optional{value_ref};
 	};
 	auto print_person = [&](auto&& person){
@@ -131,14 +130,14 @@ int main() {
 	backpack.emplace_back( sword );
 	backpack.emplace_back( giant_sword );
 
-	auto custom = CustomWeapon{ Name{"Custom_SWORD"}/*, Damage{32}*/};
-	auto default_battle = Damaging<DefaultWeapon>{ Name{"Custom_BATTLE_SWORD"}, Damage{32}};
+	auto custom = CustomWeapon{ Name{"Custom_SWORD"}};
+	auto default_battle = Damaging<DefaultWeapon>{ Name{"Custom_BATTLE_SWORD"}, Damage{32}}; // became Damagable - custom AttackStrategy_ will handle it
 	backpack.emplace_back( custom );
 	backpack.emplace_back( Damaging<CustomWeapon>{ Name{"new Custom_SWORD"}, Damage{32}} );
 	backpack.emplace_back( default_battle );
 
 	// second Living and Cure will be ignored
-	auto gustav = Living<Healing<Living<Healing<Weapon>>>>{ Name{"GUSTAV_INTELIGENT_SWORD"}, Hp{20}/*, Hp{20}, Damage{32}*/};
+	auto gustav = Living<Healing<Living<Healing<Weapon>>>>{ Name{"GUSTAV_INTELIGENT_SWORD"},/*hp*/ Hp{20}};
 	gustav.name = Name{"Franco The Inteligent Sword"};
 	gustav.hp = Hp{75};
 	gustav.cureHp = Hp{30};
@@ -180,27 +179,34 @@ int main() {
 	print_person(enemy_2);
 	std::cout << "\n\n";
 
-	std::cout << "Items I can attack with:" << '\n';
+	std::cout << "Items I can attack with:\n\n";
 	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
 		if ( item->can_attack ) {
-			std::cout << player.name() << " attack " << enemy.name() << " with " << item->name();
-			if (auto dmg_opt = item->get(Parameter::Damage)) {
-				auto value_ref = std::get<std::reference_wrapper<int>>(dmg_opt.value());
-				std::cout << " for " << value_ref << " dmg";
-			}
-			std::cout << '\n';
 			auto result = item->attack(&player, &enemy);
 			if (not result) {
 				std::cout << " attack miss ";
 			}
+
+			std::cout << player.name() << " attack " << enemy.name() << " with " << item->name();
+			if (auto dmg_opt = item->get(Parameter::Damage)) {
+				Damage& value_ref = std::get<std::reference_wrapper<Damage>>(dmg_opt.value());
+				std::cout << " for " << value_ref.value() << " dmg";
+			}
+			std::cout << '\n';
+			
 			print_person(enemy);
 		}
 	}
 	std::cout << '\n';
 
-	std::cout << "Items I can defend with:" << '\n';
+	std::cout << "Items I can defend with:\n\n";
 	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
-		if ( item->defend(&player/*, &player*/) ) {
+		if ( item->can_defend ) {
+			auto result = item->defend(&player/*, &player*/);
+			if (not result) {
+				std::cout << " protection broken ";
+			}
+
 			std::cout << player.name() << " defend self with " << item->name();
 			if (auto ac_opt = item->get(Parameter::Ac)) {
 				const AC& value_ref = std::get<std::reference_wrapper<AC>>(ac_opt.value());
@@ -212,13 +218,18 @@ int main() {
 	}
 	std::cout << '\n';
 
-	std::cout << "Items I can heal with:" << '\n';
+	std::cout << "Items I can heal with:\n\n";
 	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
-		if ( item->heal(100, &player/*, &player*/) ) {
+		if ( item->can_heal ) {
+			auto result = item->heal(100, &player/*, &player*/);
+			if (not result) {
+				std::cout << " healing don't work ";
+			}
+
 			std::cout << player.name() << " heal self with " << item->name();
 			if (auto cureHp_opt = item->get(Parameter::CureHp)) {
-				auto value_ref = std::get<std::reference_wrapper<int>>(cureHp_opt.value());
-				std::cout << " for " << value_ref << " Hp";
+				Hp& value_ref = std::get<std::reference_wrapper<Hp>>(cureHp_opt.value());
+				std::cout << " for " << value_ref.value() << " Hp";
 			}
 			std::cout << '\n';
 
@@ -233,16 +244,22 @@ int main() {
 	print_person(enemy);
 
 	Object npc( Naming<Npc>{Name{"Npc"}} );
-	franco.defend(&npc); // npc can't defend with franco - ignored
+	auto result = franco.defend(&npc); // npc can't defend with franco - ignored
+	if (result) throw;
 	print_person(npc);
 	franco.attack(&npc); // npc hit himself with franco
 
 	print_person(npc);
 	print_person(player);
-	print_person(Object(gustav));
 	print_person(enemy);
 	print_person(enemy_2); // enemy_2 dont have hp
 	std::cout << '\n';
+
+	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
+		if ( item->can_alive ) {
+			print_person(*item);
+		}
+	}
 
 	return 0;
 }
