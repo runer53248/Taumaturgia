@@ -14,9 +14,9 @@ private:
 
 		virtual std::string name() const = 0;
 		virtual std::optional<bool> alive() const = 0;
-		virtual bool attack(Object* owner, Object* target = nullptr) = 0;
-		virtual bool defend(Object* owner, Object* target = nullptr) = 0;
-		virtual bool heal(int amount, Object* owner, Object* target = nullptr) = 0;
+		virtual bool attack(Object* owner, Object* target = nullptr) const = 0;
+		virtual bool defend(Object* owner, Object* target = nullptr) const = 0;
+		virtual bool heal(int amount, Object* owner, Object* target = nullptr) const = 0;
         virtual std::optional<get_result_type> get(Parameter param) = 0;
         virtual std::optional<get_const_result_type> get(Parameter param) const = 0;
 	};
@@ -29,9 +29,9 @@ private:
 		
 		std::string name() const override;
 		std::optional<bool> alive() const override;
-		bool attack(Object* owner, Object* target) override;
-		bool defend(Object* owner, Object* target) override;
-		bool heal(int amount, Object* owner, Object* target) override;
+		bool attack(Object* owner, Object* target) const override;
+		bool defend(Object* owner, Object* target) const override;
+		bool heal(int amount, Object* owner, Object* target) const override;
         std::optional<get_result_type> get(Parameter param) override;
         std::optional<get_const_result_type> get(Parameter param) const override;
 
@@ -51,13 +51,13 @@ private:
 
             switch (param) {
                 case Parameter::Ac:
-                    return getStrategy_. template operator()<Parameter::Ac>(type);
+                    return getStrategy_.template operator()<Parameter::Ac>(type);
                 case Parameter::Damage:
-                    return getStrategy_. template operator()<Parameter::Damage>(type);
+                    return getStrategy_.template operator()<Parameter::Damage>(type);
                 case Parameter::Hp:
-                    return getStrategy_. template operator()<Parameter::Hp>(type);
+                    return getStrategy_.template operator()<Parameter::Hp>(type);
                 case Parameter::CureHp:
-                    return getStrategy_. template operator()<Parameter::CureHp>(type);
+                    return getStrategy_.template operator()<Parameter::CureHp>(type);
             };
             return result_type{};
         }
@@ -88,15 +88,15 @@ public:
 		if (not can_alive) { return {}; }
         return object_->alive();
     }
-    bool attack(Object *owner, Object *target = nullptr) {
+    bool attack(Object *owner, Object *target = nullptr) const {
 		if (not can_attack) { return false; }
         return object_->attack(owner, target);
     }
-    bool defend(Object *owner, Object *target = nullptr) {
+    bool defend(Object *owner, Object *target = nullptr) const {
 		if (not can_defend) { return false; }
         return object_->defend(owner, target);
     }
-    bool heal(int amount, Object *owner, Object *target = nullptr) {
+    bool heal(int amount, Object *owner, Object *target = nullptr) const {
 		if (not can_heal) { return false; }
         return object_->heal(amount, owner, target);
     }
@@ -136,7 +136,7 @@ std::optional<bool> Object::ObjectModel<T>::alive() const {
 }
 
 template <Namingable T>
-bool Object::ObjectModel<T>::attack(Object* owner, Object* target) {
+bool Object::ObjectModel<T>::attack(Object* owner, Object* target) const {
     if constexpr (AttackStrategable< AttackStrategy, T>) {
         return attackStrategy_(type_, owner, target);
     }
@@ -144,7 +144,7 @@ bool Object::ObjectModel<T>::attack(Object* owner, Object* target) {
 }
 
 template <Namingable T>
-bool Object::ObjectModel<T>::defend(Object* owner, Object* target) {
+bool Object::ObjectModel<T>::defend(Object* owner, Object* target) const {
     if constexpr (DefendStrategable< DefendStrategy, T>) {
         return defendStrategy_(type_, owner, target);
     }
@@ -152,7 +152,7 @@ bool Object::ObjectModel<T>::defend(Object* owner, Object* target) {
 }
 
 template <Namingable T>
-bool Object::ObjectModel<T>::heal(int amount, Object* owner, Object* target) {
+bool Object::ObjectModel<T>::heal(int amount, Object* owner, Object* target) const {
     if constexpr (HealStrategable< HealStrategy, T>) {
         return healStrategy_(type_, amount, owner, target);
     }

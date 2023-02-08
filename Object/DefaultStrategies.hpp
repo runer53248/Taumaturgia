@@ -54,7 +54,7 @@ bool HealStrategy_<Default>::operator()(Healingable auto &obj, int amount, Objec
     return is_success.has_value();
 }
 
-#include <iostream>
+// #include <iostream>
 
 template <Parameter P>
 auto GetStrategy_<Default>::operator()(Getable auto &obj) const {
@@ -63,11 +63,9 @@ auto GetStrategy_<Default>::operator()(Getable auto &obj) const {
 		std::optional<get_const_result_type>,
 		std::optional<get_result_type> >;
 
-    if constexpr (std::is_same_v<result_type, std::optional<get_const_result_type>>) {
-        std::cout << "^";
-    } else {
-        std::cout << "*";
-    }
+    // if constexpr (std::is_same_v<result_type, std::optional<get_result_type>>) {
+    //     std::cout << " [&] ";
+    // }
 
     using type = std::remove_reference_t<decltype(obj)>;
     if constexpr (P == Parameter::Hp) {

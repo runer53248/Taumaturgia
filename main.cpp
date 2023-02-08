@@ -67,7 +67,7 @@ int main() {
 	std::cout << "\n\n";
 
 	std::cout << "Items I can attack with:\n\n";
-	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
+	for ( auto item = backpack.cbegin(); item != backpack.cend(); ++item ) {
 		if ( item->can_attack ) {
 			std::cout << player.name() << " attack " << enemy.name() << " with " << item->name();
 			if (auto dmg_opt = item->get(Parameter::Damage)) {
@@ -85,7 +85,7 @@ int main() {
 	std::cout << '\n';
 
 	std::cout << "Items I can defend with:\n\n";
-	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
+	for ( auto item = backpack.cbegin(); item != backpack.cend(); ++item ) {
 		if ( item->can_defend ) {
 			auto result = item->defend(&player/*, &player*/);
 			if (not result) {
@@ -104,7 +104,7 @@ int main() {
 	std::cout << '\n';
 
 	std::cout << "Items I can heal with:\n\n";
-	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
+	for ( auto item = backpack.cbegin(); item != backpack.cend(); ++item ) {
 		if ( item->can_heal ) {
 			auto result = item->heal(100, &player/*, &player*/);
 			if (not result) {
