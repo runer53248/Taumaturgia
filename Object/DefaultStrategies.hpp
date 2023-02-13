@@ -55,7 +55,7 @@ bool HealStrategy_<Default>::operator()(Healingable auto &obj, Object *owner, Ob
 }
 
 template <Parameter P>
-auto GetStrategy_<Default>::operator()(Getable auto &obj) const {
+auto GetStrategy_<Default>::operator()(Gettingable auto &obj) const {
     using result_type = std::conditional_t<
 		std::is_const_v<std::remove_reference_t<decltype(obj)>>,
 		optional_get_const_result_type,

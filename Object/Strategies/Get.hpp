@@ -27,7 +27,7 @@ using optional_get_result_type = std::optional<get_result_type>;
 using optional_get_const_result_type = std::optional<get_const_result_type>;
 
 template <typename T>
-concept gettable = 
+concept GetResultable = 
 	std::same_as<T, AC> ||
 	std::same_as<T, Damage> ||
 	std::same_as<T, Hp> ||
@@ -35,12 +35,12 @@ concept gettable =
 	std::same_as<T, const Damage> ||
 	std::same_as<T, const Hp>;
 
-template <gettable G>
+template <GetResultable G>
 const G& Get(const get_const_result_type& type) {
 	return std::get<std::reference_wrapper<const G>>(type);
 }
 
-template <gettable G>
+template <GetResultable G>
 G& Get(const get_result_type& type) {
 	return std::get<std::reference_wrapper<G>>(type);
 }
@@ -52,11 +52,11 @@ concept GetStrategable = requires (Strategy<UserType> strategy, UserType& type, 
 };
 
 template <typename T>
-concept Getable = Livingable<T> or Healingable<T> or Protectingable<T> or Damagingable<T>;
+concept Gettingable = Livingable<T> or Healingable<T> or Protectingable<T> or Damagingable<T>;
 
 template <typename T>
 using GetStrategy = std::conditional_t<
-	Getable<T>,
+	Gettingable<T>,
 	std::conditional_t<
 		GetStrategable<GetStrategy_, T>,
 		GetStrategy_<T>,
@@ -65,5 +65,5 @@ using GetStrategy = std::conditional_t<
 
 template <> struct GetStrategy_<Default> {
 	template <Parameter P>
-	auto operator()(Getable auto &obj) const; // for const and non-const calls
+	auto operator()(Gettingable auto &obj) const; // for const and non-const calls
 };

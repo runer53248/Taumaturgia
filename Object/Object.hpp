@@ -40,9 +40,9 @@ private:
         optional_get_const_result get(Parameter param) const override;
 
 	private:
-        template <Parameter P, Getable G>
+        template <Parameter P, Gettingable G>
         inline constexpr auto get_impl(G& type) const;
-        inline auto get_impl(Getable auto& type, Parameter param) const;
+        inline auto get_impl(Gettingable auto& type, Parameter param) const;
 
 		T type_;
 	};
@@ -155,14 +155,14 @@ auto Object::ObjectModel<T>::get(Parameter param) const -> optional_get_const_re
 }
 
 template<Namingable T>
-template<Parameter P, Getable G>
+template<Parameter P, Gettingable G>
 constexpr auto Object::ObjectModel<T>::get_impl(G& type) const { // call const or non-const getStrategy_::operator() method depends on G constness
     static constinit GetStrategy<T> getStrategy_{};
     return std::invoke(&GetStrategy<T>::template operator()<P, G>, getStrategy_, type);
 }
 
 template<Namingable T>
-auto Object::ObjectModel<T>::get_impl(Getable auto& type, Parameter param) const {
+auto Object::ObjectModel<T>::get_impl(Gettingable auto& type, Parameter param) const {
     using result_type = std::conditional_t<
         std::is_const_v<std::remove_reference_t<decltype(type)>>,
         optional_get_const_result,
