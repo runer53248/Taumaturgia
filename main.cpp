@@ -79,7 +79,7 @@ int main() {
 		}
 		std::cout << '\n';
 		if (not item.attack(&player, &enemy)) {
-			std::cout << " attack miss ";
+			std::cout << " attack miss "; // unusable yet
 		}
 		print_person(enemy);
 	}
@@ -91,7 +91,7 @@ int main() {
 			continue;
 		}
 		if (not item.defend(&player/*, &player*/)) {
-			std::cout << " protection broken ";
+			std::cout << " protection broken "; // unusable yet
 		}
 
 		std::cout << player.name() << " defend self with " << item.name();
@@ -110,7 +110,7 @@ int main() {
 			continue;
 		}
 		if (not item.heal(&player, &player)) {
-			std::cout << " healing don't work ";
+			std::cout << " healing don't work "; // unusable yet
 		}
 
 		std::cout << player.name() << " heal self with " << item.name();
