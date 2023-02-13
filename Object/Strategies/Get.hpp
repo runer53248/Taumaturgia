@@ -23,6 +23,9 @@ struct GetStrategy_ {};
 using get_result_type = std::variant<std::monostate, std::reference_wrapper<AC>, std::reference_wrapper<Damage>, std::reference_wrapper<Hp>>;
 using get_const_result_type = std::variant<std::monostate, std::reference_wrapper<const AC>, std::reference_wrapper<const Damage>, std::reference_wrapper<const Hp>>;
 
+using optional_get_result_type = std::optional<get_result_type>;
+using optional_get_const_result_type = std::optional<get_const_result_type>;
+
 template <typename T>
 concept gettable = 
 	std::same_as<T, AC> ||
@@ -58,8 +61,8 @@ G& Get(const get_result_type& type) {
 
 template <template<typename> typename Strategy, typename UserType>
 concept GetStrategable = requires (Strategy<UserType> strategy, UserType& type, const UserType& ctype, Parameter param) {
-	{strategy.template operator()<Parameter::Hp>(type)} -> std::same_as<std::optional<get_result_type>>;
-	{strategy.template operator()<Parameter::Hp>(ctype)} -> std::same_as<std::optional<get_const_result_type>>;
+	{strategy.template operator()<Parameter::Hp>(type)} -> std::same_as<optional_get_result_type>;
+	{strategy.template operator()<Parameter::Hp>(ctype)} -> std::same_as<optional_get_const_result_type>;
 };
 
 template <typename T>

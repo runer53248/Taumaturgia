@@ -51,6 +51,6 @@ auto print_person = [](const auto& person){
     } else {
         std::cout << " [unliving] ";
     }
-    person.get(Parameter::Ac).and_then(print_ac);
-    person.get(Parameter::Hp).and_then(print_hp);
+    get(person, Parameter::Ac).and_then(print_ac);
+    get(person, Parameter::Hp).and_then(print_hp);
 };

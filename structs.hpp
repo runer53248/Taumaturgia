@@ -41,7 +41,7 @@ struct DefaultWeapon {
 	Damage dmg{};
 };
 
-struct CustomWeapon { // is not Damagable but still counts as AttackStrategable because have custom AttackStrategy_
+struct CustomWeapon { // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
 	Name name;
 	std::vector<DefaultWeapon> others{
 		DefaultWeapon{Name{"Light weapon"}, Damage{10}},
@@ -50,20 +50,20 @@ struct CustomWeapon { // is not Damagable but still counts as AttackStrategable 
 };
 
 template <> struct AttackStrategy_<CustomWeapon> {
-	// bool operator()(Damagingable auto& obj, Object* owner, Object* target) { // when got Damagable property
+	// bool operator()(Damagingable auto& obj, Object* owner, Object* target) { // when got Damagingable property
 	// 	return true;
 	// }
 
-	bool operator()(auto& obj, Object* owner, Object* target) const { // CustomWeapon is not Damagable but can be
+	bool operator()(auto& obj, Object* owner, Object* target) const { // CustomWeapon is not Damagingable but can became one
 		if (not owner) {
 			return false;
 		}
 		auto *suspect = Whom(owner, target);
-		auto hp_opt = suspect->get(Parameter::Hp);
+		auto hp_opt = get(*suspect, Parameter::Hp);
 
 		if (hp_opt) {
 			Hp& hp = Get<Hp>(hp_opt.value());
-			if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) { // when got Damagable property
+			if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) { // when got Damagingable property
 				hp.value() -= obj.dmg.value();
 			}
 

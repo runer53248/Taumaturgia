@@ -2,6 +2,9 @@
 #include "Object.hpp"
 
 inline Object* Whom(Object *const owner, Object *const target) {
+    if (not owner) {
+        throw std::logic_error("first argument of Whom function can't be nullptr.");
+    }
     if ((owner == target) or not target) {
         return owner;
     }
@@ -17,7 +20,7 @@ bool AttackStrategy_<Default>::operator()(Damagingable auto &obj, Object *owner,
         return false;
     }
     auto *suspect = Whom(owner, target);
-    auto is_success = suspect->get(Parameter::Hp)
+    auto is_success = get(*suspect, Parameter::Hp)
         .and_then([&](auto&& variant) {
             Hp& value_ref = Get<Hp>(variant);
             value_ref.value() -= obj.dmg.value();
@@ -31,7 +34,7 @@ bool DefendStrategy_<Default>::operator()(Protectingable auto &obj, Object *owne
         return false;
     }
     auto *suspect = Whom(owner, target);
-    auto is_success = suspect->get(Parameter::Ac)
+    auto is_success = get(*suspect, Parameter::Ac)
         .and_then([&](auto&& variant) {
             AC& ac_ref = Get<AC>(variant);
             ac_ref.value(obj.ac.location()) = obj.ac.value();
@@ -40,12 +43,12 @@ bool DefendStrategy_<Default>::operator()(Protectingable auto &obj, Object *owne
     return is_success.has_value();
 }
 
-bool HealStrategy_<Default>::operator()(Healingable auto &obj, int amount, Object *owner, Object *target) const {
+bool HealStrategy_<Default>::operator()(Healingable auto &obj, Object *owner, Object *target) const {
     if (not owner) {
         return false;
     }
     auto *suspect = Whom(owner, target);
-    auto is_success = suspect->get(Parameter::Hp)
+    auto is_success = get(*suspect, Parameter::Hp)
         .and_then([&](auto&& variant) {
             Hp& value_ref = Get<Hp>(variant);
             value_ref.value() += obj.cureHp.value();
@@ -54,18 +57,12 @@ bool HealStrategy_<Default>::operator()(Healingable auto &obj, int amount, Objec
     return is_success.has_value();
 }
 
-// #include <iostream>
-
 template <Parameter P>
 auto GetStrategy_<Default>::operator()(Getable auto &obj) const {
     using result_type = std::conditional_t<
 		std::is_const_v<std::remove_reference_t<decltype(obj)>>,
-		std::optional<get_const_result_type>,
-		std::optional<get_result_type> >;
-
-    // if constexpr (std::is_same_v<result_type, std::optional<get_result_type>>) {
-    //     std::cout << " [&] ";
-    // }
+		optional_get_const_result_type,
+		optional_get_result_type>;
 
     using type = std::remove_reference_t<decltype(obj)>;
     if constexpr (P == Parameter::Hp) {

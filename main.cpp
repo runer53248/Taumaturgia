@@ -8,16 +8,17 @@
 #include "preety_print.hpp"
 
 int main() {
-	std::vector< Object > backpack;
+	std::vector<Object> backpack;
 	
 	backpack.emplace_back( Damaging<Weapon>{ Name{"SWORD"}, Damage{16}} );
 	backpack.emplace_back( Weapon{ Name{"GIANT_SWORD"}, Damage{32}} );
 	backpack.emplace_back( CustomWeapon{ Name{"Custom_SWORD"}} );
-	backpack.emplace_back( Damaging<CustomWeapon>{ Name{"New_Custom_SWORD"}, Damage{32}} ); // became Damagable - custom AttackStrategy_ will handle it
+	backpack.emplace_back( Damaging<CustomWeapon>{ Name{"New_Custom_SWORD"}, Damage{32}} ); // became Damagingable - custom AttackStrategy_ will handle it
 	backpack.emplace_back( Damaging<DefaultWeapon>{ Name{"Default_BATTLE_SWORD"}, Damage{32}} );
 
-	// second Living and Cure will be ignored
+	// second Living and Healing will be ignored
 	auto gustav = Living<Healing<Living<Healing<Weapon>>>>{ Name{"GUSTAV_INTELIGENT_SWORD"},/*hp*/ Hp{20}};
+	static_assert(std::is_same_v< decltype(gustav), Living<Healing<Weapon>> >);
 	gustav.name = Name{"Franco The Inteligent Sword"};
 	gustav.hp = Hp{75};
 	gustav.cureHp = Hp{30};
@@ -26,16 +27,16 @@ int main() {
 
 	std::cout << gustav_obj.name() << '\n';
 	[](const auto& obj) { // get const version
-		obj.get(Parameter::Hp).and_then(print_hp);
-		obj.get(Parameter::CureHp).and_then(print_cure_hp);
-		obj.get(Parameter::Ac).and_then(print_ac);
-		obj.get(Parameter::Damage).and_then(print_dmg);
+		get(obj, Parameter::Hp).and_then(print_hp);
+		get(obj, Parameter::CureHp).and_then(print_cure_hp);
+		get(obj, Parameter::Ac).and_then(print_ac);
+		get(obj, Parameter::Damage).and_then(print_dmg);
 	} (gustav_obj);
 
-	gustav_obj.get(Parameter::Hp).and_then(print_hp); // get non-const version
-	gustav_obj.get(Parameter::CureHp).and_then(print_cure_hp);
-	gustav_obj.get(Parameter::Ac).and_then(print_ac);
-	gustav_obj.get(Parameter::Damage).and_then(print_dmg);
+	get(gustav_obj, Parameter::Hp).and_then(print_hp); // get non-const version
+	get(gustav_obj, Parameter::CureHp).and_then(print_cure_hp);
+	get(gustav_obj, Parameter::Ac).and_then(print_ac); // ignored - object dont have Ac
+	get<const Object>(gustav_obj, Parameter::Damage).and_then(print_dmg); // force get const version
 	std::cout << '\n';
 
 	backpack.push_back( std::move(gustav_obj) );
@@ -67,16 +68,15 @@ int main() {
 	std::cout << "\n\n";
 
 	std::cout << "Items I can attack with:\n\n";
-	for ( auto item = backpack.cbegin(); item != backpack.cend(); ++item ) {
-		if ( item->can_attack ) {
-			std::cout << player.name() << " attack " << enemy.name() << " with " << item->name();
-			if (auto dmg_opt = item->get(Parameter::Damage)) {
+	for (const auto& item : backpack) {
+		if (item.can_attack) {
+			std::cout << player.name() << " attack " << enemy.name() << " with " << item.name();
+			if (auto dmg_opt = get(item, Parameter::Damage)) {
 				const Damage& damage = Get<Damage>(dmg_opt.value());
 				std::cout << " for " << damage.value() << " dmg";
 			}
 			std::cout << '\n';
-			auto result = item->attack(&player, &enemy);
-			if (not result) {
+			if (not item.attack(&player, &enemy)) {
 				std::cout << " attack miss ";
 			}
 			print_person(enemy);
@@ -85,15 +85,14 @@ int main() {
 	std::cout << '\n';
 
 	std::cout << "Items I can defend with:\n\n";
-	for ( auto item = backpack.cbegin(); item != backpack.cend(); ++item ) {
-		if ( item->can_defend ) {
-			auto result = item->defend(&player/*, &player*/);
-			if (not result) {
+	for (const auto& item : backpack) {
+		if (item.can_defend) {
+			if (not item.defend(&player/*, &player*/)) {
 				std::cout << " protection broken ";
 			}
 
-			std::cout << player.name() << " defend self with " << item->name();
-			if (auto ac_opt = item->get(Parameter::Ac)) {
+			std::cout << player.name() << " defend self with " << item.name();
+			if (auto ac_opt = get(item, Parameter::Ac)) {
 				const AC& ac = Get<AC>(ac_opt.value());
 				std::cout << " for " << ac.value() << " AC";
 			}
@@ -104,15 +103,14 @@ int main() {
 	std::cout << '\n';
 
 	std::cout << "Items I can heal with:\n\n";
-	for ( auto item = backpack.cbegin(); item != backpack.cend(); ++item ) {
-		if ( item->can_heal ) {
-			auto result = item->heal(100, &player/*, &player*/);
-			if (not result) {
+	for (const auto& item : backpack) {
+		if (item.can_heal) {
+			if (not item.heal(&player, &player)) {
 				std::cout << " healing don't work ";
 			}
 
-			std::cout << player.name() << " heal self with " << item->name();
-			if (auto cureHp_opt = item->get(Parameter::CureHp)) {
+			std::cout << player.name() << " heal self with " << item.name();
+			if (auto cureHp_opt = get(item, Parameter::CureHp)) {
 				const Hp& cureHp = Get<Hp>(cureHp_opt.value());
 				std::cout << " for " << cureHp.value() << " Hp";
 			}
@@ -140,6 +138,9 @@ int main() {
 	print_person(enemy);
 	print_person(enemy_2); // enemy_2 dont have hp
 	std::cout << '\n';
+
+	Object{Healing<Potion>{ Name{"HEALING_POTION"}, Hp{100}}}.heal(&npc);
+	print_person(npc);
 
 	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
 		if ( item->can_alive ) {
