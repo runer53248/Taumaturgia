@@ -2,9 +2,6 @@
 #include "Object.hpp"
 
 inline Object* Whom(Object *const owner, Object *const target) {
-    if (not owner) {
-        throw std::logic_error("first argument of Whom function can't be nullptr.");
-    }
     if ((owner == target) or not target) {
         return owner;
     }
