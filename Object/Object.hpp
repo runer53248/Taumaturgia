@@ -23,34 +23,6 @@ private:
 		virtual bool heal(Object* owner, Object* target = nullptr) const = 0;
         virtual optional_get_result get(Parameter param) = 0;
         virtual optional_get_const_result get(Parameter param) const = 0;
-
-    protected:
-        template<Parameter P, Getable G>
-        inline constexpr auto get_impl(G& type) const { // call const or non-const getStrategy_::operator() method depends on G constness
-            using get_type = std::remove_cvref_t<decltype(type)>;
-            static constinit GetStrategy<get_type> getStrategy_{};
-            return std::invoke(&GetStrategy<get_type>::template operator()<P, G>, getStrategy_, type);
-        }
-
-        inline auto get_impl(Getable auto& type, Parameter param) const {
-            using result_type = std::conditional_t<
-                std::is_const_v<std::remove_reference_t<decltype(type)>>,
-                optional_get_const_result,
-                optional_get_result>;
-
-            switch (param) { 
-                case Parameter::Ac:
-                    return get_impl<Parameter::Ac>(type);
-                case Parameter::Damage:
-                    return get_impl<Parameter::Damage>(type);
-                case Parameter::Hp:
-                    return get_impl<Parameter::Hp>(type);
-                case Parameter::CureHp:
-                    return get_impl<Parameter::CureHp>(type);
-                default:
-                    return result_type{}; 
-            };
-        }
 	};
 
 	template <Namingable T>
@@ -68,11 +40,11 @@ private:
         optional_get_const_result get(Parameter param) const override;
 
 	private:
+        template <Parameter P, Getable G>
+        inline constexpr auto get_impl(G& type) const;
+        inline auto get_impl(Getable auto& type, Parameter param) const;
+
 		T type_;
-		static constexpr AliveStrategy<T> aliveStrategy_{};
-		static constexpr AttackStrategy<T> attackStrategy_{};
-		static constexpr DefendStrategy<T> defendStrategy_{};
-		static constexpr HealStrategy<T> healStrategy_{};
 	};
 
    	std::experimental::propagate_const<std::unique_ptr<ObjectConcept>> object_;
@@ -133,6 +105,7 @@ std::string Object::ObjectModel<T>::name() const {
 template <Namingable T>
 std::optional<bool> Object::ObjectModel<T>::alive() const {
     if constexpr (AliveStrategable<AliveStrategy, T>) {
+        static constinit AliveStrategy<T> aliveStrategy_{};
         return aliveStrategy_(type_);
     }
     return {};
@@ -141,6 +114,7 @@ std::optional<bool> Object::ObjectModel<T>::alive() const {
 template <Namingable T>
 bool Object::ObjectModel<T>::attack(Object* owner, Object* target) const {
     if constexpr (AttackStrategable<AttackStrategy, T>) {
+        static constinit AttackStrategy<T> attackStrategy_{};
         return attackStrategy_(type_, owner, target);
     }
     return {};
@@ -149,6 +123,7 @@ bool Object::ObjectModel<T>::attack(Object* owner, Object* target) const {
 template <Namingable T>
 bool Object::ObjectModel<T>::defend(Object* owner, Object* target) const {
     if constexpr (DefendStrategable<DefendStrategy, T>) {
+        static constinit DefendStrategy<T> defendStrategy_{};
         return defendStrategy_(type_, owner, target);
     }
     return {};
@@ -157,6 +132,7 @@ bool Object::ObjectModel<T>::defend(Object* owner, Object* target) const {
 template <Namingable T>
 bool Object::ObjectModel<T>::heal(Object* owner, Object* target) const {
     if constexpr (HealStrategable<HealStrategy, T>) {
+        static constinit HealStrategy<T> healStrategy_{};
         return healStrategy_(type_, owner, target);
     }
     return {};
@@ -176,4 +152,32 @@ auto Object::ObjectModel<T>::get(Parameter param) const -> optional_get_const_re
         return get_impl(type_, param);
     }
     return {};
+}
+
+template<Namingable T>
+template<Parameter P, Getable G>
+constexpr auto Object::ObjectModel<T>::get_impl(G& type) const { // call const or non-const getStrategy_::operator() method depends on G constness
+    static constinit GetStrategy<T> getStrategy_{};
+    return std::invoke(&GetStrategy<T>::template operator()<P, G>, getStrategy_, type);
+}
+
+template<Namingable T>
+auto Object::ObjectModel<T>::get_impl(Getable auto& type, Parameter param) const {
+    using result_type = std::conditional_t<
+        std::is_const_v<std::remove_reference_t<decltype(type)>>,
+        optional_get_const_result,
+        optional_get_result>;
+
+    switch (param) { 
+        case Parameter::Ac:
+            return get_impl<Parameter::Ac>(type);
+        case Parameter::Damage:
+            return get_impl<Parameter::Damage>(type);
+        case Parameter::Hp:
+            return get_impl<Parameter::Hp>(type);
+        case Parameter::CureHp:
+            return get_impl<Parameter::CureHp>(type);
+        default:
+            return result_type{}; 
+    };
 }

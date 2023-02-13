@@ -69,54 +69,57 @@ int main() {
 
 	std::cout << "Items I can attack with:\n\n";
 	for (const auto& item : backpack) {
-		if (item.can_attack) {
-			std::cout << player.name() << " attack " << enemy.name() << " with " << item.name();
-			if (auto dmg_opt = get(item, Parameter::Damage)) {
-				const Damage& damage = Get<Damage>(dmg_opt.value());
-				std::cout << " for " << damage.value() << " dmg";
-			}
-			std::cout << '\n';
-			if (not item.attack(&player, &enemy)) {
-				std::cout << " attack miss ";
-			}
-			print_person(enemy);
+		if (not item.can_attack) {
+			continue;
 		}
+		std::cout << player.name() << " attack " << enemy.name() << " with " << item.name();
+		if (auto dmg_opt = get(item, Parameter::Damage)) {
+			const Damage& damage = Get<Damage>(dmg_opt.value());
+			std::cout << " for " << damage.value() << " dmg";
+		}
+		std::cout << '\n';
+		if (not item.attack(&player, &enemy)) {
+			std::cout << " attack miss ";
+		}
+		print_person(enemy);
 	}
 	std::cout << '\n';
 
 	std::cout << "Items I can defend with:\n\n";
 	for (const auto& item : backpack) {
-		if (item.can_defend) {
-			if (not item.defend(&player/*, &player*/)) {
-				std::cout << " protection broken ";
-			}
-
-			std::cout << player.name() << " defend self with " << item.name();
-			if (auto ac_opt = get(item, Parameter::Ac)) {
-				const AC& ac = Get<AC>(ac_opt.value());
-				std::cout << " for " << ac.value() << " AC";
-			}
-			std::cout << '\n';
-			print_person(player);
+		if (not item.can_defend) {
+			continue;
 		}
+		if (not item.defend(&player/*, &player*/)) {
+			std::cout << " protection broken ";
+		}
+
+		std::cout << player.name() << " defend self with " << item.name();
+		if (auto ac_opt = get(item, Parameter::Ac)) {
+			const AC& ac = Get<AC>(ac_opt.value());
+			std::cout << " for " << ac.value() << " AC";
+		}
+		std::cout << '\n';
+		print_person(player);
 	}
 	std::cout << '\n';
 
 	std::cout << "Items I can heal with:\n\n";
 	for (const auto& item : backpack) {
-		if (item.can_heal) {
-			if (not item.heal(&player, &player)) {
-				std::cout << " healing don't work ";
-			}
-
-			std::cout << player.name() << " heal self with " << item.name();
-			if (auto cureHp_opt = get(item, Parameter::CureHp)) {
-				const Hp& cureHp = Get<Hp>(cureHp_opt.value());
-				std::cout << " for " << cureHp.value() << " Hp";
-			}
-			std::cout << '\n';
-			print_person(player);
+		if (not item.can_heal) {
+			continue;
 		}
+		if (not item.heal(&player, &player)) {
+			std::cout << " healing don't work ";
+		}
+
+		std::cout << player.name() << " heal self with " << item.name();
+		if (auto cureHp_opt = get(item, Parameter::CureHp)) {
+			const Hp& cureHp = Get<Hp>(cureHp_opt.value());
+			std::cout << " for " << cureHp.value() << " Hp";
+		}
+		std::cout << '\n';
+		print_person(player);
 	}
 	std::cout << '\n';
 
@@ -127,8 +130,7 @@ int main() {
 	print_person(enemy);
 
 	Object npc( Naming<Npc>{Name{"Npc"}} );
-	auto result = franco.defend(&npc); // npc can't defend with franco - ignored
-	if (result) throw;
+	franco.defend(&npc); // npc can't defend with franco - ignored
 
 	print_person(npc);
 	franco.attack(&npc); // npc hit himself with franco
@@ -143,7 +145,7 @@ int main() {
 	print_person(npc);
 
 	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
-		if ( item->can_alive ) {
+		if (item->can_alive) {
 			print_person(*item);
 		}
 	}

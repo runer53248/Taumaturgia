@@ -35,20 +35,6 @@ concept gettable =
 	std::same_as<T, const Damage> ||
 	std::same_as<T, const Hp>;
 
-template <gettable G, typename T>
-struct Vis final {
-	Vis(T&& type) : result(std::visit(*this, std::forward<T>(type))) {}
-	std::optional<std::reference_wrapper<G>> operator()(std::reference_wrapper<G> var) const { return var; }
-	std::optional<std::reference_wrapper<G>> operator()(std::monostate) const { return{}; }
-	std::optional<std::reference_wrapper<G>> operator()(T) const { return{}; }
-	std::optional<std::reference_wrapper<G>> result;
-};
-
-template <gettable G, typename T>
-auto Visit(T&& type) {
-	return Vis<G, T>{std::forward<T>(type)}.result;
-}
-
 template <gettable G>
 const G& Get(const get_const_result_type& type) {
 	return std::get<std::reference_wrapper<const G>>(type);
