@@ -24,7 +24,7 @@ struct Weapon {
 };
 
 struct Player{
-	std::string name;
+	std::string name; // string used as name
 	AC ac{10, BodyLocation::ALL};
 };
 
@@ -37,7 +37,7 @@ struct Npc{
 };
 
 struct DefaultWeapon {
-	std::string name;
+	std::string name; // string used as name
 	Damage dmg{};
 };
 

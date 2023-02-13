@@ -8,7 +8,7 @@ enum class BodyLocation {
     Arms,
     Legs,
     Internal,
-    ALL
+    ALL // used as number of elements for array and as special value to accumulate values from it
 };
 
 struct AC {
@@ -16,8 +16,8 @@ struct AC {
     explicit AC(int value) {
         values_.at(static_cast<size_t>(location_)) = value;
     }
-    explicit AC(int value, BodyLocation location) : location_{location} {
-        if (location_ == BodyLocation::ALL) {
+    AC(int value, BodyLocation location) : location_{location} {
+        if (location_ == BodyLocation::ALL) { // value ignored
             return;
         }
         values_.at(static_cast<size_t>(location_)) = value;
@@ -42,6 +42,5 @@ struct AC {
 
 private:
     std::array<int, static_cast<size_t>(BodyLocation::ALL)> values_{};
-
     BodyLocation location_{BodyLocation::Body};
 };
