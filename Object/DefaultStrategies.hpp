@@ -21,6 +21,10 @@ bool AttackStrategy_<Default>::operator()(Damagingable auto &obj, Object *owner,
         .and_then([&](auto&& variant) {
             Hp& value_ref = Get<Hp>(variant);
             value_ref.value() -= obj.dmg.value();
+
+            if (obj.dmg.effect() != AttackEffect::None) {
+                value_ref.effect() = obj.dmg.effect();
+            }
             return std::optional{true};
         });
     return is_success.has_value();
@@ -55,7 +59,7 @@ bool HealStrategy_<Default>::operator()(Healingable auto &obj, Object *owner, Ob
 }
 
 template <Parameter P>
-auto GetStrategy_<Default>::operator()(Gettingable auto &obj) const {
+auto GetStrategy_<Default>::operator()(Gettingable auto& obj) const {
     using result_type = std::conditional_t<
 		std::is_const_v<std::remove_reference_t<decltype(obj)>>,
 		optional_get_const_result_type,

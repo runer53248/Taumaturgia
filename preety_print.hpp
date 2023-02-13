@@ -5,7 +5,17 @@ auto print_hp = [](const auto& value) {
         std::cout << "[&]"; // value is reference_wraper to non const type - can be changed
     }
     const Hp& hp = Get<Hp>(value);
-    std::cout << "(Hp: " << hp.value() << ")\n";
+    std::cout << "(Hp: " << hp.value() << ")";
+    if (hp.effect() == AttackEffect::Sleep) {
+        std::cout << " [sleep effect]";
+    }
+    if (hp.effect() == AttackEffect::Devour) {
+        std::cout << " [devour]";
+    }
+    if (hp.effect() == AttackEffect::Stun) {
+        std::cout << " [stunned]";
+    }
+    std::cout << "\n";
     return std::optional{true};
 };
 auto print_cure_hp = [](const auto& value) {

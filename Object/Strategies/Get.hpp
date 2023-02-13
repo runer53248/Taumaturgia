@@ -65,5 +65,5 @@ using GetStrategy = std::conditional_t<
 
 template <> struct GetStrategy_<Default> {
 	template <Parameter P>
-	auto operator()(Gettingable auto &obj) const; // for const and non-const calls
+	auto operator()(Gettingable auto& obj) const; // for const and non-const calls
 };

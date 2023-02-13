@@ -22,7 +22,7 @@ int main() {
 	gustav.name = Name{"Franco The Inteligent Sword"};
 	gustav.hp = Hp{75};
 	gustav.cureHp = Hp{30};
-	gustav.dmg = Damage{100};
+	gustav.dmg = Damage{100, AttackEffect::Stun};
 	Object gustav_obj{gustav};
 
 	std::cout << gustav_obj.name() << '\n';
@@ -42,22 +42,20 @@ int main() {
 	backpack.push_back( std::move(gustav_obj) );
 
 	auto gustav_2 = Living<Healing<Living<Healing<Weapon>>>>( Name{"GUSTAV_INTELIGENT_SWORD"},/*hp*/ Hp{20},/*cureHp*/ Hp{30}, Damage{32});
-	if (gustav_2.hp != Hp{20}) throw;
-	if (gustav_2.cureHp != Hp{30}) throw;
 	static_assert(std::is_same_v< decltype(gustav_2), Living<Healing<Weapon>> >);
 	backpack.emplace_back( gustav_2 );
 
 	backpack.emplace_back( Armor{ Name{"CHAIN_MAIL"}, AC{8, BodyLocation::Body}});
 	backpack.emplace_back( Protecting<Armor>{ Name{"HALF_PLATE"}, AC{12}});
-	backpack.emplace_back( Helmet{ Name{"VIKING_HELM"}, AC{2, BodyLocation::Head} });
 	backpack.emplace_back( Damaging<Helmet>( Name{"BATTLE_HELM"} , Damage{10}, AC{4, BodyLocation::Head}));
+	backpack.emplace_back( Helmet{ Name{"VIKING_HELM"}, AC{2, BodyLocation::Head} });
 	backpack.emplace_back( Healing<Potion>( Name{"HEALING_POTION"}, Hp{20}));
 	backpack.emplace_back( Healing<Potion>{ Name{"SMALL_HEALING_POTION"}, Hp{10}});
 	backpack.emplace_back( Protecting<Potion>( Name{"SHIELD_POTION"}, AC{4, BodyLocation::Internal}));
 	backpack.emplace_back( Scroll{ Name{"USELESS_SCROLL"} });
 	backpack.emplace_back( Scroll{ Name{"EMPTY_SCROLL"} });
-	backpack.emplace_back( Damaging<Scroll>( Name{"SLEEP_SCROLL"}, Damage{0} ));
-	backpack.emplace_back( Damaging<Healing<Scroll>>( Name{"VAMPIRIC_TOUCH_SCROLL"}, Damage{30}, Hp{15}));
+	backpack.emplace_back( Damaging<Scroll>( Name{"SLEEP_SCROLL"}, Damage{0, AttackEffect::Sleep} )); //TODO add effects
+	backpack.emplace_back( Damaging<Healing<Scroll>>( Name{"VAMPIRIC_TOUCH_SCROLL"}, Damage{30, AttackEffect::Devour}, Hp{15}));
 
 	Object player( Living<Player>{Name{"Knight"}, Hp{100}} );
 	print_person(player);
@@ -73,14 +71,24 @@ int main() {
 			continue;
 		}
 		std::cout << player.name() << " attack " << enemy.name() << " with " << item.name();
+		// AttackEffect effect{};
 		if (auto dmg_opt = get(item, Parameter::Damage)) {
 			const Damage& damage = Get<Damage>(dmg_opt.value());
 			std::cout << " for " << damage.value() << " dmg";
+			// if (damage.effect() != AttackEffect::None) {
+			// 	effect = damage.effect();
+			// }
 		}
 		std::cout << '\n';
 		if (not item.attack(&player, &enemy)) {
 			std::cout << " attack miss "; // unusable yet
-		}
+		} 
+		// else if (effect != AttackEffect::None) {
+		// 	if(auto hp_opt = get(enemy, Parameter::Hp)) {
+		// 		Hp& hp = Get<Hp>(hp_opt.value());
+		// 		hp.effect() = effect;
+		// 	}
+		// }
 		print_person(enemy);
 	}
 	std::cout << '\n';
