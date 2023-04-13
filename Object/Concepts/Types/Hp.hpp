@@ -1,10 +1,9 @@
 #pragma once
-
-enum class AttackEffect;
+#include "Effect.hpp"
 
 struct Hp {
     Hp() = default;
-    explicit Hp(int value) : value_{value} {}
+    constexpr explicit Hp(int value) : value_{value} {}
     auto& value() { return value_; }
     auto value() const { return value_; }
     auto& effect() { return effect_; }
@@ -14,5 +13,5 @@ struct Hp {
     
 private:
     int value_{};
-    AttackEffect effect_{};
+    Effect effect_{};
 };

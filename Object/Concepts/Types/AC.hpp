@@ -22,6 +22,12 @@ struct AC {
         }
         values_.at(static_cast<size_t>(location_)) = value;
     }
+    AC(int value, BodyLocation location, Effect effect) : location_{location}, effect_{effect} {
+        if (location_ == BodyLocation::ALL) { // value ignored
+            return;
+        }
+        values_.at(static_cast<size_t>(location_)) = value;
+    }
 
     auto value() const {
         if (location_ == BodyLocation::ALL) {
@@ -37,10 +43,13 @@ struct AC {
     }
 
     auto location() const { return location_; }
+    auto& effect() { return effect_; }
+    auto effect() const { return effect_; }
 
     auto operator<=>(const AC& rhs) const = default;
 
 private:
     std::array<int, static_cast<size_t>(BodyLocation::ALL)> values_{};
     BodyLocation location_{BodyLocation::Body};
+    Effect effect_{};
 };

@@ -19,11 +19,11 @@ bool AttackStrategy_<Default>::operator()(Damagingable auto &obj, Object *owner,
     auto *suspect = Whom(owner, target);
     auto is_success = get(*suspect, Parameter::Hp)
         .and_then([&](auto&& variant) {
-            Hp& value_ref = Get<Hp>(variant);
-            value_ref.value() -= obj.dmg.value();
+            Hp& hp_ref = Get<Hp>(variant);
+            hp_ref.value() -= obj.dmg.value();
 
             if (obj.dmg.effect() != AttackEffect::None) {
-                value_ref.effect() = obj.dmg.effect();
+                hp_ref.effect() = obj.dmg.effect();
             }
             return std::optional{true};
         });
@@ -51,8 +51,8 @@ bool HealStrategy_<Default>::operator()(Healingable auto &obj, Object *owner, Ob
     auto *suspect = Whom(owner, target);
     auto is_success = get(*suspect, Parameter::Hp)
         .and_then([&](auto&& variant) {
-            Hp& value_ref = Get<Hp>(variant);
-            value_ref.value() += obj.cureHp.value();
+            Hp& hp_ref = Get<Hp>(variant);
+            hp_ref.value() += obj.cureHp.value();
             return std::optional{true};
         });
     return is_success.has_value();

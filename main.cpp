@@ -16,26 +16,36 @@ int main() {
 	backpack.emplace_back( Damaging<CustomWeapon>{ Name{"New_Custom_SWORD"}, Damage{32}} ); // became Damagingable - custom AttackStrategy_ will handle it
 	backpack.emplace_back( Damaging<DefaultWeapon>{ Name{"Default_BATTLE_SWORD"}, Damage{32}} );
 
-	// second Living and Healing will be ignored
-	auto gustav = Living<Healing<Living<Healing<Weapon>>>>{ Name{"GUSTAV_INTELIGENT_SWORD"},/*hp*/ Hp{20}};
+	
+	auto gustav = Living<Healing<Living<Healing<Weapon>>>>{ Name{"GUSTAV_INTELIGENT_SWORD"},/*hp*/ Hp{20}}; // second Living and Healing will be ignored
 	static_assert(std::is_same_v< decltype(gustav), Living<Healing<Weapon>> >);
 	gustav.name = Name{"Franco The Inteligent Sword"};
 	gustav.hp = Hp{75};
 	gustav.cureHp = Hp{30};
-	gustav.dmg = Damage{100, AttackEffect::Stun};
+	gustav.dmg = Damage{100, Effect{AttackEffect::Stun, EffectState{Duration{3, DurationType::Round}}}};
 	Object gustav_obj{gustav};
 
-	std::cout << gustav_obj.name() << '\n';
+	std::cout << '\n' << gustav_obj.name() << '\n';
+	std::cout << "get and print by labda taking const reference:\n";
 	[](const auto& obj) { // get const version
 		get(obj, Parameter::Hp).and_then(print_hp);
 		get(obj, Parameter::CureHp).and_then(print_cure_hp);
 		get(obj, Parameter::Ac).and_then(print_ac);
 		get(obj, Parameter::Damage).and_then(print_dmg);
 	} (gustav_obj);
+	std::cout << "get and print by labda taking reference:\n";
+	[](auto& obj) { // get version
+		get(obj, Parameter::Hp).and_then(print_hp);
+		get(obj, Parameter::CureHp).and_then(print_cure_hp);
+		get(obj, Parameter::Ac).and_then(print_ac);
+		get(obj, Parameter::Damage).and_then(print_dmg);
+	} (gustav_obj);
 
+	std::cout << "get and print by hidden friend function:\n";
 	get(gustav_obj, Parameter::Hp).and_then(print_hp); // get non-const version
 	get(gustav_obj, Parameter::CureHp).and_then(print_cure_hp);
 	get(gustav_obj, Parameter::Ac).and_then(print_ac); // ignored - object dont have Ac
+	std::cout << "get and print by hidden friend function forced to return const reference:\n";
 	get<const Object>(gustav_obj, Parameter::Damage).and_then(print_dmg); // force get const version
 	std::cout << '\n';
 
@@ -50,12 +60,12 @@ int main() {
 	backpack.emplace_back( Damaging<Helmet>( Name{"BATTLE_HELM"} , Damage{10}, AC{4, BodyLocation::Head}));
 	backpack.emplace_back( Helmet{ Name{"VIKING_HELM"}, AC{2, BodyLocation::Head} });
 	backpack.emplace_back( Healing<Potion>( Name{"HEALING_POTION"}, Hp{20}));
-	backpack.emplace_back( Healing<Potion>{ Name{"SMALL_HEALING_POTION"}, Hp{10}});
-	backpack.emplace_back( Protecting<Potion>( Name{"SHIELD_POTION"}, AC{4, BodyLocation::Internal}));
+	backpack.emplace_back( Healing<Potion>{ Name{"SMALL_HEALING_POTION"}, Hp{10}}); //TODO add removing effects
+	backpack.emplace_back( Protecting<Potion>( Name{"SHIELD_POTION"}, AC{4, BodyLocation::Internal, Effect{AttackEffect::Sleep}}));
 	backpack.emplace_back( Scroll{ Name{"USELESS_SCROLL"} });
 	backpack.emplace_back( Scroll{ Name{"EMPTY_SCROLL"} });
-	backpack.emplace_back( Damaging<Scroll>( Name{"SLEEP_SCROLL"}, Damage{0, AttackEffect::Sleep} )); //TODO add effects
-	backpack.emplace_back( Damaging<Healing<Scroll>>( Name{"VAMPIRIC_TOUCH_SCROLL"}, Damage{30, AttackEffect::Devour}, Hp{15}));
+	backpack.emplace_back( Damaging<Scroll>( Name{"SLEEP_SCROLL"}, Damage{0, Effect{AttackEffect::Sleep}} ));
+	backpack.emplace_back( Damaging<Healing<Scroll>>( Name{"VAMPIRIC_TOUCH_SCROLL"}, Damage{30, Effect{AttackEffect::Devour}}, Hp{15}));
 
 	Object player( Living<Player>{Name{"Knight"}, Hp{100}} );
 	print_person(player);
@@ -75,20 +85,11 @@ int main() {
 		if (auto dmg_opt = get(item, Parameter::Damage)) {
 			const Damage& damage = Get<Damage>(dmg_opt.value());
 			std::cout << " for " << damage.value() << " dmg";
-			// if (damage.effect() != AttackEffect::None) {
-			// 	effect = damage.effect();
-			// }
 		}
 		std::cout << '\n';
 		if (not item.attack(&player, &enemy)) {
 			std::cout << " attack miss "; // unusable yet
-		} 
-		// else if (effect != AttackEffect::None) {
-		// 	if(auto hp_opt = get(enemy, Parameter::Hp)) {
-		// 		Hp& hp = Get<Hp>(hp_opt.value());
-		// 		hp.effect() = effect;
-		// 	}
-		// }
+		}
 		print_person(enemy);
 	}
 	std::cout << '\n';
@@ -105,7 +106,7 @@ int main() {
 		std::cout << player.name() << " defend self with " << item.name();
 		if (auto ac_opt = get(item, Parameter::Ac)) {
 			const AC& ac = Get<AC>(ac_opt.value());
-			std::cout << " for " << ac.value() << " AC";
+			std::cout << " for " << ac.value() << " AC to " << ac.location();
 		}
 		std::cout << '\n';
 		print_person(player);
@@ -131,27 +132,44 @@ int main() {
 	}
 	std::cout << '\n';
 
-	Object franco{gustav};
+	Object log(Weapon{ Name{"Log"}, Damage{6, Effect{AttackEffect::Stun, DurationType::Round}}});
+	std::cout << "attack with " << log.name() << ":\n";
+	log.attack(&enemy_2, &player);
+	print_person(player);
+	std::cout << '\n';
 
 	print_person(enemy);
+
+
+	Object franco{gustav};
+	std::cout << "attack with " << franco.name() << ":\n";
 	franco.attack(&franco, &enemy);
 	print_person(enemy);
+	std::cout << '\n';
 
 	Object npc( Naming<Npc>{Name{"Npc"}} );
+	std::cout << "defend with " << franco.name() << ":\n";
 	franco.defend(&npc); // npc can't defend with franco - ignored
+	std::cout << '\n';
 
 	print_person(npc);
+	std::cout << "attack self with " << franco.name() << ":\n";
 	franco.attack(&npc); // npc hit himself with franco
 	print_person(npc);
+	std::cout << '\n';
 
+	std::cout << "print player and enemies:\n";
 	print_person(player);
 	print_person(enemy);
 	print_person(enemy_2); // enemy_2 dont have hp
 	std::cout << '\n';
 
+	std::cout << "print npc after healing:\n";
 	Object{Healing<Potion>{ Name{"HEALING_POTION"}, Hp{100}}}.heal(&npc);
 	print_person(npc);
+	std::cout << '\n';
 
+	std::cout << "print living items in backpack:\n";
 	for ( auto item = backpack.begin(); item != backpack.end(); ++item ) {
 		if (item->can_alive) {
 			print_person(*item);
