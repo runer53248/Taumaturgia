@@ -32,7 +32,7 @@ struct Enemy{
 	Name name;
 };
 
-struct Npc{
+struct Npc{ // don't have name 
 	Hp hp{5};
 };
 
@@ -43,7 +43,7 @@ struct DefaultWeapon {
 
 struct CustomWeapon { // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
 	Name name;
-	std::vector<DefaultWeapon> others{
+	std::vector<DefaultWeapon> others{ // will be used in AttackStrategy_<CustomWeapon>
 		DefaultWeapon{Name{"Light weapon"}, Damage{10}},
 		DefaultWeapon{Name{"Medium weapon"}, Damage{20}}
 	};
@@ -68,13 +68,13 @@ template <> struct AttackStrategy_<CustomWeapon> {
 			}
 
 			for (auto& other : obj.others) {
-				operator()(other, hp);
+				subAttacks(other, hp);
 			}
 		}
 		return true;
 	}
 
-	bool operator()(Damagingable auto& obj, Hp& hp_ref) const { // sub attacks
+	bool subAttacks(Damagingable auto& obj, Hp& hp_ref) const {
 		hp_ref.value() -= obj.dmg.value();
 
 		std::cout << "\t\t for " << obj.dmg.value() << " dmg";

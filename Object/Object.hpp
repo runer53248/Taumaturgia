@@ -11,18 +11,16 @@
 class Object {
 private:
 	struct ObjectConcept {
-        using optional_get_result = optional_get_result_type;
-        using optional_get_const_result = optional_get_const_result_type;
-
-		virtual ~ObjectConcept() = default;
+        virtual ~ObjectConcept() = default;
 
 		virtual std::string name() const = 0;
 		virtual std::optional<bool> alive() const = 0;
 		virtual bool attack(Object* owner, Object* target = nullptr) const = 0;
 		virtual bool defend(Object* owner, Object* target = nullptr) const = 0;
 		virtual bool heal(Object* owner, Object* target = nullptr) const = 0;
-        virtual optional_get_result get(Parameter param) = 0;
-        virtual optional_get_const_result get(Parameter param) const = 0;
+		virtual bool restore(Object* owner, Object* target = nullptr) const = 0;
+        virtual optional_get_variant_type get(Parameter param) = 0;
+        virtual optional_get_variant_const_type get(Parameter param) const = 0;
 	};
 
 	template <Namingable T>
@@ -36,8 +34,9 @@ private:
 		bool attack(Object* owner, Object* target) const override;
 		bool defend(Object* owner, Object* target) const override;
 		bool heal(Object* owner, Object* target) const override;
-        optional_get_result get(Parameter param) override;
-        optional_get_const_result get(Parameter param) const override;
+		bool restore(Object* owner, Object* target) const override;
+        optional_get_variant_type get(Parameter param) override;
+        optional_get_variant_const_type get(Parameter param) const override;
 
 	private:
         template <Parameter P, Gettingable G>
@@ -54,6 +53,7 @@ public:
 	const bool can_attack{};
 	const bool can_defend{};
 	const bool can_heal{};
+	const bool can_restore{};
 	const bool can_get{};
 
 	template <Namingable T> 
@@ -63,6 +63,7 @@ public:
 		can_attack{AttackStrategable<AttackStrategy, T>},
 		can_defend{DefendStrategable<DefendStrategy, T>},
 		can_heal{HealStrategable<HealStrategy, T>},
+		can_restore{RestoreStrategable<RestoreStrategy, T>},
 		can_get{GetStrategable<GetStrategy, T>} {}
 
 	std::string name() const { 
@@ -84,14 +85,19 @@ public:
 		if (not can_heal) { return false; }
         return object_->heal(owner, target);
     }
+    bool restore(Object *owner, Object *target = nullptr) const {
+		if (not can_restore) { return false; }
+        return object_->restore(owner, target);
+    }
 
     friend auto get(auto &object, Parameter param) -> decltype(object.object_->get(std::declval<Parameter>())) { // return type depends on object constness
         if (not object.can_get) { return {}; }
 
-        if (param == Parameter::Ac && not object.can_defend) { return {}; }
-        if (param == Parameter::CureHp && not object.can_heal) { return {}; }
-        if (param == Parameter::Damage && not object.can_attack) { return {}; }
-        if (param == Parameter::Hp && not object.can_alive) { return {}; }
+        if (param == Parameter::Ac and not object.can_defend) { return {}; }
+        if (param == Parameter::CureHp and not object.can_heal) { return {}; }
+        if (param == Parameter::Damage and not object.can_attack) { return {}; }
+        if (param == Parameter::Hp and not object.can_alive) { return {}; }
+        if (param == Parameter::Restore and not object.can_restore) { return {}; }
 
         return object.object_->get(param);
     }
@@ -139,7 +145,16 @@ bool Object::ObjectModel<T>::heal(Object* owner, Object* target) const {
 }
 
 template <Namingable T>
-auto Object::ObjectModel<T>::get(Parameter param) -> optional_get_result {
+bool Object::ObjectModel<T>::restore(Object* owner, Object* target) const {
+    if constexpr (RestoreStrategable<RestoreStrategy, T>) {
+        static constinit RestoreStrategy<T> restoreStrategy_{};
+        return restoreStrategy_(type_, owner, target);
+    }
+    return {};
+}
+
+template <Namingable T>
+auto Object::ObjectModel<T>::get(Parameter param) -> optional_get_variant_type {
     if constexpr (GetStrategable<GetStrategy, T>) {
         return get_impl(type_, param);
     }
@@ -147,7 +162,7 @@ auto Object::ObjectModel<T>::get(Parameter param) -> optional_get_result {
 }
 
 template <Namingable T>
-auto Object::ObjectModel<T>::get(Parameter param) const -> optional_get_const_result {
+auto Object::ObjectModel<T>::get(Parameter param) const -> optional_get_variant_const_type {
     if constexpr (GetStrategable<GetStrategy, T>) {
         return get_impl(type_, param);
     }
@@ -165,8 +180,8 @@ template<Namingable T>
 auto Object::ObjectModel<T>::get_impl(Gettingable auto& type, Parameter param) const {
     using result_type = std::conditional_t<
         std::is_const_v<std::remove_reference_t<decltype(type)>>,
-        optional_get_const_result,
-        optional_get_result>;
+        optional_get_variant_const_type,
+        optional_get_variant_type>;
 
     switch (param) { 
         case Parameter::Ac:
@@ -177,7 +192,9 @@ auto Object::ObjectModel<T>::get_impl(Gettingable auto& type, Parameter param) c
             return get_impl<Parameter::Hp>(type);
         case Parameter::CureHp:
             return get_impl<Parameter::CureHp>(type);
+        case Parameter::Restore:
+            return get_impl<Parameter::Restore>(type);
         default:
-            return result_type{}; 
+            return result_type{};
     };
 }

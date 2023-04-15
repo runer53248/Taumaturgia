@@ -27,27 +27,32 @@ auto& operator<<(std::ostream& out, BodyLocation location) {
 }
 
 auto print_hp = [](const auto& value) {
-    if constexpr (not std::is_same_v<std::remove_cvref_t<decltype(value)>, get_const_result_type>) {
+    if constexpr (not std::is_same_v<std::remove_cvref_t<decltype(value)>, get_variant_const_type>) {
         std::cout << "[&]"; // value is reference_wraper to non const type - can be changed
     }
     const Hp& hp = Get<Hp>(value);
     std::cout << "(Hp: " << hp.value() << ")";
-    if (hp.effect() != AttackEffect::None) {
-        switch(hp.effect().effect()){
-            case AttackEffect::Sleep:
-                std::cout << " [sleep effect]";
-                break;
-            case AttackEffect::Devour:
-                std::cout << " [devour]";
-                break;
-            case AttackEffect::Stun:
-                std::cout << " [stunned]";
-                break;
-            default:
-                break;
-        }
-        if (hp.effect().duration().type == DurationType::Round) {
-            std::cout << " (" << hp.effect().duration().value << " rounds) ";
+    if (not hp.effects().empty()) {
+        for (const auto& effect : hp.effects()) {
+            switch(effect.effectType()){
+                case EffectType::Sleep:
+                    std::cout << " [sleep effect]";
+                    break;
+                case EffectType::Devour:
+                    std::cout << " [devour]";
+                    break;
+                case EffectType::Stun:
+                    std::cout << " [stunned]";
+                    break;
+                default:
+                    break;
+            }
+            if (effect.duration().type() == DurationType::Round) {
+                std::cout << " (" << effect.duration().value() << " rounds) ";
+            }
+            if (effect.duration().type() == DurationType::Instant) {
+                std::cout << " (" << effect.duration().value() << " instant) ";
+            }
         }
     }
 
@@ -55,7 +60,7 @@ auto print_hp = [](const auto& value) {
     return std::optional{true};
 };
 auto print_cure_hp = [](const auto& value) {
-    if constexpr (not std::is_same_v<std::remove_cvref_t<decltype(value)>, get_const_result_type>) {
+    if constexpr (not std::is_same_v<std::remove_cvref_t<decltype(value)>, get_variant_const_type>) {
         std::cout << "[&]";
     }
     const Hp& cureHp = Get<Hp>(value);
@@ -63,7 +68,7 @@ auto print_cure_hp = [](const auto& value) {
     return std::optional{true};
 };
 auto print_ac = [](const auto& value) {
-    if constexpr (not std::is_same_v<std::remove_cvref_t<decltype(value)>, get_const_result_type>) {
+    if constexpr (not std::is_same_v<std::remove_cvref_t<decltype(value)>, get_variant_const_type>) {
         std::cout << "[&]";
     }
     const AC& ac = Get<AC>(value);
@@ -71,7 +76,7 @@ auto print_ac = [](const auto& value) {
     return std::optional{true};
 };
 auto print_dmg = [](const auto& value) {
-    if constexpr (not std::is_same_v<std::remove_cvref_t<decltype(value)>, get_const_result_type>) {
+    if constexpr (not std::is_same_v<std::remove_cvref_t<decltype(value)>, get_variant_const_type>) {
         std::cout << "[&]";
     }
     const Damage& damage = Get<Damage>(value);

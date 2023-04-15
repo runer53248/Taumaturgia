@@ -1,6 +1,7 @@
 #pragma once
-#include "Alive.hpp"
-#include "Attack.hpp"
-#include "Defend.hpp"
-#include "Get.hpp"
-#include "Heal.hpp"
+#include "AliveStrategy.hpp"
+#include "AttackStrategy.hpp"
+#include "DefendStrategy.hpp"
+#include "GetStrategy.hpp"
+#include "HealStrategy.hpp"
+#include "RestoreStrategy.hpp"

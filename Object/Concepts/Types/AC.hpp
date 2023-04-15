@@ -1,33 +1,27 @@
 #pragma once
+#include "Enums/BodyLocation.hpp"
 #include <array>
 #include <numeric>
 
-enum class BodyLocation {
-    Head,
-    Body,
-    Arms,
-    Legs,
-    Internal,
-    ALL // used as number of elements for array and as special value to accumulate values from it
-};
-
 struct AC {
-    AC() = default;
-    explicit AC(int value) {
+    constexpr AC() noexcept = default;
+    constexpr explicit AC(int value) noexcept {
         values_.at(static_cast<size_t>(location_)) = value;
     }
-    AC(int value, BodyLocation location) : location_{location} {
+    constexpr AC(int value, BodyLocation location) noexcept : location_{location} {
         if (location_ == BodyLocation::ALL) { // value ignored
             return;
         }
         values_.at(static_cast<size_t>(location_)) = value;
     }
-    AC(int value, BodyLocation location, Effect effect) : location_{location}, effect_{effect} {
+    constexpr AC(int value, BodyLocation location, Effect effect) noexcept : location_{location}, effect_{effect} {
         if (location_ == BodyLocation::ALL) { // value ignored
             return;
         }
         values_.at(static_cast<size_t>(location_)) = value;
     }
+
+    auto operator<=>(const AC& other) const noexcept = default;
 
     auto value() const {
         if (location_ == BodyLocation::ALL) {
@@ -35,18 +29,17 @@ struct AC {
         }
         return values_.at(static_cast<size_t>(location_));
     }
-    auto& value(BodyLocation location) { 
+    auto& value(BodyLocation location) noexcept { 
         return values_.at(static_cast<size_t>(location));
     }
-    auto value(BodyLocation location) const { 
+    auto value(BodyLocation location) const noexcept { 
         return values_.at(static_cast<size_t>(location));
     }
 
-    auto location() const { return location_; }
-    auto& effect() { return effect_; }
-    auto effect() const { return effect_; }
+    auto location() const noexcept { return location_; }
 
-    auto operator<=>(const AC& rhs) const = default;
+    auto& effect() noexcept { return effect_; }
+    auto effect() const noexcept { return effect_; }
 
 private:
     std::array<int, static_cast<size_t>(BodyLocation::ALL)> values_{};

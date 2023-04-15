@@ -1,6 +1,6 @@
 #pragma once
 #include "../Concepts/Namingable.hpp"
-#include "../Strategies/Defend.hpp"
+#include "../Strategies/DefendStrategy.hpp"
 
 template <typename T>
 struct Protecting_: T {

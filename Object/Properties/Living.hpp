@@ -1,6 +1,6 @@
 #pragma once
 #include "../Concepts/Namingable.hpp"
-#include "../Strategies/Alive.hpp"
+#include "../Strategies/AliveStrategy.hpp"
 
 template <typename T>
 struct Living_: T {

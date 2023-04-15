@@ -1,40 +1,10 @@
 #pragma once
-
-enum class AttackEffect {
-    None,
-    Slow,
-    Paralyze,
-    Stun,
-    Daze,
-    Dazzle,
-    Sleep,
-    Bleed,
-    Burn,
-    Shock,
-    Freeze,
-    Poison,
-    Infection,
-    Contagion,
-    Smite,
-    Devour,
-    Petryfy
-};
-
-enum class DurationType : size_t {
-    Instant = 0,
-    Action = 1,
-    Round = 2,
-    Minute = 20,
-    Hour = 1200,
-    Day = 28'800
-};
-
-enum class EffectStatus {
-    Inactive,
-    Active,
-    Removed,
-    Ended
-};
+#include <vector>
+#include <stdexcept>
+#include "Duration.hpp"
+#include "State.hpp"
+#include "Enums/EffectType.hpp"
+#include "Enums/EffectState.hpp"
 
 // enum class EffectStatusModifier {
 //     Suspended,
@@ -42,117 +12,64 @@ enum class EffectStatus {
 //     Removed
 // };
 
-struct Duration {
-    size_t value{1};
-    DurationType type{DurationType::Round};
-
-    auto operator<=>(const Duration& rhs) const = default;
-};
-
-struct EffectState {
-    Duration duration{};
-    EffectStatus status{EffectStatus::Inactive};
-
-    auto operator<=>(const EffectState& rhs) const = default;
-};
-
 // struct StatusModifier {
 //     Duration duration{};
 //     EffectStatusModifier status{EffectStatusModifier::Suspended};
 // };
 
 struct Effect {
-    Effect() = default;
-    explicit Effect(AttackEffect effect) : effect_{effect}, state_{Duration{1, DurationType::Round}} {}
-    Effect(AttackEffect effect, DurationType durationType) : effect_{effect}, state_{Duration{1, durationType}} {}
-    Effect(AttackEffect effect, EffectState state) : effect_{effect}, state_{state} {}
+    constexpr Effect() noexcept = default;
+    constexpr Effect(EffectType attackEffect, Duration duration, State state) noexcept : effectType_{attackEffect}, duration_{duration}, state_{state} {}
+    constexpr Effect(EffectType attackEffect, DurationType durationType) noexcept : Effect{attackEffect, Duration{1, durationType}, State{EffectState::Inactive}} {}
+    constexpr Effect(EffectType attackEffect, Duration duration) noexcept : Effect{attackEffect, duration, State{EffectState::Inactive}} {}
+    constexpr Effect(EffectType attackEffect, State state) noexcept : effectType_{attackEffect}, duration_{Duration{1, DurationType::Round}}, state_{state} {}
+    constexpr explicit Effect(EffectType attackEffect) noexcept : effectType_{attackEffect} {}
 
-    auto& effect() { return effect_; }
-    auto effect() const { return effect_; }
+    auto operator<=>(const Effect& other) const noexcept = default;
+    bool operator==(const Effect& other) const noexcept = default;
+    constexpr bool operator==(const EffectType& other) const noexcept {
+        return effectType_ == other;
+    }
+    constexpr bool operator==(const EffectState& other) const noexcept {
+        return state_ == State{other};
+    }
+    constexpr bool operator==(const State& other) const noexcept {
+        return state_ == other;
+    }
+    constexpr bool operator==(const Duration& other) const noexcept {
+        return duration_ == other;
+    }
+
+    auto& effectType() noexcept { return effectType_; }
+    auto effectType() const noexcept { return effectType_; }
     
-    auto& status() { return state_.status; }
-    auto status() const { return state_.status; }
+    auto& state() noexcept { return state_; }
+    auto state() const noexcept { return state_; }
 
-    auto& duration() { return state_.duration; }
-    auto duration() const { return state_.duration; }
+    auto& duration() noexcept { return duration_; }
+    auto duration() const noexcept { return duration_; }
 
-    void activate() {
-        if (state_.status == EffectStatus::Inactive) {
-            state_.status = EffectStatus::Active;
-        }
-    }
-    void timePass(Duration time = {}) {
-        size_t time_left = static_cast<size_t>(state_.duration.type) * state_.duration.value;
-        size_t time_pass = static_cast<size_t>(time.type) * time.value;
-
-        if (time_pass >= time_left) {
-            state_.duration.value = 0;
-            state_.status = EffectStatus::Ended;
-            return;
-        }
-
-        if (state_.duration.type == time.type) {
-            state_.duration.value -= time.value;
-            return;
-        }
-
-        time_left -= time_pass;
-        if (time_left % static_cast<size_t>(DurationType::Day) == 0) {
-            state_.duration.type = DurationType::Day;
-            state_.duration.value = time_left / static_cast<size_t>(DurationType::Day);
-            return;
-        }
-        if (time_left % static_cast<size_t>(DurationType::Hour) == 0) {
-            state_.duration.type = DurationType::Hour;
-            state_.duration.value = time_left / static_cast<size_t>(DurationType::Hour);
-            return;
-        }
-        if (time_left % static_cast<size_t>(DurationType::Minute) == 0) {
-            state_.duration.type = DurationType::Minute;
-            state_.duration.value = time_left / static_cast<size_t>(DurationType::Minute);
-            return;
-        }
-        if (time_left % static_cast<size_t>(DurationType::Round) == 0) {
-            state_.duration.type = DurationType::Round;
-            state_.duration.value = time_left / static_cast<size_t>(DurationType::Round);
-            return;
-        }
-        if (time_left % static_cast<size_t>(DurationType::Action) == 0) {
-            state_.duration.type = DurationType::Action;
-            state_.duration.value = time_left / static_cast<size_t>(DurationType::Action);
-            return;
-        }
-        throw std::logic_error("undefined effect duration.");
+    bool isActive() const noexcept {
+        return state_.state() == EffectState::Active;
     }
 
-    auto operator<=>(const Effect& rhs) const = default;
-    auto operator==(const AttackEffect& rhs) const {
-        return effect_ == rhs;
+    bool activate() noexcept {
+        if (state_.state() == EffectState::Inactive) {
+            state_.state() = EffectState::Active;
+            return true;
+        }
+        return false;
     }
-    auto operator==(const EffectStatus& rhs) const {
-        return state_.status == rhs;
+
+    void timePass(Duration time = {}) noexcept {
+        if (duration_.timePass(time)) {
+            state_.end();
+        }
     }
 
 private:
-    AttackEffect effect_{AttackEffect::None};
-    EffectState state_{Duration{0, DurationType::Instant}};
+    EffectType effectType_{EffectType::None};
+    Duration duration_{0, DurationType::Instant};
+    State state_{EffectState::Inactive};
     // std::vector<StatusModifier> statusMod_{};
 };
-
-// struct EffectContainer {
-
-// private:
-//     std::vector<Effect> effects_{};
-// };
-
-// struct Area{};
-// struct WayPoint{};
-// struct Encounter{};
-// struct Trigger{};
-// struct Hilites{};
-// struct Placeable{
-//     bool useable;
-//     bool have_inventory;
-//     bool have_trap;
-//     bool have_lock;
-// };

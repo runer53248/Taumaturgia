@@ -1,6 +1,6 @@
 #pragma once
 #include "../Concepts/Namingable.hpp"
-#include "../Strategies/Heal.hpp"
+#include "../Strategies/HealStrategy.hpp"
 
 template <typename T>
 struct Healing_: T {

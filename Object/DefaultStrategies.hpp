@@ -22,8 +22,8 @@ bool AttackStrategy_<Default>::operator()(Damagingable auto &obj, Object *owner,
             Hp& hp_ref = Get<Hp>(variant);
             hp_ref.value() -= obj.dmg.value();
 
-            if (obj.dmg.effect() != AttackEffect::None) {
-                hp_ref.effect() = obj.dmg.effect();
+            if (obj.dmg.effect() != EffectType::None) {
+                hp_ref.effects().addEffectType(obj.dmg.effect());
             }
             return std::optional{true};
         });
@@ -58,12 +58,31 @@ bool HealStrategy_<Default>::operator()(Healingable auto &obj, Object *owner, Ob
     return is_success.has_value();
 }
 
+bool RestoreStrategy_<Default>::operator()(Restoringable auto &obj, Object *owner, Object *target) const {
+    if (not owner) {
+        return false;
+    }
+    auto *suspect = Whom(owner, target);
+    auto is_success = get(*suspect, Parameter::Hp)
+        .and_then([&](auto&& variant) {
+            Hp& hp_ref = Get<Hp>(variant);
+
+            if (auto& suspect_effects = hp_ref.effects(); not suspect_effects.empty()) {
+                for (const auto& restoreEffect : obj.restoreEffects) {
+                    suspect_effects.removeEffectType(restoreEffect);
+                }
+            }
+            return std::optional{true};
+        });
+    return is_success.has_value();
+}
+
 template <Parameter P>
 auto GetStrategy_<Default>::operator()(Gettingable auto& obj) const {
     using result_type = std::conditional_t<
 		std::is_const_v<std::remove_reference_t<decltype(obj)>>,
-		optional_get_const_result_type,
-		optional_get_result_type>;
+		optional_get_variant_const_type,
+		optional_get_variant_type>;
 
     using type = std::remove_reference_t<decltype(obj)>;
     if constexpr (P == Parameter::Hp) {
@@ -84,6 +103,11 @@ auto GetStrategy_<Default>::operator()(Gettingable auto& obj) const {
     if constexpr (P == Parameter::Damage) {
         if constexpr (Damagingable<type>) {
             return result_type{std::ref(obj.dmg)};
+        }
+    }
+    if constexpr (P == Parameter::Restore) {
+        if constexpr (Restoringable<type>) {
+            return result_type{std::ref(obj.restoreEffects)};
         }
     }
     return result_type{};

@@ -1,6 +1,6 @@
 #pragma once
 #include "../Concepts/Namingable.hpp"
-#include "../Strategies/Attack.hpp"
+#include "../Strategies/AttackStrategy.hpp"
 
 template <typename T>
 struct Damaging_: T {
