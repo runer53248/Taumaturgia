@@ -1,7 +1,6 @@
 #include "Object/Object.hpp"
 #include "Object/DefaultStrategies.hpp"
 #include "Object/Properties/Properties.hpp"
-#include <iostream>
 #include <vector>
 
 #include "structs.hpp"
@@ -27,25 +26,40 @@ int main() {
 	std::cout << '\n' << gustav_obj.name() << '\n';
 	std::cout << "get and print by labda taking const reference:\n";
 	[](const auto& obj) { // get version passing const reference
-		get(obj, Parameter::Hp).and_then(print_hp);
-		get(obj, Parameter::CureHp).and_then(print_cure_hp);
-		get(obj, Parameter::Ac).and_then(print_ac);
-		get(obj, Parameter::Damage).and_then(print_dmg);
-	} (gustav_obj);
-	std::cout << "get and print by labda taking reference:\n";
-	[](auto& obj) { // get version passing reference
-		get(obj, Parameter::Hp).and_then(print_hp);
-		get(obj, Parameter::CureHp).and_then(print_cure_hp);
-		get(obj, Parameter::Ac).and_then(print_ac);
-		get(obj, Parameter::Damage).and_then(print_dmg);
+		getOpt<Parameter::Hp>(obj).and_then(print_hp);
+		std::cout << '\n';
+		getOpt<Parameter::CureHp>(obj).and_then(print_cure_hp);
+		std::cout << '\n';
+		// getOpt<Parameter::Ac>(obj).and_then(print_ac); // ignored - object dont have Ac
+		// std::cout << '\n';
+		getOpt<Parameter::Damage>(obj).and_then(print_dmg);
+		std::cout << '\n';
 	} (gustav_obj);
 
+	std::cout << '\n';
+	std::cout << "get and print by labda taking reference:\n";
+	[](auto& obj) { // get version passing reference
+		getOpt<Parameter::Hp>(obj).and_then(print_hp);
+		std::cout << '\n';
+		getOpt<Parameter::CureHp>(obj).and_then(print_cure_hp);
+		std::cout << '\n';
+		// getOpt<Parameter::Ac>(obj).and_then(print_ac); // ignored - object dont have Ac
+		// std::cout << '\n';
+		getOpt<Parameter::Damage>(obj).and_then(print_dmg);
+		std::cout << '\n';
+	} (gustav_obj);
+
+	std::cout << '\n';
 	std::cout << "get and print by hidden friend function:\n";
-	get(gustav_obj, Parameter::Hp).and_then(print_hp); // get version passing reference
-	get(gustav_obj, Parameter::CureHp).and_then(print_cure_hp);
-	get(gustav_obj, Parameter::Ac).and_then(print_ac); // ignored - object dont have Ac
+	getOpt<Parameter::Hp>(gustav_obj).and_then(print_hp); // get version passing reference
+	std::cout << '\n';
+	getOpt<Parameter::CureHp>(gustav_obj).and_then(print_cure_hp);
+	std::cout << '\n';
+	// getOpt<Parameter::Ac>(gustav_obj).and_then(print_ac); // ignored - object dont have Ac
+	// std::cout << '\n';
 	std::cout << "get and print by hidden friend function forced to return const reference:\n";
-	get<const Object>(gustav_obj, Parameter::Damage).and_then(print_dmg); // force get version passing const reference
+	getOpt<Parameter::Damage, const Object>(gustav_obj).and_then(print_dmg); // force get version passing const reference
+	std::cout << '\n';
 	std::cout << '\n';
 
 	backpack.push_back( std::move(gustav_obj) );
@@ -56,34 +70,36 @@ int main() {
 
 	backpack.emplace_back( Armor{ Name{"CHAIN_MAIL"}, AC{8, BodyLocation::Body}});
 	backpack.emplace_back( Protecting<Armor>{ Name{"HALF_PLATE"}, AC{12}});
-	backpack.emplace_back( Damaging<Helmet>( Name{"BATTLE_HELM"} , Damage{10}, AC{4, BodyLocation::Head}));
-	backpack.emplace_back( Helmet{ Name{"VIKING_HELM"}, AC{2, BodyLocation::Head} });
+	backpack.emplace_back( Damaging<Helmet>( Name{"BATTLE_HELM"} , Damage{10}, AC{4, BodyLocation::Head, {EffectType::Daze}}));
+	backpack.emplace_back( Helmet{ Name{"VIKING_HELM"}, AC{2, BodyLocation::Head, {EffectType::Stun}} });
 	backpack.emplace_back( Healing<Potion>( Name{"HEALING_POTION"}, Hp{20}));
 	backpack.emplace_back( Healing<Potion>{ Name{"SMALL_HEALING_POTION"}, Hp{10}}); //TODO add removing effects
-	backpack.emplace_back( Protecting<Potion>( Name{"SHIELD_POTION"}, AC{4, BodyLocation::Internal, Effect{EffectType::Sleep}}));
+	backpack.emplace_back( Protecting<Potion>( Name{"SHIELD_POTION"}, AC{4, BodyLocation::Internal, EffectType::Sleep}));
 	backpack.emplace_back( Scroll{ Name{"USELESS_SCROLL"} });
 	backpack.emplace_back( Scroll{ Name{"EMPTY_SCROLL"} });
+	backpack.emplace_back( Restoring<Scroll>{ Name{"AWAKE_SCROLL"}, {EffectType::Sleep}});
 	backpack.emplace_back( Damaging<Scroll>( Name{"SLEEP_SCROLL"}, Damage{0, Effect{EffectType::Sleep}} ));
 	backpack.emplace_back( Damaging<Healing<Scroll>>( Name{"VAMPIRIC_TOUCH_SCROLL"}, Damage{30, Effect{EffectType::Devour}}, Hp{15}));
 
 	Object player( Living<Player>{Name{"Knight"}, Hp{100}} );
 	print_person(player);
+
 	Object enemy( Living<Enemy>{Name{"Ogr"}, Hp{180}} );
 	print_person(enemy);
+
 	Object enemy_2( Enemy{Name{"Ogr 2"}} );
 	print_person(enemy_2);
 	std::cout << "\n\n";
 
-	std::cout << "Items I can attack with:\n\n";
+	Object{Damaging<Scroll>{Name{"SLEEP_SCROLL"}, Damage{0, Effect{EffectType::Sleep}}}}.attack(&player);
+
+	std::cout << "Items I can attack with:  //////////////////////////////\n\n";
 	for (const auto& item : backpack) {
 		if (not item.can_attack) {
 			continue;
 		}
 		std::cout << player.name() << " attack " << enemy.name() << " with " << item.name();
-		if (auto dmg_opt = get(item, Parameter::Damage)) {
-			const Damage& damage = Get<Damage>(dmg_opt.value());
-			std::cout << " for " << damage.value() << " dmg";
-		}
+		getOpt<Parameter::Damage>(item).and_then(print_dmg);
 		std::cout << '\n';
 		if (not item.attack(&player, &enemy)) {
 			std::cout << " attack miss "; // unusable yet
@@ -92,7 +108,7 @@ int main() {
 	}
 	std::cout << '\n';
 
-	std::cout << "Items I can defend with:\n\n";
+	std::cout << "Items I can defend with:  //////////////////////////////\n\n";
 	for (const auto& item : backpack) {
 		if (not item.can_defend) {
 			continue;
@@ -102,16 +118,30 @@ int main() {
 		}
 
 		std::cout << player.name() << " defend self with " << item.name();
-		if (auto ac_opt = get(item, Parameter::Ac)) {
-			const AC& ac = Get<AC>(ac_opt.value());
-			std::cout << " for " << ac.value() << " AC to " << ac.location();
-		}
+		getOpt<Parameter::Ac>(item).and_then(print_ac);
 		std::cout << '\n';
 		print_person(player);
 	}
 	std::cout << '\n';
 
-	std::cout << "Items I can heal with:\n\n";
+	std::cout << "Items I can restore with:  //////////////////////////////\n\n";
+	for (const auto& item : backpack) {
+		if (not item.can_restore) {
+			continue;
+		}
+		if (not item.restore(&player, &player)) {
+			std::cout << " restoration don't work "; // unusable yet
+		}
+
+		std::cout << player.name() << " restore self with " << item.name();
+		// get(item, Parameter::Restore).and_then(print_restore);
+		getOpt<Parameter::Restore>(item).and_then(print_restore); // same
+		std::cout << '\n';
+		print_person(player);
+	}
+	std::cout << '\n';
+
+	std::cout << "Items I can heal with:  //////////////////////////////\n\n";
 	for (const auto& item : backpack) {
 		if (not item.can_heal) {
 			continue;
@@ -121,17 +151,18 @@ int main() {
 		}
 
 		std::cout << player.name() << " heal self with " << item.name();
-		if (auto cureHp_opt = get(item, Parameter::CureHp)) {
-			const Hp& cureHp = Get<Hp>(cureHp_opt.value());
+		if (auto cureHp_opt = getOpt<Parameter::CureHp>(item)) {
+			const Hp& cureHp = cureHp_opt.value();
 			std::cout << " for " << cureHp.value() << " Hp";
 		}
 		std::cout << '\n';
 		print_person(player);
 	}
-	std::cout << '\n';
+	std::cout << "\n//////////////////////////////\n\n";
 
+	print_person(player);
 	Object log(Weapon{ Name{"Log"}, Damage{6, Effect{EffectType::Stun, Duration{1, DurationType::Round}} }} );
-	std::cout << "attack with " << log.name() << ":\n";
+	std::cout << "attack with Stunning " << log.name() << " (have protection):\n";
 	log.attack(&enemy_2, &player);
 	print_person(player);
 	std::cout << '\n';
@@ -189,28 +220,31 @@ int main() {
 	std::cout << '\n';
 	std::cout << "print potion restore effects:\n";
 	Object restore_potion{Restoring<Potion>{ Name{"Stun restore potion"}, {EffectType::Stun, EffectType::Daze, EffectType::Infection, EffectType::Poison}}};
-	get(restore_potion, Parameter::Restore).and_then([](auto&& param) {
-		auto& effects = Get<EffectTypeContainer>(param);
-		for (const auto& effect : effects) {
-			switch(effect){
-				case EffectType::Sleep:
-					std::cout << " [sleep]";
-					break;
-				case EffectType::Daze:
-					std::cout << " [Daze]";
-					break;
-				case EffectType::Devour:
-					std::cout << " [devour]";
-					break;
-				case EffectType::Stun:
-					std::cout << " [stunned]";
-					break;
-				default:
-					std::cout << " [unknown]";
-					break;
-			}
-		}
-		return std::optional<bool>{true};
+	getOpt<Parameter::Restore>(restore_potion).and_then(print_restore);
+	std::cout << '\n' << '\n';
+
+	print_object_properties(restore_potion);
+	print_object_properties(player);
+	print_object_properties(franco);
+	std::cout << '\n';
+
+	print_object(franco);
+	std::cout << '\n';
+
+	getOpt<Parameter::Hp>(player).and_then([](Hp& hp){
+		std::cout << hp.value() << '\n';
+		hp.value() = 100;
+		return std::optional<bool>(true);
+	});
+	getOpt<Parameter::Hp>(player).and_then([](auto hp_ref_wrap){
+		std::cout << hp_ref_wrap.get().value() << '\n';
+		return std::optional<bool>(true);
+	});
+
+	const Object potion{Healing<Potion>{ Name{"HEALING_POTION"}, Hp{75}}};
+	getOpt<Parameter::CureHp>(potion).and_then([](const Hp cure){
+		std::cout << cure.value() << '\n';
+		return std::optional<bool>(true);
 	});
 
 	return 0;

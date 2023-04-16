@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 struct Armor {
  	Name name;
@@ -59,26 +60,24 @@ template <> struct AttackStrategy_<CustomWeapon> {
 			return false;
 		}
 		auto *suspect = Whom(owner, target);
-		auto hp_opt = get(*suspect, Parameter::Hp);
-
+		auto hp_opt = getOpt<Parameter::Hp>(*suspect);
 		if (hp_opt) {
-			Hp& hp = Get<Hp>(hp_opt.value());
+			Hp& hp = hp_opt.value();
 			if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) { // when got Damagingable property
 				hp.value() -= obj.dmg.value();
 			}
 
 			for (auto& other : obj.others) {
-				subAttacks(other, hp);
+				hp.value() -= other.dmg.value();
+
+				subAttacks(other);
 			}
 		}
 		return true;
 	}
 
-	bool subAttacks(Damagingable auto& obj, Hp& hp_ref) const {
-		hp_ref.value() -= obj.dmg.value();
-
-		std::cout << "\t\t for " << obj.dmg.value() << " dmg";
-		std::cout << " with " << static_cast<std::string>(obj.name) << '\n';
+	bool subAttacks(Damagingable auto& obj) const {
+		std::cout << "\t\t " << obj << "\n";
 		return true;
 	}
 };

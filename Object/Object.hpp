@@ -8,6 +8,11 @@
 #include <experimental/propagate_const>
 #include <functional>
 
+class Object;
+
+template <typename T>
+concept Objected = std::same_as<T, Object> or std::same_as<T, const Object>;
+
 class Object {
 private:
 	struct ObjectConcept {
@@ -15,12 +20,12 @@ private:
 
 		virtual std::string name() const = 0;
 		virtual std::optional<bool> alive() const = 0;
-		virtual bool attack(Object* owner, Object* target = nullptr) const = 0;
-		virtual bool defend(Object* owner, Object* target = nullptr) const = 0;
-		virtual bool heal(Object* owner, Object* target = nullptr) const = 0;
-		virtual bool restore(Object* owner, Object* target = nullptr) const = 0;
-        virtual optional_get_variant_type get(Parameter param) = 0;
-        virtual optional_get_variant_const_type get(Parameter param) const = 0;
+		virtual bool attack(Object* owner, Object* targe) const = 0;
+		virtual bool defend(Object* owner, Object* target) const = 0;
+		virtual bool heal(Object* owner, Object* target) const = 0;
+		virtual bool restore(Object* owner, Object* target) const = 0;
+        virtual constexpr get_optional_variant_type get(Parameter param) = 0;
+        virtual constexpr get_optional_variant_const_type get(Parameter param) const = 0;
 	};
 
 	template <Namingable T>
@@ -35,13 +40,13 @@ private:
 		bool defend(Object* owner, Object* target) const override;
 		bool heal(Object* owner, Object* target) const override;
 		bool restore(Object* owner, Object* target) const override;
-        optional_get_variant_type get(Parameter param) override;
-        optional_get_variant_const_type get(Parameter param) const override;
+        constexpr get_optional_variant_type get(Parameter param) override;
+        constexpr get_optional_variant_const_type get(Parameter param) const override;
 
 	private:
         template <Parameter P, Gettingable G>
         inline constexpr auto get_impl(G& type) const;
-        inline auto get_impl(Gettingable auto& type, Parameter param) const;
+        inline constexpr auto get_impl(Gettingable auto& type, Parameter param) const;
 
 		T type_;
 	};
@@ -90,16 +95,72 @@ public:
         return object_->restore(owner, target);
     }
 
-    friend auto get(auto &object, Parameter param) -> decltype(object.object_->get(std::declval<Parameter>())) { // return type depends on object constness
+    template<Parameter param>
+    friend constexpr auto getOptVariant(Objected auto &object) -> decltype(object.object_->get(std::declval<Parameter>())) { // return type depends on object constness
         if (not object.can_get) { return {}; }
 
-        if (param == Parameter::Ac and not object.can_defend) { return {}; }
-        if (param == Parameter::CureHp and not object.can_heal) { return {}; }
-        if (param == Parameter::Damage and not object.can_attack) { return {}; }
-        if (param == Parameter::Hp and not object.can_alive) { return {}; }
-        if (param == Parameter::Restore and not object.can_restore) { return {}; }
-
+        if constexpr (param == Parameter::Ac) {
+            if (not object.can_defend) {
+                return {};
+            }
+        } else if constexpr (param == Parameter::CureHp) {
+            if (not object.can_heal) {
+                return {};
+            }
+        } else if constexpr (param == Parameter::Damage) {
+            if (not object.can_attack) {
+                return {};
+            }
+        } else if constexpr (param == Parameter::Hp) {
+            if (not object.can_alive) {
+                return {};
+            }
+        } else if constexpr (param == Parameter::Restore) {
+            if (not object.can_restore){
+                return {};
+            }
+        }
         return object.object_->get(param);
+    }
+    
+    template<Parameter param, Objected T>
+    friend constexpr auto getOpt(T &object) {
+        auto opt_variant = getOptVariant<param>(object);
+
+        if constexpr (param == Parameter::Hp or param == Parameter::CureHp) {
+            using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
+                const Hp, Hp>;
+            using return_type = std::reference_wrapper<type>;
+
+            return opt_variant.transform([](auto var_ref){ // transform variant of reference_wrapper to reference_wrapper of type
+                return std::get<return_type>(var_ref);
+            });
+
+        } else if constexpr (param == Parameter::Damage) {
+            using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
+                const Damage, Damage>;
+            using return_type = std::reference_wrapper<type>;
+
+            return opt_variant.transform([](auto var_ref){
+                return std::get<return_type>(var_ref);
+            });
+        } else if constexpr (param == Parameter::Ac) {
+            using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
+                const AC, AC>;
+            using return_type = std::reference_wrapper<type>;
+
+            return opt_variant.transform([](auto var_ref){
+                return std::get<return_type>(var_ref);
+            });
+        } else if constexpr (param == Parameter::Restore) {
+            using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
+                const EffectTypeContainer, EffectTypeContainer>;
+            using return_type = std::reference_wrapper<type>;
+
+            return opt_variant.transform([](auto var_ref){
+                return std::get<return_type>(var_ref);
+            });
+        }
     }
 };
 
@@ -154,7 +215,7 @@ bool Object::ObjectModel<T>::restore(Object* owner, Object* target) const {
 }
 
 template <Namingable T>
-auto Object::ObjectModel<T>::get(Parameter param) -> optional_get_variant_type {
+constexpr auto Object::ObjectModel<T>::get(Parameter param) -> get_optional_variant_type {
     if constexpr (GetStrategable<GetStrategy, T>) {
         return get_impl(type_, param);
     }
@@ -162,7 +223,7 @@ auto Object::ObjectModel<T>::get(Parameter param) -> optional_get_variant_type {
 }
 
 template <Namingable T>
-auto Object::ObjectModel<T>::get(Parameter param) const -> optional_get_variant_const_type {
+constexpr auto Object::ObjectModel<T>::get(Parameter param) const -> get_optional_variant_const_type {
     if constexpr (GetStrategable<GetStrategy, T>) {
         return get_impl(type_, param);
     }
@@ -177,11 +238,11 @@ constexpr auto Object::ObjectModel<T>::get_impl(G& type) const { // call const o
 }
 
 template<Namingable T>
-auto Object::ObjectModel<T>::get_impl(Gettingable auto& type, Parameter param) const {
+constexpr auto Object::ObjectModel<T>::get_impl(Gettingable auto& type, Parameter param) const {
     using result_type = std::conditional_t<
         std::is_const_v<std::remove_reference_t<decltype(type)>>,
-        optional_get_variant_const_type,
-        optional_get_variant_type>;
+        get_optional_variant_const_type,
+        get_optional_variant_type>;
 
     switch (param) { 
         case Parameter::Ac:

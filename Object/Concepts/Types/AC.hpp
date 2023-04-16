@@ -1,20 +1,21 @@
 #pragma once
 #include "Enums/BodyLocation.hpp"
+#include "EffectTypeContainer.hpp"
 #include <array>
 #include <numeric>
 
 struct AC {
-    constexpr AC() noexcept = default;
-    constexpr explicit AC(int value) noexcept {
+    AC() noexcept = default;
+    explicit AC(int value) noexcept {
         values_.at(static_cast<size_t>(location_)) = value;
     }
-    constexpr AC(int value, BodyLocation location) noexcept : location_{location} {
+    AC(int value, BodyLocation location) noexcept : location_{location} {
         if (location_ == BodyLocation::ALL) { // value ignored
             return;
         }
         values_.at(static_cast<size_t>(location_)) = value;
     }
-    constexpr AC(int value, BodyLocation location, Effect effect) noexcept : location_{location}, effect_{effect} {
+    AC(int value, BodyLocation location, EffectTypeContainer protectEffects) noexcept : location_{location}, protectEffects_{protectEffects} {
         if (location_ == BodyLocation::ALL) { // value ignored
             return;
         }
@@ -38,11 +39,13 @@ struct AC {
 
     auto location() const noexcept { return location_; }
 
-    auto& effect() noexcept { return effect_; }
-    auto effect() const noexcept { return effect_; }
+    auto& protectEffects() & noexcept { return protectEffects_; }
+    auto protectEffects() && noexcept { return protectEffects_; }
+    auto& protectEffects() const & noexcept { return protectEffects_; }
+    auto protectEffects() const && noexcept { return protectEffects_; }
 
 private:
     std::array<int, static_cast<size_t>(BodyLocation::ALL)> values_{};
     BodyLocation location_{BodyLocation::Body};
-    Effect effect_{};
+    EffectTypeContainer protectEffects_{};
 };

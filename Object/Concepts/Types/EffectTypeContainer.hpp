@@ -8,9 +8,9 @@ struct EffectTypeContainer {
     using container_type = std::set<T>;
 
     EffectTypeContainer() = default;
-    EffectTypeContainer(const EffectType& type) : effectTypes_{type} {}
-    EffectTypeContainer(const container_type<EffectType>& effectTypes) : effectTypes_{effectTypes} {}
-    EffectTypeContainer(std::initializer_list<EffectType> types) : effectTypes_{types} {}
+    EffectTypeContainer(const EffectType& effectType) : effectTypes_{effectType} {}
+    EffectTypeContainer(const EffectTypeContainer& effectTypes) : effectTypes_{effectTypes.effectTypes_} {}
+    EffectTypeContainer(std::initializer_list<EffectType> effectTypes) : effectTypes_{effectTypes} {}
 
     auto operator<=>(const EffectTypeContainer&) const = default;
 
@@ -21,28 +21,32 @@ struct EffectTypeContainer {
     auto begin() const { return effectTypes_.begin(); }
     auto end() const { return effectTypes_.end(); }
 
+    bool contains(const EffectType& type) const {
+        return effectTypes_.contains(type);
+    }
+
+    bool empty() const noexcept {
+        return effectTypes_.empty();
+    }
+
     auto& effectTypes() & noexcept { return effectTypes_; }
     auto effectTypes() && noexcept { return effectTypes_; }
     auto& effectTypes() const & noexcept { return effectTypes_; }
     auto effectTypes() const && noexcept { return effectTypes_; }
 
-    bool isEffectType(const EffectType& effectType) const {
-        return effectTypes_.contains(effectType);
+    void addEffectType(const EffectType& type) {
+        effectTypes_.insert(type);
+    }
+    void addEffectTypes(const EffectTypeContainer& types) {
+        effectTypes_.insert(types.cbegin(), types.cend());
     }
 
-    void addEffectType(const EffectType& effectType) {
-        effectTypes_.insert(effectType);
+    void removeEffectType(const EffectType& type) {
+        effectTypes_.erase(type);
     }
-    void addEffectTypes(const container_type<EffectType>& effectTypes) {
-        effectTypes_.insert(effectTypes.cbegin(), effectTypes.cend());
-    }
-
-    void removeEffectType(const EffectType& effectType) {
-        effectTypes_.erase(effectType);
-    }
-    void removeEffectTypes(const container_type<EffectType>& effectTypes) {
+    void removeEffectTypes(const EffectTypeContainer& types) {
         container_type<EffectType> result;
-        std::set_difference(effectTypes_.begin(), effectTypes_.end(), effectTypes.begin(), effectTypes.end(), inserter(result, result.end()));
+        std::set_difference(effectTypes_.begin(), effectTypes_.end(), types.effectTypes_.begin(), types.effectTypes_.end(), inserter(result, result.end()));
         effectTypes_ = result;
     }
 

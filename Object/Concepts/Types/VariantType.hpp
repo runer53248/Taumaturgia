@@ -17,5 +17,5 @@ using get_variant_const_type = std::variant<std::monostate,
 	std::reference_wrapper<const Hp>,
 	std::reference_wrapper<const EffectTypeContainer>>;
 
-using optional_get_variant_type = std::optional<get_variant_type>;
-using optional_get_variant_const_type = std::optional<get_variant_const_type>;
+using get_optional_variant_type = std::optional<get_variant_type>;
+using get_optional_variant_const_type = std::optional<get_variant_const_type>;

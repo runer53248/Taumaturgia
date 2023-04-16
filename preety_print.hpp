@@ -1,4 +1,11 @@
 #pragma once
+#include <iostream>
+
+auto& operator<<(std::ostream& out, Damagingable auto& obj) {
+    out << " for " << obj.dmg.value() << " dmg";
+	out << " with " << static_cast<std::string>(obj.name);
+    return out;
+}
 
 auto& operator<<(std::ostream& out, BodyLocation location) {
     switch(location) {
@@ -26,62 +33,125 @@ auto& operator<<(std::ostream& out, BodyLocation location) {
     }
 }
 
-auto print_hp = [](const auto& value) {
-    if constexpr (not std::is_same_v<std::remove_cvref_t<decltype(value)>, get_variant_const_type>) {
+auto& operator<<(std::ostream& out, EffectType effect) {
+    switch (effect) {
+        case EffectType::Infection:
+            out << " [Infection]";
+            break;
+        case EffectType::Sleep:
+            out << " [sleep]";
+            break;
+        case EffectType::Daze:
+            out << " [Daze]";
+            break;
+        case EffectType::Devour:
+            out << " [devour]";
+            break;
+        case EffectType::Stun:
+            out << " [stunned]";
+            break;
+        case EffectType::None:
+            out << " [none]";
+            break;
+        default:
+            out << " [unknown]";
+            break;
+    }
+    return out;
+}
+
+auto& operator<<(std::ostream& out, Duration duration) {
+    switch (duration.type()) {
+        case DurationType::Day:
+            out << " (" << duration.value() << " Days) ";
+            break;
+        case DurationType::Hour:
+            out << " (" << duration.value() << " Hours) ";
+            break;
+        case DurationType::Minute:
+            out << " (" << duration.value() << " Minutes) ";
+            break;
+        case DurationType::Round:
+            out << " (" << duration.value() << " Rounds) ";
+            break;
+        case DurationType::Action:
+            out << " (" << duration.value() << " Actions) ";
+            break;
+        case DurationType::Instant:
+            out << " (" << duration.value() << " Instant) ";
+            break;
+    }
+    return out;
+}
+
+auto print_hp = [](auto&& value) {
+    auto& hp = value.get();
+    if constexpr (not std::is_const_v<std::remove_reference_t<decltype(hp)>>) {
         std::cout << "[&]"; // value is reference_wraper to non const type - can be changed
     }
-    const Hp& hp = Get<Hp>(value);
+
     std::cout << "(Hp: " << hp.value() << ")";
     if (not hp.effects().empty()) {
         for (const auto& effect : hp.effects()) {
-            switch(effect.effectType()){
-                case EffectType::Sleep:
-                    std::cout << " [sleep effect]";
-                    break;
-                case EffectType::Devour:
-                    std::cout << " [devour]";
-                    break;
-                case EffectType::Stun:
-                    std::cout << " [stunned]";
-                    break;
-                default:
-                    break;
-            }
-            if (effect.duration().type() == DurationType::Round) {
-                std::cout << " (" << effect.duration().value() << " rounds) ";
-            }
-            if (effect.duration().type() == DurationType::Instant) {
-                std::cout << " (" << effect.duration().value() << " instant) ";
-            }
+            std::cout << effect.effectType();
+            std::cout << effect.duration();
         }
     }
+    std::cout << "";
+    return std::optional{true};
+};
 
-    std::cout << "\n";
-    return std::optional{true};
-};
-auto print_cure_hp = [](const auto& value) {
-    if constexpr (not std::is_same_v<std::remove_cvref_t<decltype(value)>, get_variant_const_type>) {
+auto print_cure_hp = [](auto&& value) {
+    auto& cureHp = value.get();
+    if constexpr (not std::is_const_v<std::remove_reference_t<decltype(cureHp)>>) {
         std::cout << "[&]";
     }
-    const Hp& cureHp = Get<Hp>(value);
-    std::cout << "(Cure Hp: " << cureHp.value() << ")\n";
+
+    std::cout << "(Cure Hp: " << cureHp.value() << ")";
     return std::optional{true};
 };
-auto print_ac = [](const auto& value) {
-    if constexpr (not std::is_same_v<std::remove_cvref_t<decltype(value)>, get_variant_const_type>) {
+
+auto print_ac = [](auto&& value) {
+    auto& ac = value.get();
+    if constexpr (not std::is_const_v<std::remove_reference_t<decltype(ac)>>) {
         std::cout << "[&]";
     }
-    const AC& ac = Get<AC>(value);
-    std::cout << "(Ac: " << ac.value() << ") ";
+    
+    std::cout << " (Ac: " << ac.value() << " to " << ac.location() << ") ";
+
+    if (not ac.protectEffects().empty()) {
+        std::cout << "(protection";
+        for (const auto& effect : ac.protectEffects()) {
+            std::cout << effect;
+        }
+        std::cout << ") ";
+    }
+    
     return std::optional{true};
 };
-auto print_dmg = [](const auto& value) {
-    if constexpr (not std::is_same_v<std::remove_cvref_t<decltype(value)>, get_variant_const_type>) {
+
+auto print_dmg = [](auto&& value) {
+    auto& damage = value.get();
+    if constexpr (not std::is_const_v<std::remove_reference_t<decltype(damage)>>) {
         std::cout << "[&]";
     }
-    const Damage& damage = Get<Damage>(value);
-    std::cout << "(Damage: " << damage.value() << ")\n";
+    
+    std::cout << "(Damage: " << damage.value() << damage.effect().effectType() << damage.effect().duration() << ")";
     return std::optional{true};
+};
+
+auto print_restore = [](auto&& value) {
+    auto& effects = value.get();
+    if constexpr (not std::is_const_v<std::remove_reference_t<decltype(effects)>>) {
+        std::cout << "[&]";
+    }
+    
+    std::cout << "(Restore: ";
+    for (const auto& effect : effects) {
+        std::cout << effect;
+    }
+    std::cout << ")";
+    return std::optional<bool>{true};
 };
 auto print_person = [](const auto& person){
     std::cout << person.name();
@@ -94,6 +164,39 @@ auto print_person = [](const auto& person){
     } else {
         std::cout << " [unliving] ";
     }
-    get(person, Parameter::Ac).and_then(print_ac);
-    get(person, Parameter::Hp).and_then(print_hp);
+    getOpt<Parameter::Ac>(person).and_then(print_ac);
+    getOpt<Parameter::Hp>(person).and_then(print_hp);
+    std::cout << '\n';
+};
+
+auto print_object_properties = [](const Object& obj) {
+    std::cout << " name " << obj.name() << '\n';
+    std::cout << " [can alive] " << obj.can_alive << '\n';
+    std::cout << " [can attack] " << obj.can_attack << '\n';
+    std::cout << " [can defend] " << obj.can_defend << '\n';
+    std::cout << " [can get] " << obj.can_get << '\n';
+    std::cout << " [can heal] " << obj.can_heal << '\n';
+    std::cout << " [can restore] " << obj.can_restore << '\n';
+    std::cout << '\n';
+};
+
+auto print_object = [](const auto& obj) {
+    std::cout << " name " << obj.name() << '\n';
+
+    if (obj.can_alive) {
+        getOpt<Parameter::Hp>(obj).and_then(print_hp);
+    }
+    if (obj.can_attack) {
+        getOpt<Parameter::Damage>(obj).and_then(print_dmg);
+    }
+    if (obj.can_defend) {
+        getOpt<Parameter::Ac>(obj).and_then(print_ac);
+    }
+    if (obj.can_heal) {
+        getOpt<Parameter::CureHp>(obj).and_then(print_cure_hp);
+    }
+    if (obj.can_restore) {
+        getOpt<Parameter::Restore>(obj).and_then(print_restore);
+    }
+    std::cout << '\n';
 };

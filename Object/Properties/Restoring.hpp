@@ -4,7 +4,9 @@
 
 template <typename T>
 struct Restoring_: T {
-	Restoring_(const Name& name, const EffectTypeContainer& restoreEffects, auto ...args): T{name, std::forward<decltype(args)>(args)...}, restoreEffects(restoreEffects) {}
+	Restoring_(const Name& name, const EffectType& restoreEffect, auto ...args): T{name, std::forward<decltype(args)>(args)...}, restoreEffects{restoreEffect} {}
+	Restoring_(const Name& name, const EffectTypeContainer& restoreEffects, auto ...args): T{name, std::forward<decltype(args)>(args)...}, restoreEffects{restoreEffects} {}
+	Restoring_(const Name& name, std::initializer_list<EffectType> restoreEffects, auto ...args): T{name, std::forward<decltype(args)>(args)...}, restoreEffects{restoreEffects} {}
 	Restoring_(const Name& name, auto ...args): T{name, std::forward<decltype(args)>(args)...} {}
 
 	EffectTypeContainer restoreEffects{};
