@@ -3,12 +3,12 @@
 
 struct Armor {
  	Name name;
-	AC ac{};
+	ArmorClass ac{};
 };
 
 struct Helmet {
  	Name name;
-	AC ac{};
+	ArmorClass ac{};
 };
 
 struct Potion {
@@ -24,9 +24,13 @@ struct Weapon {
 	Damage dmg{};
 };
 
+struct NoNameWeapon {
+	Damage dmg{};
+};
+
 struct Player{
 	std::string name; // string used as name
-	AC ac{10, BodyLocation::ALL};
+	ArmorClassContainer armorWear{10};
 };
 
 struct Enemy{
@@ -34,7 +38,7 @@ struct Enemy{
 };
 
 struct Npc{ // don't have name 
-	Hp hp{5};
+	Health hp{5};
 };
 
 struct DefaultWeapon {
@@ -60,15 +64,15 @@ template <> struct AttackStrategy_<CustomWeapon> {
 			return false;
 		}
 		auto *suspect = Whom(owner, target);
-		auto hp_opt = getOpt<Parameter::Hp>(*suspect);
+		auto hp_opt = getOpt<Parameter::Health>(*suspect);
 		if (hp_opt) {
-			Hp& hp = hp_opt.value();
+			Health& hp = hp_opt.value();
 			if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) { // when got Damagingable property
-				hp.value() -= obj.dmg.value();
+				hp.removeHealth(obj.dmg.value());
 			}
 
 			for (auto& other : obj.others) {
-				hp.value() -= other.dmg.value();
+				hp.removeHealth(other.dmg.value());
 
 				subAttacks(other);
 			}

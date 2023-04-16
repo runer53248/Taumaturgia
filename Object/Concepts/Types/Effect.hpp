@@ -50,12 +50,12 @@ struct Effect {
     auto duration() const noexcept { return duration_; }
 
     bool isActive() const noexcept {
-        return state_.state() == EffectState::Active;
+        return state_.effectState() == EffectState::Active;
     }
 
     bool activate() noexcept {
-        if (state_.state() == EffectState::Inactive) {
-            state_.state() = EffectState::Active;
+        if (state_.effectState() == EffectState::Inactive) {
+            state_.effectState() = EffectState::Active;
             return true;
         }
         return false;

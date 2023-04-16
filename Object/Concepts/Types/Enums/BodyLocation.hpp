@@ -1,6 +1,7 @@
 #pragma once
 
-enum class BodyLocation {
+enum class BodyLocation : size_t {
+    NONE,
     Head,
     Body,
     Arms,

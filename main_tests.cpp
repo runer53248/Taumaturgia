@@ -21,7 +21,7 @@ struct Enemy{
 
 struct Npc{
 	std::string name;
-	Hp hp{5};
+	Health hp{5};
 };
 
 struct DefaultWeapon {
@@ -59,10 +59,10 @@ int main() {
 	static_assert(sizeof(Damaging<Scroll>) == sizeof(Damaging<Damaging<Scroll>>));
 	static_assert(sizeof(Weapon) == sizeof(Damaging<Damaging<Weapon>>));
 
-	constexpr Hp hp_1{50};
-	constexpr Hp hp_2{50};
-	constexpr Hp hp_less{20};
-	Hp hp_3{50, Effect{EffectType::Slow}}; // Effect create EffectContainer which is not constexpr because using of vector
+	constexpr Health hp_1{50};
+	constexpr Health hp_2{50};
+	constexpr Health hp_less{20};
+	Health hp_3{50, Effect{EffectType::Slow}}; // Effect create EffectContainer which is not constexpr because using of vector
 	static_assert(hp_1 == hp_2);
 	static_assert(hp_1 > hp_less);
 	// static_assert(hp_1 == hp_3);

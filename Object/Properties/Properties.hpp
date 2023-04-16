@@ -5,3 +5,4 @@
 #include "Living.hpp"
 #include "Naming.hpp"
 #include "Restoring.hpp"
+#include "Wearing.hpp"

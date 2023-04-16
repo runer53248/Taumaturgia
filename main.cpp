@@ -15,79 +15,79 @@ int main() {
 	backpack.emplace_back( Damaging<CustomWeapon>{ Name{"New_Custom_SWORD"}, Damage{32}} ); // became Damagingable - custom AttackStrategy_<CustomWeapon> from 'struct.hpp'will handle it
 	backpack.emplace_back( Damaging<DefaultWeapon>{ Name{"Default_BATTLE_SWORD"}, Damage{32}} );
 
-	auto gustav = Living<Healing<Living<Healing<Weapon>>>>{ Name{"GUSTAV_INTELIGENT_SWORD"},/*hp*/ Hp{20}}; // duplicated Living and Healing will be ignored
+	auto gustav = Living<Healing<Living<Healing<Weapon>>>>{ Name{"GUSTAV_INTELIGENT_SWORD"},/*hp*/ Health{20}}; // duplicated Living and Healing will be ignored
 	static_assert(std::is_same_v< decltype(gustav), Living<Healing<Weapon>> >);
 	gustav.name = Name{"Franco The Inteligent Sword"};
-	gustav.hp = Hp{75};
-	gustav.cureHp = Hp{30};
+	gustav.hp = Health{75};
+	gustav.cureHealth = Health{30};
 	gustav.dmg = Damage{100, Effect{EffectType::Stun, Duration{3, DurationType::Round}, State{EffectState::Active}}};
 	Object gustav_obj{gustav};
 
 	std::cout << '\n' << gustav_obj.name() << '\n';
-	std::cout << "get and print by labda taking const reference:\n";
+	std::cout << "get and print by lambda taking const reference:\n";
 	[](const auto& obj) { // get version passing const reference
-		getOpt<Parameter::Hp>(obj).and_then(print_hp);
+		getOpt<Parameter::Health>(obj).and_then(print_hp);
 		std::cout << '\n';
-		getOpt<Parameter::CureHp>(obj).and_then(print_cure_hp);
+		getOpt<Parameter::CureHealth>(obj).and_then(print_cure_hp);
 		std::cout << '\n';
-		// getOpt<Parameter::Ac>(obj).and_then(print_ac); // ignored - object dont have Ac
+		// getOpt<Parameter::Armor>(obj).and_then(print_ac); // ignored - object dont have Ac
 		// std::cout << '\n';
 		getOpt<Parameter::Damage>(obj).and_then(print_dmg);
 		std::cout << '\n';
 	} (gustav_obj);
 
 	std::cout << '\n';
-	std::cout << "get and print by labda taking reference:\n";
+	std::cout << "get and print by lambda taking reference:\n"; // non-const object will return optional to non-const reference wraper - printing will then show [&]
 	[](auto& obj) { // get version passing reference
-		getOpt<Parameter::Hp>(obj).and_then(print_hp);
+		getOpt<Parameter::Health>(obj).and_then(print_hp);
 		std::cout << '\n';
-		getOpt<Parameter::CureHp>(obj).and_then(print_cure_hp);
+		getOpt<Parameter::CureHealth>(obj).and_then(print_cure_hp);
 		std::cout << '\n';
-		// getOpt<Parameter::Ac>(obj).and_then(print_ac); // ignored - object dont have Ac
+		// getOpt<Parameter::Armor>(obj).and_then(print_ac); // ignored - object dont have Ac
 		// std::cout << '\n';
 		getOpt<Parameter::Damage>(obj).and_then(print_dmg);
 		std::cout << '\n';
 	} (gustav_obj);
 
 	std::cout << '\n';
-	std::cout << "get and print by hidden friend function:\n";
-	getOpt<Parameter::Hp>(gustav_obj).and_then(print_hp); // get version passing reference
+	std::cout << "get and print:\n";
+	getOpt<Parameter::Health>(gustav_obj).and_then(print_hp); // get version passing reference
 	std::cout << '\n';
-	getOpt<Parameter::CureHp>(gustav_obj).and_then(print_cure_hp);
+	getOpt<Parameter::CureHealth>(gustav_obj).and_then(print_cure_hp);
 	std::cout << '\n';
-	// getOpt<Parameter::Ac>(gustav_obj).and_then(print_ac); // ignored - object dont have Ac
+	// getOpt<Parameter::Armor>(gustav_obj).and_then(print_ac); // ignored - object dont have Ac
 	// std::cout << '\n';
-	std::cout << "get and print by hidden friend function forced to return const reference:\n";
+	std::cout << "get and print - forced to return const reference:\n";
 	getOpt<Parameter::Damage, const Object>(gustav_obj).and_then(print_dmg); // force get version passing const reference
 	std::cout << '\n';
 	std::cout << '\n';
 
 	backpack.push_back( std::move(gustav_obj) );
 
-	auto gustav_2 = Living<Healing<Living<Healing<Weapon>>>>( Name{"GUSTAV_INTELIGENT_SWORD"},/*hp*/ Hp{20},/*cureHp*/ Hp{30}, Damage{32});
+	// arguments in constructor are from left to right - same as added properties (only Naming requires to be most left as all properties need to be used on Namingable type)
+	auto gustav_2 = Living<Healing<Living<Healing<Weapon>>>>( Name{"GUSTAV_INTELIGENT_SWORD"},/*hp*/ Health{20},/*cureHealth*/ Health{30}, Damage{32});
+	// Living<Healing<Living<Healing<Naming<NoNameWeapon>>>>>( Name{"INCOGNITO SWORD"},/*hp*/ Health{20},/*cureHealth*/ Health{30}, Damage{32});
 	static_assert(std::is_same_v< decltype(gustav_2), Living<Healing<Weapon>> >);
 	backpack.emplace_back( gustav_2 );
 
-	backpack.emplace_back( Armor{ Name{"CHAIN_MAIL"}, AC{8, BodyLocation::Body}});
-	backpack.emplace_back( Protecting<Armor>{ Name{"HALF_PLATE"}, AC{12}});
-	backpack.emplace_back( Damaging<Helmet>( Name{"BATTLE_HELM"} , Damage{10}, AC{4, BodyLocation::Head, {EffectType::Daze}}));
-	backpack.emplace_back( Helmet{ Name{"VIKING_HELM"}, AC{2, BodyLocation::Head, {EffectType::Stun}} });
-	backpack.emplace_back( Healing<Potion>( Name{"HEALING_POTION"}, Hp{20}));
-	backpack.emplace_back( Healing<Potion>{ Name{"SMALL_HEALING_POTION"}, Hp{10}}); //TODO add removing effects
-	backpack.emplace_back( Protecting<Potion>( Name{"SHIELD_POTION"}, AC{4, BodyLocation::Internal, EffectType::Sleep}));
+	backpack.emplace_back( Armor{ Name{"CHAIN_MAIL"}, ArmorClass{8, BodyLocation::Body}});
+	backpack.emplace_back( Protecting<Armor>{ Name{"HALF_PLATE"}, ArmorClass{12}});
+	backpack.emplace_back( Damaging<Helmet>( Name{"BATTLE_HELM"} , Damage{10}, ArmorClass{4, BodyLocation::Head, {EffectType::Daze}}));
+	backpack.emplace_back( Helmet{ Name{"VIKING_HELM"}, ArmorClass{2, BodyLocation::Head, {EffectType::Stun}} });
+	backpack.emplace_back( Healing<Potion>( Name{"HEALING_POTION"}, Health{20}));
+	backpack.emplace_back( Healing<Potion>{ Name{"SMALL_HEALING_POTION"}, Health{10}}); // TODO: add removing effects
+	backpack.emplace_back( Protecting<Potion>( Name{"SHIELD_POTION"}, ArmorClass{4, BodyLocation::Internal, EffectType::Sleep}));
 	backpack.emplace_back( Scroll{ Name{"USELESS_SCROLL"} });
 	backpack.emplace_back( Scroll{ Name{"EMPTY_SCROLL"} });
 	backpack.emplace_back( Restoring<Scroll>{ Name{"AWAKE_SCROLL"}, {EffectType::Sleep}});
 	backpack.emplace_back( Damaging<Scroll>( Name{"SLEEP_SCROLL"}, Damage{0, Effect{EffectType::Sleep}} ));
-	backpack.emplace_back( Damaging<Healing<Scroll>>( Name{"VAMPIRIC_TOUCH_SCROLL"}, Damage{30, Effect{EffectType::Devour}}, Hp{15}));
+	backpack.emplace_back( Damaging<Healing<Scroll>>( Name{"VAMPIRIC_TOUCH_SCROLL"}, Damage{30, Effect{EffectType::Devour}}, Health{15}));
 
-	Object player( Living<Player>{Name{"Knight"}, Hp{100}} );
-	print_person(player);
-
-	Object enemy( Living<Enemy>{Name{"Ogr"}, Hp{180}} );
-	print_person(enemy);
-
+	Object player( Living<Player>{Name{"Knight"}, Health{100}} );
+	Object enemy( Living<Enemy>{Name{"Ogr"}, Health{180}} );
 	Object enemy_2( Enemy{Name{"Ogr 2"}} );
+	print_person(player);
+	print_person(enemy);
 	print_person(enemy_2);
 	std::cout << "\n\n";
 
@@ -108,21 +108,50 @@ int main() {
 	}
 	std::cout << '\n';
 
-	std::cout << "Items I can defend with:  //////////////////////////////\n\n";
+	std::cout << "Items I can defend with:  //////////////////////////////\n";
+	std::cout << "(armor protection don't restore ongoing effect - need to use correct restore or have both restore and living properties as target of attack)\n\n";
 	for (const auto& item : backpack) {
 		if (not item.can_defend) {
 			continue;
 		}
 		if (not item.defend(&player/*, &player*/)) {
-			std::cout << " protection broken "; // unusable yet
+			std::cout << " protection broken\n"; // when target dont have Wearingable property
+			std::cout << player.name() << " can't defend self with " << item.name();
+			std::cout << '\n';
+			continue;
 		}
 
 		std::cout << player.name() << " defend self with " << item.name();
-		getOpt<Parameter::Ac>(item).and_then(print_ac);
+		getOpt<Parameter::Armor>(item).and_then(print_ac);
 		std::cout << '\n';
 		print_person(player);
 	}
 	std::cout << '\n';
+
+	std::cout << "Items enemy try defend with:  //////////////////////////////\n";
+	std::cout << "(enemy don't have wearingable property)\n\n";
+
+	for (const auto& item : backpack) {
+		if (not item.can_defend) {
+			continue;
+		}
+		if (not item.defend(&enemy/*, &player*/)) {
+			std::cout << " protection broken\n"; // when target dont have Wearingable property
+			std::cout << enemy.name() << " can't defend self with " << item.name();
+			std::cout << '\n';
+			continue;
+		}
+
+		std::cout << enemy.name() << " defend self with " << item.name();
+		getOpt<Parameter::Armor>(item).and_then(print_ac);
+		std::cout << '\n';
+		print_person(enemy);
+	}
+	std::cout << '\n';
+
+	std::cout << "Current player:  //////////////////////////////\n\n";
+
+	print_object(player);
 
 	std::cout << "Items I can restore with:  //////////////////////////////\n\n";
 	for (const auto& item : backpack) {
@@ -141,6 +170,10 @@ int main() {
 	}
 	std::cout << '\n';
 
+	std::cout << "Current player:  //////////////////////////////\n\n";
+
+	print_object(player);
+
 	std::cout << "Items I can heal with:  //////////////////////////////\n\n";
 	for (const auto& item : backpack) {
 		if (not item.can_heal) {
@@ -151,9 +184,9 @@ int main() {
 		}
 
 		std::cout << player.name() << " heal self with " << item.name();
-		if (auto cureHp_opt = getOpt<Parameter::CureHp>(item)) {
-			const Hp& cureHp = cureHp_opt.value();
-			std::cout << " for " << cureHp.value() << " Hp";
+		if (auto cureHealth_opt = getOpt<Parameter::CureHealth>(item)) {
+			const Health& cureHealth = cureHealth_opt.value();
+			std::cout << " for " << cureHealth.value() << " Health";
 		}
 		std::cout << '\n';
 		print_person(player);
@@ -194,7 +227,7 @@ int main() {
 
 	print_person(npc);
 	std::cout << "print npc after healing:\n";
-	Object{Healing<Potion>{ Name{"HEALING_POTION"}, Hp{100}}}.heal(&npc);
+	Object{Healing<Potion>{ Name{"HEALING_POTION"}, Health{100}}}.heal(&npc);
 	print_person(npc);
 	std::cout << '\n';
 
@@ -231,18 +264,18 @@ int main() {
 	print_object(franco);
 	std::cout << '\n';
 
-	getOpt<Parameter::Hp>(player).and_then([](Hp& hp){
+	getOpt<Parameter::Health>(player).and_then([](Health& hp){
 		std::cout << hp.value() << '\n';
-		hp.value() = 100;
+		hp.value(100);
 		return std::optional<bool>(true);
 	});
-	getOpt<Parameter::Hp>(player).and_then([](auto hp_ref_wrap){
+	getOpt<Parameter::Health>(player).and_then([](auto hp_ref_wrap){
 		std::cout << hp_ref_wrap.get().value() << '\n';
 		return std::optional<bool>(true);
 	});
 
-	const Object potion{Healing<Potion>{ Name{"HEALING_POTION"}, Hp{75}}};
-	getOpt<Parameter::CureHp>(potion).and_then([](const Hp cure){
+	const Object potion{Healing<Potion>{ Name{"HEALING_POTION"}, Health{75}}};
+	getOpt<Parameter::CureHealth>(potion).and_then([](const Health cure){
 		std::cout << cure.value() << '\n';
 		return std::optional<bool>(true);
 	});

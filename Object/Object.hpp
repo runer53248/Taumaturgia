@@ -59,6 +59,7 @@ public:
 	const bool can_defend{};
 	const bool can_heal{};
 	const bool can_restore{};
+	const bool can_wear{};
 	const bool can_get{};
 
 	template <Namingable T> 
@@ -69,6 +70,7 @@ public:
 		can_defend{DefendStrategable<DefendStrategy, T>},
 		can_heal{HealStrategable<HealStrategy, T>},
 		can_restore{RestoreStrategable<RestoreStrategy, T>},
+		can_wear{WearStrategable<WearStrategy, T>},
 		can_get{GetStrategable<GetStrategy, T>} {}
 
 	std::string name() const { 
@@ -99,11 +101,11 @@ public:
     friend constexpr auto getOptVariant(Objected auto &object) -> decltype(object.object_->get(std::declval<Parameter>())) { // return type depends on object constness
         if (not object.can_get) { return {}; }
 
-        if constexpr (param == Parameter::Ac) {
+        if constexpr (param == Parameter::Armor) {
             if (not object.can_defend) {
                 return {};
             }
-        } else if constexpr (param == Parameter::CureHp) {
+        } else if constexpr (param == Parameter::CureHealth) {
             if (not object.can_heal) {
                 return {};
             }
@@ -111,12 +113,16 @@ public:
             if (not object.can_attack) {
                 return {};
             }
-        } else if constexpr (param == Parameter::Hp) {
+        } else if constexpr (param == Parameter::Health) {
             if (not object.can_alive) {
                 return {};
             }
         } else if constexpr (param == Parameter::Restore) {
             if (not object.can_restore){
+                return {};
+            }
+        } else if constexpr (param == Parameter::Wear) {
+            if (not object.can_wear){
                 return {};
             }
         }
@@ -127,9 +133,9 @@ public:
     friend constexpr auto getOpt(T &object) {
         auto opt_variant = getOptVariant<param>(object);
 
-        if constexpr (param == Parameter::Hp or param == Parameter::CureHp) {
+        if constexpr (param == Parameter::Health or param == Parameter::CureHealth) {
             using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
-                const Hp, Hp>;
+                const Health, Health>;
             using return_type = std::reference_wrapper<type>;
 
             return opt_variant.transform([](auto var_ref){ // transform variant of reference_wrapper to reference_wrapper of type
@@ -144,9 +150,9 @@ public:
             return opt_variant.transform([](auto var_ref){
                 return std::get<return_type>(var_ref);
             });
-        } else if constexpr (param == Parameter::Ac) {
+        } else if constexpr (param == Parameter::Armor) {
             using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
-                const AC, AC>;
+                const ArmorClass, ArmorClass>;
             using return_type = std::reference_wrapper<type>;
 
             return opt_variant.transform([](auto var_ref){
@@ -155,6 +161,14 @@ public:
         } else if constexpr (param == Parameter::Restore) {
             using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
                 const EffectTypeContainer, EffectTypeContainer>;
+            using return_type = std::reference_wrapper<type>;
+
+            return opt_variant.transform([](auto var_ref){
+                return std::get<return_type>(var_ref);
+            });
+        } else if constexpr (param == Parameter::Wear) {
+            using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
+                const ArmorClassContainer, ArmorClassContainer>;
             using return_type = std::reference_wrapper<type>;
 
             return opt_variant.transform([](auto var_ref){
@@ -245,16 +259,18 @@ constexpr auto Object::ObjectModel<T>::get_impl(Gettingable auto& type, Paramete
         get_optional_variant_type>;
 
     switch (param) { 
-        case Parameter::Ac:
-            return get_impl<Parameter::Ac>(type);
+        case Parameter::Armor:
+            return get_impl<Parameter::Armor>(type);
         case Parameter::Damage:
             return get_impl<Parameter::Damage>(type);
-        case Parameter::Hp:
-            return get_impl<Parameter::Hp>(type);
-        case Parameter::CureHp:
-            return get_impl<Parameter::CureHp>(type);
+        case Parameter::Health:
+            return get_impl<Parameter::Health>(type);
+        case Parameter::CureHealth:
+            return get_impl<Parameter::CureHealth>(type);
         case Parameter::Restore:
             return get_impl<Parameter::Restore>(type);
+        case Parameter::Wear:
+            return get_impl<Parameter::Wear>(type);
         default:
             return result_type{};
     };

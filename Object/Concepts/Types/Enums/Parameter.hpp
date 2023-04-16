@@ -1,9 +1,10 @@
 #pragma once
 
 enum class Parameter {
-    Hp,
-	CureHp,
-	Ac,
+    Health,
+	CureHealth,
+	Armor,
 	Damage,
-	Restore
+	Restore,
+	Wear
 };

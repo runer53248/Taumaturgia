@@ -5,3 +5,4 @@
 #include "GetStrategy.hpp"
 #include "HealStrategy.hpp"
 #include "RestoreStrategy.hpp"
+#include "WearStrategy.hpp"

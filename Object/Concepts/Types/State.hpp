@@ -7,8 +7,8 @@ struct State {
 
     auto operator<=>(const State& other) const noexcept = default;
 
-    auto& state() noexcept { return state_; }
-    auto state() const noexcept { return state_; }
+    auto& effectState() noexcept { return state_; }
+    auto effectState() const noexcept { return state_; }
 
     void deactivate() noexcept { state_ = EffectState::Inactive; }
     void activate() noexcept { state_ = EffectState::Active; }

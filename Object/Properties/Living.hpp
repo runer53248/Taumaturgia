@@ -4,10 +4,10 @@
 
 template <typename T>
 struct Living_: T {
-	Living_(const Name& name, Hp hp, auto ...args): T{name, std::forward<decltype(args)>(args)...}, hp(hp) {}
+	Living_(const Name& name, Health hp, auto ...args): T{name, std::forward<decltype(args)>(args)...}, hp(hp) {}
 	Living_(const Name& name, auto ...args): T{name, std::forward<decltype(args)>(args)...} {}
 
-	Hp hp{};
+	Health hp{};
 };
 
 struct Living_Test{};

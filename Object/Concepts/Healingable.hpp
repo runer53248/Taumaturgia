@@ -1,9 +1,9 @@
 #pragma once
 #include <type_traits>
-#include "Types/Hp.hpp"
+#include "Types/Health.hpp"
 
 template <typename T>
 concept Healingable = requires (T x) {
-    x.cureHp;
-    std::is_same_v<decltype(T::cureHp), Hp>;
+    x.cureHealth;
+    std::is_same_v<decltype(T::cureHealth), Health>;
 };

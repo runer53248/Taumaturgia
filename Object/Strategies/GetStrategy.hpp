@@ -12,8 +12,8 @@ struct GetStrategy_ {};
 
 template <template<typename> typename Strategy, typename UserType>
 concept GetStrategable = requires (Strategy<UserType> strategy, UserType& type, const UserType& ctype, Parameter param) {
-	{strategy.template operator()<Parameter::Hp>(type)} -> std::same_as<get_optional_variant_type>;
-	{strategy.template operator()<Parameter::Hp>(ctype)} -> std::same_as<get_optional_variant_const_type>;
+	{strategy.template operator()<Parameter::Health>(type)} -> std::same_as<get_optional_variant_type>;
+	{strategy.template operator()<Parameter::Health>(ctype)} -> std::same_as<get_optional_variant_const_type>;
 };
 
 template <typename T>

@@ -38,6 +38,12 @@ auto& operator<<(std::ostream& out, EffectType effect) {
         case EffectType::Infection:
             out << " [Infection]";
             break;
+        case EffectType::Bleed:
+            out << " [bleed]";
+            break;
+        case EffectType::Burn:
+            out << " [burn]";
+            break;
         case EffectType::Sleep:
             out << " [sleep]";
             break;
@@ -59,6 +65,26 @@ auto& operator<<(std::ostream& out, EffectType effect) {
     }
     return out;
 }
+
+auto& operator<<(std::ostream& out, EffectState location) {
+    switch(location) {
+        case EffectState::Inactive:
+            out << "Inactive";
+        return out;
+        case EffectState::Active:
+            out << "Active";
+        return out;
+        case EffectState::Removed:
+            out << "Removed";
+        return out;
+        case EffectState::Ended:
+            out << "Ended";
+        default:
+            out << "unknown";
+        return out;
+    }
+}
+
 
 auto& operator<<(std::ostream& out, Duration duration) {
     switch (duration.type()) {
@@ -90,7 +116,9 @@ auto print_hp = [](auto&& value) {
         std::cout << "[&]"; // value is reference_wraper to non const type - can be changed
     }
 
-    std::cout << "(Hp: " << hp.value() << ")";
+    std::cout << "(Health: " << hp.value();
+    if (hp.value() == hp.maxValue()) { std::cout << " MAX"; }
+    std::cout << ")";
     if (not hp.effects().empty()) {
         for (const auto& effect : hp.effects()) {
             std::cout << effect.effectType();
@@ -102,12 +130,12 @@ auto print_hp = [](auto&& value) {
 };
 
 auto print_cure_hp = [](auto&& value) {
-    auto& cureHp = value.get();
-    if constexpr (not std::is_const_v<std::remove_reference_t<decltype(cureHp)>>) {
+    auto& cureHealth = value.get();
+    if constexpr (not std::is_const_v<std::remove_reference_t<decltype(cureHealth)>>) {
         std::cout << "[&]";
     }
 
-    std::cout << "(Cure Hp: " << cureHp.value() << ")";
+    std::cout << "(Cure Health: " << cureHealth.value() << ")";
     return std::optional{true};
 };
 
@@ -117,11 +145,30 @@ auto print_ac = [](auto&& value) {
         std::cout << "[&]";
     }
     
-    std::cout << " (Ac: " << ac.value() << " to " << ac.location() << ") ";
+    std::cout << "(Ac: " << ac.value() << " to " << ac.location() << ") ";
 
     if (not ac.protectEffects().empty()) {
         std::cout << "(protection";
         for (const auto& effect : ac.protectEffects()) {
+            std::cout << effect;
+        }
+        std::cout << ") ";
+    }
+    
+    return std::optional{true};
+};
+
+auto print_wear = [](auto&& value) {
+    auto& armorWear = value.get();
+    if constexpr (not std::is_const_v<std::remove_reference_t<decltype(armorWear)>>) {
+        std::cout << "[&]";
+    }
+    
+    std::cout << "(armor class: " << armorWear.value() << ") ";
+
+    if (not armorWear.protectEffects().empty()) {
+        std::cout << "(protection";
+        for (const auto& effect : armorWear.protectEffects()) {
             std::cout << effect;
         }
         std::cout << ") ";
@@ -136,7 +183,9 @@ auto print_dmg = [](auto&& value) {
         std::cout << "[&]";
     }
     
-    std::cout << "(Damage: " << damage.value() << damage.effect().effectType() << damage.effect().duration() << ")";
+    std::cout << "(Damage: " << damage.value() << damage.effect().effectType() << damage.effect().duration();
+    std::cout << damage.effect().state().effectState();
+    std::cout << ")";
     return std::optional{true};
 };
 
@@ -153,8 +202,8 @@ auto print_restore = [](auto&& value) {
     std::cout << ")";
     return std::optional<bool>{true};
 };
-auto print_person = [](const auto& person){
-    std::cout << person.name();
+
+auto print_liveable = [](const auto& person) {
     if (auto alive_opt = person.alive()) {
         if (alive_opt.value()) {
             std::cout << " [alive] ";
@@ -164,39 +213,57 @@ auto print_person = [](const auto& person){
     } else {
         std::cout << " [unliving] ";
     }
-    getOpt<Parameter::Ac>(person).and_then(print_ac);
-    getOpt<Parameter::Hp>(person).and_then(print_hp);
+};
+
+auto print_person = [](const auto& person){
+    std::cout << person.name();
+    print_liveable(person);
+    // getOpt<Parameter::Armor>(person).and_then(print_ac);
+    getOpt<Parameter::Wear>(person).and_then(print_wear);
+    getOpt<Parameter::Health>(person).and_then(print_hp);
     std::cout << '\n';
 };
 
 auto print_object_properties = [](const Object& obj) {
-    std::cout << " name " << obj.name() << '\n';
+    std::cout << "Name: " << obj.name() << '\n';
     std::cout << " [can alive] " << obj.can_alive << '\n';
     std::cout << " [can attack] " << obj.can_attack << '\n';
     std::cout << " [can defend] " << obj.can_defend << '\n';
     std::cout << " [can get] " << obj.can_get << '\n';
     std::cout << " [can heal] " << obj.can_heal << '\n';
     std::cout << " [can restore] " << obj.can_restore << '\n';
+    std::cout << " [can wear] " << obj.can_wear << '\n';
     std::cout << '\n';
 };
 
 auto print_object = [](const auto& obj) {
-    std::cout << " name " << obj.name() << '\n';
+    std::cout << "Name: " << obj.name();
+    print_liveable(obj);
+    std::cout << '\n';
 
     if (obj.can_alive) {
-        getOpt<Parameter::Hp>(obj).and_then(print_hp);
+        getOpt<Parameter::Health>(obj).and_then(print_hp);
+        std::cout << '\n';
     }
     if (obj.can_attack) {
         getOpt<Parameter::Damage>(obj).and_then(print_dmg);
+        std::cout << '\n';
     }
     if (obj.can_defend) {
-        getOpt<Parameter::Ac>(obj).and_then(print_ac);
+        getOpt<Parameter::Armor>(obj).and_then(print_ac);
+        std::cout << '\n';
     }
     if (obj.can_heal) {
-        getOpt<Parameter::CureHp>(obj).and_then(print_cure_hp);
+        getOpt<Parameter::CureHealth>(obj).and_then(print_cure_hp);
+        std::cout << '\n';
     }
     if (obj.can_restore) {
         getOpt<Parameter::Restore>(obj).and_then(print_restore);
+        std::cout << '\n';
+    }
+    if (obj.can_wear) {
+        getOpt<Parameter::Wear>(obj).and_then(print_wear);
+        std::cout << '\n';
     }
     std::cout << '\n';
 };

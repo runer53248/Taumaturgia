@@ -4,10 +4,10 @@
 
 template <typename T>
 struct Healing_: T {
-	Healing_(const Name& name, Hp cureHp, auto ...args): T{name, std::forward<decltype(args)>(args)...}, cureHp(cureHp) {}
+	Healing_(const Name& name, Health cureHealth, auto ...args): T{name, std::forward<decltype(args)>(args)...}, cureHealth(cureHealth) {}
 	Healing_(const Name& name, auto ...args): T{name, std::forward<decltype(args)>(args)...} {}
 
-	Hp cureHp{};
+	Health cureHealth{};
 };
 
 struct Healing_Test{};
