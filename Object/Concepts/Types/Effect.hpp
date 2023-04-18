@@ -1,10 +1,10 @@
 #pragma once
-#include <vector>
 #include <stdexcept>
+#include <vector>
 #include "Duration.hpp"
-#include "State.hpp"
-#include "Enums/EffectType.hpp"
 #include "Enums/EffectState.hpp"
+#include "Enums/EffectType.hpp"
+#include "State.hpp"
 
 // enum class EffectStatusModifier {
 //     Suspended,
@@ -19,11 +19,16 @@
 
 struct Effect {
     constexpr Effect() noexcept = default;
-    constexpr Effect(EffectType attackEffect, Duration duration, State state) noexcept : effectType_{attackEffect}, duration_{duration}, state_{state} {}
-    constexpr Effect(EffectType attackEffect, DurationType durationType) noexcept : Effect{attackEffect, Duration{1, durationType}, State{EffectState::Inactive}} {}
-    constexpr Effect(EffectType attackEffect, Duration duration) noexcept : Effect{attackEffect, duration, State{EffectState::Inactive}} {}
-    constexpr Effect(EffectType attackEffect, State state) noexcept : effectType_{attackEffect}, duration_{Duration{1, DurationType::Round}}, state_{state} {}
-    constexpr explicit Effect(EffectType attackEffect) noexcept : effectType_{attackEffect} {}
+    constexpr Effect(EffectType attackEffect, Duration duration, State state) noexcept
+        : effectType_{attackEffect}, duration_{duration}, state_{state} {}
+    constexpr Effect(EffectType attackEffect, DurationType durationType) noexcept
+        : Effect{attackEffect, Duration{1, durationType}, State{EffectState::Inactive}} {}
+    constexpr Effect(EffectType attackEffect, Duration duration) noexcept
+        : Effect{attackEffect, duration, State{EffectState::Inactive}} {}
+    constexpr Effect(EffectType attackEffect, State state) noexcept
+        : effectType_{attackEffect}, duration_{Duration{1, DurationType::Round}}, state_{state} {}
+    constexpr explicit Effect(EffectType attackEffect) noexcept
+        : effectType_{attackEffect} {}
 
     auto operator<=>(const Effect& other) const noexcept = default;
     bool operator==(const Effect& other) const noexcept = default;
@@ -42,7 +47,7 @@ struct Effect {
 
     auto& effectType() noexcept { return effectType_; }
     auto effectType() const noexcept { return effectType_; }
-    
+
     auto& state() noexcept { return state_; }
     auto state() const noexcept { return state_; }
 

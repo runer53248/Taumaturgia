@@ -3,15 +3,17 @@
 #include "../Strategies/AliveStrategy.hpp"
 
 template <typename T>
-struct Living_: T {
-	Living_(const Name& name, Health hp, auto ...args): T{name, std::forward<decltype(args)>(args)...}, hp(hp) {}
-	Living_(const Name& name, auto ...args): T{name, std::forward<decltype(args)>(args)...} {}
+struct Living_ : T {
+    Living_(const Name& name, Health hp, auto... args)
+        : T{name, std::forward<decltype(args)>(args)...}, hp(hp) {}
+    Living_(const Name& name, auto... args)
+        : T{name, std::forward<decltype(args)>(args)...} {}
 
-	Health hp{};
+    Health hp{};
 };
 
-struct Living_Test{};
-static_assert(Livingable< Living_<Living_Test> >);
+struct Living_Test {};
+static_assert(Livingable<Living_<Living_Test> >);
 
 template <typename T>
-using Living = std::conditional_t< Livingable<T>, T, Living_<T> >;
+using Living = std::conditional_t<Livingable<T>, T, Living_<T> >;

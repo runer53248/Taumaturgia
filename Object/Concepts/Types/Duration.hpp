@@ -5,7 +5,8 @@
 
 struct Duration {
     constexpr Duration() noexcept = default;
-    constexpr Duration(size_t value, DurationType type) noexcept : value_{value}, type_{type} {}
+    constexpr Duration(size_t value, DurationType type) noexcept
+        : value_{value}, type_{type} {}
 
     auto operator<=>(const Duration& other) const noexcept = default;
 
@@ -37,8 +38,7 @@ struct Duration {
             DurationType::Hour,
             DurationType::Minute,
             DurationType::Round,
-            DurationType::Action
-        };
+            DurationType::Action};
 
         for (auto leftType : leftTypes) {
             if (time_left % static_cast<size_t>(leftType) == 0) {

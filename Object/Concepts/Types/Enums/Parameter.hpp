@@ -2,9 +2,9 @@
 
 enum class Parameter {
     Health,
-	CureHealth,
-	Armor,
-	Damage,
-	Restore,
-	Wear
+    CureHealth,
+    Armor,
+    Damage,
+    Restore,
+    Wear
 };

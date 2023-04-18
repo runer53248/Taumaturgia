@@ -3,18 +3,20 @@
 #include "../Strategies/DefendStrategy.hpp"
 
 template <typename T>
-struct Protecting_: T {
-	Protecting_(const Name& name, ArmorClass ac, auto ...args): T{name, std::forward<decltype(args)>(args)...}, ac(ac) {}
-	Protecting_(const Name& name, auto ...args): T{name, std::forward<decltype(args)>(args)...} {}
+struct Protecting_ : T {
+    Protecting_(const Name& name, ArmorClass ac, auto... args)
+        : T{name, std::forward<decltype(args)>(args)...}, ac(ac) {}
+    Protecting_(const Name& name, auto... args)
+        : T{name, std::forward<decltype(args)>(args)...} {}
 
-	ArmorClass ac{};
+    ArmorClass ac{};
 };
 
-struct Protecting_Test{};
-static_assert(Protectingable< Protecting_<Protecting_Test> >);
+struct Protecting_Test {};
+static_assert(Protectingable<Protecting_<Protecting_Test>>);
 
 template <typename T>
-using Protecting = std::conditional_t< Protectingable<T>, T, Protecting_<T> >;
+using Protecting = std::conditional_t<Protectingable<T>, T, Protecting_<T>>;
 
 template <typename T>
-struct DefendStrategy_<Protecting_<T>> : DefendStrategy_<T> {}; // forward eventualy implemented strategy
+struct DefendStrategy_<Protecting_<T>> : DefendStrategy_<T> {};  // forward eventualy implemented strategy

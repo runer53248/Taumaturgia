@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
-#include <set>
 #include <algorithm>
+#include <set>
+#include <vector>
 #include "Effect.hpp"
 
 struct EffectContainer {
@@ -9,9 +9,12 @@ struct EffectContainer {
     using container_type = std::vector<T>;
 
     constexpr EffectContainer() = default;
-    constexpr EffectContainer(const Effect& effect) : effects_{effect} {}
-    constexpr EffectContainer(const EffectContainer& effects) : effects_{effects.effects_} {}
-    constexpr EffectContainer(std::initializer_list<Effect> effects) : effects_{effects} {}
+    constexpr EffectContainer(const Effect& effect)
+        : effects_{effect} {}
+    constexpr EffectContainer(const EffectContainer& effects)
+        : effects_{effects.effects_} {}
+    constexpr EffectContainer(std::initializer_list<Effect> effects)
+        : effects_{effects} {}
 
     auto operator<=>(const EffectContainer&) const = default;
 
@@ -27,9 +30,9 @@ struct EffectContainer {
     }
 
     auto& effects() & { return effects_; }
-    auto effects() && { return effects_; } // don't return reference from temporary objects
-    auto& effects() const & { return effects_; }
-    auto effects() const && { return effects_; }
+    auto effects() && { return effects_; }  // don't return reference from temporary objects
+    auto& effects() const& { return effects_; }
+    auto effects() const&& { return effects_; }
 
     bool isEffectType(const Effect& effect) const {
         return std::ranges::find(effects_, effect) != effects_.end();
@@ -45,10 +48,10 @@ struct EffectContainer {
     }
 
     void removeEffectType(const EffectType& effectType) {
-        auto it = std::ranges::find_if(effects_, [effectType](const Effect& effect){
+        auto it = std::ranges::find_if(effects_, [effectType](const Effect& effect) {
             return effect.effectType() == effectType;
         });
-        if(it != effects_.end()) {
+        if (it != effects_.end()) {
             effects_.erase(it);
         }
     }

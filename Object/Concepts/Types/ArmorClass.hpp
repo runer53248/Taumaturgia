@@ -1,19 +1,22 @@
 #pragma once
 #include <array>
 #include <numeric>
-#include "Enums/BodyLocation.hpp"
 #include "EffectTypeContainer.hpp"
+#include "Enums/BodyLocation.hpp"
 
 struct ArmorClass {
     ArmorClass() noexcept = default;
-    explicit ArmorClass(int value) noexcept : value_{value} {}
-    ArmorClass(int value, BodyLocation location) noexcept : value_{value}, location_{location} {
+    explicit ArmorClass(int value) noexcept
+        : value_{value} {}
+    ArmorClass(int value, BodyLocation location) noexcept
+        : value_{value}, location_{location} {
         if (location_ >= BodyLocation::ALL or location_ == BodyLocation::NONE) {
             location_ = BodyLocation::NONE;
             value_ = 0;
         }
     }
-    ArmorClass(int value, BodyLocation location, EffectTypeContainer protectEffects) noexcept : value_{value}, location_{location}, protectEffects_{protectEffects} {
+    ArmorClass(int value, BodyLocation location, EffectTypeContainer protectEffects) noexcept
+        : value_{value}, location_{location}, protectEffects_{protectEffects} {
         if (location_ >= BodyLocation::ALL or location_ == BodyLocation::NONE) {
             location_ = BodyLocation::NONE;
             value_ = 0;
@@ -28,8 +31,8 @@ struct ArmorClass {
 
     auto& protectEffects() & noexcept { return protectEffects_; }
     auto protectEffects() && noexcept { return protectEffects_; }
-    auto& protectEffects() const & noexcept { return protectEffects_; }
-    auto protectEffects() const && noexcept { return protectEffects_; }
+    auto& protectEffects() const& noexcept { return protectEffects_; }
+    auto protectEffects() const&& noexcept { return protectEffects_; }
 
 private:
     int value_{};

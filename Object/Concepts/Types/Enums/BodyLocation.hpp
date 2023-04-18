@@ -7,5 +7,5 @@ enum class BodyLocation : size_t {
     Arms,
     Legs,
     Internal,
-    ALL // used as number of elements for array and as special value to accumulate values from it
+    ALL  // used as number of elements for array and as special value to accumulate values from it
 };

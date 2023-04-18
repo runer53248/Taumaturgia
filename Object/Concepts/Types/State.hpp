@@ -3,7 +3,8 @@
 
 struct State {
     constexpr State() noexcept = default;
-    constexpr explicit State(EffectState state) noexcept : state_{state} {}
+    constexpr explicit State(EffectState state) noexcept
+        : state_{state} {}
 
     auto operator<=>(const State& other) const noexcept = default;
 

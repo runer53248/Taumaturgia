@@ -5,13 +5,14 @@
 
 struct ArmorClassContainer {
     ArmorClassContainer() noexcept = default;
-    explicit ArmorClassContainer(int baseValue) noexcept : globalArmor_{baseValue} {}
+    explicit ArmorClassContainer(int baseValue) noexcept
+        : globalArmor_{baseValue} {}
 
-    auto value() const & {
+    auto value() const& {
         return globalArmor_;
     }
 
-    auto protectEffects() const & {
+    auto protectEffects() const& {
         return globalProtectEffects_;
     }
 
@@ -25,7 +26,7 @@ struct ArmorClassContainer {
         return result;
     }
 
-    auto& armorAtLocation(BodyLocation location) const & {
+    auto& armorAtLocation(BodyLocation location) const& {
         return values_.at(static_cast<size_t>(location));
     }
     auto& armorAtLocation(BodyLocation location) & {
@@ -39,7 +40,7 @@ struct ArmorClassContainer {
         globalProtectEffects_.addEffectTypes(ac.protectEffects());
         return result;
     }
-    
+
     std::optional<ArmorClass> removeArmorAtLocation(BodyLocation location) & {
         if (auto result = armorAtLocation(location)) {
             armorAtLocation(location) = {};

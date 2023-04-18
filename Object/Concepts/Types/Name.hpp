@@ -3,7 +3,8 @@
 
 struct Name {
     Name() = default;
-    explicit Name(const std::string& value) : value_{value} {}
+    explicit Name(const std::string& value)
+        : value_{value} {}
 
     auto operator<=>(const Name& other) const noexcept = default;
 

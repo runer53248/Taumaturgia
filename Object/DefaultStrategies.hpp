@@ -1,7 +1,7 @@
 #pragma once
 #include "Object.hpp"
 
-inline Object* Whom(Object *const owner, Object *const target) {
+inline Object* Whom(Object* const owner, Object* const target) {
     if (not owner and not target) {
         throw std::logic_error("Whom function get nullptr as both object owner and target.");
     }
@@ -12,26 +12,24 @@ inline Object* Whom(Object *const owner, Object *const target) {
     return target;
 }
 
-std::optional<bool> AliveStrategy_<Default>::operator()(Livingable auto &obj) const {
+std::optional<bool> AliveStrategy_<Default>::operator()(Livingable auto& obj) const {
     return obj.hp.value() > 0;
 }
 
-bool AttackStrategy_<Default>::operator()(Damagingable auto &obj, Object *owner, Object *target) const {
-    auto *suspect = Whom(owner, target);
+bool AttackStrategy_<Default>::operator()(Damagingable auto& obj, Object* owner, Object* target) const {
+    auto* suspect = Whom(owner, target);
     auto opt_ac = getOpt<Parameter::Armor>(*suspect);
     auto opt_restore = getOpt<Parameter::Restore>(*suspect);
 
     auto is_success = getOpt<Parameter::Health>(*suspect).and_then([&](auto&& ref_wrap) {
         Health& suspect_hp_ref = ref_wrap;
-        
+
         suspect_hp_ref.removeHealth(obj.dmg.value());
 
         if (auto attackEffect = obj.dmg.effect(); attackEffect != EffectType::None) {
-
-
             if (opt_ac.has_value()) {
                 ArmorClass& suspect_ac = opt_ac.value();
-                if (suspect_ac.protectEffects().contains(attackEffect.effectType())) { // check ArmorClass protection against attack effect
+                if (suspect_ac.protectEffects().contains(attackEffect.effectType())) {  // check ArmorClass protection against attack effect
                     return std::optional{true};
                 }
             }
@@ -39,7 +37,7 @@ bool AttackStrategy_<Default>::operator()(Damagingable auto &obj, Object *owner,
 
             if (opt_restore.has_value()) {
                 EffectTypeContainer& suspect_restore = opt_restore.value();
-                if (suspect_restore.contains(attackEffect.effectType())) { // check suspect Restore to remove attack effect
+                if (suspect_restore.contains(attackEffect.effectType())) {  // check suspect Restore to remove attack effect
                     suspect_hp_ref.effects().removeEffectType(attackEffect.effectType());
                 }
             }
@@ -49,19 +47,19 @@ bool AttackStrategy_<Default>::operator()(Damagingable auto &obj, Object *owner,
     return is_success.has_value();
 }
 
-bool DefendStrategy_<Default>::operator()(Protectingable auto &obj, Object *owner, Object *target) const {
-    auto *suspect = Whom(owner, target);
+bool DefendStrategy_<Default>::operator()(Protectingable auto& obj, Object* owner, Object* target) const {
+    auto* suspect = Whom(owner, target);
     auto is_success = getOpt<Parameter::Wear>(*suspect).and_then([&](auto&& ref_wrap) {
         ArmorClassContainer& suspect_ac = ref_wrap;
         suspect_ac.wearArmor(obj.ac);
         return std::optional{true};
     });
-    
+
     return is_success.has_value();
 }
 
-bool HealStrategy_<Default>::operator()(Healingable auto &obj, Object *owner, Object *target) const {
-    auto *suspect = Whom(owner, target);
+bool HealStrategy_<Default>::operator()(Healingable auto& obj, Object* owner, Object* target) const {
+    auto* suspect = Whom(owner, target);
     auto is_success = getOpt<Parameter::Health>(*suspect).and_then([&](auto&& ref_wrap) {
         Health& suspect_hp = ref_wrap;
         suspect_hp.addHealth(obj.cureHealth.value());
@@ -70,8 +68,8 @@ bool HealStrategy_<Default>::operator()(Healingable auto &obj, Object *owner, Ob
     return is_success.has_value();
 }
 
-bool RestoreStrategy_<Default>::operator()(Restoringable auto &obj, Object *owner, Object *target) const {
-    auto *suspect = Whom(owner, target);
+bool RestoreStrategy_<Default>::operator()(Restoringable auto& obj, Object* owner, Object* target) const {
+    auto* suspect = Whom(owner, target);
     auto is_success = getOpt<Parameter::Health>(*suspect).and_then([&](auto&& ref_wrap) {
         Health& hp_ref = ref_wrap;
 
@@ -88,9 +86,9 @@ bool RestoreStrategy_<Default>::operator()(Restoringable auto &obj, Object *owne
 template <Parameter P>
 auto GetStrategy_<Default>::operator()(Gettingable auto& obj) const {
     using result_type = std::conditional_t<
-		std::is_const_v<std::remove_reference_t<decltype(obj)>>,
-		get_optional_variant_const_type,
-		get_optional_variant_type>;
+        std::is_const_v<std::remove_reference_t<decltype(obj)>>,
+        get_optional_variant_const_type,
+        get_optional_variant_type>;
 
     using type = std::remove_reference_t<decltype(obj)>;
     if constexpr (P == Parameter::Health) {

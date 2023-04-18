@@ -1,6 +1,6 @@
 #pragma once
-#include <set>
 #include <algorithm>
+#include <set>
 #include "Enums/EffectType.hpp"
 
 struct EffectTypeContainer {
@@ -8,9 +8,12 @@ struct EffectTypeContainer {
     using container_type = std::set<T>;
 
     EffectTypeContainer() = default;
-    EffectTypeContainer(const EffectType& effectType) : effectTypes_{effectType} {}
-    EffectTypeContainer(const EffectTypeContainer& effectTypes) : effectTypes_{effectTypes.effectTypes_} {}
-    EffectTypeContainer(std::initializer_list<EffectType> effectTypes) : effectTypes_{effectTypes} {}
+    EffectTypeContainer(const EffectType& effectType)
+        : effectTypes_{effectType} {}
+    EffectTypeContainer(const EffectTypeContainer& effectTypes)
+        : effectTypes_{effectTypes.effectTypes_} {}
+    EffectTypeContainer(std::initializer_list<EffectType> effectTypes)
+        : effectTypes_{effectTypes} {}
 
     auto operator<=>(const EffectTypeContainer&) const = default;
 
@@ -31,8 +34,8 @@ struct EffectTypeContainer {
 
     auto& effectTypes() & noexcept { return effectTypes_; }
     auto effectTypes() && noexcept { return effectTypes_; }
-    auto& effectTypes() const & noexcept { return effectTypes_; }
-    auto effectTypes() const && noexcept { return effectTypes_; }
+    auto& effectTypes() const& noexcept { return effectTypes_; }
+    auto effectTypes() const&& noexcept { return effectTypes_; }
 
     void addEffectType(const EffectType& type) {
         effectTypes_.insert(type);

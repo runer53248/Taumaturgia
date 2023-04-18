@@ -10,22 +10,23 @@ struct Object;
 template <typename T>
 struct GetStrategy_ {};
 
-template <template<typename> typename Strategy, typename UserType>
-concept GetStrategable = requires (Strategy<UserType> strategy, UserType& type, const UserType& ctype, Parameter param) {
-	{strategy.template operator()<Parameter::Health>(type)} -> std::same_as<get_optional_variant_type>;
-	{strategy.template operator()<Parameter::Health>(ctype)} -> std::same_as<get_optional_variant_const_type>;
+template <template <typename> typename Strategy, typename UserType>
+concept GetStrategable = requires(Strategy<UserType> strategy, UserType& type, const UserType& ctype, Parameter param) {
+    { strategy.template operator()<Parameter::Health>(type) } -> std::same_as<get_optional_variant_type>;
+    { strategy.template operator()<Parameter::Health>(ctype) } -> std::same_as<get_optional_variant_const_type>;
 };
 
 template <typename T>
 using GetStrategy = std::conditional_t<
-	Gettingable<T>,
-	std::conditional_t<
-		GetStrategable<GetStrategy_, T>,
-		GetStrategy_<T>,
-		GetStrategy_<Default> >,
-	GetStrategy_<T> >;
+    Gettingable<T>,
+    std::conditional_t<
+        GetStrategable<GetStrategy_, T>,
+        GetStrategy_<T>,
+        GetStrategy_<Default> >,
+    GetStrategy_<T> >;
 
-template <> struct GetStrategy_<Default> {
-	template <Parameter P>
-	auto operator()(Gettingable auto& obj) const; // for const and non-const calls
+template <>
+struct GetStrategy_<Default> {
+    template <Parameter P>
+    auto operator()(Gettingable auto& obj) const;  // for const and non-const calls
 };

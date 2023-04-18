@@ -3,109 +3,108 @@
 
 auto& operator<<(std::ostream& out, Damagingable auto& obj) {
     out << " for " << obj.dmg.value() << " dmg";
-	out << " with " << static_cast<std::string>(obj.name);
+    out << " with " << static_cast<std::string>(obj.name);
     return out;
 }
 
 auto& operator<<(std::ostream& out, BodyLocation location) {
-    switch(location) {
-        case BodyLocation::Head:
-            out << "Head";
+    switch (location) {
+    case BodyLocation::Head:
+        out << "Head";
         return out;
-        case BodyLocation::Body:
-            out << "Body";
+    case BodyLocation::Body:
+        out << "Body";
         return out;
-        case BodyLocation::Arms:
-            out << "Arms";
+    case BodyLocation::Arms:
+        out << "Arms";
         return out;
-        case BodyLocation::Legs:
-            out << "Legs";
+    case BodyLocation::Legs:
+        out << "Legs";
         return out;
-        case BodyLocation::Internal:
-            out << "Internal";
+    case BodyLocation::Internal:
+        out << "Internal";
         return out;
-        case BodyLocation::ALL:
-            out << "ALL";
+    case BodyLocation::ALL:
+        out << "ALL";
         return out;
-        default:
-            out << "Unknown";
+    default:
+        out << "Unknown";
         return out;
     }
 }
 
 auto& operator<<(std::ostream& out, EffectType effect) {
     switch (effect) {
-        case EffectType::Infection:
-            out << " [Infection]";
-            break;
-        case EffectType::Bleed:
-            out << " [bleed]";
-            break;
-        case EffectType::Burn:
-            out << " [burn]";
-            break;
-        case EffectType::Sleep:
-            out << " [sleep]";
-            break;
-        case EffectType::Daze:
-            out << " [Daze]";
-            break;
-        case EffectType::Devour:
-            out << " [devour]";
-            break;
-        case EffectType::Stun:
-            out << " [stunned]";
-            break;
-        case EffectType::None:
-            out << " [none]";
-            break;
-        default:
-            out << " [unknown]";
-            break;
+    case EffectType::Infection:
+        out << " [Infection]";
+        break;
+    case EffectType::Bleed:
+        out << " [bleed]";
+        break;
+    case EffectType::Burn:
+        out << " [burn]";
+        break;
+    case EffectType::Sleep:
+        out << " [sleep]";
+        break;
+    case EffectType::Daze:
+        out << " [Daze]";
+        break;
+    case EffectType::Devour:
+        out << " [devour]";
+        break;
+    case EffectType::Stun:
+        out << " [stunned]";
+        break;
+    case EffectType::None:
+        out << " [none]";
+        break;
+    default:
+        out << " [unknown]";
+        break;
     }
     return out;
 }
 
 auto& operator<<(std::ostream& out, EffectState location) {
-    switch(location) {
-        case EffectState::Inactive:
-            out << "Inactive";
+    switch (location) {
+    case EffectState::Inactive:
+        out << "Inactive";
         return out;
-        case EffectState::Active:
-            out << "Active";
+    case EffectState::Active:
+        out << "Active";
         return out;
-        case EffectState::Removed:
-            out << "Removed";
+    case EffectState::Removed:
+        out << "Removed";
         return out;
-        case EffectState::Ended:
-            out << "Ended";
-        default:
-            out << "unknown";
+    case EffectState::Ended:
+        out << "Ended";
+    default:
+        out << "unknown";
         return out;
     }
 }
 
-
 auto& operator<<(std::ostream& out, Duration duration) {
     switch (duration.type()) {
-        case DurationType::Day:
-            out << " (" << duration.value() << " Days) ";
-            break;
-        case DurationType::Hour:
-            out << " (" << duration.value() << " Hours) ";
-            break;
-        case DurationType::Minute:
-            out << " (" << duration.value() << " Minutes) ";
-            break;
-        case DurationType::Round:
-            out << " (" << duration.value() << " Rounds) ";
-            break;
-        case DurationType::Action:
-            out << " (" << duration.value() << " Actions) ";
-            break;
-        case DurationType::Instant:
-            out << " (" << duration.value() << " Instant) ";
-            break;
+    case DurationType::Day:
+        out << " (" << duration.value() << " Days) ";
+        break;
+    case DurationType::Hour:
+        out << " (" << duration.value() << " Hours) ";
+        break;
+    case DurationType::Minute:
+        out << " (" << duration.value() << " Minutes) ";
+        break;
+    case DurationType::Round:
+        out << " (" << duration.value() << " Rounds) ";
+        break;
+    case DurationType::Action:
+        out << " (" << duration.value() << " Actions) ";
+        break;
+    case DurationType::Instant:
+        out << " (" << duration.value() << " Instant) ";
+        break;
     }
     return out;
 }
@@ -113,11 +112,13 @@ auto& operator<<(std::ostream& out, Duration duration) {
 auto print_hp = [](auto&& value) {
     auto& hp = value.get();
     if constexpr (not std::is_const_v<std::remove_reference_t<decltype(hp)>>) {
-        std::cout << "[&]"; // value is reference_wraper to non const type - can be changed
+        std::cout << "[&]";  // value is reference_wraper to non const type - can be changed
     }
 
     std::cout << "(Health: " << hp.value();
-    if (hp.value() == hp.maxValue()) { std::cout << " MAX"; }
+    if (hp.value() == hp.maxValue()) {
+        std::cout << " MAX";
+    }
     std::cout << ")";
     if (not hp.effects().empty()) {
         for (const auto& effect : hp.effects()) {
@@ -144,7 +145,7 @@ auto print_ac = [](auto&& value) {
     if constexpr (not std::is_const_v<std::remove_reference_t<decltype(ac)>>) {
         std::cout << "[&]";
     }
-    
+
     std::cout << "(Ac: " << ac.value() << " to " << ac.location() << ") ";
 
     if (not ac.protectEffects().empty()) {
@@ -154,7 +155,7 @@ auto print_ac = [](auto&& value) {
         }
         std::cout << ") ";
     }
-    
+
     return std::optional{true};
 };
 
@@ -163,7 +164,7 @@ auto print_wear = [](auto&& value) {
     if constexpr (not std::is_const_v<std::remove_reference_t<decltype(armorWear)>>) {
         std::cout << "[&]";
     }
-    
+
     std::cout << "(armor class: " << armorWear.value() << ") ";
 
     if (not armorWear.protectEffects().empty()) {
@@ -173,7 +174,7 @@ auto print_wear = [](auto&& value) {
         }
         std::cout << ") ";
     }
-    
+
     return std::optional{true};
 };
 
@@ -182,7 +183,7 @@ auto print_dmg = [](auto&& value) {
     if constexpr (not std::is_const_v<std::remove_reference_t<decltype(damage)>>) {
         std::cout << "[&]";
     }
-    
+
     std::cout << "(Damage: " << damage.value() << damage.effect().effectType() << damage.effect().duration();
     std::cout << damage.effect().state().effectState();
     std::cout << ")";
@@ -194,7 +195,7 @@ auto print_restore = [](auto&& value) {
     if constexpr (not std::is_const_v<std::remove_reference_t<decltype(effects)>>) {
         std::cout << "[&]";
     }
-    
+
     std::cout << "(Restore: ";
     for (const auto& effect : effects) {
         std::cout << effect;
@@ -215,7 +216,7 @@ auto print_liveable = [](const auto& person) {
     }
 };
 
-auto print_person = [](const auto& person){
+auto print_person = [](const auto& person) {
     std::cout << person.name();
     print_liveable(person);
     // getOpt<Parameter::Armor>(person).and_then(print_ac);
