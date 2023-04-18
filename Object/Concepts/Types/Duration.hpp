@@ -10,11 +10,15 @@ struct Duration {
 
     auto operator<=>(const Duration& other) const noexcept = default;
 
-    auto& value() noexcept { return value_; }
-    auto value() const noexcept { return value_; }
+    auto& value() & noexcept { return value_; }
+    auto value() && noexcept { return value_; }
+    auto value() const& noexcept { return value_; }
+    auto value() const&& noexcept { return value_; }
 
-    auto& type() noexcept { return type_; }
-    auto type() const noexcept { return type_; }
+    auto& type() & noexcept { return type_; }
+    auto type() && noexcept { return type_; }
+    auto type() const& noexcept { return type_; }
+    auto type() const&& noexcept { return type_; }
 
     // return true if duration ended
     bool timePass(Duration timedelta) noexcept {

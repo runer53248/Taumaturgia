@@ -45,14 +45,20 @@ struct Effect {
         return duration_ == other;
     }
 
-    auto& effectType() noexcept { return effectType_; }
-    auto effectType() const noexcept { return effectType_; }
+    auto& effectType() & noexcept { return effectType_; }
+    auto effectType() && noexcept { return effectType_; }
+    auto effectType() const& noexcept { return effectType_; }
+    auto effectType() const&& noexcept { return effectType_; }
 
-    auto& state() noexcept { return state_; }
-    auto state() const noexcept { return state_; }
+    auto& state() & noexcept { return state_; }
+    auto state() && noexcept { return state_; }
+    auto state() const& noexcept { return state_; }
+    auto state() const&& noexcept { return state_; }
 
-    auto& duration() noexcept { return duration_; }
-    auto duration() const noexcept { return duration_; }
+    auto& duration() & noexcept { return duration_; }
+    auto duration() && noexcept { return duration_; }
+    auto duration() const& noexcept { return duration_; }
+    auto duration() const&& noexcept { return duration_; }
 
     bool isActive() const noexcept {
         return state_.effectState() == EffectState::Active;
