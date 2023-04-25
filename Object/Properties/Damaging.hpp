@@ -4,10 +4,9 @@
 
 template <typename T>
 struct Damaging_ : T {
-    Damaging_(const Name& name, Damage dmg, auto... args)
-        : T{name, std::forward<decltype(args)>(args)...}, dmg(dmg) {}
-    Damaging_(const Name& name, auto... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    Damaging_(const Name& name, auto&& dmg, auto&&... args)
+        requires std::is_convertible_v<Damage, decltype(dmg)>
+        : T{name, std::forward<decltype(args)>(args)...}, dmg{std::forward<decltype(dmg)>(dmg)} {}
 
     Damage dmg{};
 };

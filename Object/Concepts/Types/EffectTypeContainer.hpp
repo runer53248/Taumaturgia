@@ -8,12 +8,12 @@ struct EffectTypeContainer {
     using container_type = std::set<T>;
 
     EffectTypeContainer() = default;
-    EffectTypeContainer(const EffectType& effectType)
-        : effectTypes_{effectType} {}
-    EffectTypeContainer(const EffectTypeContainer& effectTypes)
-        : effectTypes_{effectTypes.effectTypes_} {}
+
     EffectTypeContainer(std::initializer_list<EffectType> effectTypes)
         : effectTypes_{effectTypes} {}
+
+    EffectTypeContainer(EffectType effectType)
+        : effectTypes_{effectType} {}
 
     auto operator<=>(const EffectTypeContainer&) const = default;
 

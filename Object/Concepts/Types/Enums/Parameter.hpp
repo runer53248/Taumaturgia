@@ -3,7 +3,7 @@
 enum class Parameter {
     Health,
     CureHealth,
-    Armor,
+    Protection,
     Damage,
     Restore,
     Wear

@@ -114,7 +114,7 @@ public:
             return {};
         }
 
-        if constexpr (param == Parameter::Armor) {
+        if constexpr (param == Parameter::Protection) {
             if (not object.can_defend) {
                 return {};
             }
@@ -163,9 +163,9 @@ public:
             return opt_variant.transform([](auto var_ref) {
                 return std::get<return_type>(var_ref);
             });
-        } else if constexpr (param == Parameter::Armor) {
+        } else if constexpr (param == Parameter::Protection) {
             using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
-                                            const ArmorClass, ArmorClass>;
+                                            const Protection, Protection>;
             using return_type = std::reference_wrapper<type>;
 
             return opt_variant.transform([](auto var_ref) {
@@ -181,7 +181,7 @@ public:
             });
         } else if constexpr (param == Parameter::Wear) {
             using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
-                                            const ArmorClassContainer, ArmorClassContainer>;
+                                            const ProtectionContainer, ProtectionContainer>;
             using return_type = std::reference_wrapper<type>;
 
             return opt_variant.transform([](auto var_ref) {
@@ -272,8 +272,8 @@ constexpr auto Object::ObjectModel<T>::get_impl(Gettingable auto& type, Paramete
         get_optional_variant_type>;
 
     switch (param) {
-    case Parameter::Armor:
-        return get_impl<Parameter::Armor>(type);
+    case Parameter::Protection:
+        return get_impl<Parameter::Protection>(type);
     case Parameter::Damage:
         return get_impl<Parameter::Damage>(type);
     case Parameter::Health:

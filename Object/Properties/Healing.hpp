@@ -4,10 +4,9 @@
 
 template <typename T>
 struct Healing_ : T {
-    Healing_(const Name& name, Health cureHealth, auto... args)
-        : T{name, std::forward<decltype(args)>(args)...}, cureHealth(cureHealth) {}
-    Healing_(const Name& name, auto... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    Healing_(const Name& name, auto&& cureHealth, auto&&... args)
+        requires std::is_convertible_v<Health, decltype(cureHealth)>
+        : T{name, std::forward<decltype(args)>(args)...}, cureHealth(std::forward<decltype(cureHealth)>(cureHealth)) {}
 
     Health cureHealth{};
 };

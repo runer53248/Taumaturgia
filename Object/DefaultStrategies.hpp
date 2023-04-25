@@ -18,7 +18,7 @@ std::optional<bool> AliveStrategy_<Default>::operator()(Livingable auto& obj) co
 
 bool AttackStrategy_<Default>::operator()(Damagingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
-    auto opt_ac = getOpt<Parameter::Armor>(*suspect);
+    auto opt_protection = getOpt<Parameter::Protection>(*suspect);
     auto opt_restore = getOpt<Parameter::Restore>(*suspect);
 
     auto is_success = getOpt<Parameter::Health>(*suspect).and_then([&](auto&& ref_wrap) {
@@ -27,9 +27,9 @@ bool AttackStrategy_<Default>::operator()(Damagingable auto& obj, Object* owner,
         suspect_hp_ref.removeHealth(obj.dmg.value());
 
         if (auto attackEffect = obj.dmg.effect(); attackEffect != EffectType::None) {
-            if (opt_ac.has_value()) {
-                ArmorClass& suspect_ac = opt_ac.value();
-                if (suspect_ac.protectEffects().contains(attackEffect.effectType())) {  // check ArmorClass protection against attack effect
+            if (opt_protection.has_value()) {
+                Protection& suspect_protection = opt_protection.value();
+                if (suspect_protection.protectEffects().contains(attackEffect.effectType())) {  // check protection against attack effect
                     return std::optional{true};
                 }
             }
@@ -50,8 +50,8 @@ bool AttackStrategy_<Default>::operator()(Damagingable auto& obj, Object* owner,
 bool DefendStrategy_<Default>::operator()(Protectingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     auto is_success = getOpt<Parameter::Wear>(*suspect).and_then([&](auto&& ref_wrap) {
-        ArmorClassContainer& suspect_ac = ref_wrap;
-        suspect_ac.wearArmor(obj.ac);
+        ProtectionContainer& suspect_protection = ref_wrap;
+        suspect_protection.wearProtection(obj.protection);
         return std::optional{true};
     });
 
@@ -99,9 +99,9 @@ auto GetStrategy_<Default>::operator()(Gettingable auto& obj) const {
         if constexpr (Healingable<type>) {
             return result_type{std::ref(obj.cureHealth)};
         }
-    } else if constexpr (P == Parameter::Armor) {
+    } else if constexpr (P == Parameter::Protection) {
         if constexpr (Protectingable<type>) {
-            return result_type{std::ref(obj.ac)};
+            return result_type{std::ref(obj.protection)};
         }
     } else if constexpr (P == Parameter::Damage) {
         if constexpr (Damagingable<type>) {

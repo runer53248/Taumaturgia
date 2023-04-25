@@ -15,7 +15,7 @@ int main() {
     backpack.emplace_back(Damaging<CustomWeapon>{Name{"New_Custom_SWORD"}, Damage{32}});  // became Damagingable - custom AttackStrategy_<CustomWeapon> from 'struct.hpp'will handle it
     backpack.emplace_back(Damaging<DefaultWeapon>{Name{"Default_BATTLE_SWORD"}, Damage{32}});
 
-    auto gustav = Living<Healing<Living<Healing<Weapon>>>>{Name{"GUSTAV_INTELIGENT_SWORD"}, /*hp*/ Health{20}};  // duplicated Living and Healing will be ignored
+    auto gustav = Living<Healing<Living<Healing<Weapon>>>>{Name{"GUSTAV_INTELIGENT_SWORD"}, /*hp*/ Health{20}, /*healHp*/ Health{}};  // duplicated Living and Healing will be ignored
     static_assert(std::is_same_v<decltype(gustav), Living<Healing<Weapon>>>);
     gustav.name = Name{"Franco The Inteligent Sword"};
     gustav.hp = Health{75};
@@ -31,7 +31,7 @@ int main() {
         std::cout << '\n';
         getOpt<Parameter::CureHealth>(obj).and_then(print_cure_hp);
         std::cout << '\n';
-        // getOpt<Parameter::Armor>(obj).and_then(print_ac); // ignored - object dont have Ac
+        // getOpt<Parameter::Protection>(obj).and_then(print_protection); // ignored - object dont have Ac
         // std::cout << '\n';
         getOpt<Parameter::Damage>(obj).and_then(print_dmg);
         std::cout << '\n';
@@ -44,7 +44,7 @@ int main() {
         std::cout << '\n';
         getOpt<Parameter::CureHealth>(obj).and_then(print_cure_hp);
         std::cout << '\n';
-        // getOpt<Parameter::Armor>(obj).and_then(print_ac); // ignored - object dont have Ac
+        // getOpt<Parameter::Protection>(obj).and_then(print_protection); // ignored - object dont have Ac
         // std::cout << '\n';
         getOpt<Parameter::Damage>(obj).and_then(print_dmg);
         std::cout << '\n';
@@ -56,7 +56,7 @@ int main() {
     std::cout << '\n';
     getOpt<Parameter::CureHealth>(gustav_obj).and_then(print_cure_hp);
     std::cout << '\n';
-    // getOpt<Parameter::Armor>(gustav_obj).and_then(print_ac); // ignored - object dont have Ac
+    // getOpt<Parameter::Protection>(gustav_obj).and_then(print_protection); // ignored - object dont have Ac
     // std::cout << '\n';
     std::cout << "get and print - forced to return const reference:\n";
     getOpt<Parameter::Damage, const Object>(gustav_obj).and_then(print_dmg);  // force get version passing const reference
@@ -65,19 +65,20 @@ int main() {
 
     backpack.push_back(std::move(gustav_obj));
 
-    // arguments in constructor are from left to right - same as added properties (only Naming requires to be most left as all properties need to be used on Namingable type)
+    // arguments in constructor are from left to right - same as added properties (only Naming requires to be most right as all properties need to be used on Namingable type)
     auto gustav_2 = Living<Healing<Living<Healing<Weapon>>>>(Name{"GUSTAV_INTELIGENT_SWORD"}, /*hp*/ Health{20}, /*cureHealth*/ Health{30}, Damage{32});
-    // Living<Healing<Living<Healing<Naming<NoNameWeapon>>>>>( Name{"INCOGNITO SWORD"},/*hp*/ Health{20},/*cureHealth*/ Health{30}, Damage{32});
+    Living<Healing<Living<Healing<Naming<NoNameWeapon>>>>>(Name{"INCOGNITO SWORD"}, /*hp*/ Health{20}, /*cureHealth*/ Health{30}, Damage{32});
     static_assert(std::is_same_v<decltype(gustav_2), Living<Healing<Weapon>>>);
     backpack.emplace_back(gustav_2);
 
-    backpack.emplace_back(Armor{Name{"CHAIN_MAIL"}, ArmorClass{8, BodyLocation::Body}});
-    backpack.emplace_back(Protecting<Armor>{Name{"HALF_PLATE"}, ArmorClass{12}});
-    backpack.emplace_back(Damaging<Helmet>(Name{"BATTLE_HELM"}, Damage{10}, ArmorClass{4, BodyLocation::Head, {EffectType::Daze}}));
+    backpack.emplace_back(Armor{Name{"CHAIN_MAIL"}, Protection{8, BodyLocation::Body}});
+    backpack.emplace_back(Protecting<Armor>{Name{"HALF_PLATE"}, Protection{ArmorClass{12}}});
+
+    backpack.emplace_back(Damaging<Helmet>{Name{"BATTLE_HELM"}, Damage{10}, ArmorClass{4, BodyLocation::Head, {EffectType::Daze}}});
     backpack.emplace_back(Helmet{Name{"VIKING_HELM"}, ArmorClass{2, BodyLocation::Head, {EffectType::Stun}}});
     backpack.emplace_back(Healing<Potion>(Name{"HEALING_POTION"}, Health{20}));
     backpack.emplace_back(Healing<Potion>{Name{"SMALL_HEALING_POTION"}, Health{10}});  // TODO: add removing effects
-    backpack.emplace_back(Protecting<Potion>(Name{"SHIELD_POTION"}, ArmorClass{4, BodyLocation::Internal, EffectType::Sleep}));
+    backpack.emplace_back(Protecting<Potion>(Name{"SHIELD_POTION"}, ArmorClass{4, BodyLocation::Internal, {EffectType::Sleep}}));
     backpack.emplace_back(Scroll{Name{"USELESS_SCROLL"}});
     backpack.emplace_back(Scroll{Name{"EMPTY_SCROLL"}});
     backpack.emplace_back(Restoring<Scroll>{Name{"AWAKE_SCROLL"}, {EffectType::Sleep}});
@@ -123,7 +124,7 @@ int main() {
         }
 
         std::cout << player.name() << " defend self with " << item.name();
-        getOpt<Parameter::Armor>(item).and_then(print_ac);
+        getOpt<Parameter::Protection>(item).and_then(print_protection);
         std::cout << '\n';
         print_person(player);
     }
@@ -144,7 +145,7 @@ int main() {
         }
 
         std::cout << enemy.name() << " defend self with " << item.name();
-        getOpt<Parameter::Armor>(item).and_then(print_ac);
+        getOpt<Parameter::Protection>(item).and_then(print_protection);
         std::cout << '\n';
         print_person(enemy);
     }

@@ -3,12 +3,12 @@
 
 struct Armor {
     Name name;
-    ArmorClass ac{};
+    Protection protection{};
 };
 
 struct Helmet {
     Name name;
-    ArmorClass ac{};
+    Protection protection{};
 };
 
 struct Potion {
@@ -30,7 +30,7 @@ struct NoNameWeapon {
 
 struct Player {
     std::string name;  // string used as name
-    ArmorClassContainer armorWear{10};
+    ProtectionContainer armorWear{10};
 };
 
 struct Enemy {
@@ -46,7 +46,7 @@ struct DefaultWeapon {
     Damage dmg{};
 };
 
-struct CustomWeapon {  // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
+struct CustomWeapon {                 // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
     Name name;
     std::vector<DefaultWeapon> others{// will be used in AttackStrategy_<CustomWeapon>
                                       DefaultWeapon{Name{"Light weapon"}, Damage{10}},

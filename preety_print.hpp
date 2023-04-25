@@ -140,17 +140,17 @@ auto print_cure_hp = [](auto&& value) {
     return std::optional{true};
 };
 
-auto print_ac = [](auto&& value) {
-    auto& ac = value.get();
-    if constexpr (not std::is_const_v<std::remove_reference_t<decltype(ac)>>) {
+auto print_protection = [](auto&& value) {
+    auto& armor = value.get();  // can be either Protection or ArmorClass
+    if constexpr (not std::is_const_v<std::remove_reference_t<decltype(armor)>>) {
         std::cout << "[&]";
     }
 
-    std::cout << "(Ac: " << ac.value() << " to " << ac.location() << ") ";
+    std::cout << "(Ac: " << armor.armorClass() << " to " << armor.location() << ") ";
 
-    if (not ac.protectEffects().empty()) {
+    if (not armor.protectEffects().empty()) {
         std::cout << "(protection";
-        for (const auto& effect : ac.protectEffects()) {
+        for (const auto& effect : armor.protectEffects()) {
             std::cout << effect;
         }
         std::cout << ") ";
@@ -219,7 +219,7 @@ auto print_liveable = [](const auto& person) {
 auto print_person = [](const auto& person) {
     std::cout << person.name();
     print_liveable(person);
-    // getOpt<Parameter::Armor>(person).and_then(print_ac);
+    // getOpt<Parameter::Protection>(person).and_then(print_protection);
     getOpt<Parameter::Wear>(person).and_then(print_wear);
     getOpt<Parameter::Health>(person).and_then(print_hp);
     std::cout << '\n';
@@ -251,7 +251,7 @@ auto print_object = [](const auto& obj) {
         std::cout << '\n';
     }
     if (obj.can_defend) {
-        getOpt<Parameter::Armor>(obj).and_then(print_ac);
+        getOpt<Parameter::Protection>(obj).and_then(print_protection);
         std::cout << '\n';
     }
     if (obj.can_heal) {

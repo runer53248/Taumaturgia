@@ -3,7 +3,7 @@
 
 template <typename T>
 struct Naming_ : T {
-    Naming_(const Name& name, auto... args)
+    Naming_(const Name& name, auto&&... args)
         : T{std::forward<decltype(args)>(args)...}, name{name} {}
 
     Name name{};

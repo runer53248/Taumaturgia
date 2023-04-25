@@ -4,12 +4,11 @@
 
 template <typename T>
 struct Protecting_ : T {
-    Protecting_(const Name& name, ArmorClass ac, auto... args)
-        : T{name, std::forward<decltype(args)>(args)...}, ac(ac) {}
-    Protecting_(const Name& name, auto... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    Protecting_(const Name& name, auto&& protection, auto&&... args)
+        requires std::is_convertible_v<decltype(protection), Protection>
+        : T{name, std::forward<decltype(args)>(args)...}, protection{std::forward<decltype(protection)>(protection)} {}
 
-    ArmorClass ac{};
+    Protection protection{};
 };
 
 struct Protecting_Test {};

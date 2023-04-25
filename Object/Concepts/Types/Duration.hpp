@@ -53,6 +53,7 @@ struct Duration {
         }
         type_ = DurationType::Instant;
         value_ = 0;
+        return true;
     }
 
 private:

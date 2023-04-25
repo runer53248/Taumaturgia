@@ -9,13 +9,8 @@ struct ArmorClass {
     explicit ArmorClass(int value) noexcept
         : value_{value} {}
     ArmorClass(int value, BodyLocation location) noexcept
-        : value_{value}, location_{location} {
-        if (location_ >= BodyLocation::ALL or location_ == BodyLocation::NONE) {
-            location_ = BodyLocation::NONE;
-            value_ = 0;
-        }
-    }
-    ArmorClass(int value, BodyLocation location, EffectTypeContainer protectEffects) noexcept
+        : ArmorClass(value, location, {}) {}
+    ArmorClass(int value, BodyLocation location, std::initializer_list<EffectType> protectEffects) noexcept
         : value_{value}, location_{location}, protectEffects_{protectEffects} {
         if (location_ >= BodyLocation::ALL or location_ == BodyLocation::NONE) {
             location_ = BodyLocation::NONE;
@@ -25,14 +20,26 @@ struct ArmorClass {
 
     auto operator<=>(const ArmorClass& other) const noexcept = default;
 
-    auto value() const noexcept { return value_; }
+    auto armorClass() const noexcept {
+        return value_;
+    }
 
-    auto location() const noexcept { return location_; }
+    auto location() const noexcept {
+        return location_;
+    }
 
-    auto& protectEffects() & noexcept { return protectEffects_; }
-    auto protectEffects() && noexcept { return protectEffects_; }
-    auto& protectEffects() const& noexcept { return protectEffects_; }
-    auto protectEffects() const&& noexcept { return protectEffects_; }
+    auto& protectEffects() & noexcept {
+        return protectEffects_;
+    }
+    auto protectEffects() && noexcept {
+        return protectEffects_;
+    }
+    auto& protectEffects() const& noexcept {
+        return protectEffects_;
+    }
+    auto protectEffects() const&& noexcept {
+        return protectEffects_;
+    }
 
 private:
     int value_{};
