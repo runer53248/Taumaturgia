@@ -6,6 +6,15 @@ struct Naming_ : T {
     Naming_(const Name& name, auto&&... args)
         : T{std::forward<decltype(args)>(args)...}, name{name} {}
 
+    auto& getName() {
+        return name;
+    }
+
+    const auto& getName() const {
+        return name;
+    }
+
+private:
     Name name{};
 };
 

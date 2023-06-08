@@ -68,11 +68,11 @@ struct AttackStrategy_<CustomWeapon> {
         if (hp_opt) {
             Health& hp = hp_opt.value();
             if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) {  // when got Damagingable property
-                hp.removeHealth(obj.dmg.value());
+                hp.removeHealth(traits::accessDamage::get(obj).value());
             }
 
             for (auto& other : obj.others) {
-                hp.removeHealth(other.dmg.value());
+                hp.removeHealth(traits::accessDamage::get(other).value());
 
                 subAttacks(other);
             }

@@ -11,8 +11,8 @@ concept DamageAccessable = requires(T x) {
 
 template <typename T>
 concept GetDamageAccessable = requires(T x) {
-    x.getDmg();
-    { x.getDmg() } -> std::convertible_to<Damage>;
+    x.getDamage();
+    { x.getDamage() } -> std::convertible_to<Damage>;
 };
 
 namespace traits {
@@ -34,7 +34,7 @@ struct accessDamage {
 
     template <GetDamageAccessable T>
     static auto& get(T& el) {
-        return el.getDmg();
+        return el.getDamage();
     }
 
     template <CustomDamageAccessable T>

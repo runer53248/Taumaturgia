@@ -8,6 +8,15 @@ struct Healing_ : T {
         requires std::is_convertible_v<Health, decltype(cureHealth)>
         : T{name, std::forward<decltype(args)>(args)...}, cureHealth(std::forward<decltype(cureHealth)>(cureHealth)) {}
 
+    auto& getCureHealth() {
+        return cureHealth;
+    }
+
+    const auto& getCureHealth() const {
+        return cureHealth;
+    }
+
+private:
     Health cureHealth{};
 };
 

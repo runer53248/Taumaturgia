@@ -8,6 +8,15 @@ struct Damaging_ : T {
         requires std::is_convertible_v<Damage, decltype(dmg)>
         : T{name, std::forward<decltype(args)>(args)...}, dmg{std::forward<decltype(dmg)>(dmg)} {}
 
+    auto& getDamage() {
+        return dmg;
+    }
+
+    const auto& getDamage() const {
+        return dmg;
+    }
+
+private:
     Damage dmg{};
 };
 

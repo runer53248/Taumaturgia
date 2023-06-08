@@ -30,8 +30,8 @@ int main() {
         /*healHp*/ Health{}};  // duplicated Living and Healing will be ignored
     static_assert(std::is_same_v<decltype(gustav), Living<Healing<Weapon>>>);
     gustav.name = Name{"Franco The Inteligent Sword"};
-    gustav.hp = Health{75};
-    gustav.cureHealth = Health{30};
+    traits::accessHealth::get(gustav) = Health{75};
+    traits::accessCureHealth::get(gustav) = Health{30};
     gustav.dmg = Damage{100,
                         Effect{
                             EffectType::Stun,

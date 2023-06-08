@@ -10,6 +10,15 @@ struct Restoring_ : T {
     Restoring_(const Name& name, std::initializer_list<EffectType>&& restoreEffects, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, restoreEffects{std::forward<decltype(restoreEffects)>(restoreEffects)} {}
 
+    auto& getRestoreEffects() {
+        return restoreEffects;
+    }
+
+    const auto& getRestoreEffects() const {
+        return restoreEffects;
+    }
+
+private:
     EffectTypeContainer restoreEffects{};
 };
 

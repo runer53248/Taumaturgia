@@ -8,6 +8,15 @@ struct Living_ : T {
         requires std::is_convertible_v<decltype(hp), Health>  // this requirement block implicit conversion for Health like: Living<...>{Name{""}, 1};
         : T{name, std::forward<decltype(args)>(args)...}, hp{std::forward<decltype(hp)>(hp)} {}
 
+    auto& getHp() {
+        return hp;
+    }
+
+    const auto& getHp() const {
+        return hp;
+    }
+
+private:
     Health hp{};
 };
 

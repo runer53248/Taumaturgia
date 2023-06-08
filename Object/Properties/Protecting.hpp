@@ -8,6 +8,15 @@ struct Protecting_ : T {
         requires std::is_convertible_v<decltype(protection), Protection>
         : T{name, std::forward<decltype(args)>(args)...}, protection{std::forward<decltype(protection)>(protection)} {}
 
+    auto& getProtection() {
+        return protection;
+    }
+
+    const auto& getProtection() const {
+        return protection;
+    }
+
+private:
     Protection protection{};
 };
 

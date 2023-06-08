@@ -7,6 +7,15 @@ struct Wearing_ : T {
     Wearing_(const Name& name, auto&& armorWear, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, armorWear(std::forward<decltype(armorWear)>(armorWear)) {}
 
+    auto& getArmorWear() {
+        return armorWear;
+    }
+
+    const auto& getArmorWear() const {
+        return armorWear;
+    }
+
+private:
     ProtectionContainer armorWear{};
 };
 
