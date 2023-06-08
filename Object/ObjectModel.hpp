@@ -1,6 +1,6 @@
 template <Namingable T>
 std::string Object::ObjectModel<T>::name() const {
-    return type_.name;
+    return traits::accessName::get(type_);
 }
 
 template <Namingable T>

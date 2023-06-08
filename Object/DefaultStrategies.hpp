@@ -51,7 +51,7 @@ bool DefendStrategy_<Default>::operator()(Protectingable auto& obj, Object* owne
     auto* suspect = Whom(owner, target);
     auto is_success = getOpt<Parameter::Wear>(*suspect).and_then([&](auto&& ref_wrap) {
         ProtectionContainer& suspect_protection = ref_wrap;
-        suspect_protection.wearProtection(obj.protection);
+        suspect_protection.wearProtection(traits::accessProtection::get(obj));
         return std::optional{true};
     });
 
@@ -62,7 +62,7 @@ bool HealStrategy_<Default>::operator()(Healingable auto& obj, Object* owner, Ob
     auto* suspect = Whom(owner, target);
     auto is_success = getOpt<Parameter::Health>(*suspect).and_then([&](auto&& ref_wrap) {
         Health& suspect_hp = ref_wrap;
-        suspect_hp.addHealth(obj.cureHealth.value());
+        suspect_hp.addHealth(traits::accessCureHealth::get(obj).value());
         return std::optional{true};
     });
     return is_success.has_value();
@@ -74,7 +74,7 @@ bool RestoreStrategy_<Default>::operator()(Restoringable auto& obj, Object* owne
         Health& hp_ref = ref_wrap;
 
         if (auto& suspect_effects = hp_ref.effects(); not suspect_effects.empty()) {
-            for (const auto& restoreEffect : obj.restoreEffects) {
+            for (const auto& restoreEffect : traits::accessRestoreEffects::get(obj)) {
                 suspect_effects.removeEffectType(restoreEffect);
             }
         }
@@ -93,27 +93,33 @@ auto GetStrategy_<Default>::operator()(Gettingable auto& obj) const {
     using type = std::remove_reference_t<decltype(obj)>;
     if constexpr (P == Parameter::Health) {
         if constexpr (Livingable<type>) {
-            return result_type{std::ref(traits::accessHealth::get(obj))};
+            return result_type{
+                std::ref(traits::accessHealth::get(obj))};
         }
     } else if constexpr (P == Parameter::CureHealth) {
         if constexpr (Healingable<type>) {
-            return result_type{std::ref(obj.cureHealth)};
+            return result_type{
+                std::ref(traits::accessCureHealth::get(obj))};
         }
     } else if constexpr (P == Parameter::Protection) {
         if constexpr (Protectingable<type>) {
-            return result_type{std::ref(obj.protection)};
+            return result_type{
+                std::ref(traits::accessProtection::get(obj))};
         }
     } else if constexpr (P == Parameter::Damage) {
         if constexpr (Damagingable<type>) {
-            return result_type{std::ref(traits::accessDamage::get(obj))};
+            return result_type{
+                std::ref(traits::accessDamage::get(obj))};
         }
     } else if constexpr (P == Parameter::Restore) {
         if constexpr (Restoringable<type>) {
-            return result_type{std::ref(obj.restoreEffects)};
+            return result_type{
+                std::ref(traits::accessRestoreEffects::get(obj))};
         }
     } else if constexpr (P == Parameter::Wear) {
         if constexpr (Wearingable<type>) {
-            return result_type{std::ref(obj.armorWear)};
+            return result_type{
+                std::ref(traits::accessArmorWear::get(obj))};
         }
     }
     return result_type{};

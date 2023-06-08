@@ -1,9 +1,10 @@
 #pragma once
 #include <type_traits>
+#include "Traits/ArmorWearTraits.hpp"
 #include "Types/ProtectionContainer.hpp"
 
 template <typename T>
 concept Wearingable = requires(T x) {
-    x.armorWear;
-    std::is_same_v<decltype(T::armorWear), ProtectionContainer>;
+    traits::accessArmorWear::get(x);
+    { traits::accessArmorWear::get(x) } -> std::convertible_to<ProtectionContainer>;
 };

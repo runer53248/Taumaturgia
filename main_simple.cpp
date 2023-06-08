@@ -10,6 +10,19 @@ struct Item {
 
 struct Armor {
     Name name;
+
+    Armor(std::string name, Protection protection)
+        : name{name}, protection{protection} {}
+
+    auto& getProtection() {
+        return protection;
+    }
+
+    const auto& getProtection() const {
+        return protection;
+    }
+
+private:
     Protection protection;
 };
 
@@ -67,11 +80,18 @@ struct Player {
 };
 
 struct Player_B {
-    std::string name;
     ProtectionContainer armorWear{10};
 
     Player_B(const std::string& name, Health hp)
         : name{name}, hp{hp} {}
+
+    auto& Name() {
+        return name;
+    }
+
+    const auto& Name() const {
+        return name;
+    }
 
     auto& getHp() {
         return hp;
@@ -82,7 +102,15 @@ struct Player_B {
     }
 
 private:
+    std::string name;
     Health hp;
+};
+
+template <>
+struct traits::customAccessName<Player_B> {
+    static auto& get(auto& el) {
+        return el.Name();
+    }
 };
 
 int main() {
