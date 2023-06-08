@@ -13,8 +13,52 @@ struct Armor {
     Protection protection;
 };
 
-struct Weapon {
+struct Weapon_A {
     std::string name;
+    Damage dmg;
+};
+
+struct Weapon_B {
+    std::string name;
+
+    Weapon_B(std::string name, Damage dmg)
+        : name{name}, dmg{dmg} {}
+
+    auto& getDmg() {
+        return dmg;
+    }
+
+    const auto& getDmg() const {
+        return dmg;
+    }
+
+private:
+    Damage dmg;
+};
+
+struct Weapon_C {
+    std::string name;
+
+    Weapon_C(const std::string& name, Damage dmg)
+        : name{name}, dmg{dmg} {}
+
+    auto& Dmg() {
+        return dmg;
+    }
+
+    const auto& Dmg() const {
+        return dmg;
+    }
+
+private:
+    Damage dmg;
+};
+
+template <>
+struct traits::customAccessDamage<Weapon_C> {
+    static auto& get(auto& el) {
+        return el.Dmg();
+    }
 };
 
 struct Player {
@@ -22,15 +66,34 @@ struct Player {
     ProtectionContainer armorWear{10};
 };
 
+struct Player_B {
+    std::string name;
+    ProtectionContainer armorWear{10};
+
+    Player_B(const std::string& name, Health hp)
+        : name{name}, hp{hp} {}
+
+    auto& getHp() {
+        return hp;
+    }
+
+    const auto& getHp() const {
+        return hp;
+    }
+
+private:
+    Health hp;
+};
+
 int main() {
     std::vector<Object> container;
 
-    Object weapon = Damaging<Weapon>{
+    Object weapon = Damaging<Weapon_C>{
         Name{"Sword"},
         Damage{50,
                Effect{EffectType::Infection}}};
 
-    Object weapon_2 = Damaging<Weapon>{
+    Object weapon_2 = Damaging<Weapon_C>{
         Name{"Sword 2"},
         Damage{50,
                Effect{
@@ -44,7 +107,7 @@ int main() {
         EffectType::Infection,
         Health{10}};  // will ignore Infection effects
 
-    Object warior = Living<Player>{
+    Object warior = Living<Player_B>{
         Name{"Warior"},
         Health{100}};
 

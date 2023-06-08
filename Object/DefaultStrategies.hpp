@@ -13,7 +13,7 @@ inline Object* Whom(Object* const owner, Object* const target) {
 }
 
 std::optional<bool> AliveStrategy_<Default>::operator()(Livingable auto& obj) const {
-    return obj.hp.value() > 0;
+    return traits::accessHealth::get(obj).value() > 0;
 }
 
 bool AttackStrategy_<Default>::operator()(Damagingable auto& obj, Object* owner, Object* target) const {
@@ -24,9 +24,9 @@ bool AttackStrategy_<Default>::operator()(Damagingable auto& obj, Object* owner,
     auto is_success = getOpt<Parameter::Health>(*suspect).and_then([&](auto&& ref_wrap) {
         Health& suspect_hp_ref = ref_wrap;
 
-        suspect_hp_ref.removeHealth(obj.dmg.value());
+        suspect_hp_ref.removeHealth(traits::accessDamage::get(obj).value());
 
-        if (auto attackEffect = obj.dmg.effect(); attackEffect != EffectType::None) {
+        if (auto attackEffect = traits::accessDamage::get(obj).effect(); attackEffect != EffectType::None) {
             if (opt_protection.has_value()) {
                 Protection& suspect_protection = opt_protection.value();
                 if (suspect_protection.protectEffects().contains(attackEffect.effectType())) {  // check protection against attack effect
@@ -93,7 +93,7 @@ auto GetStrategy_<Default>::operator()(Gettingable auto& obj) const {
     using type = std::remove_reference_t<decltype(obj)>;
     if constexpr (P == Parameter::Health) {
         if constexpr (Livingable<type>) {
-            return result_type{std::ref(obj.hp)};
+            return result_type{std::ref(traits::accessHealth::get(obj))};
         }
     } else if constexpr (P == Parameter::CureHealth) {
         if constexpr (Healingable<type>) {
@@ -105,7 +105,7 @@ auto GetStrategy_<Default>::operator()(Gettingable auto& obj) const {
         }
     } else if constexpr (P == Parameter::Damage) {
         if constexpr (Damagingable<type>) {
-            return result_type{std::ref(obj.dmg)};
+            return result_type{std::ref(traits::accessDamage::get(obj))};
         }
     } else if constexpr (P == Parameter::Restore) {
         if constexpr (Restoringable<type>) {
