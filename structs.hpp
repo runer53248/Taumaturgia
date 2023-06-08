@@ -46,7 +46,7 @@ struct DefaultWeapon {
     Damage dmg{};
 };
 
-struct CustomWeapon {                 // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
+struct CustomWeapon {  // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
     Name name;
     std::vector<DefaultWeapon> others{// will be used in AttackStrategy_<CustomWeapon>
                                       DefaultWeapon{Name{"Light weapon"}, Damage{10}},

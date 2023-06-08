@@ -45,8 +45,8 @@ private:
         constexpr get_optional_variant_const_type get(Parameter param) const override;
 
     private:
-        template <Parameter P, Gettingable G>
-        inline constexpr auto get_impl(G& type) const;
+        template <Parameter P>
+        inline constexpr auto get_impl(Gettingable auto& type) const;
         inline constexpr auto get_impl(Gettingable auto& type, Parameter param) const;
 
         T type_;
@@ -74,39 +74,12 @@ public:
           can_wear{WearStrategable<WearStrategy, T>},
           can_get{GetStrategable<GetStrategy, T>} {}
 
-    std::string name() const {
-        return object_->name();
-    }
-    std::optional<bool> alive() const {
-        if (not can_alive) {
-            return {};
-        }
-        return object_->alive();
-    }
-    bool attack(Object* owner, Object* target = nullptr) const {
-        if (not can_attack) {
-            return false;
-        }
-        return object_->attack(owner, target);
-    }
-    bool defend(Object* owner, Object* target = nullptr) const {
-        if (not can_defend) {
-            return false;
-        }
-        return object_->defend(owner, target);
-    }
-    bool heal(Object* owner, Object* target = nullptr) const {
-        if (not can_heal) {
-            return false;
-        }
-        return object_->heal(owner, target);
-    }
-    bool restore(Object* owner, Object* target = nullptr) const {
-        if (not can_restore) {
-            return false;
-        }
-        return object_->restore(owner, target);
-    }
+    std::string name() const;
+    std::optional<bool> alive() const;
+    bool attack(Object* owner, Object* target = nullptr) const;
+    bool defend(Object* owner, Object* target = nullptr) const;
+    bool heal(Object* owner, Object* target = nullptr) const;
+    bool restore(Object* owner, Object* target = nullptr) const;
 
     template <Parameter param>
     friend constexpr auto getOptVariant(Objected auto& object) -> decltype(object.object_->get(std::declval<Parameter>())) {  // return type depends on object constness
@@ -142,149 +115,29 @@ public:
         return object.object_->get(param);
     }
 
-    template <Parameter param, Objected T>
-    friend constexpr auto getOpt(T& object) {
+    template <Parameter param>
+    friend constexpr auto getOpt(Objected auto& object) {
         auto opt_variant = getOptVariant<param>(object);
 
-        if constexpr (param == Parameter::Health or param == Parameter::CureHealth) {
-            using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
-                                            const Health, Health>;
-            using return_type = std::reference_wrapper<type>;
-
+        auto extract_ref_wrapper = [&]<typename T>(T) {
+            using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>, const T, T>;
             return opt_variant.transform([](auto var_ref) {  // transform variant of reference_wrapper to reference_wrapper of type
-                return std::get<return_type>(var_ref);
+                return std::get<std::reference_wrapper<type>>(var_ref);
             });
+        };
 
+        if constexpr (param == Parameter::Health or param == Parameter::CureHealth) {
+            return extract_ref_wrapper(Health{});
         } else if constexpr (param == Parameter::Damage) {
-            using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
-                                            const Damage, Damage>;
-            using return_type = std::reference_wrapper<type>;
-
-            return opt_variant.transform([](auto var_ref) {
-                return std::get<return_type>(var_ref);
-            });
+            return extract_ref_wrapper(Damage{});
         } else if constexpr (param == Parameter::Protection) {
-            using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
-                                            const Protection, Protection>;
-            using return_type = std::reference_wrapper<type>;
-
-            return opt_variant.transform([](auto var_ref) {
-                return std::get<return_type>(var_ref);
-            });
+            return extract_ref_wrapper(Protection{});
         } else if constexpr (param == Parameter::Restore) {
-            using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
-                                            const EffectTypeContainer, EffectTypeContainer>;
-            using return_type = std::reference_wrapper<type>;
-
-            return opt_variant.transform([](auto var_ref) {
-                return std::get<return_type>(var_ref);
-            });
+            return extract_ref_wrapper(EffectTypeContainer{});
         } else if constexpr (param == Parameter::Wear) {
-            using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>,
-                                            const ProtectionContainer, ProtectionContainer>;
-            using return_type = std::reference_wrapper<type>;
-
-            return opt_variant.transform([](auto var_ref) {
-                return std::get<return_type>(var_ref);
-            });
+            return extract_ref_wrapper(ProtectionContainer{});
         }
     }
 };
 
-template <Namingable T>
-std::string Object::ObjectModel<T>::name() const {
-    return type_.name;
-}
-
-template <Namingable T>
-std::optional<bool> Object::ObjectModel<T>::alive() const {
-    if constexpr (AliveStrategable<AliveStrategy, T>) {
-        static constinit AliveStrategy<T> aliveStrategy_{};
-        return aliveStrategy_(type_);
-    }
-    return {};
-}
-
-template <Namingable T>
-bool Object::ObjectModel<T>::attack(Object* owner, Object* target) const {
-    if constexpr (AttackStrategable<AttackStrategy, T>) {
-        static constinit AttackStrategy<T> attackStrategy_{};
-        return attackStrategy_(type_, owner, target);
-    }
-    return {};
-}
-
-template <Namingable T>
-bool Object::ObjectModel<T>::defend(Object* owner, Object* target) const {
-    if constexpr (DefendStrategable<DefendStrategy, T>) {
-        static constinit DefendStrategy<T> defendStrategy_{};
-        return defendStrategy_(type_, owner, target);
-    }
-    return {};
-}
-
-template <Namingable T>
-bool Object::ObjectModel<T>::heal(Object* owner, Object* target) const {
-    if constexpr (HealStrategable<HealStrategy, T>) {
-        static constinit HealStrategy<T> healStrategy_{};
-        return healStrategy_(type_, owner, target);
-    }
-    return {};
-}
-
-template <Namingable T>
-bool Object::ObjectModel<T>::restore(Object* owner, Object* target) const {
-    if constexpr (RestoreStrategable<RestoreStrategy, T>) {
-        static constinit RestoreStrategy<T> restoreStrategy_{};
-        return restoreStrategy_(type_, owner, target);
-    }
-    return {};
-}
-
-template <Namingable T>
-constexpr auto Object::ObjectModel<T>::get(Parameter param) -> get_optional_variant_type {
-    if constexpr (GetStrategable<GetStrategy, T>) {
-        return get_impl(type_, param);
-    }
-    return {};
-}
-
-template <Namingable T>
-constexpr auto Object::ObjectModel<T>::get(Parameter param) const -> get_optional_variant_const_type {
-    if constexpr (GetStrategable<GetStrategy, T>) {
-        return get_impl(type_, param);
-    }
-    return {};
-}
-
-template <Namingable T>
-template <Parameter P, Gettingable G>
-constexpr auto Object::ObjectModel<T>::get_impl(G& type) const {  // call const or non-const getStrategy_::operator() method depends on G constness
-    static constinit GetStrategy<T> getStrategy_{};
-    return std::invoke(&GetStrategy<T>::template operator()<P, G>, getStrategy_, type);
-}
-
-template <Namingable T>
-constexpr auto Object::ObjectModel<T>::get_impl(Gettingable auto& type, Parameter param) const {
-    using result_type = std::conditional_t<
-        std::is_const_v<std::remove_reference_t<decltype(type)>>,
-        get_optional_variant_const_type,
-        get_optional_variant_type>;
-
-    switch (param) {
-    case Parameter::Protection:
-        return get_impl<Parameter::Protection>(type);
-    case Parameter::Damage:
-        return get_impl<Parameter::Damage>(type);
-    case Parameter::Health:
-        return get_impl<Parameter::Health>(type);
-    case Parameter::CureHealth:
-        return get_impl<Parameter::CureHealth>(type);
-    case Parameter::Restore:
-        return get_impl<Parameter::Restore>(type);
-    case Parameter::Wear:
-        return get_impl<Parameter::Wear>(type);
-    default:
-        return result_type{};
-    };
-}
+#include "ObjectModel.hpp"
