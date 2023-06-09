@@ -3,8 +3,8 @@
 #include "Object/Object.hpp"
 #include "Object/Properties/Properties.hpp"
 
-#include "preety_print.hpp"
-#include "structs.hpp"
+#include "Examples/preety_print.hpp"
+#include "Examples/structs.hpp"
 
 int main() {
     std::vector<Object> backpack;

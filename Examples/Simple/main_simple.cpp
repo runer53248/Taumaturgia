@@ -2,7 +2,7 @@
 #include "Object/DefaultStrategies.hpp"
 #include "Object/Object.hpp"
 #include "Object/Properties/Properties.hpp"
-#include "preety_print.hpp"
+#include "Examples/preety_print.hpp"
 
 struct Item {
     std::string name;

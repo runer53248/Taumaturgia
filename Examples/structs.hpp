@@ -1,0 +1,13 @@
+#pragma once
+#include <iostream>
+#include "Structs/Armor.hpp"
+#include "Structs/CustomWeapon.hpp"
+#include "Structs/DefaultWeapon.hpp"
+#include "Structs/Enemy.hpp"
+#include "Structs/Helmet.hpp"
+#include "Structs/NoNameWeapon.hpp"
+#include "Structs/Npc.hpp"
+#include "Structs/Player.hpp"
+#include "Structs/Potion.hpp"
+#include "Structs/Scroll.hpp"
+#include "Structs/Weapon.hpp"

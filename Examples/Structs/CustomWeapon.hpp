@@ -1,50 +1,5 @@
 #pragma once
-#include <iostream>
-
-struct Armor {
-    Name name;
-    Protection protection{};
-};
-
-struct Helmet {
-    Name name;
-    Protection protection{};
-};
-
-struct Potion {
-    Name name;
-};
-
-struct Scroll {
-    Name name;
-};
-
-struct Weapon {
-    Name name;
-    Damage dmg{};
-};
-
-struct NoNameWeapon {
-    Damage dmg{};
-};
-
-struct Player {
-    std::string name;  // string used as name
-    ProtectionContainer armorWear{10};
-};
-
-struct Enemy {
-    Name name;
-};
-
-struct Npc {  // don't have name
-    Health hp{5};
-};
-
-struct DefaultWeapon {
-    std::string name;  // string used as name
-    Damage dmg{};
-};
+#include "DefaultWeapon.hpp"
 
 struct CustomWeapon {  // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
     Name name;

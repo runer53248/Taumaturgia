@@ -4,7 +4,9 @@ project (Taumaturgia)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(${PROJECT_NAME} main.cpp Object/Object.cpp)
-add_executable(${PROJECT_NAME}_simple main_simple.cpp Object/Object.cpp)
-add_executable(${PROJECT_NAME}-minimal main_minimal.cpp Object/Object.cpp)
-add_executable(${PROJECT_NAME}-test main_tests.cpp Object/Object.cpp)
+include_directories(${Taumaturgia_SOURCE_DIR})
+
+add_executable(${PROJECT_NAME} Examples/Main/main.cpp Object/Object.cpp)
+add_executable(${PROJECT_NAME}_simple Examples/Simple/main_simple.cpp Object/Object.cpp)
+add_executable(${PROJECT_NAME}-minimal Examples/Minimal/main_minimal.cpp Object/Object.cpp)
+add_executable(${PROJECT_NAME}-test Examples/Tests/main_tests.cpp Object/Object.cpp)
