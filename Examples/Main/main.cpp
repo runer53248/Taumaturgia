@@ -14,7 +14,9 @@ int main() {
         Damage{16}});
     backpack.emplace_back(Weapon{
         Name{"GIANT_SWORD"},
-        Damage{32}});
+        Damage{
+            32,
+            DamageType::Physical}});
     backpack.emplace_back(CustomWeapon{
         Name{"Custom_SWORD"}});
     backpack.emplace_back(Damaging<CustomWeapon>{
@@ -33,6 +35,7 @@ int main() {
     traits::accessHealth::get(gustav) = Health{75};
     traits::accessCureHealth::get(gustav) = Health{30};
     gustav.dmg = Damage{100,
+                        DamageType::Magical,
                         Effect{
                             EffectType::Stun,
                             Duration{3, DurationType::Round},
@@ -156,6 +159,7 @@ int main() {
         Name{"VAMPIRIC_TOUCH_SCROLL"},
         Damage{
             30,
+            DamageType::Divine,
             Effect{EffectType::Devour}},
         Health{15}));
 

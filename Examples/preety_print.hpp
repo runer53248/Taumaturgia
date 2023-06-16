@@ -33,6 +33,24 @@ auto& operator<<(std::ostream& out, BodyLocation location) {
     }
 }
 
+auto& operator<<(std::ostream& out, DamageType damageType) {
+    switch (damageType) {
+    case DamageType::Physical:
+        out << " Physical";
+        break;
+    case DamageType::Magical:
+        out << " Magical";
+        break;
+    case DamageType::Divine:
+        out << " Divine";
+        break;
+    default:
+        out << " unknown";
+        break;
+    }
+    return out;
+}
+
 auto& operator<<(std::ostream& out, EffectType effect) {
     switch (effect) {
     case EffectType::Infection:
@@ -184,7 +202,7 @@ auto print_dmg = [](auto&& value) {
         std::cout << "[&]";
     }
 
-    std::cout << "(Damage: " << damage.value() << damage.effect().effectType() << damage.effect().duration();
+    std::cout << "(Damage: " << damage.value() << damage.type() << damage.effect().effectType() << damage.effect().duration();
     std::cout << damage.effect().state().effectState();
     std::cout << ")";
     return std::optional{true};

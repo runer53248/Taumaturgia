@@ -10,8 +10,8 @@ struct CustomWeapon {  // is not Damagingable but still counts as AttackStratega
 
 template <>
 struct AttackStrategy_<CustomWeapon> {
-    // bool operator()(Damagingable auto& obj, Object* owner, Object* target) { // when got Damagingable property
-    // 	return true;
+    // bool operator()(Damagingable auto& obj, Object* owner, Object* target) const { // when got Damagingable property
+    //     return true;
     // }
 
     bool operator()(auto& obj, Object* owner, Object* target) const {  // CustomWeapon is not Damagingable but can became one
