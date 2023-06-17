@@ -82,35 +82,12 @@ public:
     bool restore(Object* owner, Object* target = nullptr) const;
 
     template <Parameter param>
-    friend constexpr auto getOptVariant(Objected auto& object) -> decltype(object.object_->get(std::declval<Parameter>())) {  // return type depends on object constness
-        if (not object.can_get) {
-            return {};
-        }
+    bool checkGetParam() const;
 
-        if constexpr (param == Parameter::Protection) {
-            if (not object.can_defend) {
-                return {};
-            }
-        } else if constexpr (param == Parameter::CureHealth) {
-            if (not object.can_heal) {
-                return {};
-            }
-        } else if constexpr (param == Parameter::Damage) {
-            if (not object.can_attack) {
-                return {};
-            }
-        } else if constexpr (param == Parameter::Health) {
-            if (not object.can_alive) {
-                return {};
-            }
-        } else if constexpr (param == Parameter::Restore) {
-            if (not object.can_restore) {
-                return {};
-            }
-        } else if constexpr (param == Parameter::Wear) {
-            if (not object.can_wear) {
-                return {};
-            }
+    template <Parameter param>
+    friend constexpr auto getOptVariant(Objected auto& object) -> decltype(object.object_->get(std::declval<Parameter>())) {  // return type depends on object constness
+        if (not object.template checkGetParam<param>()) {
+            return {};
         }
         return object.object_->get(param);
     }
@@ -118,25 +95,7 @@ public:
     template <Parameter param>
     friend constexpr auto getOpt(Objected auto& object) {
         auto opt_variant = getOptVariant<param>(object);
-
-        auto extract_ref_wrapper = [&]<typename T>(T) {
-            using type = std::conditional_t<std::is_const_v<std::remove_reference_t<decltype(object)>>, const T, T>;
-            return opt_variant.transform([](auto var_ref) {  // transform variant of reference_wrapper to reference_wrapper of type
-                return std::get<std::reference_wrapper<type>>(var_ref);
-            });
-        };
-
-        if constexpr (param == Parameter::Health or param == Parameter::CureHealth) {
-            return extract_ref_wrapper(Health{});
-        } else if constexpr (param == Parameter::Damage) {
-            return extract_ref_wrapper(Damage{});
-        } else if constexpr (param == Parameter::Protection) {
-            return extract_ref_wrapper(Protection{});
-        } else if constexpr (param == Parameter::Restore) {
-            return extract_ref_wrapper(EffectTypeContainer{});
-        } else if constexpr (param == Parameter::Wear) {
-            return extract_ref_wrapper(ProtectionContainer{});
-        }
+        return get_opt_ref_wrapper<param>(opt_variant);
     }
 };
 

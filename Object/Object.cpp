@@ -33,3 +33,47 @@ bool Object::restore(Object* owner, Object* target) const {
     }
     return object_->restore(owner, target);
 }
+template <Parameter param>
+bool Object::checkGetParam() const {
+    if (not can_get) {
+        return false;
+    }
+    if constexpr (param == Parameter::Protection) {
+        if (not can_defend) {
+            return false;
+        }
+    }
+    if constexpr (param == Parameter::CureHealth) {
+        if (not can_heal) {
+            return false;
+        }
+    }
+    if constexpr (param == Parameter::Damage) {
+        if (not can_attack) {
+            return false;
+        }
+    }
+    if constexpr (param == Parameter::Health) {
+        if (not can_alive) {
+            return false;
+        }
+    }
+    if constexpr (param == Parameter::Restore) {
+        if (not can_restore) {
+            return false;
+        }
+    }
+    if constexpr (param == Parameter::Wear) {
+        if (not can_wear) {
+            return false;
+        }
+    }
+    return true;
+}
+
+template bool Object::checkGetParam<Parameter::Protection>() const;
+template bool Object::checkGetParam<Parameter::CureHealth>() const;
+template bool Object::checkGetParam<Parameter::Damage>() const;
+template bool Object::checkGetParam<Parameter::Health>() const;
+template bool Object::checkGetParam<Parameter::Restore>() const;
+template bool Object::checkGetParam<Parameter::Wear>() const;
