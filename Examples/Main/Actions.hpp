@@ -10,9 +10,9 @@ void attack(auto& backpack, auto& player, auto& enemy) {
         getOpt<Parameter::Damage>(item)
             .and_then(print_dmg);
         std::cout << '\n';
-        if (not item.attack(&player, &enemy)) {
-            std::cout << " attack miss ";  // unusable yet
-        }
+
+        auto status = item.attack(&player, &enemy);
+        std::cout << "attack" << status << ": ";
         print_person(enemy);
     }
     std::cout << '\n';
@@ -25,8 +25,9 @@ void defend(auto& backpack, auto& player) {
         if (not item.can_defend) {
             continue;
         }
-        if (not item.defend(&player /*, &player*/)) {
-            std::cout << " protection broken\n";  // when target dont have Wearingable property
+        auto status = item.defend(&player /*, &player*/);
+        std::cout << "defend" << status << ": ";  // when target dont have Wearingable property
+        if (status != ActionStatus::Success) {
             std::cout << player.name() << " can't defend self with " << item.name();
             std::cout << '\n';
             continue;
@@ -49,8 +50,9 @@ void enemy_defend(auto& backpack, auto& enemy) {
         if (not item.can_defend) {
             continue;
         }
-        if (not item.defend(&enemy /*, &player*/)) {
-            std::cout << " protection broken\n";  // when target dont have Wearingable property
+        auto status = item.defend(&enemy /*, &player*/);
+        std::cout << "defend" << status << ": ";  // when target dont have Wearingable property
+        if (status != ActionStatus::Success) {
             std::cout << enemy.name() << " can't defend self with " << item.name();
             std::cout << '\n';
             continue;
@@ -71,9 +73,8 @@ void restore(auto& backpack, auto& player) {
         if (not item.can_restore) {
             continue;
         }
-        if (not item.restore(&player, &player)) {
-            std::cout << " restoration don't work ";  // unusable yet
-        }
+        auto status = item.restore(&player, &player);
+        std::cout << "restore" << status << ": ";
 
         std::cout << player.name() << " restore self with " << item.name();
         // get(item, Parameter::Restore).and_then(print_restore);
@@ -91,9 +92,8 @@ void heal(auto& backpack, auto& player) {
         if (not item.can_heal) {
             continue;
         }
-        if (not item.heal(&player, &player)) {
-            std::cout << " healing don't work ";  // unusable yet
-        }
+        auto status = item.heal(&player, &player);
+        std::cout << "healing" << status << ": ";
 
         std::cout << player.name() << " heal self with " << item.name();
         if (auto cureHealth_opt = getOpt<Parameter::CureHealth>(item)) {

@@ -1,5 +1,6 @@
 #pragma once
 #include <concepts>
+#include "../Concepts/Types/Enums/ActionStatus.hpp"
 #include "../Concepts/Wearingable.hpp"
 
 struct Default;
@@ -10,7 +11,7 @@ struct WearStrategy_ {};
 
 template <template <typename> typename Strategy, typename UserType>
 concept WearStrategable = requires(Strategy<UserType> strategy, UserType& type, Object* owner, Object* target) {
-    { strategy.operator()(type, owner, target) } -> std::same_as<bool>;
+    { strategy.operator()(type, owner, target) } -> std::same_as<ActionStatus>;
 };
 
 template <typename T>
@@ -24,5 +25,5 @@ using WearStrategy = std::conditional_t<
 
 template <>
 struct WearStrategy_<Default> {
-    bool operator()(Wearingable auto& obj, Object* owner, Object* target) const;
+    ActionStatus operator()(Wearingable auto& obj, Object* owner, Object* target) const;
 };

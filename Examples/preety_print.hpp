@@ -74,6 +74,9 @@ auto& operator<<(std::ostream& out, EffectType effect) {
     case EffectType::Stun:
         out << " [stunned]";
         break;
+    case EffectType::Shock:
+        out << " [Shock]";
+        break;
     case EffectType::None:
         out << " [none]";
         break;
@@ -122,6 +125,45 @@ auto& operator<<(std::ostream& out, Duration duration) {
         break;
     case DurationType::Instant:
         out << " (" << duration.value() << " Instant) ";
+        break;
+    }
+    return out;
+}
+
+auto& operator<<(std::ostream& out, AliveStatus aliveStatus) {
+    switch (aliveStatus) {
+    case AliveStatus::Death:
+        out << " [Death] ";
+        break;
+    case AliveStatus::Dying:
+        out << " [Dying] ";
+        break;
+    case AliveStatus::Healthy:
+        out << " [Living] ";
+        break;
+    default:
+        out << " [unknown] ";
+        break;
+    }
+    return out;
+}
+
+auto& operator<<(std::ostream& out, ActionStatus actionStatus) {
+    switch (actionStatus) {
+    case ActionStatus::None:
+        out << " [None] ";
+        break;
+    case ActionStatus::Fail:
+        out << " [Fail] ";
+        break;
+    case ActionStatus::Interrupted:
+        out << " [Interrupted] ";
+        break;
+    case ActionStatus::Partial_Success:
+        out << " [Partial_Success] ";
+        break;
+    default:
+        out << " [Success] ";
         break;
     }
     return out;
@@ -224,11 +266,7 @@ auto print_restore = [](auto&& value) {
 
 auto print_liveable = [](const auto& person) {
     if (auto alive_opt = person.alive()) {
-        if (alive_opt.value()) {
-            std::cout << " [alive] ";
-        } else {
-            std::cout << " [dead] ";
-        }
+        std::cout << alive_opt.value();
     } else {
         std::cout << " [unliving] ";
     }

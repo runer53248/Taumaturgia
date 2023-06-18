@@ -1,6 +1,7 @@
 #pragma once
 #include <concepts>
 #include "../Concepts/Livingable.hpp"
+#include "../Concepts/Types/Enums/AliveStatus.hpp"
 
 struct Default;
 struct Object;
@@ -10,7 +11,7 @@ struct AliveStrategy_ {};
 
 template <template <typename> typename Strategy, typename UserType>
 concept AliveStrategable = requires(Strategy<UserType> strategy, UserType& type) {
-    { strategy.operator()(type) } -> std::same_as<std::optional<bool>>;
+    { strategy.operator()(type) } -> std::same_as<std::optional<AliveStatus>>;
 };
 
 template <typename T>
@@ -24,5 +25,5 @@ using AliveStrategy = std::conditional_t<
 
 template <>
 struct AliveStrategy_<Default> {
-    std::optional<bool> operator()(Livingable auto& obj) const;
+    std::optional<AliveStatus> operator()(Livingable auto& obj) const;
 };

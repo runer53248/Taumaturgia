@@ -5,6 +5,9 @@
 #include "Concepts/Namingable.hpp"
 #include "Strategies/Strategies.hpp"
 
+#include "Concepts/Types/Enums/ActionStatus.hpp"
+#include "Concepts/Types/Enums/Actions.hpp"
+
 #include <experimental/propagate_const>
 #include <functional>
 
@@ -18,37 +21,29 @@ private:
     struct ObjectConcept {
         virtual ~ObjectConcept() = default;
 
-        virtual std::string name() const = 0;
-        virtual std::optional<bool> alive() const = 0;
-        virtual bool attack(Object* owner, Object* targe) const = 0;
-        virtual bool defend(Object* owner, Object* target) const = 0;
-        virtual bool heal(Object* owner, Object* target) const = 0;
-        virtual bool restore(Object* owner, Object* target) const = 0;
+        virtual constexpr std::string name() const = 0;
+        virtual constexpr std::optional<AliveStatus> alive() const = 0;
+        virtual constexpr ActionStatus action(Actions action, Object* owner, Object* target) const = 0;
         virtual constexpr get_optional_variant_type get(Parameter param) = 0;
         virtual constexpr get_optional_variant_const_type get(Parameter param) const = 0;
     };
 
+    class Action_impl;
+
     template <Namingable T>
     struct ObjectModel : ObjectConcept {
     public:
-        ObjectModel(const T& type)
-            : type_{type} {}
-        ~ObjectModel() override = default;
+        ObjectModel(const T& type);
+        ~ObjectModel() override;
 
-        std::string name() const override;
-        std::optional<bool> alive() const override;
-        bool attack(Object* owner, Object* target) const override;
-        bool defend(Object* owner, Object* target) const override;
-        bool heal(Object* owner, Object* target) const override;
-        bool restore(Object* owner, Object* target) const override;
+        constexpr std::string name() const override;
+        constexpr std::optional<AliveStatus> alive() const override;
+        constexpr ActionStatus action(Actions action, Object* owner, Object* target) const override;
+
         constexpr get_optional_variant_type get(Parameter param) override;
         constexpr get_optional_variant_const_type get(Parameter param) const override;
 
     private:
-        template <Parameter P>
-        inline constexpr auto get_impl(Gettingable auto& type) const;
-        inline constexpr auto get_impl(Gettingable auto& type, Parameter param) const;
-
         T type_;
     };
 
@@ -75,11 +70,11 @@ public:
           can_get{GetStrategable<GetStrategy, T>} {}
 
     std::string name() const;
-    std::optional<bool> alive() const;
-    bool attack(Object* owner, Object* target = nullptr) const;
-    bool defend(Object* owner, Object* target = nullptr) const;
-    bool heal(Object* owner, Object* target = nullptr) const;
-    bool restore(Object* owner, Object* target = nullptr) const;
+    std::optional<AliveStatus> alive() const;
+    ActionStatus attack(Object* owner, Object* target = nullptr) const;
+    ActionStatus defend(Object* owner, Object* target = nullptr) const;
+    ActionStatus heal(Object* owner, Object* target = nullptr) const;
+    ActionStatus restore(Object* owner, Object* target = nullptr) const;
 
     template <Parameter param>
     bool checkGetParam() const;

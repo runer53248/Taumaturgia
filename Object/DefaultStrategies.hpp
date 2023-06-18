@@ -12,42 +12,64 @@ inline Object* Whom(Object* const owner, Object* const target) {
     return target;
 }
 
-std::optional<bool> AliveStrategy_<Default>::operator()(Livingable auto& obj) const {
-    return traits::accessHealth::get(obj).value() > 0;
+std::optional<AliveStatus> AliveStrategy_<Default>::operator()(Livingable auto& obj) const {
+    auto hp = traits::accessHealth::get(obj).value();
+    if (hp > 0) {
+        return AliveStatus::Healthy;
+    } else if (hp == 0) {
+        return AliveStatus::Dying;
+    }
+    return AliveStatus::Death;
 }
 
-bool AttackStrategy_<Default>::operator()(Damagingable auto& obj, Object* owner, Object* target) const {
+ActionStatus AttackStrategy_<Default>::operator()(Damagingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     auto opt_protection = getOpt<Parameter::Protection>(*suspect);
     auto opt_restore = getOpt<Parameter::Restore>(*suspect);
 
+    auto opt_alive_status = suspect->alive();
+    if (opt_alive_status) {
+        if (opt_alive_status.value() == AliveStatus::Death) {
+            return ActionStatus::Fail;  // can't damage death target
+        }
+    } else {
+        return ActionStatus::Fail;  // can't damage suspect
+    }
+
     auto is_success = getOpt<Parameter::Health>(*suspect).and_then([&](auto&& ref_wrap) {
         Health& suspect_hp_ref = ref_wrap;
 
+        if (suspect_hp_ref.value() <= -100) {
+            return std::optional{ActionStatus::Interrupted};  // can't do more damage to target
+        }
+
         suspect_hp_ref.removeHealth(traits::accessDamage::get(obj).value());
 
-        if (auto attackEffect = traits::accessDamage::get(obj).effect(); attackEffect != EffectType::None) {
-            if (opt_protection.has_value()) {
+        if (auto attackEffect = traits::accessDamage::get(obj).effect(); attackEffect != EffectType::None) {  // attack have effect
+            if (opt_protection.has_value()) {                                                                 // suspect have protection from effects
                 Protection& suspect_protection = opt_protection.value();
                 if (suspect_protection.protectEffects().contains(attackEffect.effectType())) {  // check protection against attack effect
-                    return std::optional{true};
+                    return std::optional{ActionStatus::Partial_Success};
                 }
             }
+
             suspect_hp_ref.effects().addEffectType(attackEffect);
 
-            if (opt_restore.has_value()) {
+            if (opt_restore.has_value()) {  // suspect can restore from effects
                 EffectTypeContainer& suspect_restore = opt_restore.value();
                 if (suspect_restore.contains(attackEffect.effectType())) {  // check suspect Restore to remove attack effect
                     suspect_hp_ref.effects().removeEffectType(attackEffect.effectType());
+                    return std::optional{ActionStatus::Partial_Success};
                 }
             }
         }
-        return std::optional{true};
+        return std::optional{ActionStatus::Success};
     });
-    return is_success.has_value();
+
+    return is_success.value_or(ActionStatus::Fail);
 }
 
-bool DefendStrategy_<Default>::operator()(Protectingable auto& obj, Object* owner, Object* target) const {
+ActionStatus DefendStrategy_<Default>::operator()(Protectingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     auto is_success = getOpt<Parameter::Wear>(*suspect).and_then([&](auto&& ref_wrap) {
         ProtectionContainer& suspect_protection = ref_wrap;
@@ -55,20 +77,33 @@ bool DefendStrategy_<Default>::operator()(Protectingable auto& obj, Object* owne
         return std::optional{true};
     });
 
-    return is_success.has_value();
+    if (is_success.has_value()) {
+        if (is_success.value()) {
+            return ActionStatus::Success;
+        }
+        return ActionStatus::Interrupted;
+    }
+    return ActionStatus::Fail;
 }
 
-bool HealStrategy_<Default>::operator()(Healingable auto& obj, Object* owner, Object* target) const {
+ActionStatus HealStrategy_<Default>::operator()(Healingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     auto is_success = getOpt<Parameter::Health>(*suspect).and_then([&](auto&& ref_wrap) {
         Health& suspect_hp = ref_wrap;
         suspect_hp.addHealth(traits::accessCureHealth::get(obj).value());
         return std::optional{true};
     });
-    return is_success.has_value();
+
+    if (is_success.has_value()) {
+        if (is_success.value()) {
+            return ActionStatus::Success;
+        }
+        return ActionStatus::Interrupted;
+    }
+    return ActionStatus::Fail;
 }
 
-bool RestoreStrategy_<Default>::operator()(Restoringable auto& obj, Object* owner, Object* target) const {
+ActionStatus RestoreStrategy_<Default>::operator()(Restoringable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     auto is_success = getOpt<Parameter::Health>(*suspect).and_then([&](auto&& ref_wrap) {
         Health& hp_ref = ref_wrap;
@@ -80,7 +115,14 @@ bool RestoreStrategy_<Default>::operator()(Restoringable auto& obj, Object* owne
         }
         return std::optional{true};
     });
-    return is_success.has_value();
+
+    if (is_success.has_value()) {
+        if (is_success.value()) {
+            return ActionStatus::Success;
+        }
+        return ActionStatus::Interrupted;
+    }
+    return ActionStatus::Fail;
 }
 
 template <Parameter P>

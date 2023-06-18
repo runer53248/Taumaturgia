@@ -3,35 +3,35 @@
 std::string Object::name() const {
     return object_->name();
 }
-std::optional<bool> Object::alive() const {
+std::optional<AliveStatus> Object::alive() const {
     if (not can_alive) {
         return {};
     }
     return object_->alive();
 }
-bool Object::attack(Object* owner, Object* target) const {
+ActionStatus Object::attack(Object* owner, Object* target) const {
     if (not can_attack) {
-        return false;
+        return ActionStatus::None;
     }
-    return object_->attack(owner, target);
+    return object_->action(Actions::Attack, owner, target);
 }
-bool Object::defend(Object* owner, Object* target) const {
+ActionStatus Object::defend(Object* owner, Object* target) const {
     if (not can_defend) {
-        return false;
+        return ActionStatus::None;
     }
-    return object_->defend(owner, target);
+    return object_->action(Actions::Defend, owner, target);
 }
-bool Object::heal(Object* owner, Object* target) const {
+ActionStatus Object::heal(Object* owner, Object* target) const {
     if (not can_heal) {
-        return false;
+        return ActionStatus::None;
     }
-    return object_->heal(owner, target);
+    return object_->action(Actions::Heal, owner, target);
 }
-bool Object::restore(Object* owner, Object* target) const {
+ActionStatus Object::restore(Object* owner, Object* target) const {
     if (not can_restore) {
-        return false;
+        return ActionStatus::None;
     }
-    return object_->restore(owner, target);
+    return object_->action(Actions::Restore, owner, target);
 }
 template <Parameter param>
 bool Object::checkGetParam() const {

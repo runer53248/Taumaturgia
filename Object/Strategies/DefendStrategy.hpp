@@ -1,6 +1,7 @@
 #pragma once
 #include <concepts>
 #include "../Concepts/Protectingable.hpp"
+#include "../Concepts/Types/Enums/ActionStatus.hpp"
 
 struct Default;
 struct Object;
@@ -10,7 +11,7 @@ struct DefendStrategy_ {};
 
 template <template <typename> typename Strategy, typename UserType>
 concept DefendStrategable = requires(Strategy<UserType> strategy, UserType& type, Object* owner, Object* target) {
-    { strategy.operator()(type, owner, target) } -> std::same_as<bool>;
+    { strategy.operator()(type, owner, target) } -> std::same_as<ActionStatus>;
 };
 
 template <typename T>
@@ -24,5 +25,5 @@ using DefendStrategy = std::conditional_t<
 
 template <>
 struct DefendStrategy_<Default> {
-    bool operator()(Protectingable auto& obj, Object* owner, Object* target) const;
+    ActionStatus operator()(Protectingable auto& obj, Object* owner, Object* target) const;
 };

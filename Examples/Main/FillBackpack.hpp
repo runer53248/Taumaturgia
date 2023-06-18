@@ -66,7 +66,7 @@ void fillBackpack(auto& backpack) {
         ArmorClass{
             4,
             BodyLocation::Internal,
-            {EffectType::Sleep}}));
+            {EffectType::Shock}}));  // TODO: ths protection should be temporary
     backpack.emplace_back(Scroll{
         Name{"USELESS_SCROLL"}});
     backpack.emplace_back(Scroll{

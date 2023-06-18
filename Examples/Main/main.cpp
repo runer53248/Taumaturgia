@@ -44,12 +44,17 @@ int main() {
     std::cout << '\n';
     backpack.push_back(std::move(gustav_obj));
 
+    backpack.push_back(Living<Weapon>{
+        Name{"Living_SWORD"},
+        Health{20},
+        Damage{20}});
+
     Object player(Living<Player>{
         Name{"Knight"},
         Health{100}});
     Object enemy(Living<Enemy>{
         Name{"Ogr"},
-        Health{180}});
+        Health{200}});
     Object enemy_2(Enemy{
         Name{"Ogr 2"}});
     print_person(player);

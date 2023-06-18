@@ -1,6 +1,7 @@
 #pragma once
 #include <concepts>
 #include "../Concepts/Restoringable.hpp"
+#include "../Concepts/Types/Enums/ActionStatus.hpp"
 
 struct Default;
 struct Object;
@@ -10,7 +11,7 @@ struct RestoreStrategy_ {};
 
 template <template <typename> typename Strategy, typename UserType>
 concept RestoreStrategable = requires(Strategy<UserType> strategy, UserType& type, Object* owner, Object* target) {
-    { strategy.operator()(type, owner, target) } -> std::same_as<bool>;
+    { strategy.operator()(type, owner, target) } -> std::same_as<ActionStatus>;
 };
 
 template <typename T>
@@ -24,5 +25,5 @@ using RestoreStrategy = std::conditional_t<
 
 template <>
 struct RestoreStrategy_<Default> {
-    bool operator()(Restoringable auto& obj, Object* owner, Object* target) const;
+    ActionStatus operator()(Restoringable auto& obj, Object* owner, Object* target) const;
 };
