@@ -1,7 +1,8 @@
 #pragma once
 #include <concepts>
-#include "../Concepts/Types/Enums/ActionStatus.hpp"
 #include "../Concepts/Wearingable.hpp"
+
+enum class ActionStatus;
 
 struct Default;
 struct Object;

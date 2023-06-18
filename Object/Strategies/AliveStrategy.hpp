@@ -1,7 +1,8 @@
 #pragma once
 #include <concepts>
 #include "../Concepts/Livingable.hpp"
-#include "../Concepts/Types/Enums/AliveStatus.hpp"
+
+enum class AliveStatus : signed char;
 
 struct Default;
 struct Object;

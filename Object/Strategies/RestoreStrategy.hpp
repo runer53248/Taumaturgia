@@ -1,7 +1,8 @@
 #pragma once
 #include <concepts>
 #include "../Concepts/Restoringable.hpp"
-#include "../Concepts/Types/Enums/ActionStatus.hpp"
+
+enum class ActionStatus;
 
 struct Default;
 struct Object;

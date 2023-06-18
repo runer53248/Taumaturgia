@@ -5,8 +5,9 @@
 #include "Concepts/Namingable.hpp"
 #include "Strategies/Strategies.hpp"
 
-#include "Concepts/Types/Enums/ActionStatus.hpp"
-#include "Concepts/Types/Enums/Actions.hpp"
+#include "Enums/ActionStatus.hpp"
+#include "Enums/Actions.hpp"
+#include "Enums/AliveStatus.hpp"
 
 #include <experimental/propagate_const>
 #include <functional>
@@ -18,7 +19,7 @@ concept Objected = std::same_as<T, Object> or std::same_as<T, const Object>;
 
 class Object {
 private:
-    struct ObjectConcept {
+    struct ObjectConcept {  // TODO: implement copy
         virtual ~ObjectConcept() = default;
 
         virtual constexpr std::string name() const = 0;
