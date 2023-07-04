@@ -1,8 +1,7 @@
 #include <vector>
-#include "Object/DefaultStrategies.hpp"
-#include "Object/Object.hpp"
-#include "Object/Properties/Properties.hpp"
 #include "Examples/preety_print.hpp"
+#include "Object/DefaultStrategies.hpp"
+#include "Object/Properties/Properties.hpp"
 
 struct Item {
     std::string name;

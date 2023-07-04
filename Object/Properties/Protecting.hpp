@@ -4,9 +4,11 @@
 
 template <typename T>
 struct Protecting_ : T {
-    Protecting_(const Name& name, auto&& protection, auto&&... args)
-        requires std::is_convertible_v<decltype(protection), Protection>
-        : T{name, std::forward<decltype(args)>(args)...}, protection{std::forward<decltype(protection)>(protection)} {}
+    Protecting_(const Name& name, Protection&& protection, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, protection{std::move(protection)} {}
+
+    Protecting_(const Name& name, const Protection& protection, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, protection{protection} {}
 
     auto& getProtection() {
         return protection;

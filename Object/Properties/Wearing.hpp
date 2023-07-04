@@ -4,8 +4,11 @@
 
 template <typename T>
 struct Wearing_ : T {
-    Wearing_(const Name& name, auto&& armorWear, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, armorWear(std::forward<decltype(armorWear)>(armorWear)) {}
+    Wearing_(const Name& name, ProtectionContainer&& armorWear, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::move(armorWear)} {}
+
+    Wearing_(const Name& name, const ProtectionContainer& armorWear, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, armorWear{armorWear} {}
 
     auto& getArmorWear() {
         return armorWear;

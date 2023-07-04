@@ -29,7 +29,21 @@ struct DefaultWeapon {
     Damage dmg{};
 };
 
+struct HealingHealth {  // Living and Healing
+    Name name;
+    Health hp{};
+    Health cureHealth{};
+};
+
 int main() {
+    static_assert(std::is_same_v<Living<Damaging<Healing<HealingHealth>>>, Damaging<HealingHealth>>);
+    static_assert(std::is_same_v<Living<Healing<HealingHealth>>, HealingHealth>);
+    static_assert(std::is_same_v<Living<HealingHealth>, HealingHealth>);
+    static_assert(std::is_same_v<Healing<HealingHealth>, HealingHealth>);
+
+    static_assert(std::is_same_v<Living<Damaging<Npc>>, Damaging<Npc>>);
+    static_assert(std::is_same_v<Damaging<Living<Npc>>, Damaging<Npc>>);
+
     static_assert(std::is_same_v<GetStrategy<Default>, GetStrategy<Npc>>);             // Npc will use default Get strategy - Livable concept pass
     static_assert(std::is_same_v<GetStrategy<Default>, GetStrategy<Living<Player>>>);  // Player will use default Get strategy - Livable concept pass
 

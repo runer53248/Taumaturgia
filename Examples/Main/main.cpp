@@ -1,10 +1,8 @@
 #include <vector>
-#include "Object/DefaultStrategies.hpp"
-#include "Object/Object.hpp"
-#include "Object/Properties/Properties.hpp"
-
 #include "Examples/preety_print.hpp"
 #include "Examples/structs.hpp"
+#include "Object/DefaultStrategies.hpp"
+#include "Object/Properties/Properties.hpp"
 
 #include "Actions.hpp"
 #include "FillBackpack.hpp"

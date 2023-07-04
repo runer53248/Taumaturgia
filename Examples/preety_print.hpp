@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "Object/Object.hpp"
 
 auto& operator<<(std::ostream& out, Damagingable auto& obj) {
     out << " for " << obj.dmg.value() << " dmg";

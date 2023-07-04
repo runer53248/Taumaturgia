@@ -9,8 +9,6 @@ struct Health {
         : value_{value} {}
     constexpr Health(int value, const Effect& effect) noexcept
         : value_{value}, effects_{EffectContainer{effect}} {}
-    // constexpr Health(int value, std::initializer_list<Effect> effects) noexcept
-    //     : value_{value}, effects_{effects} {}
     constexpr Health(int value, const EffectContainer& effects) noexcept
         : value_{value}, effects_{effects} {}
 

@@ -4,9 +4,11 @@
 
 template <typename T>
 struct Living_ : T {
-    Living_(const Name& name, auto&& hp, auto&&... args)
-        requires std::is_convertible_v<decltype(hp), Health>  // this requirement block implicit conversion for Health like: Living<...>{Name{""}, 1};
-        : T{name, std::forward<decltype(args)>(args)...}, hp{std::forward<decltype(hp)>(hp)} {}
+    Living_(const Name& name, Health&& hp, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, hp{std::move(hp)} {}
+
+    Living_(const Name& name, const Health& hp, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, hp{hp} {}
 
     auto& getHp() {
         return hp;

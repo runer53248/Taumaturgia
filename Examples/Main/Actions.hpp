@@ -1,4 +1,4 @@
-
+#pragma once
 
 void attack(auto& backpack, auto& player, auto& enemy) {
     std::cout << "Items I can attack with:  //////////////////////////////\n\n";
