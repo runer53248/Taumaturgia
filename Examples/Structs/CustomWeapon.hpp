@@ -27,7 +27,7 @@ struct AttackStrategy_<CustomWeapon> {
         ActionStatus status;
 
         if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) {  // when got Damagingable property
-            base_status = default_attack_behavior(obj, suspect);
+            status = default_attack_behavior(obj, suspect);
         }
 
         for (auto& other : obj.others) {
