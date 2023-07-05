@@ -98,6 +98,7 @@ auto& operator<<(std::ostream& out, EffectState location) {
         return out;
     case EffectState::Ended:
         out << "Ended";
+        return out;
     default:
         out << "unknown";
         return out;

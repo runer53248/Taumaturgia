@@ -11,8 +11,6 @@ struct EffectContainer {
     constexpr EffectContainer() = default;
     constexpr EffectContainer(const Effect& effect)
         : effects_{effect} {}
-    constexpr EffectContainer(const EffectContainer& effects)
-        : effects_{effects.effects_} {}
     constexpr EffectContainer(std::initializer_list<Effect> effects)
         : effects_{effects} {}
 

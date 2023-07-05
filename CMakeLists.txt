@@ -4,6 +4,17 @@ project (Taumaturgia)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_compile_options(
+    -fwrapv
+    -Wall 
+    -Wextra 
+    -Wsign-compare
+    -Wsign-conversion
+    -Wconversion
+    -pedantic
+    -Werror
+)
+
 include_directories(${Taumaturgia_SOURCE_DIR})
 
 add_executable(${PROJECT_NAME}
@@ -22,3 +33,6 @@ add_executable(${PROJECT_NAME}-test
     Examples/Tests/main_tests.cpp
     Object/Object.cpp
 )
+
+enable_testing()
+add_subdirectory(Examples/Tests)
