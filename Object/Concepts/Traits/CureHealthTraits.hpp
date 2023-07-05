@@ -27,24 +27,17 @@ concept CustomCureHealthAccessable = requires(T x) {
 };
 
 struct accessCureHealth {
-    template <CureHealthAccessable T>
-    static auto& get(T& el) {
+    static auto& get(CureHealthAccessable auto& el) {
         return el.cureHealth;
     }
 
-    template <GetCureHealthAccessable T>
-    static auto& get(T& el) {
+    static auto& get(GetCureHealthAccessable auto& el) {
         return el.getCureHealth();
     }
 
     template <CustomCureHealthAccessable T>
     static auto& get(T& el) {
-        return customAccessCureHealth<T>::get(el);
-    }
-
-    template <CustomCureHealthAccessable T>
-    static auto& get(const T& el) {
-        return customAccessCureHealth<T>::get(el);
+        return customAccessCureHealth<std::remove_cv_t<T>>::get(el);
     }
 };
 

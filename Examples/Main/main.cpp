@@ -1,4 +1,5 @@
 #include <vector>
+
 #include "Examples/preety_print.hpp"
 #include "Examples/structs.hpp"
 #include "Object/DefaultStrategies.hpp"
@@ -8,9 +9,61 @@
 #include "FillBackpack.hpp"
 #include "Print.hpp"
 
-int main() {
-    std::vector<Object> backpack;
+void simple() {
+    Object player(Living<Player>{
+        Name{"Player"},
+        Health{100}});
 
+    Object{
+        Helmet{
+            Name{"VIKING_HELM"},
+            ArmorClass{
+                2,
+                BodyLocation::Head,
+                {EffectType::Stun}}}}
+        .defend(&player);
+
+    print_person(player);
+
+    Object log(Weapon{
+        Name{"Log"},
+        Damage{
+            6,
+            Effect{
+                EffectType::Stun,
+                Duration{1, DurationType::Round}}}});
+
+    Object log_2(Weapon{
+        Name{"Log 2"},
+        Damage{
+            6,
+            Effect{
+                EffectType::Freeze,
+                Duration{1, DurationType::Round}}}});
+
+    std::cout << "attack with Stunning " << log.name() << " (have protection):\n";
+    log.attack(&log, &player);
+    print_person(player);
+
+    std::cout << "attack with Freezing " << log_2.name() << " (don't have protection):\n";
+    log_2.attack(&log_2, &player);
+    print_person(player);
+    std::cout << '\n';
+
+    auto weapon_2 = Weapon{Name{"Weapon"}, Damage{6}};
+    decltype(auto) val_2 = traits::accessDamage::get(weapon_2);  // reference
+    static_assert(std::is_same_v<decltype(val_2), Damage&>);
+
+    const auto weapon_3 = Weapon{Name{"Weapon"}, Damage{6}};
+    decltype(auto) val_3 = traits::accessDamage::get(weapon_3);  // const reference
+    static_assert(std::is_same_v<decltype(val_3), const Damage&>);
+}
+
+int main() {
+    simple();
+
+    // TODO: require order of Properties to remove similiar types with different order
+    std::vector<Object> backpack;
     fillBackpack(backpack);
 
     auto gustav = Living<Healing<Living<Healing<Weapon>>>>{
@@ -18,12 +71,13 @@ int main() {
         /*hp*/ Health{20},
         /*healHp*/ Health{}};  // duplicated Living and Healing will be ignored
     static_assert(std::is_same_v<decltype(gustav), Living<Healing<Weapon>>>);
-    gustav.name = Name{"Franco The Inteligent Sword"};
-    // gustav.hp = Health{75}; // cant be accessed now - is private
+    // gustav.name = Name{"Franco The Inteligent Sword"};
+    // gustav.hp = Health{75}; // can't be accessed now - is private
     // gustav.getHp() = Health{75}; // current access version
+    traits::accessName::get(gustav) = Name{"Franco The Inteligent Sword"};
     traits::accessHealth::get(gustav) = Health{75};  // universal access version
     traits::accessCureHealth::get(gustav) = Health{30};
-    gustav.dmg = Damage{
+    traits::accessDamage::get(gustav) = Damage{
         100,
         DamageType::Magical,
         Effect{
@@ -60,12 +114,29 @@ int main() {
     print_person(enemy_2);
     std::cout << "\n\n";
 
-    Object{Damaging<Scroll>{
-               Name{"SLEEP_SCROLL"},
-               Damage{
-                   0,
-                   Effect{EffectType::Sleep}}}}
-        .attack(&player);
+    Object scroll = Damaging<Scroll>{
+        Name{"SLEEP_SCROLL"},
+        Damage{
+            0,
+            Effect{EffectType::Sleep}}};
+    scroll.attack(&player);
+    std::cout << "attack player with SLEEP_SCROLL\n";
+    print_object(scroll);
+
+    std::cout << "Current player:  //////////////////////////////\n\n";
+    print_object(player);
+
+    Object burn = Damaging<Scroll>{
+        Name{"Burn_scroll"},
+        Damage{
+            0,
+            Effect{EffectType::Burn}}};
+    burn.attack(&player);
+    std::cout << "attack player with Burn_scroll\n";
+    print_object(burn);
+
+    std::cout << "Current player:  //////////////////////////////\n\n";
+    print_object(player);
 
     attack(backpack, player, enemy);
 

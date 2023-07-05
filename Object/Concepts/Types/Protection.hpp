@@ -7,7 +7,7 @@ struct Protection {
     Protection() noexcept = default;
     Protection(const ArmorClass& ac) noexcept
         : ac_{ac} {}
-    Protection(auto&&... args) noexcept  // no explicit gives some oporunities
+    Protection(auto&&... args) noexcept  // no explicit gives some oportunities
         requires std::is_constructible_v<ArmorClass, decltype(std::forward<decltype(args)>(args))...>
         : ac_{std::forward<decltype(args)>(args)...} {}
 

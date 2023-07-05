@@ -27,24 +27,17 @@ concept CustomProtectionAccessable = requires(T x) {
 };
 
 struct accessProtection {
-    template <ProtectionAccessable T>
-    static auto& get(T& el) {
+    static auto& get(ProtectionAccessable auto& el) {
         return el.protection;
     }
 
-    template <GetProtectionAccessable T>
-    static auto& get(T& el) {
+    static auto& get(GetProtectionAccessable auto& el) {
         return el.getProtection();
     }
 
     template <CustomProtectionAccessable T>
     static auto& get(T& el) {
-        return customAccessProtection<T>::get(el);
-    }
-
-    template <CustomProtectionAccessable T>
-    static auto& get(const T& el) {
-        return customAccessProtection<T>::get(el);
+        return customAccessProtection<std::remove_cv_t<T>>::get(el);
     }
 };
 

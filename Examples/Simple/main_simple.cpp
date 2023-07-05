@@ -66,8 +66,9 @@ private:
     Damage dmg;
 };
 
-template <>
-struct traits::customAccessDamage<Weapon_C> {
+template <typename T>
+    requires std::is_base_of_v<Weapon_C, T>
+struct traits::customAccessDamage<T> {
     static auto& get(auto& el) {
         return el.Dmg();
     }
@@ -105,8 +106,9 @@ private:
     Health hp;
 };
 
-template <>
-struct traits::customAccessName<Player_B> {
+template <typename T>
+    requires std::is_base_of_v<Player_B, T>
+struct traits::customAccessName<T> {
     static auto& get(auto& el) {
         return el.Name();
     }
@@ -120,8 +122,10 @@ int main() {
         Damage{50,
                Effect{EffectType::Infection}}};
 
-    Object weapon_2 = Damaging<Weapon_C>{
+    // ! if Weapon_C was not Damagable then order of argument in c-tor will be different
+    Object weapon_2 = Damaging<Living<Weapon_C>>{
         Name{"Sword 2"},
+        Health{100},
         Damage{50,
                Effect{
                    EffectType::Stun,

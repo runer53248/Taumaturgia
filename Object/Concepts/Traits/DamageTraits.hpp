@@ -27,24 +27,17 @@ concept CustomDamageAccessable = requires(T x) {
 };
 
 struct accessDamage {
-    template <DamageAccessable T>
-    static auto& get(T& el) {
+    static auto& get(DamageAccessable auto& el) {
         return el.dmg;
     }
 
-    template <GetDamageAccessable T>
-    static auto& get(T& el) {
+    static auto& get(GetDamageAccessable auto& el) {
         return el.getDamage();
     }
 
     template <CustomDamageAccessable T>
     static auto& get(T& el) {
-        return customAccessDamage<T>::get(el);
-    }
-
-    template <CustomDamageAccessable T>
-    static auto& get(const T& el) {
-        return customAccessDamage<T>::get(el);
+        return customAccessDamage<std::remove_cv_t<T>>::get(el);
     }
 };
 

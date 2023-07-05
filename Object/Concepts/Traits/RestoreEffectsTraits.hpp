@@ -27,24 +27,17 @@ concept CustomRestoreEffectsAccessable = requires(T x) {
 };
 
 struct accessRestoreEffects {
-    template <RestoreEffectsAccessable T>
-    static auto& get(T& el) {
+    static auto& get(RestoreEffectsAccessable auto& el) {
         return el.restoreEffects;
     }
 
-    template <GetRestoreEffectsAccessable T>
-    static auto& get(T& el) {
+    static auto& get(GetRestoreEffectsAccessable auto& el) {
         return el.getRestoreEffects();
     }
 
     template <CustomRestoreEffectsAccessable T>
     static auto& get(T& el) {
-        return customAccessRestoreEffects<T>::get(el);
-    }
-
-    template <CustomRestoreEffectsAccessable T>
-    static auto& get(const T& el) {
-        return customAccessRestoreEffects<T>::get(el);
+        return customAccessRestoreEffects<std::remove_cv_t<T>>::get(el);
     }
 };
 

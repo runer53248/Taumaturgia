@@ -2,12 +2,6 @@
 #include <iostream>
 #include "Object/Object.hpp"
 
-auto& operator<<(std::ostream& out, Damagingable auto& obj) {
-    out << " for " << obj.dmg.value() << " dmg";
-    out << " with " << static_cast<std::string>(obj.name);
-    return out;
-}
-
 auto& operator<<(std::ostream& out, BodyLocation location) {
     switch (location) {
     case BodyLocation::Head:
@@ -81,6 +75,9 @@ auto& operator<<(std::ostream& out, EffectType effect) {
     case EffectType::None:
         out << " [none]";
         break;
+    case EffectType::Freeze:
+        out << " [freeze]";
+        break;
     default:
         out << " [unknown]";
         break;
@@ -128,6 +125,16 @@ auto& operator<<(std::ostream& out, Duration duration) {
         out << " (" << duration.value() << " Instant) ";
         break;
     }
+    return out;
+}
+
+auto& operator<<(std::ostream& out, Damagingable auto& obj) {
+    Damage dmg = obj.dmg;
+    out << " for " << dmg.value() << " dmg";
+    out << " with " << static_cast<std::string>(obj.name);
+    out << " " << dmg.effect().effectType();
+    out << " " << dmg.effect().duration();
+    out << " " << dmg.type();
     return out;
 }
 
@@ -182,12 +189,13 @@ auto print_hp = [](auto&& value) {
     }
     std::cout << ")";
     if (not hp.effects().empty()) {
+        std::cout << " {Effects: ";
         for (const auto& effect : hp.effects()) {
             std::cout << effect.effectType();
             std::cout << effect.duration();
         }
+        std::cout << "}";
     }
-    std::cout << "";
     return std::optional{true};
 };
 
@@ -257,7 +265,7 @@ auto print_restore = [](auto&& value) {
         std::cout << "[&]";
     }
 
-    std::cout << "(Restore: ";
+    std::cout << "(Restore:";
     for (const auto& effect : effects) {
         std::cout << effect;
     }
@@ -276,9 +284,10 @@ auto print_liveable = [](const auto& person) {
 auto print_person = [](const auto& person) {
     std::cout << person.name();
     print_liveable(person);
-    // getOpt<Parameter::Protection>(person).and_then(print_protection);
+    // getOpt<Parameter::Protection>(person).and_then(print_protection); // protection is now property of wearable items
     getOpt<Parameter::Wear>(person).and_then(print_wear);
     getOpt<Parameter::Health>(person).and_then(print_hp);
+    getOpt<Parameter::Restore>(person).and_then(print_restore);
     std::cout << '\n';
 };
 

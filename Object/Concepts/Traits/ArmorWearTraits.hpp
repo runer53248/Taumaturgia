@@ -27,24 +27,17 @@ concept CustomArmorWearAccessable = requires(T x) {
 };
 
 struct accessArmorWear {
-    template <ArmorWearAccessable T>
-    static auto& get(T& el) {
+    static auto& get(ArmorWearAccessable auto& el) {
         return el.armorWear;
     }
 
-    template <GetArmorWearAccessable T>
-    static auto& get(T& el) {
+    static auto& get(GetArmorWearAccessable auto& el) {
         return el.getArmorWear();
     }
 
     template <CustomArmorWearAccessable T>
     static auto& get(T& el) {
-        return customAccessArmorWear<T>::get(el);
-    }
-
-    template <CustomArmorWearAccessable T>
-    static auto& get(const T& el) {
-        return customAccessArmorWear<T>::get(el);
+        return customAccessArmorWear<std::remove_cv_t<T>>::get(el);
     }
 };
 

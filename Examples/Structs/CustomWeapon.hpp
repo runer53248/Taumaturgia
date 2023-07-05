@@ -1,7 +1,6 @@
 #pragma once
 #include "DefaultWeapon.hpp"
-#include "Object/Object.hpp"
-#include "Object/StrategyHelpers.hpp"
+#include "Object/DefaultStrategies.hpp"
 
 struct CustomWeapon {  // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
     Name name;
@@ -12,32 +11,33 @@ struct CustomWeapon {  // is not Damagingable but still counts as AttackStratega
 
 template <>
 struct AttackStrategy_<CustomWeapon> {
-    // bool operator()(Damagingable auto& obj, Object* owner, Object* target) const { // when got Damagingable property
-    //     return true;
+    // ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const {  // when get Damagingable property
+    //     auto* suspect = Whom(owner, target);
+    //     ActionStatus base_status = default_attack_behavior(obj, suspect);
+
+    //     for (auto& other : obj.others) {
+    //         default_attack_behavior(other, suspect);
+    //         print_subAttacks(other);
+    //     }
+    //     return base_status;
     // }
 
-    bool operator()(auto& obj, Object* owner, Object* target) const {  // CustomWeapon is not Damagingable but can became one
-        if (not owner) {
-            return false;
-        }
+    ActionStatus operator()(auto& obj, Object* owner, Object* target) const {  // CustomWeapon is not Damagingable by default
         auto* suspect = Whom(owner, target);
-        auto hp_opt = getOpt<Parameter::Health>(*suspect);
-        if (hp_opt) {
-            Health& hp = hp_opt.value();
-            if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) {  // when got Damagingable property
-                hp.removeHealth(traits::accessDamage::get(obj).value());
-            }
+        ActionStatus status;
 
-            for (auto& other : obj.others) {
-                hp.removeHealth(traits::accessDamage::get(other).value());
-
-                subAttacks(other);
-            }
+        if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) {  // when got Damagingable property
+            base_status = default_attack_behavior(obj, suspect);
         }
-        return true;
+
+        for (auto& other : obj.others) {
+            status = default_attack_behavior(other, suspect);
+            print_subAttacks(other);
+        }
+        return status;
     }
 
-    bool subAttacks(Damagingable auto& obj) const {
+    bool print_subAttacks(Damagingable auto& obj) const {
         std::cout << "\t\t " << obj << "\n";
         return true;
     }

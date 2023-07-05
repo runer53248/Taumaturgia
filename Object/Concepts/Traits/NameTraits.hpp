@@ -28,24 +28,17 @@ concept CustomNameAccessable = requires(T x) {
 };
 
 struct accessName {
-    template <NameAccessable T>
-    static auto& get(T& el) {
+    static auto& get(NameAccessable auto& el) {
         return el.name;
     }
 
-    template <GetNameAccessable T>
-    static auto& get(T& el) {
+    static auto& get(GetNameAccessable auto& el) {
         return el.getName();
     }
 
     template <CustomNameAccessable T>
     static auto& get(T& el) {
-        return customAccessName<T>::get(el);
-    }
-
-    template <CustomNameAccessable T>
-    static auto& get(const T& el) {
-        return customAccessName<T>::get(el);
+        return customAccessName<std::remove_cv_t<T>>::get(el);
     }
 };
 
