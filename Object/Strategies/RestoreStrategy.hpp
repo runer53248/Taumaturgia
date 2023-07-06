@@ -5,7 +5,7 @@
 enum class ActionStatus;
 
 struct Default;
-struct Object;
+class Object;
 
 template <typename T>
 struct RestoreStrategy_ {};

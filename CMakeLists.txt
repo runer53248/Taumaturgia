@@ -13,26 +13,11 @@ add_compile_options(
     -Wconversion
     -pedantic
     -Werror
+
+    -Wno-defaulted-function-deleted
 )
 
 include_directories(${Taumaturgia_SOURCE_DIR})
 
-add_executable(${PROJECT_NAME}
-    Examples/Main/main.cpp
-    Object/Object.cpp
-)
-add_executable(${PROJECT_NAME}_simple
-    Examples/Simple/main_simple.cpp
-    Object/Object.cpp
-)
-add_executable(${PROJECT_NAME}-minimal
-    Examples/Minimal/main_minimal.cpp
-    Object/Object.cpp
-)
-add_executable(${PROJECT_NAME}-test
-    Examples/Tests/main_tests.cpp
-    Object/Object.cpp
-)
-
 enable_testing()
-add_subdirectory(Examples/Tests)
+add_subdirectory(Examples)

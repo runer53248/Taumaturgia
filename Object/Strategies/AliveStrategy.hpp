@@ -5,7 +5,7 @@
 enum class AliveStatus : signed char;
 
 struct Default;
-struct Object;
+class Object;
 
 template <typename T>
 struct AliveStrategy_ {};

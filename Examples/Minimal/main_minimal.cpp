@@ -50,7 +50,7 @@ int main() {
         Name{"SHIELD_POTION"},
         Health{}};
 
-    Living<Healty>{
+    auto healthy = Living<Healty>{
         Name{"SHIELD_POTION"},
         {}};
 

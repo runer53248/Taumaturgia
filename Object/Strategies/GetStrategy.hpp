@@ -5,7 +5,7 @@
 #include "../Concepts/Types/VariantType.hpp"
 
 struct Default;
-struct Object;
+class Object;
 
 template <typename T>
 struct GetStrategy_ {};

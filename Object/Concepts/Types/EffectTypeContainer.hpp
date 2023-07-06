@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <iterator> // std::inserter
 #include <set>
 #include "Enums/EffectType.hpp"
 
@@ -49,7 +50,7 @@ struct EffectTypeContainer {
     }
     void removeEffectTypes(const EffectTypeContainer& types) {
         container_type<EffectType> result;
-        std::set_difference(effectTypes_.begin(), effectTypes_.end(), types.effectTypes_.begin(), types.effectTypes_.end(), inserter(result, result.end()));
+        std::set_difference(effectTypes_.begin(), effectTypes_.end(), types.effectTypes_.begin(), types.effectTypes_.end(), std::inserter(result, result.end()));
         effectTypes_ = result;
     }
 

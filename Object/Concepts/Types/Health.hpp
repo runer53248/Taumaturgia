@@ -21,7 +21,7 @@ struct Health {
         }
         value_ = value;
     }
-    auto value() const noexcept { return value_; }
+    constexpr auto value() const noexcept { return value_; }
 
     constexpr auto maxValue() const noexcept { return MAX_VALUE; }
 

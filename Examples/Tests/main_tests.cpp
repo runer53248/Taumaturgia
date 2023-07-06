@@ -78,7 +78,7 @@ int main() {
     constexpr Health hp_less{20};
     Health hp_3{50, Effect{EffectType::Slow}};  // Effect create EffectContainer which is not constexpr because using of vector
     static_assert(hp_1 == hp_2);
-    static_assert(hp_1 > hp_less);
+    static_assert(hp_1.value() > hp_less.value());
     // static_assert(hp_1 == hp_3);
     static_assert(Effect{EffectType::Slow} == Effect{EffectType::Slow, Duration{0, DurationType::Instant}, State{EffectState::Inactive}});
     static_assert(Effect{EffectType::Slow} == EffectType::Slow);
