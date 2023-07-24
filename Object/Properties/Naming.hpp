@@ -19,7 +19,7 @@ private:
 };
 
 struct Naming_Test {};
-static_assert(Namingable<Naming_<Naming_Test> >);
+static_assert(Namingable<Naming_<Naming_Test>>);
 
 template <typename T>
-using Naming = std::conditional_t<Namingable<T>, T, Naming_<T> >;
+using Naming = std::conditional_t<Namingable<T>, T, Naming_<T>>;

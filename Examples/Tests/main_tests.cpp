@@ -53,7 +53,7 @@ int main() {
     static_assert(not std::is_same_v<AttackStrategy<Default>, AttackStrategy<Player>>);
 
     static_assert(std::is_same_v<GetStrategy<Default>, GetStrategy<Damaging<Living<Healing<Player>>>>>);
-    static_assert(std::is_same_v<Damaging<Living<Healing<Living<Player>>>>, Damaging<Damaging<Living<Living<Healing<Living<Player>>>>>>>);
+    static_assert(std::is_same_v<Damaging<Healing<Living<Player>>>, Damaging<Damaging<Living<Living<Healing<Living<Player>>>>>>>);  // the last duplication will be used
     static_assert(std::is_same_v<Damaging<Npc>, Damaging<Living<Npc>>>);
 
     static_assert(std::is_same_v<AttackStrategy<Weapon>, AttackStrategy<Healing<Weapon>>>);

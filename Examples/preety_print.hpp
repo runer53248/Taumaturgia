@@ -294,10 +294,10 @@ auto print_person = [](const auto& person) {
 
 auto print_object_properties = [](const Object& obj) {
     std::cout << "Name: " << obj.name() << '\n';
+    std::cout << " [can get] " << obj.can_get << '\n';
     std::cout << " [can alive] " << obj.can_alive << '\n';
     std::cout << " [can attack] " << obj.can_attack << '\n';
     std::cout << " [can defend] " << obj.can_defend << '\n';
-    std::cout << " [can get] " << obj.can_get << '\n';
     std::cout << " [can heal] " << obj.can_heal << '\n';
     std::cout << " [can restore] " << obj.can_restore << '\n';
     std::cout << " [can wear] " << obj.can_wear << '\n';
