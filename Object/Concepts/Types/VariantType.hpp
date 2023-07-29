@@ -4,6 +4,7 @@
 #include "ArmorClass.hpp"
 #include "Damage.hpp"
 #include "Enums/EffectType.hpp"
+#include "Enums/Parameter.hpp"
 #include "Health.hpp"
 #include "ProtectionContainer.hpp"
 
