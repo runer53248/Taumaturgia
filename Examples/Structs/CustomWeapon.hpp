@@ -24,7 +24,7 @@ struct AttackStrategy_<CustomWeapon> {
 
     ActionStatus operator()(auto& obj, Object* owner, Object* target) const {  // CustomWeapon is not Damagingable by default
         auto* suspect = Whom(owner, target);
-        ActionStatus status;
+        ActionStatus status{ActionStatus::None};
 
         if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) {  // when got Damagingable property
             status = default_attack_behavior(obj, suspect);
