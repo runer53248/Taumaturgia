@@ -20,25 +20,28 @@ struct is_base_of_template_impl {
 template <template <typename> class base, typename derived>
 using is_base_of_template = typename is_base_of_template_impl<base, derived>::type;
 
+constexpr char a_type_name[] = "A";
+
 template <typename T>
-struct A_ : T {};
+struct A_ : T {
+    using property_data = PropertyData<A_, T, a_type_name>;
+};
 
 template <typename T>
 using A = std::conditional_t<is_base_of_template<A_, T>::value, T, A_<T>>;
 
-template <typename T>
-struct B_ : T {};
+constexpr char b_type_name[] = "B";
 
 template <typename T>
-using B = std::conditional_t<is_base_of_template<B_, T>::value, T, B_<T>>;
+struct B : T {
+    using property_data = PropertyData<B, T, b_type_name>;
+};
+
+struct Element_empty {};
 
 struct Element {
     Name name{};
 };
-
-static_assert(std::is_same_v<
-              A<Element>,
-              A<A<Element>>>);
 
 struct Element_n {
     Name name{};
@@ -49,6 +52,10 @@ struct Element_Dmg : Element_n {
     Damage dmg{1};
 };
 
+static_assert(std::is_same_v<
+              A<Element>,
+              A<A<Element>>>);
+
 int main() {
     std::cout << "create_ordered_property_list<A, B, Protecting, A, Protecting, Living, Damaging, A>" << '\n';
     std::cout << name<create_ordered_property_list<A, B, Protecting, A, Protecting, Living, Damaging, A>>() << '\n'
@@ -56,7 +63,9 @@ int main() {
 
     using type_00 = create_ordered_property_list<Damaging, Protecting>;
     using type_01 = create_ordered_property_list<Protecting, Damaging>;
-    static_assert(std::is_same_v<type_00, type_01>);  // checking reorder
+    static_assert(std::is_same_v<
+                  type_00,
+                  type_01>);  // checking reorder
     std::cout << "checking reorder" << '\n';
     std::cout << name<type_00>() << '\n';
     std::cout << name<type_01>() << '\n';
@@ -64,7 +73,9 @@ int main() {
 
     using type_1 = create_ordered_property_list<Damaging, Damaging, Living, Damaging>;
     using type_2 = create_ordered_property_list<Living, Damaging>;
-    static_assert(std::is_same_v<type_1, type_2>);  // checking removing of duplicates and reorder
+    static_assert(std::is_same_v<
+                  type_1,
+                  type_2>);  // checking removing of duplicates and reorder
     std::cout << "checking removing of duplicates and reorder" << '\n';
     std::cout << name<type_1>() << '\n';
     std::cout << name<type_2>() << '\n';
@@ -72,7 +83,9 @@ int main() {
 
     using type_3 = create_ordered_property_list<A, B, Protecting, Living, Damaging>;
     using type_4 = create_ordered_property_list<B, A, Protecting, Damaging, Living>;
-    static_assert(std::is_same_v<type_1, type_2>);  // checking removing of unknown properties and reorder
+    static_assert(std::is_same_v<
+                  type_1,
+                  type_2>);  // checking removing of unknown properties and reorder
     std::cout << "checking removing of unknown properties and reorder" << '\n';
     std::cout << name<type_3>() << '\n';
     std::cout << name<type_4>() << '\n';
@@ -80,10 +93,17 @@ int main() {
 
     using type_5 = create_ordered_property_list<A, Wearing, B, Protecting, A, Restoring, Naming, Living, Damaging, Healing, A>;
     using type_6 = create_ordered_property_list<Restoring, B, A, Living, Healing, Protecting, Protecting, Damaging, Protecting, Wearing, Living, Naming, Protecting>;
-    static_assert(std::is_same_v<type_5, type_6>);  // checking all features
+    using type_6_b = create_ordered_property_list<Restoring, A, B, Living, Healing, Protecting, Protecting, Damaging, Protecting, Wearing, Living, Naming, Protecting>;
+    static_assert(not std::is_same_v<
+                  type_5,
+                  type_6>);  // checking all features (unorder of A and B)
+    static_assert(std::is_same_v<
+                  type_5,
+                  type_6_b>);  // checking all features
     std::cout << "checking all features" << '\n';
     std::cout << name<type_5>() << '\n';
     std::cout << name<type_6>() << '\n';
+    std::cout << name<type_6_b>() << '\n';
     std::cout << '\n';
 
     std::cout << name<create_ordered_property_list<>>() << " - no properties" << '\n';                   // no properties
@@ -106,35 +126,45 @@ int main() {
     std::cout << "build_into_t<Element, list<Property<Damaging>, Property<Damaging>>> - duplicates are ignored by property Damaging itself" << '\n';
     using type_7 = build_into_t<Element, list<Property<Damaging>, Property<Damaging>>>;
     using type_7b = Damaging<Element>;
-    static_assert(std::is_same_v<type_7, type_7b>);
+    static_assert(std::is_same_v<
+                  type_7,
+                  type_7b>);
     std::cout << name<type_7>() << '\n';
     std::cout << name<type_7b>() << '\n';
     std::cout << '\n';
     std::cout << "build_into_t<Element, list<Property<A>, Property<A>>> - unknown types (not listed in order_list) are ignored by PropertyOrder" << '\n';
     using type_7c = build_into_t<Element, list<Property<A>, Property<A>>>;
-    using type_7d = Element;
-    static_assert(std::is_same_v<type_7c, type_7d>);
+    using type_7d = A<Element>;
+    static_assert(std::is_same_v<
+                  type_7c,
+                  type_7d>);
     std::cout << name<type_7c>() << '\n';
     std::cout << name<type_7d>() << '\n';
     std::cout << '\n';
     std::cout << "build_into_t<Element, list<Property<Damaging>, Property<Living>>> - order priority is not checked in build_into_t" << '\n';
     using type_8 = build_into_t<Element, list<Property<Damaging>, Property<Living>>>;
     using type_8b = Damaging<Living<Element>>;
-    static_assert(std::is_same_v<type_8, type_8b>);
+    static_assert(std::is_same_v<
+                  type_8,
+                  type_8b>);
     std::cout << name<type_8>() << '\n';
     std::cout << name<type_8b>() << '\n';
     std::cout << '\n';
     std::cout << "build_into_t<Element, list<Property<Living>, Property<Damaging>>>" << '\n';
     using type_9 = build_into_t<Element, list<Property<Living>, Property<Damaging>>>;
     using type_9b = Living<Damaging<Element>>;
-    static_assert(std::is_same_v<type_9, type_9b>);
+    static_assert(std::is_same_v<
+                  type_9,
+                  type_9b>);
     std::cout << name<type_9>() << '\n';
     std::cout << name<type_9b>() << '\n';
     std::cout << '\n';
 
     using type_A = add_properties<Element, Damaging, Living, Damaging, Damaging, Living, Damaging>;  // known properties are: Damaging, Living, Protecting; It's because they are in order_list
     using type_B = Living<Damaging<Element>>;
-    static_assert(std::is_same_v<type_A, type_B>);
+    static_assert(std::is_same_v<
+                  type_A,
+                  type_B>);
 
     using type_C = add_properties<Element, Damaging, Living, Damaging, Damaging, Living>;
     static_assert(std::is_same_v<
@@ -179,8 +209,6 @@ int main() {
         Health{50}};
     print_object(Object{t5});
 
-    // std::cout << name<add_properties<Element_Dmg, Protecting, Damaging, Living, Protecting, Damaging, Living>>() << '\n';  // Protecting_<Element_Dmg>
-
     [[maybe_unused]] auto t6_0 = Element_Dmg{
         Name{"Element 6"},
         Health{50},
@@ -196,17 +224,11 @@ int main() {
         Name{"Element 6"},
         std::tuple{15, BodyLocation::Arms},
         Health{50},
-        Damage{50}};  // * will remove duplication, inverited Damaging, and order properties
+        Damage{50}};  // will remove duplication, inverited Damaging, and order properties
     print_object(Object{t6});
 
     static_assert(sizeof(t4) == sizeof(t5));
     static_assert(sizeof(t5) == sizeof(t6));
-
-    // [[maybe_unused]] auto t7 = add_properties<Element_Dmg, Living, Damaging, Protecting, Protecting, Living, Damaging>{Name{"Element 7"} /*, Damage{50}*/, std::tuple{15, BodyLocation::Arms} /*, Health{50}*/};  // * will remove duplication, inverited Damaging, and order properties
-    // elements.push_back(t7);
-    // std::cout << name<decltype(t7)>() << '\n'
-    //           << '\n'
-    //           << '\n';
 
     using type_t9 = add_properties<Element_Dmg, Protecting, Damaging, Living, Protecting, Damaging, Living>;
     [[maybe_unused]] auto t9 = type_t9{
@@ -220,11 +242,11 @@ int main() {
     std::cout << name<decltype(t10)>() << '\n';
     print_object(Object{t10});
 
-    using x_type = add_properties<Element, Protecting, Living>;  // todo: we should somehow remember properties list for this type and result type...
+    using x_type = add_properties<Element, Protecting, Living>;
     std::cout << "x_type:   " << name<x_type>() << '\n';
-    using y_type = add_properties<x_type, Wearing, Restoring>;  // todo: ... then when same result is used as starting type use sum of properties list and base type to determine result type
-    std::cout << "y_type:   " << name<y_type>() << " Need to be fixed - should be the same as z_type" << '\n';
-    using z_type = add_properties<Element, Wearing, Restoring, Protecting, Living>;  // * correctly ordered type
+    using y_type = add_properties<x_type, Wearing, Restoring>;
+    std::cout << "y_type:   " << name<y_type>() << '\n';
+    using z_type = add_properties<Element, Wearing, Restoring, Protecting, Living>;
     std::cout << "z_type:   " << name<z_type>() << '\n';
     std::cout << '\n';
 
@@ -246,7 +268,30 @@ int main() {
 
     static_assert(sizeof(Y) == sizeof(Z));
 
-    static_assert(not std::is_same_v<
+    static_assert(std::is_same_v<
                   y_type,
                   z_type>);
+
+    using a_type = Damaging<Living<Naming<Element>>>;                  // ! incorrect order
+    using b_type = add_properties<a_type>;                             // add_properties should fix incorrect type
+    using c_type = add_properties<Element, Damaging, Living, Naming>;  // correct order
+    using d_type = add_properties<Damaging<Element>, Naming, Living>;  // correct order
+
+    using e_type =
+        B<Protecting<A<Damaging<A<B<Element_empty>>>>>>;
+    using e_type_2 =
+        add_properties<B<Protecting<A<Damaging<A<B<Element_empty>>>>>>>;
+    using f_type = add_properties<
+        B<Protecting<A<Damaging<A<B<Element_empty>>>>>>,
+        Naming, Living>;  // ? Should A and B types that are not close to base_type be removed by ordering function
+    std::cout << "e_type:       " << name<e_type>() << '\n';
+    std::cout << "e_type fix:   " << name<e_type_2>() << '\n';
+    std::cout << "f_type:       " << name<f_type>() << " = e_type + Naming + Living" << '\n';
+
+    static_assert(std::is_same_v<
+                  b_type,
+                  c_type>);
+    static_assert(std::is_same_v<
+                  c_type,
+                  d_type>);
 }

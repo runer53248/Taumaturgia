@@ -1,9 +1,13 @@
 #pragma once
 #include "../Concepts/Types/Name.hpp"
-#include "../Strategies/DefendStrategy.hpp"
+#include "PropertyData.hpp"
+
+constexpr char protecting_type_name[] = "Protecting";
 
 template <typename T>
 struct Protecting_ : T {
+    using property_data = PropertyData<Protecting_, T, protecting_type_name>;
+
     Protecting_() = default;
 
     template <typename... INFO>

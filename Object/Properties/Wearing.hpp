@@ -1,9 +1,14 @@
 #pragma once
 #include "../Concepts/Types/Name.hpp"
 #include "../Strategies/WearStrategy.hpp"
+#include "PropertyData.hpp"
+
+constexpr char wearing_type_name[] = "Wearing";
 
 template <typename T>
 struct Wearing_ : T {
+    using property_data = PropertyData<Wearing_, T, wearing_type_name>;
+
     Wearing_() = default;
 
     template <typename... INFO>

@@ -1,9 +1,14 @@
 #pragma once
 #include "../Concepts/Types/Name.hpp"
 #include "../Strategies/HealStrategy.hpp"
+#include "PropertyData.hpp"
+
+constexpr char healing_type_name[] = "Healing";
 
 template <typename T>
 struct Healing_ : T {
+    using property_data = PropertyData<Healing_, T, healing_type_name>;
+
     Healing_() = default;
 
     template <typename... INFO>

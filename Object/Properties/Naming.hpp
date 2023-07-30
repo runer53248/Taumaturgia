@@ -1,8 +1,13 @@
 #pragma once
 #include "../Concepts/Namingable.hpp"
+#include "PropertyData.hpp"
+
+constexpr char naming_type_name[] = "Naming";
 
 template <typename T>
 struct Naming_ : T {
+    using property_data = PropertyData<Naming_, T, naming_type_name>;
+
     Naming_() = default;
 
     Naming_(const Name& name, auto&&... args)

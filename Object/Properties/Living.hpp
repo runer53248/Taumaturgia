@@ -1,9 +1,14 @@
 #pragma once
 #include "../Concepts/Types/Name.hpp"
 #include "../Strategies/AliveStrategy.hpp"
+#include "PropertyData.hpp"
+
+constexpr char living_type_name[] = "Living";
 
 template <typename T>
 struct Living_ : T {
+    using property_data = PropertyData<Living_, T, living_type_name>;
+
     Living_() = default;
 
     template <typename... INFO>

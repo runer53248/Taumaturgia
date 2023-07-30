@@ -1,9 +1,14 @@
 #pragma once
 #include "../Concepts/Types/Name.hpp"
 #include "../Strategies/RestoreStrategy.hpp"
+#include "PropertyData.hpp"
+
+constexpr char restoring_type_name[] = "Restoring";
 
 template <typename T>
 struct Restoring_ : T {
+    using property_data = PropertyData<Restoring_, T, restoring_type_name>;
+
     Restoring_() = default;
 
     template <typename... INFO>
