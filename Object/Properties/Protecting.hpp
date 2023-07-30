@@ -1,9 +1,17 @@
 #pragma once
-#include "../Concepts/Namingable.hpp"
+#include "../Concepts/Types/Name.hpp"
 #include "../Strategies/DefendStrategy.hpp"
 
 template <typename T>
 struct Protecting_ : T {
+    template <typename... INFO>
+        requires(std::is_constructible_v<Protection, INFO...> and sizeof...(INFO) > 0)
+    Protecting_(const Name& name, std::tuple<INFO...>&& protection, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, protection{std::move(std::make_from_tuple<Protection>(std::forward<decltype(protection)>(protection)))} {}
+
+    Protecting_(const Name& name, decltype(std::ignore), auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...} {}
+
     Protecting_(const Name& name, Protection&& protection, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, protection{std::move(protection)} {}
 
@@ -22,8 +30,10 @@ private:
     Protection protection{};
 };
 
+namespace Test {
 struct Protecting_Test {};
 static_assert(Protectingable<Protecting_<Protecting_Test>>);
+}  // namespace Test
 
 template <typename T>
 using Protecting = std::conditional_t<Protectingable<T>, T, Protecting_<T>>;

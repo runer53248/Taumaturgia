@@ -1,9 +1,17 @@
 #pragma once
-#include "../Concepts/Namingable.hpp"
+#include "../Concepts/Types/Name.hpp"
 #include "../Strategies/WearStrategy.hpp"
 
 template <typename T>
 struct Wearing_ : T {
+    template <typename... INFO>
+        requires(std::is_constructible_v<ProtectionContainer, INFO...> and sizeof...(INFO) > 0)
+    Wearing_(const Name& name, std::tuple<INFO...>&& armorWear, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::move(std::make_from_tuple<ProtectionContainer>(std::forward<decltype(armorWear)>(armorWear)))} {}
+
+    Wearing_(const Name& name, decltype(std::ignore), auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...} {}
+
     Wearing_(const Name& name, ProtectionContainer&& armorWear, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::move(armorWear)} {}
 
@@ -22,8 +30,10 @@ private:
     ProtectionContainer armorWear{};
 };
 
+namespace Test {
 struct Wearing_Test {};
 static_assert(Wearingable<Wearing_<Wearing_Test>>);
+}  // namespace Test
 
 template <typename T>
 using Wearing = std::conditional_t<Wearingable<T>, T, Wearing_<T>>;

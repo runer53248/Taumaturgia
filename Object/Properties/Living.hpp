@@ -1,9 +1,17 @@
 #pragma once
-#include "../Concepts/Namingable.hpp"
+#include "../Concepts/Types/Name.hpp"
 #include "../Strategies/AliveStrategy.hpp"
 
 template <typename T>
 struct Living_ : T {
+    template <typename... INFO>
+        requires(std::is_constructible_v<Health, INFO...> and sizeof...(INFO) > 0)
+    Living_(const Name& name, std::tuple<INFO...>&& hp, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, hp{std::move(std::make_from_tuple<Health>(std::forward<decltype(hp)>(hp)))} {}
+
+    Living_(const Name& name, decltype(std::ignore), auto&&... args)  // Living_(Name{}, {})
+        : T{name, std::forward<decltype(args)>(args)...} {}
+
     Living_(const Name& name, Health&& hp, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, hp{std::move(hp)} {}
 
@@ -22,8 +30,10 @@ private:
     Health hp{};
 };
 
+namespace Test {
 struct Living_Test {};
 static_assert(Livingable<Living_<Living_Test>>);
+}  // namespace Test
 
 template <typename T>
 using Living = std::conditional_t<Livingable<T>, T, Living_<T>>;

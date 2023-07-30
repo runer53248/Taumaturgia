@@ -52,11 +52,15 @@ int main() {
 
     auto healthy = Living<Healty>{
         Name{"SHIELD_POTION"},
-        {}};
+        {}};  // Living ignored - c-tor of Healty used
+
+    // Living<Potion>{
+    //     Name{"SHIELD_POTION"},
+    //     {}};  // Living used - c-tor of Living can't be used
 
     Living<Potion>{
         Name{"SHIELD_POTION"},
-        {}};
+        std::ignore};
 
     Living<Damaging<Protecting<Potion>>>{
         Name{"SHIELD_POTION"},
@@ -91,7 +95,7 @@ int main() {
 
     Restoring<Damaging<Protecting<Potion>>>{
         Name{"SHIELD_POTION"},
-        {},
+        EffectTypeContainer{},
         Damage{10},
         ArmorClass{4, BodyLocation::Internal, {EffectType::Sleep}}};
 

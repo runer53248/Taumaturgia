@@ -1,9 +1,18 @@
 #pragma once
-#include "../Concepts/Namingable.hpp"
+#include "../Concepts/Types/Name.hpp"
 #include "../Strategies/HealStrategy.hpp"
 
 template <typename T>
 struct Healing_ : T {
+    template <typename... INFO>
+        requires(std::is_constructible_v<Health, INFO...> and sizeof...(INFO) > 0)
+    Healing_(const Name& name, std::tuple<INFO...>&& cureHealth, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...},
+          cureHealth{std::move(std::make_from_tuple<Health>(std::forward<decltype(cureHealth)>(cureHealth)))} {}
+
+    Healing_(const Name& name, decltype(std::ignore), auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...} {}
+
     Healing_(const Name& name, Health&& cureHealth, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, cureHealth{std::move(cureHealth)} {}
 
@@ -22,8 +31,10 @@ private:
     Health cureHealth{};
 };
 
+namespace Test {
 struct Healing_Test {};
 static_assert(Healingable<Healing_<Healing_Test>>);
+}  // namespace Test
 
 template <typename T>
 using Healing = std::conditional_t<Healingable<T>, T, Healing_<T>>;
