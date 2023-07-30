@@ -4,6 +4,8 @@
 
 template <typename T>
 struct Protecting_ : T {
+    Protecting_() = default;
+
     template <typename... INFO>
         requires(std::is_constructible_v<Protection, INFO...> and sizeof...(INFO) > 0)
     Protecting_(const Name& name, std::tuple<INFO...>&& protection, auto&&... args)

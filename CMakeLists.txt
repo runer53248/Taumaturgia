@@ -15,6 +15,7 @@ add_compile_options(
     -Werror
 
     -Wno-defaulted-function-deleted
+    -Wno-missing-braces
 )
 
 include_directories(${Taumaturgia_SOURCE_DIR})

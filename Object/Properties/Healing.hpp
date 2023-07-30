@@ -4,6 +4,8 @@
 
 template <typename T>
 struct Healing_ : T {
+    Healing_() = default;
+
     template <typename... INFO>
         requires(std::is_constructible_v<Health, INFO...> and sizeof...(INFO) > 0)
     Healing_(const Name& name, std::tuple<INFO...>&& cureHealth, auto&&... args)

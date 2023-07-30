@@ -4,6 +4,8 @@
 
 template <typename T>
 struct Wearing_ : T {
+    Wearing_() = default;
+
     template <typename... INFO>
         requires(std::is_constructible_v<ProtectionContainer, INFO...> and sizeof...(INFO) > 0)
     Wearing_(const Name& name, std::tuple<INFO...>&& armorWear, auto&&... args)

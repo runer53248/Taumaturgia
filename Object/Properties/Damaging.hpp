@@ -4,6 +4,8 @@
 
 template <typename T>
 struct Damaging_ : T {
+    Damaging_() = default;
+
     template <typename... INFO>
         requires(std::is_constructible_v<Damage, INFO...> and sizeof...(INFO) > 0)
     Damaging_(const Name& name, std::tuple<INFO...>&& dmg, auto&&... args)

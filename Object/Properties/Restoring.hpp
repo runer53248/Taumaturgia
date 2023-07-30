@@ -4,6 +4,8 @@
 
 template <typename T>
 struct Restoring_ : T {
+    Restoring_() = default;
+
     template <typename... INFO>
         requires(std::is_constructible_v<EffectTypeContainer, INFO...> and sizeof...(INFO) > 0)
     Restoring_(const Name& name, std::tuple<INFO...>&& restoreEffects, auto&&... args)

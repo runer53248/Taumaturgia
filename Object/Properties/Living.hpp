@@ -4,12 +4,14 @@
 
 template <typename T>
 struct Living_ : T {
+    Living_() = default;
+
     template <typename... INFO>
         requires(std::is_constructible_v<Health, INFO...> and sizeof...(INFO) > 0)
     Living_(const Name& name, std::tuple<INFO...>&& hp, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, hp{std::move(std::make_from_tuple<Health>(std::forward<decltype(hp)>(hp)))} {}
 
-    Living_(const Name& name, decltype(std::ignore), auto&&... args)  // Living_(Name{}, {})
+    Living_(const Name& name, decltype(std::ignore), auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
     Living_(const Name& name, Health&& hp, auto&&... args)
