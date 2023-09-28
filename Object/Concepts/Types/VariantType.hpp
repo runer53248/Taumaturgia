@@ -44,13 +44,17 @@ template <Parameter param>
 constexpr auto get_opt_ref_wrapper(GetOptVarianted auto&& opt_variant) {
     if constexpr (param == Parameter::Health or param == Parameter::CureHealth) {
         return extract_to_opt_ref_wrapper<Health>(opt_variant);
-    } else if constexpr (param == Parameter::Damage) {
+    }
+    if constexpr (param == Parameter::Damage) {
         return extract_to_opt_ref_wrapper<Damage>(opt_variant);
-    } else if constexpr (param == Parameter::Protection) {
+    }
+    if constexpr (param == Parameter::Protection) {
         return extract_to_opt_ref_wrapper<Protection>(opt_variant);
-    } else if constexpr (param == Parameter::Restore) {
+    }
+    if constexpr (param == Parameter::Restore) {
         return extract_to_opt_ref_wrapper<EffectTypeContainer>(opt_variant);
-    } else if constexpr (param == Parameter::Wear) {
+    }
+    if constexpr (param == Parameter::Wear) {
         return extract_to_opt_ref_wrapper<ProtectionContainer>(opt_variant);
     }
 }
