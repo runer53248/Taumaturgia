@@ -1,5 +1,5 @@
 #pragma once
-#include <type_traits>
+#include "helper/same_as_ref.hpp"
 
 struct Protection;
 
@@ -12,18 +12,18 @@ concept ProtectionAccessable = requires(T x) {
 template <typename T>
 concept GetProtectionAccessable = requires(T x) {
     x.getProtection();
-    { x.getProtection() } -> std::convertible_to<Protection>;
+    { x.getProtection() } -> same_as_ref<Protection>;
 };
 
 namespace traits {
 
 template <typename T>
-struct customAccessProtection {};
+struct CustomAccessProtection {};
 
 template <typename T>
 concept CustomProtectionAccessable = requires(T x) {
-    customAccessProtection<T>::get(x);
-    { customAccessProtection<T>::get(x) } -> std::convertible_to<Protection>;
+    CustomAccessProtection<T>::get(x);
+    { CustomAccessProtection<T>::get(x) } -> same_as_ref<Protection>;
 };
 
 struct accessProtection {
@@ -37,7 +37,7 @@ struct accessProtection {
 
     template <CustomProtectionAccessable T>
     static auto& get(T& el) {
-        return customAccessProtection<std::remove_cv_t<T>>::get(el);
+        return CustomAccessProtection<std::remove_cv_t<T>>::get(el);
     }
 };
 

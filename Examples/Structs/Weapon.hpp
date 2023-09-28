@@ -32,7 +32,7 @@ private:
 
 template <typename T>
     requires std::is_base_of_v<Weapon, T>
-struct traits::customAccessDamage<T> {
+struct traits::CustomAccessDamage<T> {
     static auto& get(auto& el) {
         return el.Dmg();
     }

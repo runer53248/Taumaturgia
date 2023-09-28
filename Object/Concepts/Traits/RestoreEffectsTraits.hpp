@@ -1,5 +1,5 @@
 #pragma once
-#include <type_traits>
+#include "helper/same_as_ref.hpp"
 
 struct EffectTypeContainer;
 
@@ -12,18 +12,18 @@ concept RestoreEffectsAccessable = requires(T x) {
 template <typename T>
 concept GetRestoreEffectsAccessable = requires(T x) {
     x.getRestoreEffects();
-    { x.getRestoreEffects() } -> std::convertible_to<EffectTypeContainer>;
+    { x.getRestoreEffects() } -> same_as_ref<EffectTypeContainer>;
 };
 
 namespace traits {
 
 template <typename T>
-struct customAccessRestoreEffects {};
+struct CustomAccessRestoreEffects {};
 
 template <typename T>
 concept CustomRestoreEffectsAccessable = requires(T x) {
-    customAccessRestoreEffects<T>::get(x);
-    { customAccessRestoreEffects<T>::get(x) } -> std::convertible_to<EffectTypeContainer>;
+    CustomAccessRestoreEffects<T>::get(x);
+    { CustomAccessRestoreEffects<T>::get(x) } -> same_as_ref<EffectTypeContainer>;
 };
 
 struct accessRestoreEffects {
@@ -37,7 +37,7 @@ struct accessRestoreEffects {
 
     template <CustomRestoreEffectsAccessable T>
     static auto& get(T& el) {
-        return customAccessRestoreEffects<std::remove_cv_t<T>>::get(el);
+        return CustomAccessRestoreEffects<std::remove_cv_t<T>>::get(el);
     }
 };
 

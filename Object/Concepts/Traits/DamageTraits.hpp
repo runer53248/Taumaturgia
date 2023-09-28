@@ -1,5 +1,5 @@
 #pragma once
-#include <type_traits>
+#include "helper/same_as_ref.hpp"
 
 struct Damage;
 
@@ -12,18 +12,18 @@ concept DamageAccessable = requires(T x) {
 template <typename T>
 concept GetDamageAccessable = requires(T x) {
     x.getDamage();
-    { x.getDamage() } -> std::convertible_to<Damage>;
+    { x.getDamage() } -> same_as_ref<Damage>;
 };
 
 namespace traits {
 
 template <typename T>
-struct customAccessDamage {};
+struct CustomAccessDamage {};
 
 template <typename T>
 concept CustomDamageAccessable = requires(T x) {
-    customAccessDamage<T>::get(x);
-    { customAccessDamage<T>::get(x) } -> std::convertible_to<Damage>;
+    CustomAccessDamage<T>::get(x);
+    { CustomAccessDamage<T>::get(x) } -> same_as_ref<Damage>;
 };
 
 struct accessDamage {
@@ -37,7 +37,7 @@ struct accessDamage {
 
     template <CustomDamageAccessable T>
     static auto& get(T& el) {
-        return customAccessDamage<std::remove_cv_t<T>>::get(el);
+        return CustomAccessDamage<std::remove_cv_t<T>>::get(el);
     }
 };
 

@@ -6,5 +6,5 @@
 template <typename T>
 concept Wearingable = requires(T x) {
     traits::accessArmorWear::get(x);
-    { traits::accessArmorWear::get(x) } -> std::convertible_to<ProtectionContainer>;
+    { traits::accessArmorWear::get(x) } -> same_as_ref<ProtectionContainer>;
 };

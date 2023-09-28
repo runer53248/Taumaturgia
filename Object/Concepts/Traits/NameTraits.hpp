@@ -19,12 +19,12 @@ concept GetNameAccessable = requires(T x) {
 namespace traits {
 
 template <typename T>
-struct customAccessName {};
+struct CustomAccessName {};
 
 template <typename T>
 concept CustomNameAccessable = requires(T x) {
-    customAccessName<T>::get(x);
-    { customAccessName<T>::get(x) } -> std::convertible_to<std::string>;
+    CustomAccessName<T>::get(x);
+    { CustomAccessName<T>::get(x) } -> std::convertible_to<std::string>;
 };
 
 struct accessName {
@@ -38,7 +38,7 @@ struct accessName {
 
     template <CustomNameAccessable T>
     static auto& get(T& el) {
-        return customAccessName<std::remove_cv_t<T>>::get(el);
+        return CustomAccessName<std::remove_cv_t<T>>::get(el);
     }
 };
 

@@ -6,5 +6,5 @@
 template <typename T>
 concept Damagingable = requires(T x) {
     traits::accessDamage::get(x);
-    { traits::accessDamage::get(x) } -> std::convertible_to<Damage>;
+    { traits::accessDamage::get(x) } -> same_as_ref<Damage>;
 };

@@ -6,5 +6,5 @@
 template <typename T>
 concept Healingable = requires(T x) {
     traits::accessCureHealth::get(x);
-    { traits::accessCureHealth::get(x) } -> std::convertible_to<Health>;
+    { traits::accessCureHealth::get(x) } -> same_as_ref<Health>;
 };

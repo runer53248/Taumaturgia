@@ -6,5 +6,5 @@
 template <typename T>
 concept Protectingable = requires(T x) {
     traits::accessProtection::get(x);
-    { traits::accessProtection::get(x) } -> std::convertible_to<Protection>;
+    { traits::accessProtection::get(x) } -> same_as_ref<Protection>;
 };

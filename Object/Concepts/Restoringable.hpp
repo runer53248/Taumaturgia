@@ -6,5 +6,5 @@
 template <typename T>
 concept Restoringable = requires(T x) {
     traits::accessRestoreEffects::get(x);
-    { traits::accessRestoreEffects::get(x) } -> std::convertible_to<EffectTypeContainer>;
+    { traits::accessRestoreEffects::get(x) } -> same_as_ref<EffectTypeContainer>;
 };

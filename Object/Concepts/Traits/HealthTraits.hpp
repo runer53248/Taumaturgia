@@ -1,5 +1,5 @@
 #pragma once
-#include <type_traits>
+#include "helper/same_as_ref.hpp"
 
 struct Health;
 
@@ -12,18 +12,18 @@ concept HealthAccessable = requires(T x) {
 template <typename T>
 concept GetHealthAccessable = requires(T x) {
     x.getHp();
-    { x.getHp() } -> std::convertible_to<Health>;
+    { x.getHp() } -> same_as_ref<Health>;
 };
 
 namespace traits {
 
 template <typename T>
-struct customAccessHealth {};
+struct CustomAccessHealth {};
 
 template <typename T>
 concept CustomHealthAccessable = requires(T x) {
-    customAccessHealth<T>::get(x);
-    { customAccessHealth<T>::get(x) } -> std::convertible_to<Health>;
+    CustomAccessHealth<T>::get(x);
+    { CustomAccessHealth<T>::get(x) } -> same_as_ref<Health>;
 };
 
 struct accessHealth {
@@ -37,7 +37,7 @@ struct accessHealth {
 
     template <CustomHealthAccessable T>
     static auto& get(T& el) {
-        return customAccessHealth<std::remove_cv_t<T>>::get(el);
+        return CustomAccessHealth<std::remove_cv_t<T>>::get(el);
     }
 };
 

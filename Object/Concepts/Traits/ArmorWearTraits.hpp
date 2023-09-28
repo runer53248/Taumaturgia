@@ -1,5 +1,5 @@
 #pragma once
-#include <type_traits>
+#include "helper/same_as_ref.hpp"
 
 struct ProtectionContainer;
 
@@ -12,18 +12,18 @@ concept ArmorWearAccessable = requires(T x) {
 template <typename T>
 concept GetArmorWearAccessable = requires(T x) {
     x.getArmorWear();
-    { x.getArmorWear() } -> std::convertible_to<ProtectionContainer>;
+    { x.getArmorWear() } -> same_as_ref<ProtectionContainer>;
 };
 
 namespace traits {
 
 template <typename T>
-struct customAccessArmorWear {};
+struct CustomAccessArmorWear {};
 
 template <typename T>
 concept CustomArmorWearAccessable = requires(T x) {
-    customAccessArmorWear<T>::get(x);
-    { customAccessArmorWear<T>::get(x) } -> std::convertible_to<ProtectionContainer>;
+    CustomAccessArmorWear<T>::get(x);
+    { CustomAccessArmorWear<T>::get(x) } -> same_as_ref<ProtectionContainer>;
 };
 
 struct accessArmorWear {
@@ -37,7 +37,7 @@ struct accessArmorWear {
 
     template <CustomArmorWearAccessable T>
     static auto& get(T& el) {
-        return customAccessArmorWear<std::remove_cv_t<T>>::get(el);
+        return CustomAccessArmorWear<std::remove_cv_t<T>>::get(el);
     }
 };
 
