@@ -50,7 +50,7 @@ int main() {
         Name{"SHIELD_POTION"},
         Health{}};
 
-    auto healthy = Living<Healty>{
+    Living<Healty>{
         Name{"SHIELD_POTION"},
         {}};  // Living ignored - c-tor of Healty used
 
