@@ -10,9 +10,9 @@ concept ArmorWearAccessable = requires(T x) {
 };
 
 template <typename T>
-concept GetArmorWearAccessable = requires(T x) {
-    x.getArmorWear();
+concept GetArmorWearAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
     { x.getArmorWear() } -> same_as_ref<ProtectionContainer>;
+    { y.getArmorWear() } -> same_as_ref<const ProtectionContainer>;
 };
 
 namespace traits {
@@ -21,9 +21,9 @@ template <typename T>
 struct CustomAccessArmorWear {};
 
 template <typename T>
-concept CustomArmorWearAccessable = requires(T x) {
-    CustomAccessArmorWear<T>::get(x);
+concept CustomArmorWearAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
     { CustomAccessArmorWear<T>::get(x) } -> same_as_ref<ProtectionContainer>;
+    { CustomAccessArmorWear<T>::get(y) } -> same_as_ref<const ProtectionContainer>;
 };
 
 struct accessArmorWear {
@@ -31,12 +31,19 @@ struct accessArmorWear {
         return el.armorWear;
     }
 
-    static auto& get(GetArmorWearAccessable auto& el) {
+    template <GetArmorWearAccessable T>
+        requires(not CustomArmorWearAccessable<T>)  // use custom access if available
+    static decltype(auto) get(T& el) {
         return el.getArmorWear();
     }
 
     template <CustomArmorWearAccessable T>
-    static auto& get(T& el) {
+    static decltype(auto) get(T& el) {
+        return CustomAccessArmorWear<std::remove_cv_t<T>>::get(el);
+    }
+
+    template <CustomArmorWearAccessable T>
+    static decltype(auto) get(const T& el) {
         return CustomAccessArmorWear<std::remove_cv_t<T>>::get(el);
     }
 };

@@ -10,9 +10,9 @@ concept HealthAccessable = requires(T x) {
 };
 
 template <typename T>
-concept GetHealthAccessable = requires(T x) {
-    x.getHp();
+concept GetHealthAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
     { x.getHp() } -> same_as_ref<Health>;
+    { y.getHp() } -> same_as_ref<const Health>;
 };
 
 namespace traits {
@@ -21,9 +21,9 @@ template <typename T>
 struct CustomAccessHealth {};
 
 template <typename T>
-concept CustomHealthAccessable = requires(T x) {
-    CustomAccessHealth<T>::get(x);
+concept CustomHealthAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
     { CustomAccessHealth<T>::get(x) } -> same_as_ref<Health>;
+    { CustomAccessHealth<T>::get(y) } -> same_as_ref<const Health>;
 };
 
 struct accessHealth {
@@ -31,12 +31,19 @@ struct accessHealth {
         return el.hp;
     }
 
-    static auto& get(GetHealthAccessable auto& el) {
+    template <GetHealthAccessable T>
+        requires(not CustomHealthAccessable<T>)  // use custom access if available
+    static decltype(auto) get(T& el) {
         return el.getHp();
     }
 
     template <CustomHealthAccessable T>
-    static auto& get(T& el) {
+    static decltype(auto) get(T& el) {
+        return CustomAccessHealth<std::remove_cv_t<T>>::get(el);
+    }
+
+    template <CustomHealthAccessable T>
+    static decltype(auto) get(const T& el) {
         return CustomAccessHealth<std::remove_cv_t<T>>::get(el);
     }
 };

@@ -10,9 +10,9 @@ concept RestoreEffectsAccessable = requires(T x) {
 };
 
 template <typename T>
-concept GetRestoreEffectsAccessable = requires(T x) {
-    x.getRestoreEffects();
+concept GetRestoreEffectsAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
     { x.getRestoreEffects() } -> same_as_ref<EffectTypeContainer>;
+    { y.getRestoreEffects() } -> same_as_ref<const EffectTypeContainer>;
 };
 
 namespace traits {
@@ -21,9 +21,9 @@ template <typename T>
 struct CustomAccessRestoreEffects {};
 
 template <typename T>
-concept CustomRestoreEffectsAccessable = requires(T x) {
-    CustomAccessRestoreEffects<T>::get(x);
+concept CustomRestoreEffectsAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
     { CustomAccessRestoreEffects<T>::get(x) } -> same_as_ref<EffectTypeContainer>;
+    { CustomAccessRestoreEffects<T>::get(y) } -> same_as_ref<const EffectTypeContainer>;
 };
 
 struct accessRestoreEffects {
@@ -31,12 +31,19 @@ struct accessRestoreEffects {
         return el.restoreEffects;
     }
 
-    static auto& get(GetRestoreEffectsAccessable auto& el) {
+    template <GetRestoreEffectsAccessable T>
+    requires (not CustomRestoreEffectsAccessable<T>)
+    static decltype(auto) get(T& el) {
         return el.getRestoreEffects();
     }
 
     template <CustomRestoreEffectsAccessable T>
-    static auto& get(T& el) {
+    static decltype(auto) get(T& el) {
+        return CustomAccessRestoreEffects<std::remove_cv_t<T>>::get(el);
+    }
+
+    template <CustomRestoreEffectsAccessable T>
+    static decltype(auto) get(const T& el) {
         return CustomAccessRestoreEffects<std::remove_cv_t<T>>::get(el);
     }
 };
