@@ -6,7 +6,7 @@ struct Name {
     explicit Name(const std::string& value)
         : value_{value} {}
 
-    auto operator<=>(const Name& other) const noexcept = default;
+    friend auto operator<=>(const Name& lhs, const Name& rhs) noexcept = default;
 
     operator std::string() noexcept { return value_; }
     operator std::string() const noexcept { return value_; }
