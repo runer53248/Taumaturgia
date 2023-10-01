@@ -8,6 +8,8 @@ struct ProtectionContainer {
     explicit ProtectionContainer(int baseValue) noexcept
         : globalArmor_{baseValue} {}
 
+    friend auto operator<=>(const ProtectionContainer& lhs, const ProtectionContainer& rhs) noexcept = default;
+
     auto value() const& {
         return globalArmor_;
     }
