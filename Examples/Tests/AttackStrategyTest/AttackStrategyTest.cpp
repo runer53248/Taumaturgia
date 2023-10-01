@@ -27,6 +27,8 @@ TEST(AttackStrategyTest, Weapon_attack_effect) {
             Health{max_health}}};
 
     auto hp = getOpt<Parameter::Health>(player);
+    ASSERT_TRUE(hp.has_value());
+
     EXPECT_EQ(hp.value().get().value(), max_health);
     EXPECT_FALSE(hp.value().get().effects().isEffectType(effect_1));
     EXPECT_FALSE(hp.value().get().effects().isEffectType(effect_2));
@@ -37,6 +39,8 @@ TEST(AttackStrategyTest, Weapon_attack_effect) {
     std::cout << status << "\n\n";
 
     hp = getOpt<Parameter::Health>(player);
+    ASSERT_TRUE(hp.has_value());
+
     auto expected_current_hp = max_health - damage_1;
     EXPECT_EQ(hp.value().get().value(), expected_current_hp);
     EXPECT_TRUE(hp.value().get().effects().isEffectType(effect_1));
@@ -70,6 +74,8 @@ TEST(AttackStrategyTest, CustomWeapon_subattack_effects) {
             Health{max_health}}};
 
     auto hp = getOpt<Parameter::Health>(player);
+    ASSERT_TRUE(hp.has_value());
+
     EXPECT_EQ(hp.value().get().value(), max_health);
     EXPECT_FALSE(hp.value().get().effects().isEffectType(effect_1));
     EXPECT_FALSE(hp.value().get().effects().isEffectType(effect_2));
@@ -80,6 +86,8 @@ TEST(AttackStrategyTest, CustomWeapon_subattack_effects) {
     std::cout << status << "\n\n";
 
     hp = getOpt<Parameter::Health>(player);
+    ASSERT_TRUE(hp.has_value());
+
     auto expected_current_hp = max_health - damage_1 - damage_2;
     EXPECT_EQ(hp.value().get().value(), expected_current_hp);
     EXPECT_FALSE(hp.value().get().effects().isEffectType(effect_1));
@@ -92,6 +100,8 @@ TEST(AttackStrategyTest, CustomWeapon_subattack_effects) {
     std::cout << status << "\n\n";
 
     hp = getOpt<Parameter::Health>(player);
+    ASSERT_TRUE(hp.has_value());
+
     expected_current_hp = expected_current_hp - damage_1 - damage_2 - damage_3;
     EXPECT_EQ(hp.value().get().value(), expected_current_hp);
     EXPECT_TRUE(hp.value().get().effects().isEffectType(effect_1));
