@@ -18,8 +18,8 @@ struct Restoring_ : T {
 
     Restoring_(const Name& name)
         : T{name} {}
-    
-    Restoring_(const Name& name, decltype(std::ignore), auto&&... args)
+
+    Restoring_(const Name& name, [[maybe_unused]] decltype(std::ignore) restoreEffects, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
     Restoring_(const Name& name, EffectTypeContainer&& restoreEffects, auto&&... args)
@@ -28,11 +28,11 @@ struct Restoring_ : T {
     Restoring_(const Name& name, const EffectTypeContainer& restoreEffects, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, restoreEffects{restoreEffects} {}
 
-    auto& getRestoreEffects() {
+    auto& getRestoreEffects() & {
         return restoreEffects;
     }
 
-    const auto& getRestoreEffects() const {
+    const auto& getRestoreEffects() const& {
         return restoreEffects;
     }
 

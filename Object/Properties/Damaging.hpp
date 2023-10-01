@@ -20,7 +20,7 @@ struct Damaging_ : T {
     Damaging_(const Name& name)
         : T{name} {}
 
-    Damaging_(const Name& name, decltype(std::ignore), auto&&... args)
+    Damaging_(const Name& name, [[maybe_unused]] decltype(std::ignore) dmg, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
     Damaging_(const Name& name, Damage&& dmg, auto&&... args)
@@ -29,11 +29,11 @@ struct Damaging_ : T {
     Damaging_(const Name& name, const Damage& dmg, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, dmg{dmg} {}
 
-    auto& getDamage() {
+    auto& getDamage() & {
         return dmg;
     }
 
-    const auto& getDamage() const {
+    const auto& getDamage() const& {
         return dmg;
     }
 

@@ -18,8 +18,8 @@ struct Living_ : T {
 
     Living_(const Name& name)
         : T{name} {}
-    
-    Living_(const Name& name, decltype(std::ignore), auto&&... args)
+
+    Living_(const Name& name, [[maybe_unused]] decltype(std::ignore) hp, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
     Living_(const Name& name, Health&& hp, auto&&... args)
@@ -28,11 +28,11 @@ struct Living_ : T {
     Living_(const Name& name, const Health& hp, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, hp{hp} {}
 
-    auto& getHp() {
+    auto& getHp() & {
         return hp;
     }
 
-    const auto& getHp() const {
+    const auto& getHp() const& {
         return hp;
     }
 

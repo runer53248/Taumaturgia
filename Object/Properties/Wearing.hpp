@@ -19,7 +19,7 @@ struct Wearing_ : T {
     Wearing_(const Name& name)
         : T{name} {}
 
-    Wearing_(const Name& name, decltype(std::ignore), auto&&... args)
+    Wearing_(const Name& name, [[maybe_unused]] decltype(std::ignore) armorWear, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
     Wearing_(const Name& name, ProtectionContainer&& armorWear, auto&&... args)
@@ -28,11 +28,11 @@ struct Wearing_ : T {
     Wearing_(const Name& name, const ProtectionContainer& armorWear, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, armorWear{armorWear} {}
 
-    auto& getArmorWear() {
+    auto& getArmorWear() & {
         return armorWear;
     }
 
-    const auto& getArmorWear() const {
+    const auto& getArmorWear() const& {
         return armorWear;
     }
 

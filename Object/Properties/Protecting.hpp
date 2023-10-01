@@ -17,8 +17,8 @@ struct Protecting_ : T {
 
     Protecting_(const Name& name)
         : T{name} {}
-    
-    Protecting_(const Name& name, decltype(std::ignore), auto&&... args)
+
+    Protecting_(const Name& name, [[maybe_unused]] decltype(std::ignore) protection, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
     Protecting_(const Name& name, Protection&& protection, auto&&... args)
@@ -27,11 +27,11 @@ struct Protecting_ : T {
     Protecting_(const Name& name, const Protection& protection, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, protection{protection} {}
 
-    auto& getProtection() {
+    auto& getProtection() & {
         return protection;
     }
 
-    const auto& getProtection() const {
+    const auto& getProtection() const& {
         return protection;
     }
 

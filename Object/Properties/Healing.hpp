@@ -20,7 +20,7 @@ struct Healing_ : T {
     Healing_(const Name& name)
         : T{name} {}
 
-    Healing_(const Name& name, decltype(std::ignore), auto&&... args)
+    Healing_(const Name& name, [[maybe_unused]] decltype(std::ignore) cureHealth, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
     Healing_(const Name& name, Health&& cureHealth, auto&&... args)
@@ -29,11 +29,11 @@ struct Healing_ : T {
     Healing_(const Name& name, const Health& cureHealth, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, cureHealth{cureHealth} {}
 
-    auto& getCureHealth() {
+    auto& getCureHealth() & {
         return cureHealth;
     }
 
-    const auto& getCureHealth() const {
+    const auto& getCureHealth() const& {
         return cureHealth;
     }
 

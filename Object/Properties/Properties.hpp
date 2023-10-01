@@ -10,12 +10,13 @@
 #include "Helpers/taged_list.hpp"
 
 using order_list = taged_list<
-    Naming,  // should be first property to add (used last)
     Living,
     Wearing,
     Damaging,
     Protecting,
     Healing,
-    Restoring>;  // properties list in order
+    Restoring,
+    Naming  // should be last property to add (used last)
+    >;      // properties list in order
 
 #include "Helpers/Property.hpp"
