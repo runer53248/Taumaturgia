@@ -9,6 +9,8 @@ struct CustomWeapon {  // is not Damagingable but still counts as AttackStratega
                                       DefaultWeapon{Name{"Medium weapon"}, Damage{20}}};
 };
 
+static_assert(Damagingable<DefaultWeapon>);
+
 template <>
 struct AttackStrategy_<CustomWeapon> {
     // ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const {  // when get Damagingable property
