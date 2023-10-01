@@ -1,5 +1,6 @@
 #pragma once
 #include "../Concepts/Types/Name.hpp"
+#include "../Strategies/DefendStrategy.hpp"
 #include "PropertyData.hpp"
 
 constexpr char protecting_type_name[] = "Protecting";
