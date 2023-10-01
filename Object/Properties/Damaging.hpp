@@ -17,6 +17,9 @@ struct Damaging_ : T {
         : T{name, std::forward<decltype(args)>(args)...}, dmg{std::move(std::make_from_tuple<Damage>(std::forward<decltype(dmg)>(dmg)))} {
     }
 
+    Damaging_(const Name& name)
+        : T{name} {}
+
     Damaging_(const Name& name, decltype(std::ignore), auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 

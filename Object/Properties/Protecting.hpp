@@ -15,6 +15,9 @@ struct Protecting_ : T {
     Protecting_(const Name& name, std::tuple<INFO...>&& protection, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, protection{std::move(std::make_from_tuple<Protection>(std::forward<decltype(protection)>(protection)))} {}
 
+    Protecting_(const Name& name)
+        : T{name} {}
+    
     Protecting_(const Name& name, decltype(std::ignore), auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 

@@ -16,6 +16,9 @@ struct Living_ : T {
     Living_(const Name& name, std::tuple<INFO...>&& hp, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, hp{std::move(std::make_from_tuple<Health>(std::forward<decltype(hp)>(hp)))} {}
 
+    Living_(const Name& name)
+        : T{name} {}
+    
     Living_(const Name& name, decltype(std::ignore), auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 

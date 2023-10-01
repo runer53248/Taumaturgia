@@ -16,6 +16,9 @@ struct Wearing_ : T {
     Wearing_(const Name& name, std::tuple<INFO...>&& armorWear, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::move(std::make_from_tuple<ProtectionContainer>(std::forward<decltype(armorWear)>(armorWear)))} {}
 
+    Wearing_(const Name& name)
+        : T{name} {}
+
     Wearing_(const Name& name, decltype(std::ignore), auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 

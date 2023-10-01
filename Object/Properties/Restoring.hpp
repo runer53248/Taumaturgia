@@ -16,6 +16,9 @@ struct Restoring_ : T {
     Restoring_(const Name& name, std::tuple<INFO...>&& restoreEffects, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, restoreEffects{std::move(std::make_from_tuple<EffectTypeContainer>(std::forward<decltype(restoreEffects)>(restoreEffects)))} {}
 
+    Restoring_(const Name& name)
+        : T{name} {}
+    
     Restoring_(const Name& name, decltype(std::ignore), auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 

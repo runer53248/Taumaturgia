@@ -17,6 +17,9 @@ struct Healing_ : T {
         : T{name, std::forward<decltype(args)>(args)...},
           cureHealth{std::move(std::make_from_tuple<Health>(std::forward<decltype(cureHealth)>(cureHealth)))} {}
 
+    Healing_(const Name& name)
+        : T{name} {}
+
     Healing_(const Name& name, decltype(std::ignore), auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
