@@ -2,20 +2,47 @@
 #include "Object/DefaultStrategies.hpp"
 #include "Object/Object.hpp"
 #include "Object/Properties/Properties.hpp"
+#include "Object/Properties/UserProperty.hpp"
 
 struct MyType {};
+
+template <typename TYPE>
+struct UserPropertyAdapter {
+    template <typename T>
+    using type = UserProperty<T, TYPE>;
+};
 
 using TestType = add_properties<
     MyType,
     //
+    UserPropertyAdapter<float>::type,  // not on order_list - last on c-tor arguments list
+    UserPropertyAdapter<int>::type,    // not on order_list - always apply to MyType as most inner (before Naming !!!)
+    UserPropertyAdapter<bool>::type,
+    // so its first argument in TestType c-tor
+    //
+    // all below are in correct order in TestType c-tor arguments but take name as they first argument so its looks like Naming is before them
     Living,
     Wearing,
-    Damaging,
-    Protecting,
+    Protecting,  // even if switch order they return the same type
+    Damaging,    //
     Healing,
     Restoring,
-    Naming  // should be last property to add (used last)
+    Naming  // most inner to add (apply to type after unordered/unknown properties)
+    // actualy last but other requires that it exist in type to add name from they own c-tors.
     >;
+
+// C-tor args order
+//
+// TestType(
+//     Naming, // c-tors move it in front because its required (its added to MyType as last of ordered types)
+//     Living,
+//     Wearing,
+//     Damaging,
+//     Protecting,
+//     Healing,
+//     Restoring,
+//     UserProperty<float>, // because the are unordered (order at add_properties arguments is used)
+//     UserProperty<int>)
 
 #include "Mocks/MockCustomAccessArmorWear.hpp"
 #include "Mocks/MockCustomAccessCureHealth.hpp"
@@ -24,6 +51,7 @@ using TestType = add_properties<
 #include "Mocks/MockCustomAccessName.hpp"
 #include "Mocks/MockCustomAccessProtection.hpp"
 #include "Mocks/MockCustomAccessRestoreEffects.hpp"
+#include "Mocks/MockCustomAccessUserType.hpp"
 
 /////////////////////////////////////////////////////////
 
@@ -362,7 +390,9 @@ TEST(custom_access_test, CustomAccessRestoreEffects) {
         std::ignore,
         std::ignore,
         std::ignore,
-        result};
+        result,
+        5.0f,
+        12};
 
     EXPECT_CALL(mock, get(_)).Times(2).WillRepeatedly(ReturnRef(result));
     EXPECT_CALL(mock, getConst(_)).Times(1).WillRepeatedly(ReturnRef(result));
@@ -377,4 +407,49 @@ TEST(custom_access_test, CustomAccessRestoreEffects) {
     restoreEffects = traits::accessRestoreEffects::get(type);
 
     EXPECT_EQ(restoreEffects, default_restoreEffects_change);
+}
+
+/////////////////////////////////////////////////////////
+
+const auto default_userType = 15.0f;
+const auto default_userType_change = 12.45f;
+const auto default_userType2 = 20;
+const auto default_userType2_change = 45;
+
+TEST(custom_access_test, AccessUserType) {
+    TestType type{
+        Name{default_name},
+        std::ignore,
+        std::ignore,
+        std::ignore,
+        std::ignore,
+        std::ignore,
+        std::ignore,
+        default_userType,
+        default_userType2,
+        std::ignore};
+
+    decltype(auto) userType = type.getType();
+    decltype(auto) userType_const = std::as_const(type).getType();
+
+    decltype(auto) userType2 = type.getType<int>();
+    decltype(auto) userType2_const = std::as_const(type).getType<int>();
+
+    EXPECT_EQ(userType, default_userType);
+    EXPECT_EQ(userType_const, default_userType);
+
+    EXPECT_EQ(userType2, default_userType2);
+    EXPECT_EQ(userType2_const, default_userType2);
+
+    userType = default_userType_change;
+    userType = type.getType();
+
+    userType2 = default_userType2_change;
+    userType2 = type.getType<int>();
+
+    auto test = type.getType<bool>();
+    EXPECT_EQ(test, false);
+
+    EXPECT_EQ(userType, default_userType_change);
+    EXPECT_EQ(userType2, default_userType2_change);
 }
