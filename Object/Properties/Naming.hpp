@@ -13,11 +13,11 @@ struct Naming_ : T {
     Naming_(const Name& name, auto&&... args)
         : T{std::forward<decltype(args)>(args)...}, name{name} {}
 
-    auto& getName() {
+    auto& getName() & {
         return name;
     }
 
-    const auto& getName() const {
+    const auto& getName() const& {
         return name;
     }
 
