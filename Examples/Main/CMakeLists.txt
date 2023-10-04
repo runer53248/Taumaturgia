@@ -25,7 +25,6 @@ add_executable(${PROJECT_NAME}-main_introduction
 
 add_executable(${PROJECT_NAME}-main_user_property
     main_user_property.cpp
-    ../../Object/Object.cpp
 )
 
 add_executable(${PROJECT_NAME}-main_user_property2
