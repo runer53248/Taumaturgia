@@ -9,7 +9,7 @@ struct MyType {};
 template <typename TYPE>
 struct UserPropertyAdapter {
     template <typename T>
-    using type = UserProperty<T, TYPE>;
+    using type = UserProperty<TYPE, T>;
 };
 
 using TestType = add_properties<
@@ -51,7 +51,7 @@ using TestType = add_properties<
 #include "Mocks/MockCustomAccessName.hpp"
 #include "Mocks/MockCustomAccessProtection.hpp"
 #include "Mocks/MockCustomAccessRestoreEffects.hpp"
-#include "Mocks/MockCustomAccessUserType.hpp"
+#include "Mocks/MockCustomAccessType.hpp"
 
 /////////////////////////////////////////////////////////
 
@@ -429,8 +429,8 @@ TEST(custom_access_test, AccessUserType) {
         default_userType2,
         std::ignore};
 
-    decltype(auto) userType = type.getType();
-    decltype(auto) userType_const = std::as_const(type).getType();
+    decltype(auto) userType = type.getType<float>();
+    decltype(auto) userType_const = std::as_const(type).getType<float>();
 
     decltype(auto) userType2 = type.getType<int>();
     decltype(auto) userType2_const = std::as_const(type).getType<int>();
@@ -442,7 +442,7 @@ TEST(custom_access_test, AccessUserType) {
     EXPECT_EQ(userType2_const, default_userType2);
 
     userType = default_userType_change;
-    userType = type.getType();
+    userType = type.getType<float>();
 
     userType2 = default_userType2_change;
     userType2 = type.getType<int>();

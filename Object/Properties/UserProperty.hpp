@@ -1,20 +1,20 @@
 #pragma once
+#include "../Concepts/Typeable.hpp"
 #include "../Concepts/Types/Name.hpp"
-// #include "../Strategies/UserStrategy.hpp"
-#include "../Concepts/UserTypeConcept.hpp"
+#include "../Strategies/UserStrategy.hpp"
 #include "PropertyData.hpp"
 
-constexpr char user_type_name[] = "UserType";
+constexpr char user_type_name[] = "UserProperty";
 
-template <typename T, typename TYPE>
+template <typename TYPE, typename T>
 struct UserProperty_ : T {
-    template <typename TT, typename TYPET = TYPE>
-    using self = UserProperty_<TT, TYPET>;  // make yourself one template argument type
+    template <typename TAG, typename TYPE_DEFAULT = TYPE>
+    using self = UserProperty_<TYPE_DEFAULT, TAG>;  // make yourself one template argument type
     using property_data = PropertyData<self, T, user_type_name>;
 
     UserProperty_() = default;
 
-    // for ordered
+    // for ordered UserProperty_
 
     template <typename... INFO>
         requires(std::is_constructible_v<TYPE, INFO...> and sizeof...(INFO) > 0)
@@ -33,7 +33,7 @@ struct UserProperty_ : T {
     UserProperty_(const Name& name, const TYPE& type, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, type{type} {}
 
-    //for unordered
+    // for unordered UserProperty_
 
     template <typename... INFO>
         requires(std::is_constructible_v<TYPE, INFO...> and sizeof...(INFO) > 0)
@@ -49,32 +49,31 @@ struct UserProperty_ : T {
     UserProperty_(const TYPE& type, auto&&... args)
         : T{std::forward<decltype(args)>(args)...}, type{type} {}
 
-    auto& getType() {
+    template <typename RETURN>
+    decltype(auto) getType() & {
+        if constexpr (std::is_same_v<RETURN, TYPE>) {
+            return getType();
+        } else if constexpr (GetTypeable<T, RETURN>) {
+            return T::template getType<RETURN>();
+        }
+    }
+
+    template <typename RETURN>
+    decltype(auto) getType() const& {
+        if constexpr (std::is_same_v<RETURN, TYPE>) {
+            return getType();
+        } else if constexpr (GetTypeable<T, RETURN>) {
+            return T::template getType<RETURN>();
+        }
+    }
+
+protected:
+    auto& getType() & {
         return type;
     }
 
-    const auto& getType() const {
+    const auto& getType() const& {
         return type;
-    }
-
-    template <typename N_TYPE>
-    decltype(auto) getType() {
-        if constexpr (std::is_same_v<N_TYPE, TYPE>) {
-            return getType();
-        } else {
-            return T::template getType<N_TYPE>();
-        }
-        // return traits::accessUserType<N_TYPE>::get(*this);
-    }
-
-    template <typename N_TYPE>
-    decltype(auto) getType() const {
-        if constexpr (std::is_same_v<N_TYPE, TYPE>) {
-            return getType();
-        } else {
-            return T::template getType<N_TYPE>();
-        }
-        // return traits::accessUserType<N_TYPE>::get(*this);
     }
 
 private:
@@ -83,11 +82,11 @@ private:
 
 namespace Test {
 struct UserProperty_Test {};
-static_assert(UserTypeConceptable<UserProperty_<UserProperty_Test, int>, int>);
+static_assert(Typeable<UserProperty_<int, UserProperty_Test>, int>);
 }  // namespace Test
 
-template <typename T, typename TYPE>
-using UserProperty = std::conditional_t<UserTypeConceptable<T, TYPE>, T, UserProperty_<T, TYPE>>;
+template <typename TYPE, typename T>
+using UserProperty = std::conditional_t<Typeable<T, TYPE>, T, UserProperty_<TYPE, T>>;
 
-// template <typename T>
-// struct UserStrategy_<UserProperty_<T>> : UserStrategy_<T> {};  // forward eventualy implemented strategy
+template <typename TYPE, typename T>
+struct UserStrategy_<TYPE, UserProperty_<TYPE, T>> : UserStrategy_<TYPE, T> {};  // forward eventualy implemented strategy
