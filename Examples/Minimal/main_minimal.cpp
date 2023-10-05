@@ -50,12 +50,18 @@ int main() {
         Name{"SHIELD_POTION"},
         Health{}};
 
+    #ifdef __clang__
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wunused-value"
     Living<Healty>{
         Name{"SHIELD_POTION"},
         Health{}};  // Living ignored - c-tor of Healty used
     #pragma clang diagnostic pop
+    #else
+    Living<Healty>{
+        Name{"SHIELD_POTION"},
+        Health{}};  // Living ignored - c-tor of Healty used
+    #endif
 
     Living<Potion>{
         Name{"SHIELD_POTION"},
