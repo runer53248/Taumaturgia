@@ -8,8 +8,8 @@ constexpr char user_type_name[] = "UserProperty";
 
 template <typename TYPE, typename T>
 struct UserProperty_ : T {
-    template <typename TAG, typename TYPE_DEFAULT = TYPE>
-    using self = UserProperty_<TYPE_DEFAULT, TAG>;  // make yourself one template argument type
+    template <typename TAG>
+    using self = UserProperty_<TYPE, TAG>;  // make yourself one template argument type
     using property_data = PropertyData<self, T, user_type_name>;
 
     UserProperty_() = default;
