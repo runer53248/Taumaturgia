@@ -7,7 +7,7 @@ template <template <typename> typename property, typename T, const char* NAME = 
 struct PropertyData {
     using base_type = T;
     using property_type = Property<property>;
-    static constexpr auto name() noexcept {
+    static consteval auto name() noexcept {
         if constexpr (NAME != nullptr) {
             return NAME;
         }
