@@ -16,7 +16,7 @@ using order_list = taged_list<
     Protecting,
     Healing,
     Restoring,
-    Naming  // should be last property to add (used last)
+    Naming  // should be last property to add (used closest to type)
     >;      // properties list in order
 
 #include "Helpers/Property.hpp"
