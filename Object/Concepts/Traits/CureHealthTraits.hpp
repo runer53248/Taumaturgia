@@ -1,18 +1,18 @@
 #pragma once
 #include "helper/same_as_ref.hpp"
 
-struct Health;
+struct CureHealth;
 
 template <typename T>
 concept CureHealthAccessable = requires(T x) {
     x.cureHealth;
-    std::is_same_v<decltype(T::cureHealth), Health>;
+    std::is_same_v<decltype(T::cureHealth), CureHealth>;
 };
 
 template <typename T>
 concept GetCureHealthAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
-    { x.getCureHealth() } -> same_as_ref<Health>;
-    { y.getCureHealth() } -> same_as_ref<const Health>;
+    { x.getCureHealth() } -> same_as_ref<CureHealth>;
+    { y.getCureHealth() } -> same_as_ref<const CureHealth>;
 };
 
 namespace traits {
@@ -22,8 +22,8 @@ struct CustomAccessCureHealth {};
 
 template <typename T>
 concept CustomCureHealthAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
-    { CustomAccessCureHealth<T>::get(x) } -> same_as_ref<Health>;
-    { CustomAccessCureHealth<T>::get(y) } -> same_as_ref<const Health>;
+    { CustomAccessCureHealth<T>::get(x) } -> same_as_ref<CureHealth>;
+    { CustomAccessCureHealth<T>::get(y) } -> same_as_ref<const CureHealth>;
 };
 
 struct accessCureHealth {

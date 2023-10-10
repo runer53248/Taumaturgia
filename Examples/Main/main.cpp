@@ -69,14 +69,14 @@ int main() {
     auto gustav = Living<Healing<Living<Healing<Weapon>>>>{
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},
-        /*healHp*/ Health{}};  // duplicated Living and Healing will be ignored
+        /*healHp*/ CureHealth{}};  // duplicated Living and Healing will be ignored
     static_assert(std::is_same_v<decltype(gustav), Living<Healing<Weapon>>>);
     // gustav.name = Name{"Franco The Inteligent Sword"};
     // gustav.hp = Health{75}; // can't be accessed now - is private
     // gustav.getHp() = Health{75}; // current access version
     traits::accessName::get(gustav) = Name{"Franco The Inteligent Sword"};
     traits::accessHealth::get(gustav) = Health{75};  // universal access version
-    traits::accessCureHealth::get(gustav) = Health{30};
+    traits::accessCureHealth::get(gustav) = CureHealth{30};
     traits::accessDamage::get(gustav) = Damage{
         100,
         DamageType::Magical,
@@ -199,7 +199,7 @@ int main() {
     std::cout << "print npc after healing:\n";
     Object{Healing<Potion>{
                Name{"HEALING_POTION"},
-               Health{100}}}
+               CureHealth{100}}}
         .heal(&npc);
     print_person(npc);
     std::cout << '\n';
@@ -263,10 +263,10 @@ int main() {
 
     const Object potion{Healing<Potion>{
         Name{"HEALING_POTION"},
-        Health{75}}};
+        CureHealth{75}}};
     getOpt<Parameter::CureHealth>(potion)
-        .and_then([](const Health cure) {
-            std::cout << cure.value() << '\n';
+        .and_then([](const CureHealth cure) {
+            std::cout << cure.value() << toString(cure.valueType()) << '\n';
             return std::optional<bool>(true);
         });
 

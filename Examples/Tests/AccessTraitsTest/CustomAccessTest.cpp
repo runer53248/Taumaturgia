@@ -297,8 +297,8 @@ TEST(custom_access_test, CustomAccessProtection) {
 
 /////////////////////////////////////////////////////////
 
-constexpr auto default_cureHp = Health{10};
-constexpr auto default_cureHp_change = Health{100};
+constexpr auto default_cureHp = CureHealth{10};
+constexpr auto default_cureHp_change = CureHealth{100};
 
 TEST(custom_access_test, AccessCureHealth) {
     TestType type{

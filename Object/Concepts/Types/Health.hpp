@@ -27,7 +27,7 @@ struct Health {
 
     auto& effects() & { return effects_; }
     auto effects() && { return effects_; }
-    auto effects() const& { return effects_; }
+    auto& effects() const& { return effects_; }
     auto effects() const&& { return effects_; }
 
     void addHealth(int value) {

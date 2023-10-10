@@ -32,7 +32,7 @@ struct DefaultWeapon {
 struct HealingHealth {  // Living and Healing
     Name name;
     Health hp{};
-    Health cureHealth{};
+    CureHealth cureHealth{};
 };
 
 int main() {

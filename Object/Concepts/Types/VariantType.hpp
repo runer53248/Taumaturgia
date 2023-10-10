@@ -10,12 +10,14 @@
 
 using get_variant_type = std::variant<std::monostate,
                                       std::reference_wrapper<Health>,
+                                      std::reference_wrapper<CureHealth>,
                                       std::reference_wrapper<Damage>,
                                       std::reference_wrapper<Protection>,
                                       std::reference_wrapper<EffectTypeContainer>,
                                       std::reference_wrapper<ProtectionContainer>>;
 using get_variant_const_type = std::variant<std::monostate,
                                             std::reference_wrapper<const Health>,
+                                            std::reference_wrapper<const CureHealth>,
                                             std::reference_wrapper<const Damage>,
                                             std::reference_wrapper<const Protection>,
                                             std::reference_wrapper<const EffectTypeContainer>,
@@ -42,8 +44,11 @@ constexpr auto extract_to_opt_ref_wrapper(GetOptVarianted auto&& opt_variant) {
 
 template <Parameter param>
 constexpr auto get_opt_ref_wrapper(GetOptVarianted auto&& opt_variant) {
-    if constexpr (param == Parameter::Health or param == Parameter::CureHealth) {
+    if constexpr (param == Parameter::Health) {
         return extract_to_opt_ref_wrapper<Health>(opt_variant);
+    }
+    if constexpr (param == Parameter::CureHealth) {
+        return extract_to_opt_ref_wrapper<CureHealth>(opt_variant);
     }
     if constexpr (param == Parameter::Damage) {
         return extract_to_opt_ref_wrapper<Damage>(opt_variant);

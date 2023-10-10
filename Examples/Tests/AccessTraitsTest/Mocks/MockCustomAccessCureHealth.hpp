@@ -3,8 +3,8 @@
 #include "Object/Concepts/Traits/HealthTraits.hpp"
 
 struct MockCustomAccessCureHealth {
-    MOCK_METHOD(Health&, get, (TestType& el));
-    MOCK_METHOD(const Health&, getConst, (const TestType& el));
+    MOCK_METHOD(CureHealth&, get, (TestType& el));
+    MOCK_METHOD(const CureHealth&, getConst, (const TestType& el));
 };
 
 template <>

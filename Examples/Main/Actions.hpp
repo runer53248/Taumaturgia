@@ -97,8 +97,8 @@ void heal(auto& backpack, auto& player) {
 
         std::cout << player.name() << " heal self with " << item.name();
         if (auto cureHealth_opt = getOpt<Parameter::CureHealth>(item)) {
-            const Health& cureHealth = cureHealth_opt.value();
-            std::cout << " for " << cureHealth.value() << " Health";
+            const CureHealth& cureHealth = cureHealth_opt.value();
+            std::cout << " for " << cureHealth.value() << toString(cureHealth.valueType()) << " Health";
         }
         std::cout << '\n';
         print_person(player);

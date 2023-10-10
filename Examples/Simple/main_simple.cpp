@@ -136,7 +136,7 @@ int main() {
         Name{"Paladin"},
         Health{100},
         EffectType::Infection,
-        Health{10}};  // will ignore Infection effects
+        CureHealth{10}};  // will ignore Infection effects
 
     Object warior = Living<Player_B>{
         Name{"Warior"},

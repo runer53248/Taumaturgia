@@ -15,7 +15,7 @@ struct Healing_ : T {
         requires(std::is_constructible_v<Health, INFO...> and sizeof...(INFO) > 0)
     Healing_(const Name& name, std::tuple<INFO...>&& cureHealth, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...},
-          cureHealth{std::move(std::make_from_tuple<Health>(std::forward<decltype(cureHealth)>(cureHealth)))} {}
+          cureHealth{std::move(std::make_from_tuple<CureHealth>(std::forward<decltype(cureHealth)>(cureHealth)))} {}
 
     Healing_(const Name& name)
         : T{name} {}
@@ -23,10 +23,10 @@ struct Healing_ : T {
     Healing_(const Name& name, [[maybe_unused]] decltype(std::ignore) cureHealth, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
-    Healing_(const Name& name, Health&& cureHealth, auto&&... args)
+    Healing_(const Name& name, CureHealth&& cureHealth, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, cureHealth{std::move(cureHealth)} {}
 
-    Healing_(const Name& name, const Health& cureHealth, auto&&... args)
+    Healing_(const Name& name, const CureHealth& cureHealth, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, cureHealth{cureHealth} {}
 
     auto& getCureHealth() & {
@@ -38,7 +38,7 @@ struct Healing_ : T {
     }
 
 private:
-    Health cureHealth{};
+    CureHealth cureHealth{};
 };
 
 namespace Test {

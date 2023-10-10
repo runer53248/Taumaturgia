@@ -22,12 +22,12 @@ void fillBackpack(auto& backpack) {
     auto gustav_2 = Living<Healing<Living<Healing<Weapon>>>>(
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},
-        /*cureHealth*/ Health{30},
+        /*cureHealth*/ CureHealth{30},
         Damage{32});
     Living<Healing<Living<Healing<Naming<NoNameWeapon>>>>>(
         Name{"INCOGNITO SWORD"},
         /*hp*/ Health{20},
-        /*cureHealth*/ Health{30},
+        /*cureHealth*/ CureHealth{30},
         Damage{32});
     static_assert(std::is_same_v<decltype(gustav_2), Living<Healing<Weapon>>>);
     backpack.emplace_back(gustav_2);
@@ -57,10 +57,10 @@ void fillBackpack(auto& backpack) {
             {EffectType::Stun}}});
     backpack.emplace_back(Healing<Potion>(
         Name{"HEALING_POTION"},
-        Health{20}));
+        CureHealth{20}));
     backpack.emplace_back(Healing<Potion>{
         Name{"SMALL_HEALING_POTION"},
-        Health{10}});  // TODO: add removing effects
+        CureHealth{10}});  // TODO: add removing effects
     backpack.emplace_back(Protecting<Potion>(
         Name{"SHIELD_POTION"},
         ArmorClass{
@@ -85,5 +85,5 @@ void fillBackpack(auto& backpack) {
             30,
             DamageType::Divine,
             Effect{EffectType::Devour}},
-        Health{15}));
+        CureHealth{15}));
 }
