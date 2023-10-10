@@ -9,6 +9,8 @@
 #include "PreetyPrint/PrintEffectState.hpp"
 #include "PreetyPrint/PrintEffectType.hpp"
 #include "PreetyPrint/PrintHealth.hpp"
+#include "PreetyPrint/PrintCureHealth.hpp"
 #include "PreetyPrint/PrintName.hpp"
 #include "PreetyPrint/PrintProtection.hpp"
 #include "PreetyPrint/PrintProtectionContainer.hpp"
+#include "PreetyPrint/PrintEffectTypeContainer.hpp"

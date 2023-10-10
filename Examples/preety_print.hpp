@@ -31,7 +31,7 @@ auto print_cure_hp = [](auto&& value) {
         std::cout << "[&]";
     }
 
-    std::cout << "(Cure Health: " << cureHealth.value() << ")";
+    std::cout << "(Cure Health: " << cureHealth.value() << toString(cureHealth.valueType()) << ")";
     return std::optional{true};
 };
 
