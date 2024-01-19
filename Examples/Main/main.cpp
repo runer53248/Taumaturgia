@@ -112,7 +112,7 @@ int main() {
     print_person(player);
     print_person(enemy);
     print_person(enemy_2);
-    std::cout << "\n\n";
+    std::cout << "\n";
 
     Object scroll = Damaging<Scroll>{
         Name{"SLEEP_SCROLL"},
@@ -228,8 +228,8 @@ int main() {
             print_person(*item);
         }
     }
-
     std::cout << '\n';
+
     std::cout << "print potion restore effects:\n";
     Object restore_potion{Restoring<Potion>{
         Name{"Multi restore potion"},
@@ -247,27 +247,33 @@ int main() {
     print_object_properties(franco);
     std::cout << '\n';
 
+    std::cout << "print franco:\n";
     print_object(franco);
     std::cout << '\n';
 
     getOpt<Parameter::Health>(player)
         .and_then([](Health& hp) {
-            std::cout << hp.value() << '\n';
-            hp.value(100);
+            std::cout << "player hp = " << hp.value() << '\n';
+            constexpr auto new_hp = 100;
+            hp.value(new_hp);
+            std::cout << "player hp change to  " << hp.value() << '\n';
             return std::optional<bool>(true);
         });
     getOpt<Parameter::Health>(player)
         .and_then([](auto hp_ref_wrap) {
-            std::cout << hp_ref_wrap.get().value() << '\n';
+            Health& hp = hp_ref_wrap.get();
+            std::cout << "player hp = " << hp.value() << '\n';
             return std::optional<bool>(true);
         });
+    std::cout << '\n';
 
     const Object potion{Healing<Potion>{
         Name{"HEALING_POTION"},
         CureHealth{75}}};
+
     getOpt<Parameter::CureHealth>(potion)
-        .and_then([](const CureHealth cure) {
-            std::cout << cure.value() << toString(cure.valueType()) << '\n';
+        .and_then([](const CureHealth& cure) {
+            std::cout << "potion heal = " << cure.value() << toString(cure.valueType()) << '\n';
             return std::optional<bool>(true);
         });
 
