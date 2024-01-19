@@ -7,25 +7,25 @@ constexpr const char* toString(EffectType effect) noexcept {
     case EffectType::Infection:
         return "Infection";
     case EffectType::Bleed:
-        return "bleed";
+        return "Bleed";
     case EffectType::Burn:
-        return "burn";
+        return "Burn";
     case EffectType::Sleep:
-        return "sleep";
+        return "Sleep";
     case EffectType::Daze:
         return "Daze";
     case EffectType::Devour:
-        return "devour";
+        return "Devour";
     case EffectType::Stun:
-        return "stunned";
+        return "Stun";
     case EffectType::Shock:
         return "Shock";
     case EffectType::None:
-        return "none";
+        return "None";
     case EffectType::Freeze:
-        return "freeze";
+        return "Freeze";
     case EffectType::Slow:
-        return "Slow]";
+        return "Slow";
     case EffectType::Paralyze:
         return "Paralyze";
     case EffectType::Dazzle:
