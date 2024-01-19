@@ -92,7 +92,7 @@ int main() {
     std::cout << '\n';
     get_print_ref(gustav_obj);
     std::cout << '\n';
-    get_print(gustav_obj);
+    get_print_with_damage_as_const(gustav_obj);
     std::cout << '\n';
     backpack.push_back(std::move(gustav_obj));
 
@@ -238,8 +238,9 @@ int main() {
          EffectType::Infection,
          EffectType::Poison}}};
     getOpt<Parameter::Restore>(restore_potion)
-        .and_then(print_restore);
-    std::cout << "\n\n";
+        .and_then(print_restore)
+        .and_then(print_new_line);
+    std::cout << "\n";
 
     print_object_properties(restore_potion);
     print_object_properties(player);

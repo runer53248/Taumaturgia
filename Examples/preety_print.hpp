@@ -3,6 +3,11 @@
 #include "Object/Object.hpp"
 #include "preety_print_types.hpp"
 
+auto print_new_line = [](auto&& value) {
+    std::cout << '\n';
+    return std::optional{value};
+};
+
 auto print_hp = [](auto&& value) {
     auto& hp = value.get();
     if constexpr (not std::is_const_v<std::remove_reference_t<decltype(hp)>>) {

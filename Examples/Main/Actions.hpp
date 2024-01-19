@@ -8,8 +8,8 @@ void attack(auto& backpack, auto& player, auto& enemy) {
         }
         std::cout << player.name() << " attack " << enemy.name() << " with " << item.name();
         getOpt<Parameter::Damage>(item)
-            .and_then(print_dmg);
-        std::cout << '\n';
+            .and_then(print_dmg)
+            .and_then(print_new_line);
 
         auto status = item.attack(&player, &enemy);
         std::cout << "attack" << status << ": ";
@@ -35,8 +35,8 @@ void defend(auto& backpack, auto& player) {
 
         std::cout << player.name() << " defend self with " << item.name();
         getOpt<Parameter::Protection>(item)
-            .and_then(print_protection);
-        std::cout << '\n';
+            .and_then(print_protection)
+            .and_then(print_new_line);
         print_person(player);
     }
     std::cout << '\n';
@@ -60,8 +60,8 @@ void enemy_defend(auto& backpack, auto& enemy) {
 
         std::cout << enemy.name() << " defend self with " << item.name();
         getOpt<Parameter::Protection>(item)
-            .and_then(print_protection);
-        std::cout << '\n';
+            .and_then(print_protection)
+            .and_then(print_new_line);
         print_person(enemy);
     }
     std::cout << '\n';
@@ -79,8 +79,8 @@ void restore(auto& backpack, auto& player) {
         std::cout << player.name() << " restore self with " << item.name();
         // get(item, Parameter::Restore).and_then(print_restore);
         getOpt<Parameter::Restore>(item)
-            .and_then(print_restore);  // same
-        std::cout << '\n';
+            .and_then(print_restore)
+            .and_then(print_new_line);
         print_person(player);
     }
     std::cout << '\n';
