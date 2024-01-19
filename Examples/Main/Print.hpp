@@ -16,8 +16,9 @@ void get_print_const_ref(const auto& obj) {
         .and_then(print_new_line);
 }
 
+// non-const object will return optional to non-const reference wraper - printing will then show [&]
 void get_print_ref(auto& obj) {
-    std::cout << "get_print_ref:\n";  // non-const object will return optional to non-const reference wraper - printing will then show [&]
+    std::cout << "get_print_ref:\n";
     getOpt<Parameter::Health>(obj)
         .and_then(print_hp)
         .and_then(print_new_line);
@@ -35,7 +36,7 @@ void get_print_ref(auto& obj) {
 void get_print_with_damage_as_const(auto& obj) {
     std::cout << "get_print_with_damage_as_const:\n";
     getOpt<Parameter::Health>(obj)
-        .and_then(print_hp)  // get version passing reference
+        .and_then(print_hp)
         .and_then(print_new_line);
     getOpt<Parameter::CureHealth>(obj)
         .and_then(print_cure_hp)

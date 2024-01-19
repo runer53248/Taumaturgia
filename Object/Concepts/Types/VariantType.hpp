@@ -31,6 +31,11 @@ concept GetOptVarianted =
     std::same_as<std::remove_cvref_t<T>, get_optional_variant_type> or
     std::same_as<std::remove_cvref_t<T>, get_optional_variant_const_type>;
 
+template <typename T, typename B>
+concept WrappedType =
+    std::same_as<std::remove_cvref_t<T>, std::reference_wrapper<B>> or
+    std::same_as<std::remove_cvref_t<T>, std::reference_wrapper<const B>>;
+
 template <typename T>
 constexpr auto extract_to_opt_ref_wrapper(GetOptVarianted auto&& opt_variant) {
     return opt_variant.transform([](auto&& var_ref) {
