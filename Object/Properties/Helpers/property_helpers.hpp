@@ -28,19 +28,28 @@ struct build_into_impl<Base, L> {
 template <typename Base, typename L>
 using build_into_t = build_into_impl<Base, L>::type;
 
-template <typename T>
-using value_equal_zero = std::conditional_t<
-    (T::value == 0),
-    mp_true,
-    mp_false>;
+// template <typename T>
+// using value_equal_zero = std::conditional_t<
+//     (T::value == 0),
+//     mp_true,
+//     mp_false>;
+
+template <typename A, typename B>
+struct same_priority {
+    constexpr static bool value =
+        std::is_same_v<A, B> or
+        ((A::value == B::value) and A::value != std::numeric_limits<size_t>::max());
+};
 
 template <typename... PROPERTY_LISTS>
 using append_and_order_property_lists =
     mp_sort<
         // mp_remove_if< // will remove properties that have 0 value (are not in order_list)
-        mp_unique<
+        // mp_unique<
+        mp_unique_if< //
             mp_append<
-                PROPERTY_LISTS...>>,
+                PROPERTY_LISTS...>,
+            same_priority>,
         // value_equal_zero>,
         mp_less>;
 

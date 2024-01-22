@@ -30,3 +30,6 @@ add_executable(${PROJECT_NAME}-main_user_property
 add_executable(${PROJECT_NAME}-main_user_property2
     main_user_property_2.cpp
 )
+add_executable(${PROJECT_NAME}-main_mix_give_properties
+    main_mix_give_properties.cpp
+)
