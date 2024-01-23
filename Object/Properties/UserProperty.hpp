@@ -9,12 +9,12 @@ constexpr char user_type_name[] = "UserProperty";
 template <typename TYPE, typename T>
 struct UserProperty_ : T {
     template <typename TAG>
-    using self = UserProperty_<TYPE, TAG>;  // make yourself one template argument type
+    using self = UserProperty_<TYPE, TAG>;  // make yourself one template argument type to satisfy PropertyData
     using property_data = PropertyData<self, T, user_type_name>;
 
     UserProperty_() = default;
 
-    // for ordered UserProperty_
+    // for ordered UserProperty_ (require name)
 
     template <typename... INFO>
         requires(std::is_constructible_v<TYPE, INFO...> and sizeof...(INFO) > 0)
@@ -33,7 +33,7 @@ struct UserProperty_ : T {
     UserProperty_(const Name& name, const TYPE& type, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, type{type} {}
 
-    // for unordered UserProperty_
+    // for unordered UserProperty_ (can exist before TYPE accuire name property)
 
     template <typename... INFO>
         requires(std::is_constructible_v<TYPE, INFO...> and sizeof...(INFO) > 0)
