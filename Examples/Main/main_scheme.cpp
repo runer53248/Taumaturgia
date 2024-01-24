@@ -1,12 +1,7 @@
-#include <boost/core/demangle.hpp>
 #include <typeinfo>
 #include "Examples/preety_print.hpp"
 #include "basic_strategies.hpp"
-
-template <class T>
-std::string name() {
-    return boost::core::demangle(typeid(T).name());
-}
+#include "demangle_type_name.hpp"
 
 struct test_struct {};
 struct test_struct_2 {};

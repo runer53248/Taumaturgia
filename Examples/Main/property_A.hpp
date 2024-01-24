@@ -1,0 +1,18 @@
+#pragma once
+
+namespace impl {
+
+constexpr char a_type_name[] = "A";
+
+template <typename T>
+struct A_ : T {
+    using property_data = PropertyData<A_, T, a_type_name>;
+};
+
+}  // namespace impl
+
+template <typename T>
+using A = std::conditional_t<
+    is_base_of_template<impl::A_, T>::value,
+    T,
+    impl::A_<T>>;

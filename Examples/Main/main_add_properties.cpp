@@ -1,44 +1,9 @@
-#include <boost/core/demangle.hpp>
-#include <typeinfo>
 #include "Examples/preety_print.hpp"
 #include "basic_strategies.hpp"
-
-template <class T>
-std::string name() {
-    return boost::core::demangle(typeid(T).name());
-}
-
-// is_base_of_template
-template <template <typename> class base, typename derived>
-struct is_base_of_template_impl {
-    template <typename T>
-    static constexpr std::true_type test(const base<T>*);
-    static constexpr std::false_type test(...);
-    using type = decltype(test(std::declval<derived*>()));
-};
-
-template <template <typename> class base, typename derived>
-using is_base_of_template = typename is_base_of_template_impl<base, derived>::type;
-
-constexpr char a_type_name[] = "A";
-
-template <typename T>
-struct A_ : T {
-    using property_data = PropertyData<A_, T, a_type_name>;
-};
-
-template <typename T>
-using A = std::conditional_t<
-    is_base_of_template<A_, T>::value,
-    T,
-    A_<T>>;
-
-constexpr char b_type_name[] = "B";
-
-template <typename T>
-struct B : T {
-    using property_data = PropertyData<B, T, b_type_name>;
-};
+#include "demangle_type_name.hpp"
+#include "is_base_of_template.hpp"
+#include "property_A.hpp"
+#include "property_B.hpp"
 
 struct Element_empty {};
 
@@ -60,119 +25,6 @@ static_assert(std::is_same_v<
               A<A<Element>>>);
 
 int main() {
-    std::cout << "A. 'create_ordered_property_list' examples:" << '\n'
-              << '\n';
-
-    std::cout << "1) create_ordered_property_list<A, B, Protecting, A, Protecting, Living, Damaging, A>" << '\n';
-    std::cout << name<create_ordered_property_list<
-                     A,
-                     B,
-                     Protecting,
-                     A,
-                     Protecting,
-                     Living,
-                     Damaging,
-                     A>>()
-              << '\n'
-              << '\n';
-
-    using type_00 = create_ordered_property_list<Damaging, Protecting>;
-    using type_01 = create_ordered_property_list<Protecting, Damaging>;
-    static_assert(std::is_same_v<type_00, type_01>);  // checking reorder
-
-    std::cout << "2) checking reorder" << '\n';
-    std::cout << name<type_00>() << '\n';
-    std::cout << name<type_01>() << '\n';
-    std::cout << '\n';
-
-    using type_1 = create_ordered_property_list<Damaging, Damaging, Living, Damaging>;
-    using type_2 = create_ordered_property_list<Living, Damaging>;
-    static_assert(std::is_same_v<type_1, type_2>);  // checking removing of duplicates and reorder
-    std::cout << "3) checking removing of duplicates and reorder" << '\n';
-    std::cout << name<type_1>() << '\n';
-    std::cout << name<type_2>() << '\n';
-    std::cout << '\n';
-
-    using type_3 = create_ordered_property_list<A, B, Protecting, Living, Damaging>;
-    using type_4 = create_ordered_property_list<B, A, Protecting, Damaging, Living>;
-    static_assert(not std::is_same_v<type_3, type_4>);  // checking removing of unknown properties and reorder
-    std::cout << "4) checking ignoring order of unknown properties and reorder" << '\n';
-    std::cout << name<type_3>() << '\n';
-    std::cout << name<type_4>() << '\n';
-    std::cout << '\n';
-
-    using type_5 = create_ordered_property_list<A, Wearing, B, Protecting, A, Restoring, Naming, Living, Damaging, Healing, A>;
-    using type_6 = create_ordered_property_list<Restoring, B, A, Living, Healing, Protecting, Protecting, Damaging, Protecting, Wearing, Living, Naming, Protecting>;
-    using type_6b = create_ordered_property_list<Restoring, A, B, Living, Healing, Protecting, Protecting, Damaging, Protecting, Wearing, Living, Naming, Protecting>;
-    static_assert(not std::is_same_v<type_5, type_6>);  // checking all properties (unorder of A and B)
-    static_assert(std::is_same_v<type_5, type_6b>);     // checking all properties
-    std::cout << "5) checking all properties" << '\n';
-    std::cout << name<type_5>() << '\n';
-    std::cout << name<type_6>() << '\n';
-    std::cout << name<type_6b>() << '\n';
-    std::cout << '\n';
-
-    std::cout << "6) checking no properties" << '\n';
-    std::cout << name<create_ordered_property_list<>>() << " - no properties" << '\n';  // no properties
-    std::cout << '\n';
-
-    std::cout << "7) checking unknown properties only" << '\n';
-    std::cout << name<create_ordered_property_list<A, B>>() << " - all properties are unknown" << '\n';  // all properties are unknown
-    std::cout << '\n';
-
-    std::cout << "B. 'Property<...>::value' priority examples:" << '\n'
-              << '\n';
-
-    std::cout << "1) print priority of unknown properties" << '\n';
-    std::cout << Property<A>::value << " - A priority" << '\n';
-    std::cout << Property<B>::value << " - B priority" << '\n';
-    std::cout << '\n';
-
-    std::cout << "2) print priority of known properties" << '\n';
-    std::cout << Property<Naming>::value << " - Naming priority" << '\n';
-    std::cout << Property<Living>::value << " - Living priority" << '\n';
-    std::cout << Property<Wearing>::value << " - Wearing priority" << '\n';
-    std::cout << Property<Damaging>::value << " - Damaging priority" << '\n';
-    std::cout << Property<Protecting>::value << " - Protecting priority" << '\n';
-    std::cout << Property<Healing>::value << " - Healing priority" << '\n';
-    std::cout << Property<Restoring>::value << " - Restoring priority" << '\n';
-    std::cout << '\n';
-
-    std::cout << "C. 'build_into_t' from list examples:" << '\n'
-              << '\n';
-
-    std::cout << "1) build_into_t<Element, list<Property<Damaging>, Property<Damaging>>> - duplicates are ignored by property Damaging itself" << '\n';
-    using type_7 = build_into_t<Element, list<Property<Damaging>, Property<Damaging>>>;
-    using type_7b = Damaging<Element>;
-    static_assert(std::is_same_v<type_7, type_7b>);
-    std::cout << name<type_7>() << '\n';
-    std::cout << name<type_7b>() << '\n';
-    std::cout << '\n';
-
-    std::cout << "2) build_into_t<Element, list<Property<A>, Property<A>>> - unknown types (not listed in order_list) are ignored by PropertyOrder" << '\n';
-    using type_7c = build_into_t<Element, list<Property<A>, Property<A>>>;
-    using type_7d = A<Element>;
-    static_assert(std::is_same_v<type_7c, type_7d>);
-    std::cout << name<type_7c>() << '\n';
-    std::cout << name<type_7d>() << '\n';
-    std::cout << '\n';
-
-    std::cout << "3) build_into_t<Element, list<Property<Damaging>, Property<Living>>> - order priority is not checked in build_into_t" << '\n';
-    using type_8 = build_into_t<Element, list<Property<Damaging>, Property<Living>>>;
-    using type_8b = Damaging<Living<Element>>;
-    static_assert(std::is_same_v<type_8, type_8b>);
-    std::cout << name<type_8>() << '\n';
-    std::cout << name<type_8b>() << '\n';
-    std::cout << '\n';
-
-    std::cout << "4) build_into_t<Element, list<Property<Living>, Property<Damaging>>>" << '\n';
-    using type_9 = build_into_t<Element, list<Property<Living>, Property<Damaging>>>;
-    using type_9b = Living<Damaging<Element>>;
-    static_assert(std::is_same_v<type_9, type_9b>);
-    std::cout << name<type_9>() << '\n';
-    std::cout << name<type_9b>() << '\n';
-    std::cout << '\n';
-
     std::cout << "D. 'add_properties' examples:" << '\n'
               << '\n';
 
@@ -275,12 +127,12 @@ int main() {
                   c_type,
                   d_type>);
 
-    using e_type =
-        B<Protecting<A<Damaging<A<B<Element_empty>>>>>>;
-    using e_type_2 =
-        add_properties<e_type>;
-    using f_type = add_properties<e_type, Naming, Living>;  // ? Should A and B types that are not close to base_type be removed by ordering function
+    using e_type = B<Protecting<A<Damaging<A<B<Element_empty>>>>>>;
+    using e_type_2 = add_properties<e_type>;
+    using f_type = add_properties<e_type, Naming, Living>;  // ? Should A and B types that are not close to base_type be removed by ordering function?
     std::cout << "e_type:       " << name<e_type>() << '\n';
     std::cout << "e_type fix:   " << name<e_type_2>() << '\n';
     std::cout << "f_type:       " << name<f_type>() << " = e_type + Naming + Living" << '\n';
+
+    return 0;
 }

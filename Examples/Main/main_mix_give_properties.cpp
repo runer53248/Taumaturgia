@@ -1,4 +1,6 @@
+#include <iostream>
 #include "../../Object/Properties/Properties.hpp"
+#include "demangle_type_name.hpp"
 
 struct Type {
     Name name;
@@ -13,14 +15,6 @@ using Type4 = add_properties<Type3, Living, Healing>;
 static_assert(std::is_same_v<Type1, Type2>);
 static_assert(std::is_same_v<Type2, Type3>);
 static_assert(std::is_same_v<Type3, Type4>);
-
-#include <boost/core/demangle.hpp>
-#include <iostream>
-
-template <class T>
-std::string name() {
-    return boost::core::demangle(typeid(T).name());
-}
 
 int main() {
     auto print = [](auto t) {

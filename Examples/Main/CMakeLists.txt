@@ -13,8 +13,25 @@ add_executable(${PROJECT_NAME}-main_ignore_and_tuple
     ../../Object/Object.cpp
 )
 
-add_executable(${PROJECT_NAME}-main_add_properties
-    main_add_properties.cpp
+# add_executable(${PROJECT_NAME}-main_add_properties
+#     main_add_properties.cpp
+#     ../../Object/Object.cpp
+# )
+
+add_executable(${PROJECT_NAME}-main_add_properties_A
+    main_add_properties_A.cpp
+    ../../Object/Object.cpp
+)
+add_executable(${PROJECT_NAME}-main_add_properties_B
+    main_add_properties_B.cpp
+    ../../Object/Object.cpp
+)
+add_executable(${PROJECT_NAME}-main_add_properties_C
+    main_add_properties_C.cpp
+    ../../Object/Object.cpp
+)
+add_executable(${PROJECT_NAME}-main_add_properties_D
+    main_add_properties_D.cpp
     ../../Object/Object.cpp
 )
 
