@@ -1,5 +1,10 @@
-add_executable(${PROJECT_NAME}
-    main.cpp
+add_executable(${PROJECT_NAME}-1
+    main_1.cpp
+    ../../Object/Object.cpp
+)
+
+add_executable(${PROJECT_NAME}-2
+    main_2.cpp
     ../../Object/Object.cpp
 )
 

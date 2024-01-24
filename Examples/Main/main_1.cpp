@@ -1,13 +1,10 @@
 #include <vector>
-
-#include "Examples/preety_print.hpp"
-#include "Examples/structs.hpp"
-#include "Object/DefaultStrategies.hpp"
-#include "Object/Properties/Properties.hpp"
-
 #include "Actions.hpp"
-#include "FillBackpack.hpp"
+#include "Object/Properties/Properties.hpp"
 #include "Print.hpp"
+
+#include "Examples/structs.hpp"
+#include "FillBackpack_1.hpp"
 
 void simple() {
     Object player(Living<Player>{
@@ -64,12 +61,13 @@ int main() {
 
     // TODO: require order of Properties to remove similiar types with different order
     std::vector<Object> backpack;
-    fillBackpack(backpack);
+    fillBackpack1(backpack);
 
     auto gustav = Living<Healing<Living<Healing<Weapon>>>>{
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},
         /*healHp*/ CureHealth{}};  // duplicated Living and Healing will be ignored
+
     static_assert(std::is_same_v<decltype(gustav), Living<Healing<Weapon>>>);
     // gustav.name = Name{"Franco The Inteligent Sword"};
     // gustav.hp = Health{75}; // can't be accessed now - is private

@@ -1,4 +1,7 @@
 #pragma once
+#include <iostream>
+#include "Object/DefaultStrategies.hpp"
+#include "Examples/preety_print.hpp"
 
 void attack(auto& backpack, auto& player, auto& enemy) {
     std::cout << "Items I can attack with:  //////////////////////////////\n\n";

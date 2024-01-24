@@ -1,6 +1,6 @@
 #pragma once
 
-void fillBackpack(auto& backpack) {
+void fillBackpack1(auto& backpack) {
     backpack.emplace_back(Damaging<Weapon>{
         Name{"SWORD"},
         Damage{16}});
