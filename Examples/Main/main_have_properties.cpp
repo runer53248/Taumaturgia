@@ -113,7 +113,7 @@ static_assert(have_properties2<
               Living,
               Healing,
               impl::Living_,
-              impl::Healing_>::value);  // TODO: ccnsider removing duplicates and sorting properties before specialize have_properties2
+              impl::Healing_>::value);  // TODO: consider removing duplicates and sorting properties before specialize have_properties2
 static_assert(have_properties2<
               add_properties<Type, Living, Healing>,
               impl::Healing_>::value);
