@@ -4,6 +4,7 @@
 #include "../Strategies/UserStrategy.hpp"
 #include "PropertyData.hpp"
 
+namespace impl {
 constexpr char user_type_name[] = "UserProperty";
 
 template <typename TYPE, typename T>
@@ -85,8 +86,10 @@ struct UserProperty_Test {};
 static_assert(Typeable<UserProperty_<int, UserProperty_Test>, int>);
 }  // namespace Test
 
-template <typename TYPE, typename T>
-using UserProperty = std::conditional_t<Typeable<T, TYPE>, T, UserProperty_<TYPE, T>>;
+}  // namespace impl
 
 template <typename TYPE, typename T>
-struct UserStrategy_<TYPE, UserProperty_<TYPE, T>> : UserStrategy_<TYPE, T> {};  // forward eventualy implemented strategy
+using UserProperty = std::conditional_t<Typeable<T, TYPE>, T, impl::UserProperty_<TYPE, T>>;
+
+template <typename TYPE, typename T>
+struct UserStrategy_<TYPE, impl::UserProperty_<TYPE, T>> : UserStrategy_<TYPE, T> {};  // forward eventualy implemented strategy

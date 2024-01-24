@@ -3,6 +3,7 @@
 #include "../Strategies/AliveStrategy.hpp"
 #include "PropertyData.hpp"
 
+namespace impl {
 constexpr char living_type_name[] = "Living";
 
 template <typename T>
@@ -45,5 +46,7 @@ struct Living_Test {};
 static_assert(Livingable<Living_<Living_Test>>);
 }  // namespace Test
 
+}  // namespace impl
+
 template <typename T>
-using Living = std::conditional_t<Livingable<T>, T, Living_<T>>;
+using Living = std::conditional_t<Livingable<T>, T, impl::Living_<T>>;

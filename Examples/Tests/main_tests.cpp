@@ -47,7 +47,7 @@ int main() {
     static_assert(std::is_same_v<GetStrategy<Default>, GetStrategy<Npc>>);             // Npc will use default Get strategy - Livable concept pass
     static_assert(std::is_same_v<GetStrategy<Default>, GetStrategy<Living<Player>>>);  // Player will use default Get strategy - Livable concept pass
 
-    static_assert(std::is_same_v<Living_<Player>, Living<Player>>);  // Livable traits added
+    static_assert(std::is_same_v<impl::Living_<Player>, Living<Player>>);  // Livable traits added
     static_assert(std::is_same_v<Npc, Living<Npc>>);                 // Livable concept pass
 
     static_assert(not std::is_same_v<AttackStrategy<Default>, AttackStrategy<Player>>);

@@ -2,6 +2,7 @@
 #include "../Concepts/Namingable.hpp"
 #include "PropertyData.hpp"
 
+namespace impl {
 constexpr char naming_type_name[] = "Naming";
 
 template <typename T>
@@ -30,5 +31,7 @@ struct Naming_Test {};
 static_assert(Namingable<Naming_<Naming_Test>>);
 }  // namespace Test
 
+}  // namespace impl
+
 template <typename T>
-using Naming = std::conditional_t<Namingable<T>, T, Naming_<T>>;
+using Naming = std::conditional_t<Namingable<T>, T, impl::Naming_<T>>;

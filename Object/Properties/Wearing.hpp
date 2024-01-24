@@ -3,6 +3,7 @@
 #include "../Strategies/WearStrategy.hpp"
 #include "PropertyData.hpp"
 
+namespace impl {
 constexpr char wearing_type_name[] = "Wearing";
 
 template <typename T>
@@ -45,8 +46,10 @@ struct Wearing_Test {};
 static_assert(Wearingable<Wearing_<Wearing_Test>>);
 }  // namespace Test
 
-template <typename T>
-using Wearing = std::conditional_t<Wearingable<T>, T, Wearing_<T>>;
+}  // namespace impl
 
 template <typename T>
-struct WearStrategy_<Wearing_<T>> : WearStrategy_<T> {};  // forward eventualy implemented strategy
+using Wearing = std::conditional_t<Wearingable<T>, T, impl::Wearing_<T>>;
+
+template <typename T>
+struct WearStrategy_<impl::Wearing_<T>> : WearStrategy_<T> {};  // forward eventualy implemented strategy

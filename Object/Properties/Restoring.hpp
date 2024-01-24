@@ -3,6 +3,7 @@
 #include "../Strategies/RestoreStrategy.hpp"
 #include "PropertyData.hpp"
 
+namespace impl {
 constexpr char restoring_type_name[] = "Restoring";
 
 template <typename T>
@@ -45,8 +46,10 @@ struct Restoring_Test {};
 static_assert(Restoringable<Restoring_<Restoring_Test>>);
 }  // namespace Test
 
-template <typename T>
-using Restoring = std::conditional_t<Restoringable<T>, T, Restoring_<T>>;
+}  // namespace impl
 
 template <typename T>
-struct RestoreStrategy_<Restoring_<T>> : RestoreStrategy_<T> {};  // forward eventualy implemented strategy
+using Restoring = std::conditional_t<Restoringable<T>, T, impl::Restoring_<T>>;
+
+template <typename T>
+struct RestoreStrategy_<impl::Restoring_<T>> : RestoreStrategy_<T> {};  // forward eventualy implemented strategy

@@ -3,6 +3,7 @@
 #include "../Strategies/DefendStrategy.hpp"
 #include "PropertyData.hpp"
 
+namespace impl {
 constexpr char protecting_type_name[] = "Protecting";
 
 template <typename T>
@@ -45,8 +46,10 @@ struct Protecting_Test {};
 static_assert(Protectingable<Protecting_<Protecting_Test>>);
 }  // namespace Test
 
-template <typename T>
-using Protecting = std::conditional_t<Protectingable<T>, T, Protecting_<T>>;
+}  // namespace impl
 
 template <typename T>
-struct DefendStrategy_<Protecting_<T>> : DefendStrategy_<T> {};  // forward eventualy implemented strategy
+using Protecting = std::conditional_t<Protectingable<T>, T, impl::Protecting_<T>>;
+
+template <typename T>
+struct DefendStrategy_<impl::Protecting_<T>> : DefendStrategy_<T> {};  // forward eventualy implemented strategy

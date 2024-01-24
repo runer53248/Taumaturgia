@@ -45,7 +45,7 @@ int main() {
                      create_ordered_property_list<Living, Healing>>>()
               << '\n';
     std::cout << "Property<Living>  priority = " << Property<Living>::value << '\n';
-    std::cout << "Property<Living_> priority = " << Property<Living_>::value << '\n';
+    std::cout << "Property<Living_> priority = " << Property<impl::Living_>::value << '\n';
 
     return 0;
 }

@@ -26,14 +26,14 @@ struct MyType_2 {
 
 // implement CustomAccessType to replace MyType_3 most inner UserProperty type
 template <typename TYPE, typename T>
-    requires std::is_base_of_v<UserProperty_<TYPE, MyType_2>, T>
+    requires std::is_base_of_v<impl::UserProperty_<TYPE, MyType_2>, T>
 struct traits::CustomAccessType<TYPE, T> {
-    static decltype(auto) get(UserProperty_<TYPE, MyType_2>& el) {
+    static decltype(auto) get(impl::UserProperty_<TYPE, MyType_2>& el) {
         std::cout << "get  ";
         return el.template getType<TYPE>();
     }
 
-    static decltype(auto) get(const UserProperty_<TYPE, MyType_2>& el) {
+    static decltype(auto) get(const impl::UserProperty_<TYPE, MyType_2>& el) {
         std::cout << "const get  ";
         return el.template getType<TYPE>();
     }

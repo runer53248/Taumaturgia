@@ -3,6 +3,7 @@
 #include "../Strategies/HealStrategy.hpp"
 #include "PropertyData.hpp"
 
+namespace impl {
 constexpr char healing_type_name[] = "Healing";
 
 template <typename T>
@@ -46,8 +47,10 @@ struct Healing_Test {};
 static_assert(Healingable<Healing_<Healing_Test>>);
 }  // namespace Test
 
-template <typename T>
-using Healing = std::conditional_t<Healingable<T>, T, Healing_<T>>;
+}  // namespace impl
 
 template <typename T>
-struct HealStrategy_<Healing_<T>> : HealStrategy_<T> {};  // forward eventualy implemented strategy
+using Healing = std::conditional_t<Healingable<T>, T, impl::Healing_<T>>;
+
+template <typename T>
+struct HealStrategy_<impl::Healing_<T>> : HealStrategy_<T> {};  // forward eventualy implemented strategy

@@ -3,6 +3,7 @@
 #include "../Strategies/AttackStrategy.hpp"
 #include "PropertyData.hpp"
 
+namespace impl {
 constexpr char damaging_type_name[] = "Damaging";
 
 template <typename T>
@@ -46,8 +47,10 @@ struct Damaging_Test {};
 static_assert(Damagingable<Damaging_<Damaging_Test>>);
 }  // namespace Test
 
-template <typename T>
-using Damaging = std::conditional_t<Damagingable<T>, T, Damaging_<T>>;
+}  // namespace impl
 
 template <typename T>
-struct AttackStrategy_<Damaging_<T>> : AttackStrategy_<T> {};  // forward eventualy implemented strategy
+using Damaging = std::conditional_t<Damagingable<T>, T, impl::Damaging_<T>>;
+
+template <typename T>
+struct AttackStrategy_<impl::Damaging_<T>> : AttackStrategy_<T> {};  // forward eventualy implemented strategy
