@@ -1,7 +1,7 @@
 #pragma once
 
 void fillBackpack2(auto& backpack) {
-    backpack.emplace_back(Damaging<Weapon>{
+    backpack.emplace_back(add_properties<Weapon, Damaging>{
         Name{"SWORD"},
         Damage{16}});
     backpack.emplace_back(Weapon{
@@ -11,10 +11,10 @@ void fillBackpack2(auto& backpack) {
             DamageType::Physical}});
     backpack.emplace_back(CustomWeapon{
         Name{"Custom_SWORD"}});
-    backpack.emplace_back(Damaging<CustomWeapon>{
+    backpack.emplace_back(add_properties<CustomWeapon, Damaging>{
         Name{"New_Custom_SWORD"},
         Damage{32}});  // became Damagingable - custom AttackStrategy_<CustomWeapon> from 'CustomWeapon.hpp' will handle it
-    backpack.emplace_back(Damaging<DefaultWeapon>{
+    backpack.emplace_back(add_properties<DefaultWeapon, Damaging>{
         Name{"Default_BATTLE_SWORD"},
         Damage{32}});
 
@@ -37,12 +37,12 @@ void fillBackpack2(auto& backpack) {
         Protection{
             8,
             BodyLocation::Body}});
-    backpack.emplace_back(Protecting<Armor>{
+    backpack.emplace_back(add_properties<Armor, Protecting>{
         Name{"HALF_PLATE"},
         Protection{
             ArmorClass{12}}});
 
-    backpack.emplace_back(Damaging<Helmet>{
+    backpack.emplace_back(add_properties<Helmet, Damaging>{
         Name{"BATTLE_HELM"},
         Damage{10},
         ArmorClass{
@@ -55,13 +55,13 @@ void fillBackpack2(auto& backpack) {
             2,
             BodyLocation::Head,
             {EffectType::Stun}}});
-    backpack.emplace_back(Healing<Potion>(
+    backpack.emplace_back(add_properties<Potion, Healing>(
         Name{"HEALING_POTION"},
         CureHealth{20}));
-    backpack.emplace_back(Healing<Potion>{
+    backpack.emplace_back(add_properties<Potion, Healing>{
         Name{"SMALL_HEALING_POTION"},
         CureHealth{10}});  // TODO: add removing effects
-    backpack.emplace_back(Protecting<Potion>(
+    backpack.emplace_back(add_properties<Potion, Protecting>(
         Name{"SHIELD_POTION"},
         ArmorClass{
             4,
@@ -71,15 +71,15 @@ void fillBackpack2(auto& backpack) {
         Name{"USELESS_SCROLL"}});
     backpack.emplace_back(Scroll{
         Name{"EMPTY_SCROLL"}});
-    backpack.emplace_back(Restoring<Scroll>{
+    backpack.emplace_back(add_properties<Scroll, Restoring>{
         Name{"AWAKE_SCROLL"},
         {EffectType::Sleep}});
-    backpack.emplace_back(Damaging<Scroll>(
+    backpack.emplace_back(add_properties<Scroll, Damaging>(
         Name{"SLEEP_SCROLL"},
         Damage{
             0,
             Effect{EffectType::Sleep}}));
-    backpack.emplace_back(Damaging<Healing<Scroll>>(
+    backpack.emplace_back(add_properties<Scroll, Damaging, Healing>(
         Name{"VAMPIRIC_TOUCH_SCROLL"},
         Damage{
             30,
