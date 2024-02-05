@@ -3,7 +3,7 @@
 template <template <typename> typename property>
 struct Property;
 
-template <template <typename> typename property, typename T, const char* NAME = nullptr>
+template <const char* NAME, template <typename> typename property, typename T>
 struct PropertyData {
     using base_type = T;
     using property_type = Property<property>;

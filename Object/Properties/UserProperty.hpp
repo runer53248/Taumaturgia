@@ -11,7 +11,7 @@ template <typename TYPE, typename T>
 struct UserProperty_ : T {
     template <typename TAG>
     using self = UserProperty_<TYPE, TAG>;  // make yourself one template argument type to satisfy PropertyData
-    using property_data = PropertyData<self, T, user_type_name>;
+    using property_data = PropertyData<user_type_name, self, T>;
 
     UserProperty_() = default;
 
@@ -19,19 +19,19 @@ struct UserProperty_ : T {
 
     template <typename... INFO>
         requires(std::is_constructible_v<TYPE, INFO...> and sizeof...(INFO) > 0)
-    UserProperty_(const Name& name, std::tuple<INFO...>&& type, auto&&... args)
+    UserProperty_(const Name& name, std::tuple<INFO...>&& type, auto&&... args) requires (not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<decltype(args)>(args)...}, type{std::move(std::make_from_tuple<TYPE>(std::forward<decltype(type)>(type)))} {}
 
-    UserProperty_(const Name& name)
+    UserProperty_(const Name& name) requires (not std::is_same_v<TYPE, Name>)
         : T{name} {}
 
-    UserProperty_(const Name& name, [[maybe_unused]] decltype(std::ignore) type, auto&&... args)
+    UserProperty_(const Name& name, [[maybe_unused]] decltype(std::ignore) type, auto&&... args) requires (not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
-    UserProperty_(const Name& name, TYPE&& type, auto&&... args)
+    UserProperty_(const Name& name, TYPE&& type, auto&&... args) requires (not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<decltype(args)>(args)...}, type{std::move(type)} {}
 
-    UserProperty_(const Name& name, const TYPE& type, auto&&... args)
+    UserProperty_(const Name& name, const TYPE& type, auto&&... args) requires (not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<decltype(args)>(args)...}, type{type} {}
 
     // for unordered UserProperty_ (can exist before TYPE accuire name property)

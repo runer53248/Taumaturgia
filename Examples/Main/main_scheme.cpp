@@ -10,14 +10,14 @@ constexpr char a_type_name[] = "A";
 
 template <typename T>
 struct A : T {
-    using property_data = PropertyData<A, T, a_type_name>;
+    using property_data = PropertyData<a_type_name, A, T>;
 };
 
 constexpr char b_type_name[] = "B";
 
 template <typename T>
 struct B : T {
-    using property_data = PropertyData<B, T, b_type_name>;
+    using property_data = PropertyData<b_type_name, B, T>;
 };
 
 using WearingIndex = typename Wearing<test_struct>::property_data::property_type;

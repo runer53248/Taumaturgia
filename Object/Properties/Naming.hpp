@@ -7,7 +7,7 @@ constexpr char naming_type_name[] = "Naming";
 
 template <typename T>
 struct Naming_ : T {
-    using property_data = PropertyData<Naming_, T, naming_type_name>;
+    using property_data = PropertyData<naming_type_name, Naming_, T>;
 
     Naming_() = default;
 

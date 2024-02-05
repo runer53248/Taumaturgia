@@ -8,7 +8,7 @@ constexpr char living_type_name[] = "Living";
 
 template <typename T>
 struct Living_ : T {
-    using property_data = PropertyData<Living_, T, living_type_name>;
+    using property_data = PropertyData<living_type_name, Living_, T>;
 
     Living_() = default;
 

@@ -6,7 +6,7 @@ constexpr char a_type_name[] = "A";
 
 template <typename T>
 struct A_ : T {
-    using property_data = PropertyData<A_, T, a_type_name>;
+    using property_data = PropertyData<a_type_name, A_, T>;
 };
 
 }  // namespace impl

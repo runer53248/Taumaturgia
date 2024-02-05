@@ -8,7 +8,7 @@ constexpr char healing_type_name[] = "Healing";
 
 template <typename T>
 struct Healing_ : T {
-    using property_data = PropertyData<Healing_, T, healing_type_name>;
+    using property_data = PropertyData<healing_type_name, Healing_, T>;
 
     Healing_() = default;
 
