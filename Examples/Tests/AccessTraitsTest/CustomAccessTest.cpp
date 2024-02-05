@@ -53,6 +53,10 @@ using TestType = add_properties<
 #include "Mocks/MockCustomAccessRestoreEffects.hpp"
 #include "Mocks/MockCustomAccessType.hpp"
 
+std::ostream& operator<<(std::ostream& stream, const Name& name) {
+  return stream << std::string(name);
+}
+
 /////////////////////////////////////////////////////////
 
 constexpr auto default_name = "TestName";
@@ -66,7 +70,12 @@ TEST(custom_access_test, AccessName) {
 
     EXPECT_EQ(name, Name{default_name});
     EXPECT_EQ(name_const, Name{default_name});
+}
 
+TEST(custom_access_test, AccessName_changeName) {
+    TestType type{Name{default_name}};
+
+    decltype(auto) name = type.getName();
     name = Name{default_name_change};
     name = type.getName();
 
@@ -81,7 +90,7 @@ TEST(custom_access_test, CustomAccessName) {
     auto result = Name{default_name};
     TestType type{result};
 
-    EXPECT_CALL(mock, get(_)).Times(2).WillRepeatedly(ReturnRef(result));
+    EXPECT_CALL(mock, get(_)).Times(1).WillRepeatedly(ReturnRef(result));
     EXPECT_CALL(mock, getConst(_)).Times(1).WillRepeatedly(ReturnRef(result));
 
     decltype(auto) name = traits::accessName::get(type);
@@ -89,6 +98,19 @@ TEST(custom_access_test, CustomAccessName) {
 
     EXPECT_EQ(name, Name{default_name});
     EXPECT_EQ(name_const, Name{default_name});
+}
+
+TEST(custom_access_test, CustomAccessName_changeName) {
+    MockCustomAccessName mock;
+    traits::CustomAccessName<TestType>::mock = &mock;
+    using namespace testing;
+
+    auto result = Name{default_name};
+    TestType type{result};
+
+    EXPECT_CALL(mock, get(_)).Times(2).WillRepeatedly(ReturnRef(result));
+
+    decltype(auto) name = traits::accessName::get(type);
 
     name = Name{default_name_change};
     name = traits::accessName::get(type);
