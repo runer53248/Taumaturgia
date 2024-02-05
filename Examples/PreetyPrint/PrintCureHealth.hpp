@@ -7,9 +7,9 @@ constexpr const char* toString(CureValueType type) noexcept {
     case CureValueType::VALUE:
         return " points";
     case CureValueType::CURRENT_PERCENT:
-        return " %%";
+        return " %curent";
     case CureValueType::MAX_PERCENT:
-        return " %";
+        return " %max";
     default:
         return " Unknown";
     }
