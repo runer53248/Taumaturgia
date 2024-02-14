@@ -1,5 +1,5 @@
 #include "Examples/preety_print.hpp"
-#include "basic_strategies.hpp"
+#include "../basic_strategies.hpp"
 
 struct Element2 {
     auto& getHp() & { return hp; }

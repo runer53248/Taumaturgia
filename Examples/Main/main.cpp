@@ -1,15 +1,94 @@
 #include <vector>
 #include "Actions.hpp"
-#include "Object/Properties/Properties.hpp"
-#include "Print.hpp"
+#include "demangle_type_name.hpp"
 
-#include "Examples/structs.hpp"
-#include "FillBackpack_1.hpp"
+#ifndef USER_PROPERTIES
+    // use prepared properties
+    #include "Object/Properties/Properties.hpp"
+
+#else
+    // simulate prepared properties with UserProperty class
+    #include "Object/Properties/UserProperty.hpp"
+
+    template <typename TYPE, bool CONCEPT>
+    struct UserPropertyAdapter {
+        template <typename T>
+        using type = std::conditional_t<CONCEPT, T, UserProperty<TYPE, T>>;
+    };
+
+    template <typename TYPE>
+    using Living = UserPropertyAdapter<Health, Livingable<TYPE>>::template type<TYPE>;
+    template <typename TYPE>
+    using Wearing = UserPropertyAdapter<ProtectionContainer, Wearingable<TYPE>>::template type<TYPE>;
+    template <typename TYPE>
+    using Damaging = UserPropertyAdapter<Damage, Damagingable<TYPE>>::template type<TYPE>;
+    template <typename TYPE>
+    using Protecting = UserPropertyAdapter<Protection, Protectingable<TYPE>>::template type<TYPE>;
+    template <typename TYPE>
+    using Healing = UserPropertyAdapter<CureHealth, Healingable<TYPE>>::template type<TYPE>;
+    template <typename TYPE>
+    using Restoring = UserPropertyAdapter<EffectTypeContainer, Restoringable<TYPE>>::template type<TYPE>;
+    template <typename TYPE>
+    using Naming = UserPropertyAdapter<Name, Namingable<TYPE>>::template type<TYPE>;
+
+    #include "Object/Properties/Helpers/taged_list.hpp"
+
+    using order_list = taged_list<
+        Living,
+        Wearing,
+        Damaging,
+        Protecting,
+        Healing,
+        Restoring,
+        Naming  // Naming should be last property to add (used closest to type)
+        >;      // properties list in order
+
+    #include "Object/Properties/Helpers/Property.hpp"
+
+    struct Living_type {
+        Name name;
+        Health hp;
+    };
+
+    static_assert(std::is_same_v<Damaging<Living_type>, add_properties<Living_type, Naming, Living, Damaging>>);
+
+#endif
+
+#ifdef WITH_ADD_PROPERTIES
+    // use add_properties for creating type with properties
+    #include "Examples/Structs/CustomWeapon.hpp"
+
+    struct Type {};
+
+    using NoNameWeapon = add_properties<Type, Damaging>;
+    using Weapon = add_properties<Type, Naming, Damaging>;
+    using Player = add_properties<Type, Naming, Wearing, Protecting>;
+    using Enemy = add_properties<Type, Naming>;
+
+    using Scroll = add_properties<Type, Naming>;
+    using Potion = add_properties<Type, Naming>;
+    using Armor = add_properties<Type, Naming, Protecting>;
+    using Helmet = add_properties<Type, Naming, Protecting>;
+    using Npc = add_properties<Type, Living>;
+#else
+    // use old method of creating type with properties
+    #include "Examples/structs.hpp"
+#endif
+
+#include "Print.hpp"
+#include "FillBackpack.hpp"
+
 
 void simple() {
+#ifdef WITH_ADD_PROPERTIES
+    Object player = add_properties<Player, Living>{
+        Name{"Player"},
+        Health{100}};
+#else
     Object player(Living<Player>{
         Name{"Player"},
         Health{100}});
+#endif
 
     Object{
         Helmet{
@@ -56,22 +135,90 @@ void simple() {
     static_assert(std::is_same_v<decltype(val_3), const Damage&>);
 }
 
+#include "Object/Properties/UserProperty.hpp"
+struct base {};
+using CureHealthType = UserProperty<int, UserProperty<CureValueType, UserProperty<EffectContainer, base>>>;
+
+std::ostream& operator<<(std::ostream& out, const EffectContainer& effectContainer) {
+    if (not effectContainer.empty()) {
+        out << " {Effects: ";
+        for (const auto& effect : effectContainer) {
+            out << effect.effectType() << effect.duration();
+        }
+        out << "}";
+    }
+    return out;
+}
+
 int main() {
     simple();
 
-    // TODO: require order of Properties to remove similiar types with different order
-    std::vector<Object> backpack;
-    fillBackpack1(backpack);
+    CureHealthType cht{5, CureValueType::CURRENT_PERCENT, EffectContainer{Effect{EffectType::Burn}, Effect{EffectType::Devour}}};
 
-    auto gustav = Living<Healing<Living<Healing<Weapon>>>>{
+    std::cout << traits::accessType<int>::get(cht) << '\n';
+    std::cout << toString(traits::accessType<CureValueType>::get(cht)) << '\n';
+    std::cout << traits::accessType<EffectContainer>::get(cht) << '\n';
+
+    std::vector<Object> backpack;
+
+    using type_old = Living<Healing<Living<Healing<Weapon>>>>;  // ! will not reorder Damaging property from Weapon
+    using type_new = add_properties<Weapon, Living, Healing, Living, Healing>;
+
+    type_old old_t{};
+    std::cout << traits::accessName::get(old_t) << '\n';
+    std::cout << name<type_old>() << '\n';
+    std::cout << name<Living<Healing<Damaging<Naming<Weapon>>>>>() << '\n';
+    type_new new_t{};
+    std::cout << traits::accessName::get(new_t) << '\n';
+    std::cout << name<type_new>() << '\n';
+    std::cout << name<add_properties<Weapon, Living, Healing, Damaging, Naming>>() << '\n';
+
+#ifdef WITH_ADD_PROPERTIES
+    std::cout << "*** WITH_ADD_PROPERTIES ***" << '\n';
+
+    // static_assert(std::is_same_v<type_old, Living<Healing<Damaging<Naming<Type, defaultWeaponName>>>>>); //!
+    // static_assert(std::is_same_v<type_old, Living<Healing<Damaging<Naming<Type>>>>>);  //!
+    static_assert(std::is_same_v<type_new, Living<Damaging<Healing<Naming<Type>>>>>);
+
+    fillBackpack(backpack);
+
+    auto gustav = type_new{
+        Name{"GUSTAV_INTELIGENT_SWORD"},
+        /*hp*/ Health{20},
+        /*dmg*/ std::ignore,     // ? need to add damage here
+        /*healHp*/ CureHealth{}  // * can be ommited
+    };                           // duplicated Living and Healing will be ignored
+
+    static_assert(std::is_same_v<decltype(gustav), add_properties<Weapon, Living, Healing>>);
+#else
+    std::cout << "*** WITHOUT_ADD_PROPERTIES ***" << '\n';
+
+    // std::cout << name<UserProperty<int, tag>>() << '\n';
+    // std::cout << UserProperty<int, tag>::property_data::name() << '\n';
+    // std::cout << name<UserProperty<int, tag>::property_data::base_type>() << '\n';
+
+    // std::cout << name<type_old>() << '\n';
+    // // std::cout << name<Living<Healing<Damaging<Naming<Weapon>>>>>() << '\n';
+    // std::cout << name<Living<Healing<Weapon>>>() << '\n';
+    // std::cout << name<type_new>() << '\n';
+    // std::cout << name<Living<Damaging<Healing<Naming<Weapon>>>>>() << '\n';
+
+    static_assert(std::is_same_v<type_old, Living<Healing<Damaging<Naming<Weapon>>>>>);  // * ignore Damaging and Naming
+    static_assert(std::is_same_v<type_new, Living<Damaging<Healing<Naming<Weapon>>>>>);  // * ignore Damaging and Naming
+
+    fillBackpack(backpack);
+
+    auto gustav = type_old{
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},
         /*healHp*/ CureHealth{}};  // duplicated Living and Healing will be ignored
 
     static_assert(std::is_same_v<decltype(gustav), Living<Healing<Weapon>>>);
+#endif
+
     // gustav.name = Name{"Franco The Inteligent Sword"};
     // gustav.hp = Health{75}; // can't be accessed now - is private
-    // gustav.getHp() = Health{75}; // current access version
+    // gustav.getHp() = Health{75}; // access version
     traits::accessName::get(gustav) = Name{"Franco The Inteligent Sword"};
     traits::accessHealth::get(gustav) = Health{75};  // universal access version
     traits::accessCureHealth::get(gustav) = CureHealth{30};
@@ -255,13 +402,13 @@ int main() {
             constexpr auto new_hp = 100;
             hp.value(new_hp);
             std::cout << "player hp change to  " << hp.value() << '\n';
-            return std::optional<bool>(true);
+            return std::optional{hp};
         });
     getOpt<Parameter::Health>(player)
         .and_then([](auto hp_ref_wrap) {
             Health& hp = hp_ref_wrap.get();
             std::cout << "player hp = " << hp.value() << '\n';
-            return std::optional<bool>(true);
+            return std::optional{hp_ref_wrap};
         });
     std::cout << '\n';
 
@@ -272,7 +419,7 @@ int main() {
     getOpt<Parameter::CureHealth>(potion)
         .and_then([](const CureHealth& cure) {
             std::cout << "potion heal = " << cure.value() << toString(cure.valueType()) << '\n';
-            return std::optional<bool>(true);
+            return std::optional{cure};
         });
 
     return 0;

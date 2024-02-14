@@ -3,7 +3,7 @@
 #include "Examples/preety_print.hpp"
 #include "Object/Properties/Properties.hpp"
 #include "Object/Properties/UserProperty.hpp"
-#include "demangle_type_name.hpp"
+#include "../demangle_type_name.hpp"
 
 struct MyType {
     // std::string name{};

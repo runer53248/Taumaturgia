@@ -228,7 +228,7 @@ int main() {
                 print_protection(std::ref(opt_protection.value()));
                 std::cout << '\n';
             }
-            return std::optional{true};
+            return std::optional{wear};
         });
     print_info(paladin);
     std::cout << "\n";
@@ -244,7 +244,7 @@ int main() {
                     std::cout << '\n';
                 }
             }
-            return std::optional{true};
+            return std::optional{wear};
         });
     print_info(paladin);
     std::cout << '\n';
