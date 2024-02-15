@@ -3,35 +3,48 @@
 #include "Object/Object.hpp"
 #include "Object/Properties/Properties.hpp"
 
-struct MyType {
-    std::string name{"My type"};
-    // Health hp{4};  // can pass Livingable Concept
+struct BaseType {
+    std::string name{"BaseType"};
+    Health hp{4};
 };
 
-// using LivingType = Living<MyType>;
+struct MyType {
+    std::string name{"MyType"};
+};
+
 using LivingType = add_properties<MyType, Living>;
 
-// static_assert(std::is_same_v<MyType, LivingType>);  // pass when MyType is Livingable
-
 int main() {
+    BaseType baseType{};
+
     LivingType myType{};
     myType.getHp() = Health{4};
-    const Object object{myType};
 
-    std::cout << "Name: " << object.name() << '\n';
+    int healthValue = 1;
 
-    std::cout << "Benchmark get hp from my type directly.\n";
-    const auto& hp2 = Benchmark([&] {
-        // return myType.hp;
-        return myType.getHp();
-    })();
-    std::cout << "Health: " << hp2.value();
+    auto test = [&](auto& type) {
+        Object object{type};
+        std::cout << "Name: " << object.name() << '\n';
+        std::cout << "Benchmark get hp directly.\n";
+        const auto& hp2 = Benchmark([&] {
+            if constexpr (traits::HealthAccessable<std::remove_cvref_t<decltype(type)>>) {
+                return type.hp = Health{healthValue++};
+            } else {
+                return type.getHp() = Health{healthValue++};
+            }
+        })();
+        std::cout << "Health = " << hp2.value();
+        std::cout << '\n';
+
+        std::cout << "Benchmark get hp from Object.\n";
+        const auto& hp = Benchmark([&] {
+            return getOpt<Parameter::Health>(object).value().get() = Health{healthValue++};  // GetStrategy_<Default>
+        })();
+        std::cout << "Health = " << hp.value();
+        std::cout << '\n';
+    };
+
+    test(baseType);
     std::cout << '\n';
-
-    std::cout << "Benchmark get hp from object.\n";
-    const auto& hp = Benchmark([&] {
-        return getOpt<Parameter::Health>(object).value().get();  // GetStrategy_<Default>
-    })();
-    std::cout << "Health: " << hp.value();
-    std::cout << '\n';
+    test(myType);
 }
