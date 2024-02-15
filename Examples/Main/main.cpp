@@ -153,11 +153,11 @@ std::ostream& operator<<(std::ostream& out, const EffectContainer& effectContain
 int main() {
     simple();
 
-    CureHealthType cht{5, CureValueType::CURRENT_PERCENT, EffectContainer{Effect{EffectType::Burn}, Effect{EffectType::Devour}}};
+    CureHealthType cureHealthType{5, CureValueType::CURRENT_PERCENT, EffectContainer{Effect{EffectType::Burn}, Effect{EffectType::Devour}}};
 
-    std::cout << traits::accessType<int>::get(cht) << '\n';
-    std::cout << toString(traits::accessType<CureValueType>::get(cht)) << '\n';
-    std::cout << traits::accessType<EffectContainer>::get(cht) << '\n';
+    std::cout << traits::accessType<int>::get(cureHealthType);
+    std::cout << toString(traits::accessType<CureValueType>::get(cureHealthType));
+    std::cout << traits::accessType<EffectContainer>::get(cureHealthType) << '\n';
 
     std::vector<Object> backpack;
 
