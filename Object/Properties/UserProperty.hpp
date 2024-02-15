@@ -1,4 +1,6 @@
 #pragma once
+#include <boost/mp11.hpp>
+#include <variant>
 #include "../Concepts/Typeable.hpp"
 #include "../Concepts/Types/Name.hpp"
 #include "../Strategies/UserStrategy.hpp"
@@ -19,20 +21,35 @@ struct UserProperty_ : T {
 
     template <typename... INFO>
         requires(std::is_constructible_v<TYPE, INFO...> and sizeof...(INFO) > 0)
-    UserProperty_(const Name& name, std::tuple<INFO...>&& type, auto&&... args) requires (not std::is_same_v<TYPE, Name>)
+    UserProperty_(const Name& name, std::tuple<INFO...>&& type, auto&&... args)
+        requires(not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<decltype(args)>(args)...}, type{std::move(std::make_from_tuple<TYPE>(std::forward<decltype(type)>(type)))} {}
 
-    UserProperty_(const Name& name) requires (not std::is_same_v<TYPE, Name>)
+    UserProperty_(const Name& name)
+        requires(not std::is_same_v<TYPE, Name>)
         : T{name} {}
 
-    UserProperty_(const Name& name, [[maybe_unused]] decltype(std::ignore) type, auto&&... args) requires (not std::is_same_v<TYPE, Name>)
+    UserProperty_(const Name& name, [[maybe_unused]] decltype(std::ignore) type, auto&&... args)
+        requires(not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
-    UserProperty_(const Name& name, TYPE&& type, auto&&... args) requires (not std::is_same_v<TYPE, Name>)
+    UserProperty_(const Name& name, TYPE&& type, auto&&... args)
+        requires(not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<decltype(args)>(args)...}, type{std::move(type)} {}
 
-    UserProperty_(const Name& name, const TYPE& type, auto&&... args) requires (not std::is_same_v<TYPE, Name>)
+    UserProperty_(const Name& name, const TYPE& type, auto&&... args)
+        requires(not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<decltype(args)>(args)...}, type{type} {}
+
+    template <typename... V>
+        requires(boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
+    UserProperty_(const Name& name, const std::variant<V...>& type, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, type{std::get<TYPE>(type)} {}
+
+    template <typename... V>
+        requires(not boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
+    UserProperty_(const Name& name, [[maybe_unused]] const std::variant<V...>& type, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...} {}
 
     // for unordered UserProperty_ (can exist before TYPE accuire name property)
 
@@ -49,6 +66,16 @@ struct UserProperty_ : T {
 
     UserProperty_(const TYPE& type, auto&&... args)
         : T{std::forward<decltype(args)>(args)...}, type{type} {}
+
+    template <typename... V>
+        requires (boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
+    UserProperty_(const std::variant<V...>& type, auto&&... args)
+        : T{std::forward<decltype(args)>(args)...}, type{std::get<TYPE>(type)} {}
+
+    template <typename... V>
+        requires(not boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
+    UserProperty_([[maybe_unused]] const std::variant<V...>& type, auto&&... args)
+        : T{std::forward<decltype(args)>(args)...} {}
 
     template <typename RETURN>
     decltype(auto) getType() & {

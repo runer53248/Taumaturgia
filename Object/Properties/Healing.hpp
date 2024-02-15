@@ -1,4 +1,5 @@
 #pragma once
+#include <boost/mp11.hpp>
 #include "../Concepts/Types/Name.hpp"
 #include "../Strategies/HealStrategy.hpp"
 #include "PropertyData.hpp"
@@ -13,7 +14,7 @@ struct Healing_ : T {
     Healing_() = default;
 
     template <typename... INFO>
-        requires(std::is_constructible_v<Health, INFO...> and sizeof...(INFO) > 0)
+        requires(std::is_constructible_v<CureHealth, INFO...> and sizeof...(INFO) > 0)
     Healing_(const Name& name, std::tuple<INFO...>&& cureHealth, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...},
           cureHealth{std::move(std::make_from_tuple<CureHealth>(std::forward<decltype(cureHealth)>(cureHealth)))} {}
@@ -29,6 +30,16 @@ struct Healing_ : T {
 
     Healing_(const Name& name, const CureHealth& cureHealth, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, cureHealth{cureHealth} {}
+
+    template <typename... V>
+        requires boost::mp11::mp_contains<std::variant<V...>, CureHealth>::value
+    Healing_(const Name& name, const std::variant<V...>& cureHealth, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, cureHealth{std::get<CureHealth>(cureHealth)} {}
+
+    template <typename... V>
+        requires(not boost::mp11::mp_contains<std::variant<V...>, CureHealth>::value)
+    Healing_(const Name& name, [[maybe_unused]] const std::variant<V...>& cureHealth, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...} {}
 
     auto& getCureHealth() & {
         return cureHealth;

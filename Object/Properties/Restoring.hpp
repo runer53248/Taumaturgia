@@ -1,4 +1,5 @@
 #pragma once
+#include <boost/mp11.hpp>
 #include "../Concepts/Types/Name.hpp"
 #include "../Strategies/RestoreStrategy.hpp"
 #include "PropertyData.hpp"
@@ -28,6 +29,19 @@ struct Restoring_ : T {
 
     Restoring_(const Name& name, const EffectTypeContainer& restoreEffects, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, restoreEffects{restoreEffects} {}
+
+    Restoring_(const Name& name, std::initializer_list<EffectType> restoreEffects, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, restoreEffects{restoreEffects} {}
+
+    template <typename... V>
+        requires(boost::mp11::mp_contains<std::variant<V...>, EffectTypeContainer>::value and (sizeof...(V) > 0))
+    Restoring_(const Name& name, const std::variant<V...>& restoreEffects, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, restoreEffects{std::get<EffectTypeContainer>(restoreEffects)} {}
+
+    template <typename... V>
+        requires(not boost::mp11::mp_contains<std::variant<V...>, EffectTypeContainer>::value and (sizeof...(V) > 0))
+    Restoring_(const Name& name, [[maybe_unused]] const std::variant<V...>& restoreEffects, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...} {}
 
     auto& getRestoreEffects() & {
         return restoreEffects;

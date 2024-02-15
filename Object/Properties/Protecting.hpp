@@ -29,6 +29,16 @@ struct Protecting_ : T {
     Protecting_(const Name& name, const Protection& protection, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, protection{protection} {}
 
+    template <typename... V>
+        requires boost::mp11::mp_contains<std::variant<V...>, Protection>::value
+    Protecting_(const Name& name, const std::variant<V...>& protection, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, protection{std::get<Protection>(protection)} {}
+
+    template <typename... V>
+        requires(not boost::mp11::mp_contains<std::variant<V...>, Protection>::value)
+    Protecting_(const Name& name, [[maybe_unused]] const std::variant<V...>& protection, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...} {}
+
     auto& getProtection() & {
         return protection;
     }

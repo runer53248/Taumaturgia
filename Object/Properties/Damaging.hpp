@@ -1,4 +1,5 @@
 #pragma once
+#include <boost/mp11.hpp>
 #include "../Concepts/Types/Name.hpp"
 #include "../Strategies/AttackStrategy.hpp"
 #include "PropertyData.hpp"
@@ -29,6 +30,16 @@ struct Damaging_ : T {
 
     Damaging_(const Name& name, const Damage& dmg, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, dmg{dmg} {}
+
+    template <typename... V>
+        requires boost::mp11::mp_contains<std::variant<V...>, Damage>::value
+    Damaging_(const Name& name, const std::variant<V...>& dmg, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, dmg{std::get<Damage>(dmg)} {}
+
+    template <typename... V>
+        requires(not boost::mp11::mp_contains<std::variant<V...>, Damage>::value)
+    Damaging_(const Name& name, [[maybe_unused]] const std::variant<V...>& dmg, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...} {}
 
     auto& getDamage() & {
         return dmg;

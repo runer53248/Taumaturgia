@@ -1,4 +1,5 @@
 #pragma once
+#include <boost/mp11.hpp>
 #include "../Concepts/Types/Name.hpp"
 #include "../Strategies/WearStrategy.hpp"
 #include "PropertyData.hpp"
@@ -28,6 +29,16 @@ struct Wearing_ : T {
 
     Wearing_(const Name& name, const ProtectionContainer& armorWear, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, armorWear{armorWear} {}
+
+    template <typename... V>
+        requires boost::mp11::mp_contains<std::variant<V...>, ProtectionContainer>::value
+    Wearing_(const Name& name, const std::variant<V...>& armorWear, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::get<ProtectionContainer>(armorWear)} {}
+
+    template <typename... V>
+        requires(not boost::mp11::mp_contains<std::variant<V...>, ProtectionContainer>::value)
+    Wearing_(const Name& name, [[maybe_unused]] const std::variant<V...>& armorWear, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...} {}
 
     auto& getArmorWear() & {
         return armorWear;

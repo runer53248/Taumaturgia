@@ -1,4 +1,5 @@
 #pragma once
+#include <boost/mp11.hpp>
 #include "../Concepts/Types/Name.hpp"
 #include "../Strategies/AliveStrategy.hpp"
 #include "PropertyData.hpp"
@@ -28,6 +29,16 @@ struct Living_ : T {
 
     Living_(const Name& name, const Health& hp, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, hp{hp} {}
+
+    template <typename... V>
+        requires boost::mp11::mp_contains<std::variant<V...>, Health>::value
+    Living_(const Name& name, const std::variant<V...>& hp, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...}, hp{std::get<Health>(hp)} {}
+
+    template <typename... V>
+        requires(not boost::mp11::mp_contains<std::variant<V...>, Health>::value)
+    Living_(const Name& name, [[maybe_unused]] const std::variant<V...>& hp, auto&&... args)
+        : T{name, std::forward<decltype(args)>(args)...} {}
 
     auto& getHp() & {
         return hp;
