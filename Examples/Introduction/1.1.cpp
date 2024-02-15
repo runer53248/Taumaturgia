@@ -74,10 +74,33 @@ int main() {
     Type_3 type3{Name{"Valid"}, Health{50}};                                                                                      // rest of properties defaulted by not mention them
     Type_4 type4{Name{"Valid"}, std::ignore, std::ignore, std::ignore, std::ignore, CureHealth{25}, std::ignore};                 // ignore some of properties
     Type_5 type5{Name{"Valid"}, Health{25}, ProtectionContainer{}, Damage{}, Protection{}, CureHealth{}, EffectTypeContainer{}};  // set all properties
+    using health_tuple = std::tuple<int, EffectContainer>;                                                                        // types used in Health C-tor
+    using protectionContainer_tuple = std::tuple<int>;                                                                            // types used in ProtectionContainer C-tor
+    using cureHealth_tuple = std::tuple<int, CureValueType>;                                                                      // types used in CureHealth C-tor
+    Type_5 type5_1{Name{"Valid"},                                                                                                 // create properties from tuples
+                   health_tuple{25, {Effect{EffectType::Burn}, Effect{EffectType::Freeze}}},
+                   protectionContainer_tuple{10},
+                   Damage{},
+                   std::ignore,
+                   cureHealth_tuple{10, CureValueType::MAX_PERCENT},
+                   EffectTypeContainer{}};
+    using variant_type_1 = std::variant<Health, ProtectionContainer, Damage, Protection, CureHealth, EffectTypeContainer>;
+    using variant_type_2 = std::variant<Damage>;
+    variant_type_2 varDmg = Damage{120, DamageType::Divine};
+    std::vector<variant_type_1> vec{Health{125}, ProtectionContainer{}, Damage{20, DamageType::Magical}, Protection{}, CureHealth{}, EffectTypeContainer{}};
+    Type_5 type5_2{Name{"Valid"}, vec[0], vec[1], vec[2], vec[3], vec[4], vec[5]};  // create properties from variants
+    Type_5 type5_3{Name{"Valid"}, varDmg, varDmg, varDmg};                          // create properties from wrong variants
+
     std::cout << "type3_0 Name:       " << type3_0.getName() << '\n';
     std::cout << "type3 Hp:           " << type3.getHp() << '\n';
     std::cout << "type4 CureHp:       " << type4.getCureHealth() << '\n';
     std::cout << "type5 Hp:           " << type5.getHp() << '\n';
+    std::cout << "type5_1 Hp:         " << type5_1.getHp() << '\n';
+    std::cout << "type5_1 Armor:      " << type5_1.getArmorWear() << '\n';
+    std::cout << "type5_1 CureHp:     " << type5_1.getCureHealth() << '\n';
+    std::cout << "type5_2 Hp:         " << type5_2.getHp() << '\n';
+    std::cout << "type5_2 Damage:     " << type5_2.getDamage() << '\n';
+    std::cout << "type5_3 Damage:     " << type5_3.getDamage() << '\n';
     std::cout << '\n';
 
     type5.getArmorWear().wearProtection(Protection{ArmorClass{8, BodyLocation::Body, {EffectType::Paralyze}}});
