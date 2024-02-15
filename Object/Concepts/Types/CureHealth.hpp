@@ -14,6 +14,8 @@ struct CureHealth {
     constexpr CureHealth() noexcept = default;
     constexpr explicit CureHealth(int value) noexcept
         : value_{value} {}
+    constexpr CureHealth(int value, CureValueType type) noexcept
+        : value_{value}, value_type_{type} {}
     constexpr CureHealth(int value, const Effect& effect) noexcept
         : value_{value}, effects_{EffectContainer{effect}} {}
     constexpr CureHealth(int value, const EffectContainer& effects) noexcept
