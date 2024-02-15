@@ -10,11 +10,12 @@ std::ostream& operator<<(std::ostream& out, const ProtectionContainer& armorWear
         for (const auto& effect : armorWear.protectEffects()) {
             out << effect;
         }
-        out << ")\n";
+        out << ')';
     }
     const auto armorLocations = armorWear.getWearedLocations();
     for (auto location : armorLocations) {
-        out << armorWear.armorAtLocation(location).value() << '\n';
+        out << '\n';
+        out << '\t' << armorWear.armorAtLocation(location).value();
     }
     return out;
 }

@@ -16,7 +16,7 @@ constexpr const char* toString(CureValueType type) noexcept {
 }
 
 std::ostream& operator<<(std::ostream& out, const CureHealth& cureHealth) {
-    out << cureHealth.value() << toString(cureHealth.valueType()) << '\n';
+    out << cureHealth.value() << toString(cureHealth.valueType()) << " hp";
     if (not cureHealth.effects().empty()) {
         out << " {Effects: ";
         for (const auto& effect : cureHealth.effects()) {
