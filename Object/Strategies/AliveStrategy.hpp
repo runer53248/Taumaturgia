@@ -24,6 +24,9 @@ using AliveStrategy = std::conditional_t<
         AliveStrategy_<Default>>,
     AliveStrategy_<T>>;
 
+template <typename T>
+concept is_alive_strategy = AliveStrategable<AliveStrategy, T>;
+
 template <>
 struct AliveStrategy_<Default> {
     std::optional<AliveStatus> operator()(Livingable auto& obj) const;

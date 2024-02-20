@@ -24,6 +24,9 @@ using RestoreStrategy = std::conditional_t<
         RestoreStrategy_<Default> >,
     RestoreStrategy_<T> >;
 
+template <typename T>
+concept is_restore_strategy = RestoreStrategable<RestoreStrategy, T>;
+
 template <>
 struct RestoreStrategy_<Default> {
     ActionStatus operator()(Restoringable auto& obj, Object* owner, Object* target) const;

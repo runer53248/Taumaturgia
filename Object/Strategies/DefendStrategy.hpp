@@ -24,6 +24,9 @@ using DefendStrategy = std::conditional_t<
         DefendStrategy_<Default> >,
     DefendStrategy_<T> >;
 
+template <typename T>
+concept is_defend_strategy = DefendStrategable<DefendStrategy, T>;
+
 template <>
 struct DefendStrategy_<Default> {
     ActionStatus operator()(Protectingable auto& obj, Object* owner, Object* target) const;

@@ -26,6 +26,9 @@ using GetStrategy = std::conditional_t<
         GetStrategy_<Default>>,
     GetStrategy_<T>>;
 
+template <typename T>
+concept is_get_strategy = GetStrategable<GetStrategy, T>;
+
 template <>
 struct GetStrategy_<Default> {
     template <Parameter P>

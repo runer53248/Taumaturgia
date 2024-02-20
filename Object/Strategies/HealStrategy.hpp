@@ -24,6 +24,9 @@ using HealStrategy = std::conditional_t<
         HealStrategy_<Default> >,
     HealStrategy_<T> >;
 
+template <typename T>
+concept is_heal_strategy = HealStrategable<HealStrategy, T>;
+
 template <>
 struct HealStrategy_<Default> {
     ActionStatus operator()(Healingable auto& obj, Object* owner, Object* target) const;

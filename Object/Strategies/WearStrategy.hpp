@@ -24,6 +24,9 @@ using WearStrategy = std::conditional_t<
         WearStrategy_<Default> >,
     WearStrategy_<T> >;
 
+template <typename T>
+concept is_wear_strategy = WearStrategable<WearStrategy, T>;
+
 template <>
 struct WearStrategy_<Default> {
     ActionStatus operator()(Wearingable auto& obj, Object* owner, Object* target) const;

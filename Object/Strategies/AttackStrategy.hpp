@@ -24,6 +24,9 @@ using AttackStrategy = std::conditional_t<
         AttackStrategy_<Default> >,
     AttackStrategy_<T> >;
 
+template <typename T>
+concept is_attack_strategy = AttackStrategable<AttackStrategy, T>;
+
 template <>
 struct AttackStrategy_<Default> {
     ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const;

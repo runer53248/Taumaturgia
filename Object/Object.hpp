@@ -20,6 +20,7 @@ concept Objected = std::same_as<T, Object> or std::same_as<T, const Object>;
 class Object {
 private:
     struct ObjectConcept {  // TODO: implement copy
+    public:
         virtual ~ObjectConcept() = default;
 
         virtual constexpr std::string name() const = 0;
@@ -35,7 +36,7 @@ private:
     struct ObjectModel : ObjectConcept {
     public:
         ObjectModel(const T& type);
-        ~ObjectModel() override;
+        ~ObjectModel() override = default;
 
         constexpr std::string name() const override;
         constexpr std::optional<AliveStatus> alive() const override;
@@ -62,13 +63,13 @@ public:
     template <Namingable T>
     Object(const T& obj)
         : object_{std::make_unique<ObjectModel<T>>(obj)},
-          can_alive{AliveStrategable<AliveStrategy, T>},
-          can_attack{AttackStrategable<AttackStrategy, T>},
-          can_defend{DefendStrategable<DefendStrategy, T>},
-          can_heal{HealStrategable<HealStrategy, T>},
-          can_restore{RestoreStrategable<RestoreStrategy, T>},
-          can_wear{WearStrategable<WearStrategy, T>},
-          can_get{GetStrategable<GetStrategy, T>} {}
+          can_alive{is_alive_strategy<T>},
+          can_attack{is_attack_strategy<T>},
+          can_defend{is_defend_strategy<T>},
+          can_heal{is_heal_strategy<T>},
+          can_restore{is_restore_strategy<T>},
+          can_wear{is_wear_strategy<T>},
+          can_get{is_get_strategy<T>} {}
 
     std::string name() const;
     std::optional<AliveStatus> alive() const;
@@ -81,11 +82,11 @@ public:
     bool checkGetParam() const;
 
     template <Parameter param>
-    friend constexpr auto getOptVariant(Objected auto& object) -> decltype(object.object_->get(std::declval<Parameter>())) {  // return type depends on object constness
-        if (not object.template checkGetParam<param>()) {
-            return {};
+    friend constexpr auto getOptVariant(Objected auto& object) {  // return type depends on object constness
+        if (object.template checkGetParam<param>()) {
+            return object.object_->get(param);  // return get_optional_variant_type or get_optional_variant_const_type
         }
-        return object.object_->get(param);
+        return decltype(object.object_->get(param)){};
     }
 
     template <Parameter param>

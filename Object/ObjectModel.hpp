@@ -76,14 +76,6 @@ template <Namingable T>
 Object::ObjectModel<T>::ObjectModel(const T& type)
     : type_{type} {}
 
-#if defined(__clang__)
-template <Namingable T>
-Object::ObjectModel<T>::~ObjectModel<T>() = default;
-#else
-template <Namingable T>
-Object::ObjectModel<T>::~ObjectModel() = default;
-#endif
-
 template <Namingable T>
 constexpr std::string Object::ObjectModel<T>::name() const {
     return traits::accessName::get(type_);

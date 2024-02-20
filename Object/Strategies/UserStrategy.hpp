@@ -24,6 +24,9 @@ using UserStrategy = std::conditional_t<
         UserStrategy_<TYPE, Default> >,
     UserStrategy_<TYPE, T> >;
 
+template <typename TYPE, typename T>
+concept is_user_strategy = UserStrategable<UserStrategy, TYPE, T>;
+
 template <typename TYPE>
 struct UserStrategy_<TYPE, Default> {
     void operator()(Typeable<TYPE> auto& obj) const;
