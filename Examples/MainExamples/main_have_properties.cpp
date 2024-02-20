@@ -1,7 +1,7 @@
 #include <iostream>
+#include "../demangle_type_name.hpp"
 #include "Object/Properties/Properties.hpp"
 #include "Object/Properties/UserProperty.hpp"
-#include "../demangle_type_name.hpp"
 
 struct Type {
     Name name;
@@ -58,8 +58,8 @@ private:
     struct equivalent_properties_predicate_impl {
         constexpr static bool value =
             // (std::is_same_v<lhp, rhp>) or                                                       // same property
-            (std::is_same_v<typename lhp::type<tag>, typename rhp::type<tag>>) or               // same Property or UserProperty (eg. UserProperty_<int, tag>)
-            ((lhp::value == rhp::value) and lhp::value != std::numeric_limits<size_t>::max());  // same priority of known property
+            (std::is_same_v<typename lhp::template type<tag>, typename rhp::template type<tag>>) or  // same Property or UserProperty (eg. UserProperty_<int, tag>)
+            ((lhp::value == rhp::value) and lhp::value != std::numeric_limits<size_t>::max());       // same priority of known property
     };
 
 public:

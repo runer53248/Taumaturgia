@@ -79,7 +79,7 @@ static_assert(std::is_same_v<named_Valid_type_3, Valid_type_3>);
 
 struct Valid_5 {
     auto name() & { return Name{"Valid_5"}; }
-    const auto name() const& { return Name{"const Valid_5"}; }
+    auto name() const& { return Name{"const Valid_5"}; }
 };
 
 template <typename T>
