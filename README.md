@@ -1,29 +1,32 @@
 # Taumaturgia Project
 
-## The goal is to create a system that allows to create new types (and modify existing ones) based on features called ***properties***.
+## Project goal is to create a system that allows creating new types (and modify existing ones) based on features called ***`properties`***. Each ***`property`*** has a single type to which it encapsulates access.
 
-## This type with ***properties*** can be used to create an object of the ***Object*** class.
+## Type with ***`properties`*** is used to create an instantion of the ***`Object`*** class.
 
-## Then this ***Object*** instantion will be used to invoke ***strategies*** assigned to individual ***properties***.
+## ***`Object`*** instantions will be used to invoke ***`strategies`*** assigned to individual ***`properties`***.
 
-### Concepts are added to determine whether the type meets the requirements imposed on ***Properties***.
+## What is needed for type to have ***`properties`***?
 
-There are two ways to add ***properties*** to a type.
+Concepts determine whether the type meets the requirements imposed on ***`Properties`***.\
+There are two ways to add ***`properties`*** to a type.
 
-1. By placing the type in successive layers of ***properties***. In this case, the type must have a ***Namingable*** property or ***Naming*** must be the deepest nested ***property***.
+1. By placing the type in successive layers of ***`properties`***. In this case, the type must have a ***`Namingable`*** property or ***`Naming`*** must be the deepest nested ***`property`***.
 ```cpp
 using NewType = Living<Wearing<Damaging<Protecting<Healing<Restoring<Naming<Type>>>>>>>
 ```
 
-2. By using ***add_properties***. This allows you to specify the preferred order of ***properties*** and what should be considered an indexed ***Property*** and ordered as such.
+2. By using ***`add_properties`***. This allows you to specify the preferred order of ***`properties`*** and what should be considered an indexed ***`Property`*** and ordered as such.
 ```cpp
 using NewType = add_properties<Type, Naming, Living, Wearing, Damaging, Protecting, Healing, Restoring>;
 ```
 
-By default, all types should satisfy the ***Namingable*** concept. This means:
+## What is needed for type to be used in ***`Object`*** class?
 
+By default, all types should satisfy the ***`Namingable`*** concept. This will allow the type to be used in the ***`Object`*** class.\
+This means:
 
-* type that have public ***name*** member convertible to **std::string** (or **const std::string**)
+1. type that have public ***`name`*** member convertible to **std::string** (or **const std::string**)
 
 ```cpp
 struct Type {
@@ -47,7 +50,7 @@ struct Type {
 static_assert(Namingable<Type>);
 ```
 
-* type that have public ***getName*** method returning **std::string** convertible type
+2. type that have public ***`getName`*** method returning **std::string** convertible type
 
 ```cpp
 struct Type {};
@@ -69,14 +72,14 @@ static_assert(Namingable<WithName<Type, std::string>>);
 static_assert(Namingable<WithName<Type, Name>>);
 ```
 
-* type resulted after gived ***Naming*** properties
+3. type resulted after gived ***`Naming`*** properties
 ```cpp
 struct Type {};
 using named_Type = Naming<Type>;
 static_assert(Namingable<named_Type>);
 ```
 
-* type that have ***CustomAccessName*** trait specialization
+4. type that have ***`CustomAccessName`*** trait specialization
 ```cpp
 struct Type {
     auto any_name() & { return Name{"Valid"}; }
@@ -92,11 +95,8 @@ struct traits::CustomAccessName<T> {
 static_assert(Namingable<Type>);
 ```
 
-This will allow the type to be used in the ***Object*** class.
-
-Each ***property*** has a single type to which it encapsulates access.
-
-Regardless of how you access the type stored by a ***property***, you can also access it using ***access traits***.
+## Is there universal method to access property data?
+Regardless of how you can access the type stored by a ***`property`***, you can also access it using ***`access traits`***.
 
 ```cpp
 traits::accessArmorWear::get(type);
@@ -106,5 +106,7 @@ traits::accessHealth::get(type);
 traits::accessName::get(type);
 traits::accessProtection::get(type);
 traits::accessRestoreEffects::get(type);
+```
+```cpp
 traits::accessType<ENCAPSULATE_TYPE>::get(type);
 ```
