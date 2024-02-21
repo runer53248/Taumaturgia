@@ -10,44 +10,17 @@ struct Type {
 template <typename T>
 using IntProperty = UserProperty<int, T>;
 
+template <typename T>
+using FloatProperty = UserProperty<float, T>;
+
 // ? ----------------------------------------
 
 template <typename T, template <typename> typename... properties>
-using have_properties1 = mp_and<
-    mp_contains<  //
-        typename Scheme<T>::list,
-        Property<properties>>...>;
-
-// static_assert(have_properties1<
-//               add_properties<Type, Living>,
-//               Living>::value);  // ! not check eqivalent properties with same priority
-
-// static_assert(have_properties1<
-//               add_properties<Type, IntProperty>,
-//               IntProperty>::value);  // ! dont work with UserProperty
-
-static_assert(have_properties1<
-              add_properties<Type, Living>,
-              impl::Living_>::value);
-static_assert(have_properties1<
-              add_properties<Type, Living, Healing>,
-              impl::Living_,
-              impl::Healing_>::value);
-static_assert(have_properties1<
-              add_properties<Type, Living, Healing>,
-              impl::Healing_>::value);
-static_assert(not have_properties1<
-              add_properties<Type, Living>,
-              Living,
-              Healing>::value);  // ! wrong because dont work with eqivalent properties anyway
-
-// static_assert(have_properties1<
-//               add_properties<Type, Living, Healing>,
-//               Living,
-//               Healing>::value); // ! not check eqivalent properties with same priority
-// static_assert(have_properties1<
-//               add_properties<Type, Living, Healing>,
-//               Healing>::value); // ! not check eqivalent properties with same priority
+concept have_properties1 =
+    mp_and<
+        mp_contains<
+            typename Scheme<T>::list,
+            Property<properties>>...>::value;
 
 // ? ----------------------------------------
 
@@ -68,54 +41,112 @@ public:
 };
 
 template <typename T, template <typename> typename... properties>
-using have_properties2 =
+concept have_properties2 =
     mp_and<
         mp_to_bool<
             mp_count_if<
                 typename Scheme<T>::list,
-                equivalent_properties_predicate<properties>::template type>>...>;
+                equivalent_properties_predicate<properties>::template type>>...>::value;
 
-static_assert(have_properties2<
-              add_properties<Type, Living>,
-              Living>::value);  // ? check eqivalent properties with same priority
+// ? ----------------------------------------
 
-static_assert(have_properties2<
-              add_properties<Type, IntProperty>,
-              IntProperty>::value);  // ? work with UserProperty
+using living_type = add_properties<Type, Living>;
+// static_assert(have_properties1<living_type,
+//                                Living>);  // ! not check eqivalent properties with same priority
+static_assert(have_properties2<living_type,
+                               Living>);  // ? check eqivalent properties with same priority
 
-static_assert(have_properties2<
-              add_properties<Type, Living>,
-              impl::Living_>::value);
-static_assert(have_properties2<
-              add_properties<Type, Living, Healing>,
-              impl::Living_,
-              impl::Healing_>::value);
-static_assert(have_properties2<
-              add_properties<Type, Living, Healing>,
-              Living,
-              impl::Healing_>::value);
-static_assert(have_properties2<
-              add_properties<Type, Living, Healing>,
-              impl::Healing_,
-              Living>::value);
-static_assert(have_properties2<
-              add_properties<Type, Living, Healing>,
-              Living,
-              Healing>::value);
+using int_property_type = add_properties<Type, IntProperty>;
+// static_assert(have_properties1<int_property_type,
+//                                IntProperty>);  // ! dont work with UserProperty
+static_assert(have_properties2<int_property_type,
+                               IntProperty>);  // ? work with UserProperty
+
+using float_property_type = add_properties<Type, FloatProperty>;
+// static_assert(have_properties1<float_property_type,
+//                                FloatProperty>);  // ! dont work with UserProperty
+static_assert(have_properties2<float_property_type,
+                               FloatProperty>);  // ? work with UserProperty
+
+using int_float_property_type = add_properties<Type, IntProperty, FloatProperty>;
+// static_assert(have_properties1<int_float_property_type,
+//                                FloatProperty>);  // ! dont work with UserProperty
+static_assert(have_properties2<int_float_property_type,
+                               FloatProperty>);  // ? work with UserProperty
+
+// static_assert(have_properties1<int_float_property_type,
+//                                IntProperty>,     // ! dont work with UserProperty
+//                                FloatProperty>);  // ! dont work with UserProperty
+static_assert(have_properties2<int_float_property_type,
+                               IntProperty,
+                               FloatProperty>);  // ? work with UserProperty
+
+static_assert(have_properties1<living_type,
+                               impl::Living_>);
+static_assert(have_properties2<living_type,
+                               impl::Living_>);
+
+using living_healing_type = add_properties<Type, Living, Healing>;
+
+static_assert(have_properties1<living_healing_type,
+                               impl::Living_,
+                               impl::Healing_>);
+static_assert(have_properties2<living_healing_type,
+                               impl::Living_,
+                               impl::Healing_>);
+
+static_assert(have_properties1<living_healing_type,
+                               impl::Healing_>);
+static_assert(have_properties2<living_healing_type,
+                               impl::Healing_>);
+
+// static_assert(have_properties1<living_healing_type,
+//                                impl::Healing_,
+//                                Living>);   // ! not check eqivalent properties with same priority
+static_assert(have_properties2<living_healing_type,
+                               impl::Healing_,
+                               Living>);
+
+// static_assert(have_properties1<living_healing_type,
+//                                Living,     // ! not check eqivalent properties with same priority
+//                                impl::Healing_>);
+static_assert(have_properties2<living_healing_type,
+                               Living,
+                               impl::Healing_>);
+
+// static_assert(have_properties1<living_healing_type,
+//                                Living,     // ! not check eqivalent properties with same priority
+//                                Healing>);  // ! not check eqivalent properties with same priority
+static_assert(have_properties2<living_healing_type,
+                               Living,
+                               Healing>);
+
+// static_assert(have_properties1<living_healing_type,
+//                                Healing>);  // ! not check eqivalent properties with same priority
+static_assert(have_properties2<living_healing_type,
+                               Healing>);
+
+// static_assert(have_properties1<living_healing_type,
+//                                Living>);  // ! not check eqivalent properties with same priority
+static_assert(have_properties2<living_healing_type,
+                               Living>);
+
+// ? ----------------------------------------
+
 static_assert(have_properties2<
               add_properties<Type, Living, Healing>,
               Living,
               Living,
               Healing,
               impl::Living_,
-              impl::Healing_>::value);  // TODO: consider removing duplicates and sorting properties before specialize have_properties2
+              impl::Healing_>);  // TODO: consider removing duplicates and sorting properties before specialize have_properties2
 static_assert(have_properties2<
               add_properties<Type, Living, Healing>,
-              impl::Healing_>::value);
+              impl::Healing_>);
 static_assert(not have_properties2<
               add_properties<Type, Living>,
               impl::Living_,
-              impl::Healing_>::value);
+              impl::Healing_>);
 
 // ? ----------------------------------------
 
