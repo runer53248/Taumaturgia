@@ -55,20 +55,20 @@ struct same_priority {
             return (A::value == B::value);
         }
         // same_priority true if any improved unordered Property improvement_of same as other
-        if constexpr (property_improvement_tag<typename A::type<tag>> and property_improvement_tag<typename B::type<tag>>) {
+        if constexpr (property_improvement_tag<typename A::template type<tag>> and property_improvement_tag<typename B::template type<tag>>) {
             return (std::is_same_v<
-                    typename A::type<tag>::improvement_of,
-                    typename B::type<tag>::improvement_of>);
+                    typename A::template type<tag>::improvement_of,
+                    typename B::template type<tag>::improvement_of>);
         }
-        if constexpr (property_improvement_tag<typename A::type<tag>>) {
+        if constexpr (property_improvement_tag<typename A::template type<tag>>) {
             return (std::is_same_v<
-                    typename A::type<tag>::improvement_of,
-                    typename B::type<tag>>);
+                    typename A::template type<tag>::improvement_of,
+                    typename B::template type<tag>>);
         }
-        if constexpr (property_improvement_tag<typename B::type<tag>>) {
+        if constexpr (property_improvement_tag<typename B::template type<tag>>) {
             return (std::is_same_v<
-                    typename A::type<tag>,
-                    typename B::type<tag>::improvement_of>);
+                    typename A::template type<tag>,
+                    typename B::template type<tag>::improvement_of>);
         }
         return false;
     }();
