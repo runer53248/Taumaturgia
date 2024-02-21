@@ -49,19 +49,8 @@ struct accessDamage {
         return CustomAccessDamage<std::remove_cv_t<T>>::get(el);
     }
 
-    template <CustomDamageAccessable T>
-        requires(not UserTypeDamageAccessable<T>)
-    static decltype(auto) get(const T& el) {
-        return CustomAccessDamage<std::remove_cv_t<T>>::get(el);
-    }
-
     template <UserTypeDamageAccessable T>
     static decltype(auto) get(T& el) {
-        return el.template getType<Damage>();
-    }
-
-    template <UserTypeDamageAccessable T>
-    static decltype(auto) get(const T& el) {
         return el.template getType<Damage>();
     }
 };

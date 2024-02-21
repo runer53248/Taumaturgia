@@ -49,19 +49,8 @@ struct accessCureHealth {
         return CustomAccessCureHealth<std::remove_cv_t<T>>::get(el);
     }
 
-    template <CustomCureHealthAccessable T>
-        requires(not UserTypeCureHealthAccessable<T>)
-    static decltype(auto) get(const T& el) {
-        return CustomAccessCureHealth<std::remove_cv_t<T>>::get(el);
-    }
-
     template <UserTypeCureHealthAccessable T>
     static decltype(auto) get(T& el) {
-        return el.template getType<CureHealth>();
-    }
-
-    template <UserTypeCureHealthAccessable T>
-    static decltype(auto) get(const T& el) {
         return el.template getType<CureHealth>();
     }
 };

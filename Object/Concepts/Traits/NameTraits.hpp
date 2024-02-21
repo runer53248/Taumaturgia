@@ -51,19 +51,8 @@ struct accessName {
         return CustomAccessName<std::remove_cv_t<T>>::get(el);
     }
 
-    template <CustomNameAccessable T>
-        requires(not UserTypeNameAccessable<T>)
-    static decltype(auto) get(const T& el) {
-        return CustomAccessName<std::remove_cv_t<T>>::get(el);
-    }
-
     template <UserTypeNameAccessable T>
     static decltype(auto) get(T& el) {
-        return el.template getType<Name>();
-    }
-
-    template <UserTypeNameAccessable T>
-    static decltype(auto) get(const T& el) {
         return el.template getType<Name>();
     }
 };

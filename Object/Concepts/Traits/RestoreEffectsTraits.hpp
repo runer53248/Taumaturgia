@@ -49,19 +49,8 @@ struct accessRestoreEffects {
         return CustomAccessRestoreEffects<std::remove_cv_t<T>>::get(el);
     }
 
-    template <CustomRestoreEffectsAccessable T>
-        requires(not UserTypeRestoreEffectsAccessable<T>)
-    static decltype(auto) get(const T& el) {
-        return CustomAccessRestoreEffects<std::remove_cv_t<T>>::get(el);
-    }
-
     template <UserTypeRestoreEffectsAccessable T>
     static decltype(auto) get(T& el) {
-        return el.template getType<EffectTypeContainer>();
-    }
-
-    template <UserTypeRestoreEffectsAccessable T>
-    static decltype(auto) get(const T& el) {
         return el.template getType<EffectTypeContainer>();
     }
 };

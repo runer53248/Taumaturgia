@@ -49,19 +49,8 @@ struct accessProtection {
         return CustomAccessProtection<std::remove_cv_t<T>>::get(el);
     }
 
-    template <CustomProtectionAccessable T>
-        requires(not UserTypeProtectionAccessable<T>)
-    static decltype(auto) get(const T& el) {
-        return CustomAccessProtection<std::remove_cv_t<T>>::get(el);
-    }
-
     template <UserTypeProtectionAccessable T>
     static decltype(auto) get(T& el) {
-        return el.template getType<Protection>();
-    }
-
-    template <UserTypeProtectionAccessable T>
-    static decltype(auto) get(const T& el) {
         return el.template getType<Protection>();
     }
 };

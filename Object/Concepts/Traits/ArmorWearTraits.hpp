@@ -50,19 +50,8 @@ struct accessArmorWear {
         return CustomAccessArmorWear<std::remove_cv_t<T>>::get(el);
     }
 
-    template <CustomArmorWearAccessable T>
-        requires(not UserTypeArmorWearAccessable<T>)
-    static decltype(auto) get(const T& el) {
-        return CustomAccessArmorWear<std::remove_cv_t<T>>::get(el);
-    }
-
     template <UserTypeArmorWearAccessable T>
     static decltype(auto) get(T& el) {
-        return el.template getType<ProtectionContainer>();
-    }
-
-    template <UserTypeArmorWearAccessable T>
-    static decltype(auto) get(const T& el) {
         return el.template getType<ProtectionContainer>();
     }
 };
