@@ -1,14 +1,11 @@
 # Taumaturgia Project
 
-## Project goal is to create a system that allows creating new types (and modify existing ones) based on features called ***`properties`***. Each ***`property`*** has a single type to which it encapsulates access.
+## Project goal is to create a system that allows creating new types (and modify existing ones). <br> For this purpose will be used feature called ***`properties`***. <br> Each ***`property`*** has a single type to which it encapsulates access. <br> ***`Concepts`*** determine whether the type meets the requirements imposed on ***`properties`***. <br> Build-in ***`properties`*** allow ignore or create its private type in many ways (ie. by variant or from tuple) and to use it in conjunction with others ***`properties`***.  <br> User can create build-in like ***`properties`*** using ***`UserProperty`*** class. <br> 
 
-## Type with ***`properties`*** is used to create an instantion of the ***`Object`*** class.
+## Type with ***`properties`*** that also satisfy the ***`Namingable`*** concept can be used to create an instantion of the ***`Object`*** class. <br> ***`Object`*** instantions will be used to invoke ***`strategies`*** assigned to individual ***`properties`***.
 
-## ***`Object`*** instantions will be used to invoke ***`strategies`*** assigned to individual ***`properties`***.
+### How to add build-in ***`properties`*** to type?
 
-## What is needed for type to have ***`properties`***?
-
-Concepts determine whether the type meets the requirements imposed on ***`Properties`***.\
 There are two ways to add ***`properties`*** to a type.
 
 1. By placing the type in successive layers of ***`properties`***. In this case, the type must have a ***`Namingable`*** property or ***`Naming`*** must be the deepest nested ***`property`***.
@@ -21,10 +18,9 @@ using NewType = Living<Wearing<Damaging<Protecting<Healing<Restoring<Naming<Type
 using NewType = add_properties<Type, Naming, Living, Wearing, Damaging, Protecting, Healing, Restoring>;
 ```
 
-## What is needed for type to be used in ***`Object`*** class?
+### What is needed for type to be considered as having ***`property`***?
 
-By default, all types should satisfy the ***`Namingable`*** concept. This will allow the type to be used in the ***`Object`*** class.\
-This means:
+Type need to have way to access it's encapsulates type same as or convertible to ***`property`*** type. <br> As example for concept ***`Namingable`*** this means:
 
 1. type that have public ***`name`*** member convertible to **std::string** (or **const std::string**)
 
@@ -95,7 +91,7 @@ struct traits::CustomAccessName<T> {
 static_assert(Namingable<Type>);
 ```
 
-## Is there universal method to access property data?
+### Is there universal method to access property data?
 Regardless of how you can access the type stored by a ***`property`***, you can also access it using ***`access traits`***.
 
 ```cpp
