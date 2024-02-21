@@ -9,7 +9,4 @@ concept Typeable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
 };
 
 template <typename T, typename RESULT_TYPE>
-concept GetTypeable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
-    { x.template getType<RESULT_TYPE>() } -> same_as_ref<RESULT_TYPE>;
-    { y.template getType<RESULT_TYPE>() } -> same_as_ref<const RESULT_TYPE>;
-};
+concept GetTypeable = traits::GetTypeAccessable<T, RESULT_TYPE>;

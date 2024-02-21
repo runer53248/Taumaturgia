@@ -3,14 +3,14 @@
 #include "Object/Concepts/Traits/UserTypeTraits.hpp"
 
 template <typename TYPE>
-struct MockCustomAccessType {
+struct MockCustomTypeAccess {
     MOCK_METHOD(TYPE&, get, (TestType& el));
     MOCK_METHOD(const TYPE&, getConst, (const TestType& el));
 };
 
 template <typename TYPE>
-struct traits::CustomAccessType<TestType, TYPE> {
-    static MockCustomAccessType<TYPE>* mock;
+struct traits::CustomTypeAccess<TestType, TYPE> {
+    static MockCustomTypeAccess<TYPE>* mock;
     
     static decltype(auto) get(TestType& el) {
         return mock->get(el);
@@ -22,4 +22,4 @@ struct traits::CustomAccessType<TestType, TYPE> {
 };
 
 template <typename TYPE>
-MockCustomAccessType<TYPE>* traits::CustomAccessType<TestType, TYPE>::mock = nullptr;
+MockCustomTypeAccess<TYPE>* traits::CustomTypeAccess<TestType, TYPE>::mock = nullptr;
