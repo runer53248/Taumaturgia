@@ -73,7 +73,7 @@ constexpr auto Object::Action_impl::get_impl(G& type, Parameter param) {
 }
 
 template <Namingable T>
-Object::ObjectModel<T>::ObjectModel(const T& type)
+constexpr Object::ObjectModel<T>::ObjectModel(const T& type)
     : type_{type} {}
 
 template <Namingable T>

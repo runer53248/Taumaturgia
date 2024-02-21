@@ -21,7 +21,7 @@ class Object {
 private:
     struct ObjectConcept {  // TODO: implement copy
     public:
-        virtual ~ObjectConcept() = default;
+        virtual constexpr ~ObjectConcept() = default;
 
         virtual constexpr std::string name() const = 0;
         virtual constexpr std::optional<AliveStatus> alive() const = 0;
@@ -35,8 +35,8 @@ private:
     template <Namingable T>
     struct ObjectModel : ObjectConcept {
     public:
-        ObjectModel(const T& type);
-        ~ObjectModel() override = default;
+        constexpr ObjectModel(const T& type);
+        constexpr ~ObjectModel() override = default;
 
         constexpr std::string name() const override;
         constexpr std::optional<AliveStatus> alive() const override;
