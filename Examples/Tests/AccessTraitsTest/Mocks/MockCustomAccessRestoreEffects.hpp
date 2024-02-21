@@ -13,12 +13,10 @@ struct traits::CustomAccessRestoreEffects<TestType> {
     
     static decltype(auto) get(TestType& el) {
         return mock->get(el);
-        // return el.getRestoreEffects();
     }
 
     static decltype(auto) get(const TestType& el) {
         return mock->getConst(el);
-        // return el.getRestoreEffects();
     }
 };
 MockCustomAccessRestoreEffects* traits::CustomAccessRestoreEffects<TestType>::mock = nullptr;

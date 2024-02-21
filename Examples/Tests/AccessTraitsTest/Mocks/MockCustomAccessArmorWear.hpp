@@ -13,12 +13,10 @@ struct traits::CustomAccessArmorWear<TestType> {
     
     static decltype(auto) get(TestType& el) {
         return mock->get(el);
-        // return el.getArmorWear();
     }
 
     static decltype(auto) get(const TestType& el) {
         return mock->getConst(el);
-        // return el.getArmorWear();
     }
 };
 MockCustomAccessArmorWear* traits::CustomAccessArmorWear<TestType>::mock = nullptr;

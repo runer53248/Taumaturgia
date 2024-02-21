@@ -13,12 +13,10 @@ struct traits::CustomAccessProtection<TestType> {
     
     static decltype(auto) get(TestType& el) {
         return mock->get(el);
-        // return el.getProtection();
     }
 
     static decltype(auto) get(const TestType& el) {
         return mock->getConst(el);
-        // return el.getProtection();
     }
 };
 MockCustomAccessProtection* traits::CustomAccessProtection<TestType>::mock = nullptr;

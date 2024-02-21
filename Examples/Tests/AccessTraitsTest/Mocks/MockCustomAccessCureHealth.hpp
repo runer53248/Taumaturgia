@@ -13,12 +13,10 @@ struct traits::CustomAccessCureHealth<TestType> {
     
     static decltype(auto) get(TestType& el) {
         return mock->get(el);
-        // return el.getCureHp();
     }
 
     static decltype(auto) get(const TestType& el) {
         return mock->getConst(el);
-        // return el.getCureHp();
     }
 };
 MockCustomAccessCureHealth* traits::CustomAccessCureHealth<TestType>::mock = nullptr;
