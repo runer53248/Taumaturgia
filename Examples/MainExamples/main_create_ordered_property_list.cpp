@@ -1,49 +1,9 @@
-#include "../../Object/Properties/UserProperty.hpp"
-#include "../basic_strategies.hpp"
 #include "../demangle_type_name.hpp"
+#include "../improved_types.hpp"
 #include "../is_base_of_template.hpp"
 #include "../property_A.hpp"
 #include "../property_B.hpp"
 #include "Examples/preety_print.hpp"
-
-template <typename T>
-struct DamagingImproved_ : T {  // example of improving build-in property - may be used as replacement of impl::Damaging_
-    using property_data = PropertyData<impl::damaging_type_name, DamagingImproved_, T>;
-    using improvement_of = impl::Damaging_<T>;
-
-    DamagingImproved_() = default;
-
-    Damage dmg;
-};
-template <typename T>  // example of improving build-in property - may be used as replacement of Damaging
-using DamagingImproved = std::conditional_t<Damagingable<T>, T, DamagingImproved_<T>>;
-
-template <typename T>
-using UserDamaging = UserProperty<Damage, T>;
-template <typename T>
-using UserProtecting = UserProperty<Protection, T>;
-template <typename T>
-using UserProtecting_2 = UserProperty<Protection, T>;
-
-template <typename T>
-struct UserProtectingImproved_ : T {  // example of improving user property
-    using property_data = PropertyData<impl::user_type_name, UserProtectingImproved_, T>;
-    using improvement_of = UserProtecting<T>;
-
-    UserProtectingImproved_() = default;
-};
-template <typename T>
-using UserProtectingImproved = std::conditional_t<Typeable<T, Protection>, T, UserProtectingImproved_<T>>;
-
-template <typename T>
-struct UserProtectingImproved_2_ : T {  // example of improving use property
-    using property_data = PropertyData<impl::user_type_name, UserProtectingImproved_2_, T>;
-    using improvement_of = UserProtecting_2<T>;
-
-    UserProtectingImproved_2_() = default;
-};
-template <typename T>
-using UserProtectingImproved_2 = std::conditional_t<Typeable<T, Protection>, T, UserProtectingImproved_2_<T>>;
 
 int main() {
     std::cout << "A. 'create_ordered_property_list' examples:" << '\n'
@@ -86,7 +46,7 @@ int main() {
     using type_1 = create_ordered_property_list<Damaging, Damaging, Living, Damaging>;
     using type_2 = create_ordered_property_list<Living, Damaging>;
     static_assert(std::is_same_v<type_1, type_2>);  // checking removing of duplicates and reorder
-    std::cout << "3) checking removing of duplicates and reorder" << '\n';
+    std::cout << "3) checking removing of duplicates and reorder rest" << '\n';
     std::cout << name<type_1>() << '\n';
     std::cout << name<type_2>() << '\n';
     std::cout << '\n';
@@ -94,7 +54,7 @@ int main() {
     using type_3 = create_ordered_property_list<A, B, Protecting, Living, Damaging>;
     using type_4 = create_ordered_property_list<B, A, Protecting, Damaging, Living>;
     static_assert(not std::is_same_v<type_3, type_4>);  // checking removing of unknown properties and reorder
-    std::cout << "4) checking ignoring order of unknown properties and reorder" << '\n';
+    std::cout << "4) checking ignoring order of unknown properties and reorder rest" << '\n';
     std::cout << name<type_3>() << '\n';
     std::cout << name<type_4>() << '\n';
     std::cout << '\n';
@@ -123,44 +83,6 @@ int main() {
     std::cout << name<type_9>() << " - all properties are unknown" << '\n';  // all properties are unknown
     std::cout << '\n';
 
-    //////////////////////
-
-    static_assert(Property<Damaging>::value == Property<impl::Damaging_>::value);
-    static_assert(same_priority<Property<Damaging>, Property<impl::Damaging_>>::value);
-
-    // improvements of build-in properties
-    static_assert(Property<Damaging>::value == Property<DamagingImproved>::value);
-    static_assert(same_priority<Property<Damaging>, Property<DamagingImproved>>::value);
-    static_assert(same_priority<Property<impl::Damaging_>, Property<DamagingImproved>>::value);
-    std::cout << "build-in properties can be improved" << '\n';
-    std::cout << "Damaging priority = " << Property<Damaging>::value << " | improved = " << property_improvement<Damaging> << '\n';
-    std::cout << "impl::Damaging_ priority = " << Property<impl::Damaging_>::value << " | improved = " << property_improvement<impl::Damaging_> << '\n';
-    std::cout << "DamagingImproved priority = " << Property<DamagingImproved>::value << " | improved = " << property_improvement<DamagingImproved> << '\n';
-    std::cout << "DamagingImproved_ priority = " << Property<DamagingImproved_>::value << " | improved = " << property_improvement<DamagingImproved_> << '\n'
-              << '\n';
-
-    // improvements of user properties
-    static_assert(Property<UserProtectingImproved>::value == Property<UserProtecting>::value);
-    static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtecting>>::value);            // ? same_priority value
-    static_assert(same_priority<Property<UserProtecting>, Property<UserProtectingImproved>>::value);            // ? same_priority value
-    static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtectingImproved>>::value);    // ? same_priority value
-    static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtectingImproved_2>>::value);  // ? same_priority value
-    std::cout << "user properties can be improved" << '\n';
-    std::cout << "UserProtecting priority = " << Property<UserProtecting>::value << " | improved = " << property_improvement<UserProtecting> << '\n';
-    std::cout << "UserProtectingImproved priority = " << Property<UserProtectingImproved>::value << " | improved = " << property_improvement<UserProtectingImproved> << '\n';
-    std::cout << "UserProtectingImproved_ priority = " << Property<UserProtectingImproved_>::value << " | improved = " << property_improvement<UserProtectingImproved_> << '\n';
-    std::cout << "UserProtectingImproved_2 priority = " << Property<UserProtectingImproved_2>::value << " | improved = " << property_improvement<UserProtectingImproved_2> << '\n';
-    std::cout << "UserProtectingImproved_2_ priority = " << Property<UserProtectingImproved_2_>::value << " | improved = " << property_improvement<UserProtectingImproved_2_> << '\n'
-              << '\n';
-
-    // UserProperty may have same priority value but are not considered same by same_priority struct
-    static_assert(Property<UserProtecting>::value == Property<UserDamaging>::value);                // same priority value
-    static_assert(Property<UserProtecting>::value == Property<UserProtecting_2>::value);            // same priority value
-    static_assert(Property<UserProtecting>::value == Property<UserProtecting>::value);              // same priority value
-    static_assert(not same_priority<Property<UserProtecting>, Property<UserDamaging>>::value);      // not same_priority value - different types
-    static_assert(not same_priority<Property<UserProtecting>, Property<UserProtecting_2>>::value);  // not same_priority value - different type even if similiar
-    static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting>>::value);        // same type have same_priority value
-
     using type_x0 = create_ordered_property_list<Damaging, DamagingImproved, impl::Damaging_, DamagingImproved_>;
     using type_x1 = create_ordered_property_list<impl::Damaging_, DamagingImproved, Damaging, DamagingImproved_>;
     using type_x2 = create_ordered_property_list<DamagingImproved_, impl::Damaging_, DamagingImproved, Damaging>;
@@ -187,9 +109,9 @@ int main() {
     static_assert(Property<UserDamaging>::value != Property<Damaging>::value);
     static_assert(not same_priority<Property<UserProtecting>, Property<Protecting>>::value);
     static_assert(not same_priority<Property<UserDamaging>, Property<Damaging>>::value);
-    using type_x = create_ordered_property_list<UserProtecting, UserDamaging, Protecting, Damaging>;
-    using type_y = create_ordered_property_list<UserDamaging, UserProtecting, Damaging, Protecting>;
-    std::cout << "9) user created properties with same encapsulated type don't count as build-in ones" << '\n';
+    using type_x = create_ordered_property_list<UserProtecting, UserDamaging, Protecting, Damaging>;  // end with Protecting, Damaging
+    using type_y = create_ordered_property_list<UserDamaging, UserProtecting, Damaging, Protecting>;  // end with Damaging, Protecting
+    std::cout << "9) user created properties with same encapsulated type don't count as build-in ones (ie. not have its index)" << '\n';
     std::cout << name<type_x>() << '\n';
     std::cout << name<type_y>() << '\n'
               << '\n';
@@ -202,33 +124,12 @@ int main() {
     std::cout << name<type_b>() << '\n'
               << '\n';
 
-    struct Type {
-    public:
-        Damage dmgs;
-        Damage dmg;
-
-        auto& getType() {
-            return dmg;
-        }
-    };
-    std::cout << "build-in property may shadow members and methods of type that pass validation concept for property" << '\n';
-    std::cout << name<Damaging<Type>>() << '\n';
-    std::cout << name<impl::Damaging_<Type>>() << '\n'
-              << '\n';
-    // [[maybe_unused]] auto a = impl::Damaging_<Type>{}.dmg; // public dmg is shadowed by private one from Damaging_
-    [[maybe_unused]] auto b = impl::Damaging_<Type>{}.dmgs;
-    [[maybe_unused]] auto c = impl::Damaging_<Type>{}.getType();
-
-    std::cout << "custom property may shadow members and methods of type that pass validation concept for property" << '\n';
-    [[maybe_unused]] auto d = UserDamaging<Type>{}.dmg;
-    [[maybe_unused]] auto e = UserDamaging<Type>{}.dmgs;
-    // [[maybe_unused]] auto f = UserDamaging<Type>{}.getType(); // ! public getType is shadowed by protected one from UserProperty
-    std::cout << name<UserDamaging<Type>>() << '\n'
-              << '\n';
-
     using type_c = create_ordered_property_list<impl::Damaging_, Living, Damaging>;
     using type_d = create_ordered_property_list<Living, impl::Damaging_, Damaging>;
     static_assert(std::is_same_v<type_c, type_d>);
+    std::cout << name<type_c>() << '\n';
+    std::cout << name<type_d>() << '\n'
+              << '\n';
 
     return 0;
 }

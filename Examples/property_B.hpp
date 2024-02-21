@@ -1,4 +1,5 @@
 #pragma once
+#include "Object/Properties/PropertyData.hpp"
 
 constexpr char b_type_name[] = "B";
 template <typename T>

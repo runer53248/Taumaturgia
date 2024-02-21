@@ -1,4 +1,5 @@
 #pragma once
+#include "Object/Properties/PropertyData.hpp"
 
 namespace impl {
 

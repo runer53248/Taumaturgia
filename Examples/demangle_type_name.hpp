@@ -1,7 +1,8 @@
 #pragma once
 #include <boost/core/demangle.hpp>
+#include <typeinfo>
 
 template <class T>
-std::string name() {
+inline std::string name() {
     return boost::core::demangle(typeid(T).name());
 }
