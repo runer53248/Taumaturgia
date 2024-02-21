@@ -29,27 +29,68 @@ template <typename Base, typename L>
 using build_into_t = build_into_impl<Base, L>::type;
 
 // template <typename T>
-// using value_equal_zero = std::conditional_t<
-//     (T::value == 0),
-//     mp_true,
-//     mp_false>;
+// using value_equal_zero = mp_bool<T::value == 0>;
+
+template <template <typename> typename T>
+concept property_improvement = requires(T<tag>) {
+    typename T<tag>::improvement_of;
+};
+
+template <typename T>
+concept property_improvement_tag = requires(T) {
+    typename T::improvement_of;
+};
 
 template <typename A, typename B>
 struct same_priority {
-    constexpr static bool value =
-        std::is_same_v<A, B> or
-        ((A::value == B::value) and A::value != std::numeric_limits<size_t>::max());
+    // constexpr static bool value =
+    //     std::is_same_v<A, B> or
+    //     ((A::value == B::value) and A::value != std::numeric_limits<size_t>::max());
+
+    constinit const static auto value = []() -> bool {
+        if constexpr (std::is_same_v<A, B>) {
+            return true;
+        }
+        if constexpr (A::value != std::numeric_limits<size_t>::max()) {  // compare two ordered Properties
+            return (A::value == B::value);
+        }
+        // same_priority true if any improved unordered Property improvement_of same as other
+        if constexpr (property_improvement_tag<typename A::type<tag>> and property_improvement_tag<typename B::type<tag>>) {
+            return (std::is_same_v<
+                    typename A::type<tag>::improvement_of,
+                    typename B::type<tag>::improvement_of>);
+        }
+        if constexpr (property_improvement_tag<typename A::type<tag>>) {
+            return (std::is_same_v<
+                    typename A::type<tag>::improvement_of,
+                    typename B::type<tag>>);
+        }
+        if constexpr (property_improvement_tag<typename B::type<tag>>) {
+            return (std::is_same_v<
+                    typename A::type<tag>,
+                    typename B::type<tag>::improvement_of>);
+        }
+        return false;
+    }();
 };
+
+// template <typename A, typename B>
+// struct equivalent_priority {
+//     constexpr static bool value =
+//         (std::is_same_v<typename A::template type<tag>, typename B::template type<tag>>) or  // same Property or UserProperty (eg. UserProperty_<int, tag>)
+//         ((A::value == B::value) and A::value != std::numeric_limits<size_t>::max());       // same priority of known property
+// };
 
 template <typename... PROPERTY_LISTS>
 using append_and_order_property_lists =
     mp_sort<
         // mp_remove_if< // will remove properties that have 0 value (are not in order_list)
         // mp_unique<
-        mp_unique_if< //
+        mp_unique_if<  //
             mp_append<
                 PROPERTY_LISTS...>,
             same_priority>,
+        // equivalent_priority>,
         // value_equal_zero>,
         mp_less>;
 
