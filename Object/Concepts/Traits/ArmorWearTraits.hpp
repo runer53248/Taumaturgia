@@ -1,36 +1,16 @@
 #pragma once
+#include <utility>  // for as_const
 #include "helper/same_as_ref.hpp"
+#include "helper/traits_helper.hpp"
 
 struct ProtectionContainer;
 
 namespace traits {
 
-template <typename T>
-concept ArmorWearAccessable = requires(T x) {
-    x.armorWear;
-    std::is_same_v<decltype(T::armorWear), ProtectionContainer>;
-};
-
-template <typename T>
-concept GetArmorWearAccessable = requires(std::remove_cvref_t<T> x) {
-    { x.getArmorWear() } -> same_as_ref<ProtectionContainer>;
-    { std::as_const(x).getArmorWear() } -> same_as_ref<const ProtectionContainer>;
-};
-
-template <typename T>
-struct CustomAccessArmorWear {};
-
-template <typename T>
-concept CustomArmorWearAccessable = requires(std::remove_cvref_t<T> x) {
-    { CustomAccessArmorWear<T>::get(x) } -> same_as_ref<ProtectionContainer>;
-    { CustomAccessArmorWear<T>::get(std::as_const(x)) } -> same_as_ref<const ProtectionContainer>;
-};
-
-template <typename T>
-concept UserTypeArmorWearAccessable = requires(std::remove_cvref_t<T> x) {
-    { x.template getType<ProtectionContainer>() } -> same_as_ref<ProtectionContainer>;
-    { std::as_const(x).template getType<ProtectionContainer>() } -> same_as_ref<const ProtectionContainer>;
-};
+CreateAccessableConcept(ArmorWear, armorWear, ProtectionContainer);
+CreateGetAccessableConcept(ArmorWear, ProtectionContainer);
+CreateCustomAccessableConcept(ArmorWear, ProtectionContainer);
+CreateUserTypeAccessableConcept(ArmorWear, ProtectionContainer);
 
 struct accessArmorWear {
     static auto& get(ArmorWearAccessable auto& el) {
