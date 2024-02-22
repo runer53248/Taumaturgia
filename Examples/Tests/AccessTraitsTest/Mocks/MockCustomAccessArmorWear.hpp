@@ -7,8 +7,9 @@ struct MockCustomAccessArmorWear {
     MOCK_METHOD(const ProtectionContainer&, getConst, (const TestType& el));
 };
 
-template <>
-struct traits::CustomAccessArmorWear<TestType> {
+template <typename T>
+    requires std::is_base_of_v<TestType, std::remove_cvref_t<T>>
+struct traits::CustomAccessArmorWear<T> {
     static MockCustomAccessArmorWear* mock;
     
     static decltype(auto) get(TestType& el) {
@@ -19,4 +20,6 @@ struct traits::CustomAccessArmorWear<TestType> {
         return mock->getConst(el);
     }
 };
+
+template <>
 MockCustomAccessArmorWear* traits::CustomAccessArmorWear<TestType>::mock = nullptr;

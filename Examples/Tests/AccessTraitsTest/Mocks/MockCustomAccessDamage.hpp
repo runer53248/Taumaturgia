@@ -3,14 +3,15 @@
 #include "Object/Concepts/Traits/DamageTraits.hpp"
 
 struct MockCustomAccessDamage {
-    MOCK_METHOD(Damage &, get, (TestType& el));
-    MOCK_METHOD(const Damage &, getConst, (const TestType& el));
+    MOCK_METHOD(Damage&, get, (TestType & el));
+    MOCK_METHOD(const Damage&, getConst, (const TestType& el));
 };
 
-template <>
-struct traits::CustomAccessDamage <TestType> {
-    static MockCustomAccessDamage * mock;
-    
+template <typename T>
+    requires std::is_base_of_v<TestType, std::remove_cvref_t<T>>
+struct traits::CustomAccessDamage<T> {
+    static MockCustomAccessDamage* mock;
+
     static decltype(auto) get(TestType& el) {
         return mock->get(el);
     }
@@ -19,4 +20,6 @@ struct traits::CustomAccessDamage <TestType> {
         return mock->getConst(el);
     }
 };
-MockCustomAccessDamage * traits::CustomAccessDamage<TestType>::mock = nullptr;
+
+template <>
+MockCustomAccessDamage* traits::CustomAccessDamage<TestType>::mock = nullptr;

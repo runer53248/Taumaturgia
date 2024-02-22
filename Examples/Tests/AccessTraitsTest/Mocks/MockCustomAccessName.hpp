@@ -7,16 +7,19 @@ struct MockCustomAccessName {
     MOCK_METHOD(const Name&, getConst, (const TestType& el));
 };
 
-template <>
-struct traits::CustomAccessName<TestType> {
+template <typename T>
+    requires std::is_base_of_v<TestType, std::remove_cvref_t<T>>
+struct traits::CustomAccessName<T> {
     static MockCustomAccessName* mock;
 
-    static decltype(auto) get(auto& el) {
-        if constexpr (std::is_const_v<std::remove_reference_t<decltype(el)>>) {
-            return mock->getConst(el);
-        } else {
-            return mock->get(el);
-        }
+    static decltype(auto) get(TestType& el) {
+        return mock->get(el);
+    }
+
+    static decltype(auto) get(const TestType& el) {
+        return mock->getConst(el);
     }
 };
+
+template <>
 MockCustomAccessName* traits::CustomAccessName<TestType>::mock = nullptr;
