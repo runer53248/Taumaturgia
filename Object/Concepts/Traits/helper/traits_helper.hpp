@@ -15,21 +15,21 @@
         { std::as_const(x).get##NAME() } -> std::convertible_to<const TYPE>; \
     };
 
-#define CreateCustomAccessableConcept_convertible(NAME, TYPE)                                \
-    template <typename T>                                                                    \
-    struct CustomAccess##NAME;                                                               \
-                                                                                             \
-    template <typename T>                                                                    \
-    concept Custom##NAME##Accessable = requires(std::remove_cvref_t<T> x) {                  \
+#define CreateCustomAccessableConcept_convertible(NAME, TYPE)                                                     \
+    template <typename T>                                                                                         \
+    struct CustomAccess##NAME;                                                                                    \
+                                                                                                                  \
+    template <typename T>                                                                                         \
+    concept Custom##NAME##Accessable = requires(std::remove_cvref_t<T> x) {                                       \
         { CustomAccess##NAME<std::remove_cvref_t<T>>::get(x) } -> std::convertible_to<TYPE>;                      \
         { CustomAccess##NAME<std::remove_cvref_t<T>>::get(std::as_const(x)) } -> std::convertible_to<const TYPE>; \
     };
 
-#define CreateUserTypeAccessableConcept_convertible(NAME, TYPE)                           \
-    template <typename T>                                                                 \
-    concept UserType##NAME##Accessable = requires(std::remove_cvref_t<T> x) {             \
-        { x.template getType<TYPE>() } -> std::convertible_to<TYPE>;                      \
-        { std::as_const(x).template getType<TYPE>() } -> std::convertible_to<const TYPE>; \
+#define CreateUserTypeAccessableConcept_convertible(NAME, BUILD_TYPE, CONVERT_TYPE)                     \
+    template <typename T>                                                                               \
+    concept UserType##NAME##Accessable = requires(std::remove_cvref_t<T> x) {                           \
+        { x.template getType<BUILD_TYPE>() } -> std::convertible_to<CONVERT_TYPE>;                      \
+        { std::as_const(x).template getType<BUILD_TYPE>() } -> std::convertible_to<const CONVERT_TYPE>; \
     };
 
 #define CreateAccessableConcept(NAME, MEMBER, TYPE) \
