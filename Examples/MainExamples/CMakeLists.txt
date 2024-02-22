@@ -45,3 +45,7 @@ add_executable(${PROJECT_NAME}-main_mix_give_properties
 add_executable(${PROJECT_NAME}-main_have_properties
     main_have_properties.cpp
 )
+
+add_executable(${PROJECT_NAME}-main_improve_properties
+    main_improve_properties.cpp
+)
