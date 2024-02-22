@@ -12,24 +12,24 @@ concept CureHealthAccessable = requires(T x) {
 };
 
 template <typename T>
-concept GetCureHealthAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
+concept GetCureHealthAccessable = requires(std::remove_cvref_t<T> x) {
     { x.getCureHealth() } -> same_as_ref<CureHealth>;
-    { y.getCureHealth() } -> same_as_ref<const CureHealth>;
+    { std::as_const(x).getCureHealth() } -> same_as_ref<const CureHealth>;
 };
 
 template <typename T>
 struct CustomAccessCureHealth {};
 
 template <typename T>
-concept CustomCureHealthAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
+concept CustomCureHealthAccessable = requires(std::remove_cvref_t<T> x) {
     { CustomAccessCureHealth<T>::get(x) } -> same_as_ref<CureHealth>;
-    { CustomAccessCureHealth<T>::get(y) } -> same_as_ref<const CureHealth>;
+    { CustomAccessCureHealth<T>::get(std::as_const(x)) } -> same_as_ref<const CureHealth>;
 };
 
 template <typename T>
-concept UserTypeCureHealthAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
+concept UserTypeCureHealthAccessable = requires(std::remove_cvref_t<T> x) {
     { x.template getType<CureHealth>() } -> same_as_ref<CureHealth>;
-    { y.template getType<CureHealth>() } -> same_as_ref<const CureHealth>;
+    { std::as_const(x).template getType<CureHealth>() } -> same_as_ref<const CureHealth>;
 };
 
 struct accessCureHealth {
@@ -38,7 +38,7 @@ struct accessCureHealth {
     }
 
     template <GetCureHealthAccessable T>
-        requires(not CustomCureHealthAccessable<T> and not UserTypeCureHealthAccessable<T>)
+        requires(not(CustomCureHealthAccessable<T> or UserTypeCureHealthAccessable<T>))
     static decltype(auto) get(T& el) {
         return el.getCureHealth();
     }

@@ -12,24 +12,24 @@ concept RestoreEffectsAccessable = requires(T x) {
 };
 
 template <typename T>
-concept GetRestoreEffectsAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
+concept GetRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
     { x.getRestoreEffects() } -> same_as_ref<EffectTypeContainer>;
-    { y.getRestoreEffects() } -> same_as_ref<const EffectTypeContainer>;
+    { std::as_const(x).getRestoreEffects() } -> same_as_ref<const EffectTypeContainer>;
 };
 
 template <typename T>
 struct CustomAccessRestoreEffects {};
 
 template <typename T>
-concept CustomRestoreEffectsAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
+concept CustomRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
     { CustomAccessRestoreEffects<T>::get(x) } -> same_as_ref<EffectTypeContainer>;
-    { CustomAccessRestoreEffects<T>::get(y) } -> same_as_ref<const EffectTypeContainer>;
+    { CustomAccessRestoreEffects<T>::get(std::as_const(x)) } -> same_as_ref<const EffectTypeContainer>;
 };
 
 template <typename T>
-concept UserTypeRestoreEffectsAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
+concept UserTypeRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
     { x.template getType<EffectTypeContainer>() } -> same_as_ref<EffectTypeContainer>;
-    { y.template getType<EffectTypeContainer>() } -> same_as_ref<const EffectTypeContainer>;
+    { std::as_const(x).template getType<EffectTypeContainer>() } -> same_as_ref<const EffectTypeContainer>;
 };
 
 struct accessRestoreEffects {
@@ -38,7 +38,7 @@ struct accessRestoreEffects {
     }
 
     template <GetRestoreEffectsAccessable T>
-        requires(not CustomRestoreEffectsAccessable<T> and not UserTypeRestoreEffectsAccessable<T>)
+        requires(not(CustomRestoreEffectsAccessable<T> or UserTypeRestoreEffectsAccessable<T>))
     static decltype(auto) get(T& el) {
         return el.getRestoreEffects();
     }

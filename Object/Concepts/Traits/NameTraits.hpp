@@ -14,24 +14,24 @@ concept NameAccessable = requires(T x) {
 };
 
 template <typename T>
-concept GetNameAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
+concept GetNameAccessable = requires(std::remove_cvref_t<T> x) {
     { x.getName() } -> std::convertible_to<std::string>;
-    { y.getName() } -> std::convertible_to<const std::string>;
+    { std::as_const(x).getName() } -> std::convertible_to<const std::string>;
 };
 
 template <typename T>
 struct CustomAccessName {};
 
 template <typename T>
-concept CustomNameAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
+concept CustomNameAccessable = requires(std::remove_cvref_t<T> x) {
     { CustomAccessName<T>::get(x) } -> std::convertible_to<std::string>;
-    { CustomAccessName<T>::get(y) } -> std::convertible_to<const std::string>;
+    { CustomAccessName<T>::get(std::as_const(x)) } -> std::convertible_to<const std::string>;
 };
 
 template <typename T>
-concept UserTypeNameAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
+concept UserTypeNameAccessable = requires(std::remove_cvref_t<T> x) {
     { x.template getType<Name>() } -> std::convertible_to<std::string>;
-    { y.template getType<Name>() } -> std::convertible_to<const std::string>;
+    { std::as_const(x).template getType<Name>() } -> std::convertible_to<const std::string>;
 };
 
 struct accessName {
@@ -40,7 +40,7 @@ struct accessName {
     }
 
     template <GetNameAccessable T>
-        requires(not CustomNameAccessable<T> and not UserTypeNameAccessable<T>)
+        requires(not(CustomNameAccessable<T> or UserTypeNameAccessable<T>))
     static decltype(auto) get(T& el) {
         return el.getName();
     }

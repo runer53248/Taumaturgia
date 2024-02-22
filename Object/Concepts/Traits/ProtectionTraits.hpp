@@ -12,24 +12,24 @@ concept ProtectionAccessable = requires(T x) {
 };
 
 template <typename T>
-concept GetProtectionAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
+concept GetProtectionAccessable = requires(std::remove_cvref_t<T> x) {
     { x.getProtection() } -> same_as_ref<Protection>;
-    { y.getProtection() } -> same_as_ref<const Protection>;
+    { std::as_const(x).getProtection() } -> same_as_ref<const Protection>;
 };
 
 template <typename T>
 struct CustomAccessProtection {};
 
 template <typename T>
-concept CustomProtectionAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
+concept CustomProtectionAccessable = requires(std::remove_cvref_t<T> x) {
     { CustomAccessProtection<T>::get(x) } -> same_as_ref<Protection>;
-    { CustomAccessProtection<T>::get(y) } -> same_as_ref<const Protection>;
+    { CustomAccessProtection<T>::get(std::as_const(x)) } -> same_as_ref<const Protection>;
 };
 
 template <typename T>
-concept UserTypeProtectionAccessable = requires(std::remove_const_t<T> x, std::add_const_t<T> y) {
+concept UserTypeProtectionAccessable = requires(std::remove_cvref_t<T> x) {
     { x.template getType<Protection>() } -> same_as_ref<Protection>;
-    { y.template getType<Protection>() } -> same_as_ref<const Protection>;
+    { std::as_const(x).template getType<Protection>() } -> same_as_ref<const Protection>;
 };
 
 struct accessProtection {
@@ -38,7 +38,7 @@ struct accessProtection {
     }
 
     template <GetProtectionAccessable T>
-        requires(not CustomProtectionAccessable<T> and not UserTypeProtectionAccessable<T>)
+        requires(not(CustomProtectionAccessable<T> or UserTypeProtectionAccessable<T>))
     static decltype(auto) get(T& el) {
         return el.getProtection();
     }
