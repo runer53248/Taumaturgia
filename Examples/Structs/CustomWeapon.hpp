@@ -10,6 +10,7 @@ struct CustomWeapon {  // is not Damagingable but still counts as AttackStratega
 };
 
 static_assert(Damagingable<DefaultWeapon>);
+static_assert(not Damagingable<CustomWeapon>);
 
 template <>
 struct AttackStrategy_<CustomWeapon> {
