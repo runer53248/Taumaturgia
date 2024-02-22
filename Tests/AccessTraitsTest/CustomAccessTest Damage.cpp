@@ -1,13 +1,10 @@
 #include <gtest/gtest.h>
 #include "Object/DefaultStrategies.hpp"
-
 #include "TestType.hpp"
 
 #include "Mocks/MockCustomAccessDamage.hpp"
 
 constexpr auto default_name = "TestName";
-constexpr auto default_name_change = "TestName121234123556426354376585856858357858356883465";
-
 constexpr auto default_damage = Damage{10};
 constexpr auto default_damage_change = Damage{100};
 

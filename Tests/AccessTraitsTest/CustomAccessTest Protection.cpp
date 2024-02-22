@@ -1,13 +1,10 @@
 #include <gtest/gtest.h>
 #include "Object/DefaultStrategies.hpp"
-
 #include "TestType.hpp"
 
 #include "Mocks/MockCustomAccessProtection.hpp"
 
 constexpr auto default_name = "TestName";
-constexpr auto default_name_change = "TestName121234123556426354376585856858357858356883465";
-
 const auto default_protection = Protection{10};
 const auto default_protection_change = Protection{100};
 

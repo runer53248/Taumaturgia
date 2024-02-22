@@ -1,13 +1,10 @@
 #include <gtest/gtest.h>
 #include "Object/DefaultStrategies.hpp"
-
 #include "TestType.hpp"
 
 #include "Mocks/MockCustomAccessType.hpp"
 
 constexpr auto default_name = "TestName";
-constexpr auto default_name_change = "TestName121234123556426354376585856858357858356883465";
-
 const auto default_userType = 15.0f;
 const auto default_userType_change = 12.45f;
 const auto default_userType2 = 20;
