@@ -26,7 +26,7 @@ struct accessArmorWear {
     template <CustomArmorWearAccessable T>
         requires(not UserTypeArmorWearAccessable<T>)
     static decltype(auto) get(T& el) {
-        return CustomAccessArmorWear<std::remove_cv_t<T>>::get(el);
+        return CustomAccessArmorWear<std::remove_cvref_t<T>>::get(el);
     }
 
     template <UserTypeArmorWearAccessable T>

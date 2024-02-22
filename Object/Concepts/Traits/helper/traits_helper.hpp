@@ -17,12 +17,12 @@
 
 #define CreateCustomAccessableConcept_convertible(NAME, TYPE)                                \
     template <typename T>                                                                    \
-    struct CustomAccess##NAME {};                                                            \
+    struct CustomAccess##NAME;                                                               \
                                                                                              \
     template <typename T>                                                                    \
     concept Custom##NAME##Accessable = requires(std::remove_cvref_t<T> x) {                  \
-        { CustomAccess##NAME<T>::get(x) } -> std::convertible_to<TYPE>;                      \
-        { CustomAccess##NAME<T>::get(std::as_const(x)) } -> std::convertible_to<const TYPE>; \
+        { CustomAccess##NAME<std::remove_cvref_t<T>>::get(x) } -> std::convertible_to<TYPE>;                      \
+        { CustomAccess##NAME<std::remove_cvref_t<T>>::get(std::as_const(x)) } -> std::convertible_to<const TYPE>; \
     };
 
 #define CreateUserTypeAccessableConcept_convertible(NAME, TYPE)                           \

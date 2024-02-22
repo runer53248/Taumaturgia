@@ -1,5 +1,7 @@
 #pragma once
+#include <utility>  // for as_const
 #include "helper/same_as_ref.hpp"
+#include "helper/traits_helper.hpp"
 
 namespace traits {
 
@@ -10,12 +12,12 @@ concept GetTypeAccessable = requires(std::remove_cvref_t<T> x) {
 };
 
 template <typename TYPE, typename T>
-struct CustomTypeAccess;  // {};
+struct CustomTypeAccess;
 
 template <typename T, typename TYPE>
 concept CustomTypeAccessable = requires(std::remove_cvref_t<T> x) {
-    { CustomTypeAccess<TYPE, T>::get(x) } -> same_as_ref<TYPE>;
-    { CustomTypeAccess<TYPE, T>::get(std::as_const(x)) } -> same_as_ref<const TYPE>;
+    { CustomTypeAccess<TYPE, std::remove_cvref_t<T>>::get(x) } -> same_as_ref<TYPE>;
+    { CustomTypeAccess<TYPE, std::remove_cvref_t<T>>::get(std::as_const(x)) } -> same_as_ref<const TYPE>;
 };
 
 // CustomAccessType to replace all default
@@ -43,7 +45,7 @@ struct accessType {
     template <CustomTypeAccessable<TYPE> T>
         requires(not GetTypeAccessable<TYPE, T>)
     static decltype(auto) get(T& el) {
-        return CustomTypeAccess<TYPE, std::remove_cv_t<T>>::get(el);
+        return CustomTypeAccess<TYPE, std::remove_cvref_t<T>>::get(el);
     }
 };
 

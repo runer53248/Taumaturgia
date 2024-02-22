@@ -32,7 +32,7 @@ struct accessHealth {
     template <CustomHealthAccessable T>
         requires(not UserTypeHealthAccessable<T>)
     static decltype(auto) get(T& el) {
-        return CustomAccessHealth<std::remove_cv_t<T>>::get(el);
+        return CustomAccessHealth<std::remove_cvref_t<T>>::get(el);
     }
 
     template <UserTypeHealthAccessable T>

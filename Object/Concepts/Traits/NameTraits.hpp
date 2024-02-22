@@ -33,7 +33,7 @@ struct accessName {
     template <CustomNameAccessable T>
         requires(not UserTypeNameAccessable<T>)
     static decltype(auto) get(T& el) {
-        return CustomAccessName<std::remove_cv_t<T>>::get(el);
+        return CustomAccessName<std::remove_cvref_t<T>>::get(el);
     }
 
     template <UserTypeNameAccessable T>

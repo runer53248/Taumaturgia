@@ -26,7 +26,7 @@ struct accessCureHealth {
     template <CustomCureHealthAccessable T>
         requires(not UserTypeCureHealthAccessable<T>)
     static decltype(auto) get(T& el) {
-        return CustomAccessCureHealth<std::remove_cv_t<T>>::get(el);
+        return CustomAccessCureHealth<std::remove_cvref_t<T>>::get(el);
     }
 
     template <UserTypeCureHealthAccessable T>
