@@ -10,7 +10,7 @@ struct MockCustomAccessCureHealth {
 template <typename T>
     requires std::is_base_of_v<TestType, std::remove_cvref_t<T>>
 struct traits::CustomAccessCureHealth<T> {
-    static MockCustomAccessCureHealth* mock;
+    inline static MockCustomAccessCureHealth* mock = nullptr;
     
     static decltype(auto) get(TestType& el) {
         return mock->get(el);
@@ -20,6 +20,3 @@ struct traits::CustomAccessCureHealth<T> {
         return mock->getConst(el);
     }
 };
-
-template <>
-MockCustomAccessCureHealth* traits::CustomAccessCureHealth<TestType>::mock = nullptr;

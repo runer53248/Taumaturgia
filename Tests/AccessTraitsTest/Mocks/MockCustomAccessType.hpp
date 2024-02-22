@@ -10,7 +10,7 @@ struct MockCustomTypeAccess {
 
 template <typename TYPE>
 struct traits::CustomTypeAccess<TestType, TYPE> {
-    static MockCustomTypeAccess<TYPE>* mock;
+    inline static MockCustomTypeAccess<TYPE>* mock = nullptr;
     
     static decltype(auto) get(TestType& el) {
         return mock->get(el);
@@ -20,6 +20,3 @@ struct traits::CustomTypeAccess<TestType, TYPE> {
         return mock->getConst(el);
     }
 };
-
-template <typename TYPE>
-MockCustomTypeAccess<TYPE>* traits::CustomTypeAccess<TestType, TYPE>::mock = nullptr;

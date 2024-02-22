@@ -10,7 +10,7 @@ struct MockCustomAccessRestoreEffects {
 template <typename T>
     requires std::is_base_of_v<TestType, std::remove_cvref_t<T>>
 struct traits::CustomAccessRestoreEffects<T> {
-    static MockCustomAccessRestoreEffects* mock;
+    inline static MockCustomAccessRestoreEffects* mock = nullptr;
     
     static decltype(auto) get(TestType& el) {
         return mock->get(el);
@@ -20,6 +20,3 @@ struct traits::CustomAccessRestoreEffects<T> {
         return mock->getConst(el);
     }
 };
-
-template <>
-MockCustomAccessRestoreEffects* traits::CustomAccessRestoreEffects<TestType>::mock = nullptr;
