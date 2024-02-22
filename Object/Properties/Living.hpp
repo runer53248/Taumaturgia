@@ -40,11 +40,11 @@ struct Living_ : T {
     Living_(const Name& name, [[maybe_unused]] const std::variant<V...>& hp, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
-    auto& getHp() & {
+    auto& getHealth() & {
         return hp;
     }
 
-    const auto& getHp() const& {
+    const auto& getHealth() const& {
         return hp;
     }
 

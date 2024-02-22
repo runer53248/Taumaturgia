@@ -92,13 +92,13 @@ int main() {
     Type_5 type5_3{Name{"Valid"}, varDmg, varDmg, varDmg};                          // create properties from wrong variants
 
     std::cout << "type3_0 Name:       " << type3_0.getName() << '\n';
-    std::cout << "type3 Hp:           " << type3.getHp() << '\n';
+    std::cout << "type3 Hp:           " << type3.getHealth() << '\n';
     std::cout << "type4 CureHp:       " << type4.getCureHealth() << '\n';
-    std::cout << "type5 Hp:           " << type5.getHp() << '\n';
-    std::cout << "type5_1 Hp:         " << type5_1.getHp() << '\n';
+    std::cout << "type5 Hp:           " << type5.getHealth() << '\n';
+    std::cout << "type5_1 Hp:         " << type5_1.getHealth() << '\n';
     std::cout << "type5_1 Armor:      " << type5_1.getArmorWear() << '\n';
     std::cout << "type5_1 CureHp:     " << type5_1.getCureHealth() << '\n';
-    std::cout << "type5_2 Hp:         " << type5_2.getHp() << '\n';
+    std::cout << "type5_2 Hp:         " << type5_2.getHealth() << '\n';
     std::cout << "type5_2 Damage:     " << type5_2.getDamage() << '\n';
     std::cout << "type5_3 Damage:     " << type5_3.getDamage() << '\n';
     std::cout << '\n';
@@ -113,7 +113,7 @@ int main() {
     type5.getRestoreEffects() = {EffectType::Burn, EffectType::Smite};
 
     std::cout << "Name:         " << type5.getName() << '\n';
-    std::cout << "Hp:           " << type5.getHp() << '\n';
+    std::cout << "Hp:           " << type5.getHealth() << '\n';
     std::cout << "Armor:        " << type5.getArmorWear() << '\n';
     std::cout << "Damage:       " << type5.getDamage() << '\n';
     std::cout << "Protection:   " << type5.getProtection() << '\n';

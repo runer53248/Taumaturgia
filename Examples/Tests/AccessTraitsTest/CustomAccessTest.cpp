@@ -128,14 +128,14 @@ TEST(custom_access_test, AccessHealth) {
         Name{default_name},
         default_hp};
 
-    decltype(auto) hp = type.getHp();
-    decltype(auto) hp_const = std::as_const(type).getHp();
+    decltype(auto) hp = type.getHealth();
+    decltype(auto) hp_const = std::as_const(type).getHealth();
 
     EXPECT_EQ(hp, default_hp);
     EXPECT_EQ(hp_const, default_hp);
 
     hp = default_hp_change;
-    hp = type.getHp();
+    hp = type.getHealth();
 
     EXPECT_EQ(hp, default_hp_change);
 }

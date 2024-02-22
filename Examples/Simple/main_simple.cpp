@@ -93,11 +93,11 @@ struct Player_B {
         return name;
     }
 
-    auto& getHp() {
+    auto& getHealth() {
         return hp;
     }
 
-    const auto& getHp() const {
+    const auto& getHealth() const {
         return hp;
     }
 

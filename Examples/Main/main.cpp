@@ -218,7 +218,7 @@ int main() {
 
     // gustav.name = Name{"Franco The Inteligent Sword"};
     // gustav.hp = Health{75}; // can't be accessed now - is private
-    // gustav.getHp() = Health{75}; // access version
+    // gustav.getHealth() = Health{75}; // access version
     traits::accessName::get(gustav) = Name{"Franco The Inteligent Sword"};
     traits::accessHealth::get(gustav) = Health{75};  // universal access version
     traits::accessCureHealth::get(gustav) = CureHealth{30};

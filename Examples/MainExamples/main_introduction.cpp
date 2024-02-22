@@ -18,7 +18,7 @@ int main() {
     BaseType baseType{};
 
     LivingType myType{};
-    myType.getHp() = Health{4};
+    myType.getHealth() = Health{4};
 
     int healthValue = 1;
 
@@ -30,7 +30,7 @@ int main() {
             if constexpr (traits::HealthAccessable<std::remove_cvref_t<decltype(type)>>) {
                 return type.hp = Health{healthValue++};
             } else {
-                return type.getHp() = Health{healthValue++};
+                return type.getHealth() = Health{healthValue++};
             }
         })();
         std::cout << "Health = " << hp2.value();

@@ -2,8 +2,8 @@
 #include "../basic_strategies.hpp"
 
 struct Element2 {
-    auto& getHp() & { return hp; }
-    auto& getHp() const& { return hp; }
+    auto& getHealth() & { return hp; }
+    auto& getHealth() const& { return hp; }
 
 private:
     Health hp{100};
