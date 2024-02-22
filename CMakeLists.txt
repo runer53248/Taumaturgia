@@ -22,3 +22,4 @@ include_directories(${Taumaturgia_SOURCE_DIR})
 
 enable_testing()
 add_subdirectory(Examples)
+add_subdirectory(Tests)
