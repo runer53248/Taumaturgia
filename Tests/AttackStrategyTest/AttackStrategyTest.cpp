@@ -1,9 +1,53 @@
 #include <gtest/gtest.h>
-#include "Examples/Structs/CustomWeapon.hpp"
-#include "Examples/Structs/Player.hpp"
-#include "Examples/Structs/Weapon.hpp"
-#include "Object/DefaultStrategies.hpp"
-#include "Object/Properties/Properties.hpp"
+
+#ifdef WITH_ADD_PROPERTIES
+    #include "Object/DefaultStrategies.hpp"
+    #include "Object/Properties/Properties.hpp"
+
+    struct Type {};
+
+    using Weapon = add_properties<Type, Naming, Damaging>;
+    using DefaultWeapon = add_properties<Type, Naming, Damaging>;
+    using Player = add_properties<Type, Naming, Restoring, Wearing>;
+
+    struct CustomType {
+        std::vector<DefaultWeapon> others{
+            DefaultWeapon{Name{"Light weapon"}, Damage{10}},
+            DefaultWeapon{Name{"Medium weapon"}, Damage{20}}};
+    };
+
+    using CustomWeapon = add_properties<CustomType, Naming>;
+
+    template <>
+    struct AttackStrategy_<CustomWeapon> {
+        ActionStatus operator()(auto& obj, Object* owner, Object* target) const {
+            auto* suspect = Whom(owner, target);
+            ActionStatus status{ActionStatus::None};
+
+            if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) {
+                status = default_attack_behavior(obj, suspect);
+            }
+
+            for (auto& other : obj.others) {
+                status = default_attack_behavior(other, suspect);
+                print_subAttacks(other);
+            }
+            return status;
+        }
+
+        bool print_subAttacks(Damagingable auto& obj) const {
+            std::cout << "\t\t " << obj << "\n";
+            return true;
+        }
+    };
+
+#else
+    #include "Examples/Structs/CustomWeapon.hpp"
+    #include "Examples/Structs/Player.hpp"
+    #include "Examples/Structs/Weapon.hpp"
+    #include "Object/DefaultStrategies.hpp"
+    #include "Object/Properties/Properties.hpp"
+#endif
 
 #include "Examples/preety_print.hpp"
 
