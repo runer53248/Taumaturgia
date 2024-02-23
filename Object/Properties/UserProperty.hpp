@@ -81,7 +81,8 @@ struct UserProperty_ : T {
     decltype(auto) getType() & {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             return getType();
-        } else if constexpr (GetTypeable<T, RETURN>) {
+        }
+        if constexpr (GetTypeable<T, RETURN>) {
             return T::template getType<RETURN>();
         }
     }
@@ -90,7 +91,8 @@ struct UserProperty_ : T {
     decltype(auto) getType() const& {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             return getType();
-        } else if constexpr (GetTypeable<T, RETURN>) {
+        }
+        if constexpr (GetTypeable<T, RETURN>) {
             return T::template getType<RETURN>();
         }
     }

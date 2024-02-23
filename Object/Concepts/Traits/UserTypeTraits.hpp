@@ -31,7 +31,7 @@ concept CustomTypeAccessable = requires(std::remove_cvref_t<T> x) {
 // template <typename TYPE, typename T>
 // concept UserTypeAccessable = requires(std::remove_cvref_t<T> x) {
 //     { x.template getType<TYPE>() } -> same_as_ref<TYPE>;
-//     { y.template getType<TYPE>() } -> same_as_ref<const TYPE>;
+//     { std::as_const(x).template getType<TYPE>() } -> same_as_ref<const TYPE>;
 // };
 
 template <typename TYPE>

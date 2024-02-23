@@ -61,3 +61,11 @@ target_link_libraries(CustomAccessTest-UserType PRIVATE
     -lgtest
     -lgmock)
 add_test(NAME CustomAccessTest-UserType COMMAND CustomAccessTest-UserType --gtest_color=yes)
+
+add_executable(CustomAccessTest-UserProperty
+    ../mainTest.cpp
+    "CustomAccessTest UserProperty.cpp")
+target_link_libraries(CustomAccessTest-UserProperty PRIVATE 
+    -lgtest
+    -lgmock)
+add_test(NAME CustomAccessTest-UserProperty COMMAND CustomAccessTest-UserProperty --gtest_color=yes)
