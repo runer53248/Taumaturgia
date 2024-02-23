@@ -3,6 +3,6 @@
 #include "../../Object/Concepts/Types/Name.hpp"
 
 std::ostream& operator<<(std::ostream& out, const Name& name) {
-    out << name.operator std::string();
+    out << std::string(name);
     return out;
 }
