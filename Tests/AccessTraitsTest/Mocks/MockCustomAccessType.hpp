@@ -4,8 +4,8 @@
 #include "Object/Concepts/Traits/UserTypeTraits.hpp"
 
 template <typename TYPE, typename T>
-struct traits::CustomTypeAccess {
-    inline static traits::CustomTypeAccess<TYPE, T>* mock = nullptr;
+struct traits::CustomAccessType {
+    inline static traits::CustomAccessType<TYPE, T>* mock = nullptr;
 
     MOCK_METHOD(TYPE&, get_, (T & el));
     MOCK_METHOD(const TYPE&, get_, (const T& el));

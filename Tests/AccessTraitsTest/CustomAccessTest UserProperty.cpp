@@ -16,7 +16,7 @@ public:
     std::unique_ptr<UserTestType> type{nullptr};
     std::unique_ptr<const UserTestType> c_type{nullptr};
 
-    traits::CustomTypeAccess<Name, UserTestType> customMock;
+    traits::CustomAccessType<Name, UserTestType> customMock;
 
 protected:
     void SetUp() override {
@@ -24,14 +24,14 @@ protected:
         type = std::make_unique<UserTestType>(default_name);
         c_type = std::make_unique<const UserTestType>(default_name);
 
-        traits::CustomTypeAccess<Name, UserTestType>::mock = &customMock;
+        traits::CustomAccessType<Name, UserTestType>::mock = &customMock;
     }
 
     void TearDown() override {
         type = nullptr;
         c_type = nullptr;
 
-        traits::CustomTypeAccess<Name, UserTestType>::mock = nullptr;
+        traits::CustomAccessType<Name, UserTestType>::mock = nullptr;
     }
 };
 
@@ -39,7 +39,7 @@ std::ostream& operator<<(std::ostream& stream, const Name& name) {
     return stream << std::string(name);
 }
 
-TEST_F(UserProperty_Fixture, Access_by_trait_accessType_with_CustomTypeAccess) {
+TEST_F(UserProperty_Fixture, Access_by_trait_accessType_with_CustomAccessType) {
     EXPECT_CALL(customMock, get_(An<UserTestType&>())).Times(1).WillRepeatedly(ReturnRef(default_name));
     EXPECT_CALL(customMock, get_(An<const UserTestType&>())).Times(1).WillRepeatedly(ReturnRef(default_name));
 

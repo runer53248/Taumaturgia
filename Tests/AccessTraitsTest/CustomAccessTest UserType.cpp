@@ -19,7 +19,7 @@ public:
 
     std::unique_ptr<TestType> type{nullptr};
 
-    traits::CustomTypeAccess<float, TestType> customMock;
+    traits::CustomAccessType<float, TestType> customMock;
 
 protected:
     void SetUp() override {
@@ -35,14 +35,14 @@ protected:
             default_userType2,
             default_userType3);
 
-        traits::CustomTypeAccess<float, TestType> mock;
-        traits::CustomTypeAccess<float, TestType>::mock = &customMock;
+        traits::CustomAccessType<float, TestType> mock;
+        traits::CustomAccessType<float, TestType>::mock = &customMock;
     }
 
     void TearDown() override {
         type = nullptr;
 
-        traits::CustomTypeAccess<float, TestType>::mock = nullptr;
+        traits::CustomAccessType<float, TestType>::mock = nullptr;
     }
 };
 
@@ -90,7 +90,7 @@ TEST_F(UserType_with_UserProperty_Fixture, Access_by_getType) {
     EXPECT_EQ(userType3, default_userType3_change);
 }
 
-TEST_F(UserType_with_UserProperty_Fixture, Access_by_trait_accessType_with_CustomTypeAccess) {
+TEST_F(UserType_with_UserProperty_Fixture, Access_by_trait_accessType_with_CustomAccessType) {
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_userType));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_userType));
 
