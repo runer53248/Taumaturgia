@@ -1,6 +1,6 @@
 #pragma once
-#include "Object/Properties/UserProperty.hpp"
 #include "Object/Properties/Properties.hpp"
+#include "Object/Properties/UserProperty.hpp"
 
 struct MyType {};
 
@@ -16,18 +16,30 @@ using TestType = add_properties<
     UserPropertyAdapter<float>::type,  // not on order_list - last on c-tor arguments list
     UserPropertyAdapter<int>::type,    // not on order_list - always apply to MyType as most inner (before Naming !!!)
     UserPropertyAdapter<bool>::type,
-    // so its first argument in TestType c-tor
-    //
-    // all below are in correct order in TestType c-tor arguments but take name as they first argument so its looks like Naming is before them
+    // below are in order_list order
     Living,
     Wearing,
-    Protecting,  // even if switch order they return the same type
-    Damaging,    //
+    Damaging,
+    Protecting,
     Healing,
     Restoring,
-    Naming  // most inner to add (apply to type after unordered/unknown properties)
-    // actualy last but other requires that it exist in type to add name from they own c-tors.
-    >;
+    Naming>;
+
+static_assert(Property<Living>::value < Property<Wearing>::value);
+static_assert(Property<Wearing>::value < Property<Damaging>::value);
+static_assert(Property<Damaging>::value < Property<Protecting>::value);
+static_assert(Property<Protecting>::value < Property<Healing>::value);
+static_assert(Property<Healing>::value < Property<Restoring>::value);
+static_assert(Property<Restoring>::value < Property<Naming>::value);
+static_assert(Property<Naming>::value < Property<UserPropertyAdapter<float>::type>::value);
+static_assert(Property<UserPropertyAdapter<float>::type>::value == Property<UserPropertyAdapter<int>::type>::value);
+static_assert(Property<UserPropertyAdapter<float>::type>::value == Property<UserPropertyAdapter<bool>::type>::value);
+static_assert(not same_priority<
+              Property<UserPropertyAdapter<float>::type>,
+              Property<UserPropertyAdapter<int>::type>>::value);
+static_assert(not same_priority<
+              Property<UserPropertyAdapter<float>::type>,
+              Property<UserPropertyAdapter<bool>::type>>::value);
 
 // C-tor args order
 //
@@ -40,7 +52,8 @@ using TestType = add_properties<
 //     Healing,
 //     Restoring,
 //     UserProperty<float>, // because the are unordered (order at add_properties arguments is used)
-//     UserProperty<int>)
+//     UserProperty<int>,
+//     UserProperty<bool>)
 
 std::ostream& operator<<(std::ostream& stream, const Name& name) {
     return stream << std::string(name);

@@ -1,22 +1,29 @@
 #pragma once
 #include <gmock/gmock.h>
+#include "MockCustomAccess.hpp"
 #include "Object/Concepts/Traits/RestoreEffectsTraits.hpp"
+#ifdef CUSTOM_ACCESS_MOCK_MACRO
+StartCustomAccessMock(RestoreEffects);
+MOCK_METHOD(EffectTypeContainer&, get_, (TestType & el));
+MOCK_METHOD(const EffectTypeContainer&, get_, (const TestType& el));
+EndCustomAccessMock();
+CustomMock(RestoreEffects);
+#else
+template <typename T>
+struct traits::CustomAccessRestoreEffects {
+    inline static traits::CustomAccessRestoreEffects<T>* mock = nullptr;
 
-struct MockCustomAccessRestoreEffects {
-    MOCK_METHOD(EffectTypeContainer&, get, (TestType& el));
-    MOCK_METHOD(const EffectTypeContainer&, getConst, (const TestType& el));
+    MOCK_METHOD(EffectTypeContainer&, get_, (TestType & el));
+    MOCK_METHOD(const EffectTypeContainer&, get_, (const TestType& el));
+
+    static decltype(auto) get(auto& el) {
+        if (mock) {
+            return mock->get_(el);
+        }
+        throw std::logic_error("Mock not set for CustomAccessRestoreEffects!");
+    }
 };
 
 template <typename T>
-    requires std::is_base_of_v<TestType, std::remove_cvref_t<T>>
-struct traits::CustomAccessRestoreEffects<T> {
-    inline static MockCustomAccessRestoreEffects* mock = nullptr;
-    
-    static decltype(auto) get(auto& el) {
-        if constexpr (std::is_const_v<std::remove_reference_t<decltype(el)>>) {
-            return mock->getConst(el);
-        } else {
-            return mock->get(el);
-        }
-    }
-};
+using CustomMock = traits::CustomAccessRestoreEffects<T>;
+#endif

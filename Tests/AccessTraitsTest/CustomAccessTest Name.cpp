@@ -4,61 +4,70 @@
 
 #include "Mocks/MockCustomAccessName.hpp"
 
-constexpr auto default_name = "TestName";
-constexpr auto default_name_change = "TestName121234123556426354376585856858357858356883465";
+using namespace testing;
 
-TEST(custom_access_test, AccessName) {
-    TestType type{Name{default_name}};
+class Name_Fixture : public Test {
+public:
+    constexpr static auto default_float = 1.2f;
+    constexpr static auto default_int = 5;
+    constexpr static auto default_bool = true;
+    Name default_name;
+    Name default_name_change;
+    std::unique_ptr<TestType> type{nullptr};
 
-    decltype(auto) name = type.getName();
-    decltype(auto) name_const = std::as_const(type).getName();
+    CustomMock<TestType> customMock;
+
+protected:
+    void SetUp() override {
+        default_name = Name{"TestName"};
+        default_name_change = Name{"TestName121234123556426354376585856858357858356883465"};
+        type = std::make_unique<TestType>(
+            /*Naming*/ Name{default_name},
+            /*Living*/ std::ignore,
+            /*Wearing*/ std::ignore,
+            /*Damaging*/ std::ignore,
+            /*Protecting*/ std::ignore,
+            /*Healing*/ std::ignore,
+            /*Restoring*/ std::ignore,
+            /*float*/ default_float,
+            /*int*/ default_int,
+            /*bool*/ default_bool);
+
+        CustomMock<TestType>::mock = &customMock;
+    }
+
+    void TearDown() override {
+        type = nullptr;
+
+        CustomMock<TestType>::mock = nullptr;
+    }
+};
+
+TEST_F(Name_Fixture, Access_by_getName) {
+    decltype(auto) name = (*type).getName();
+    decltype(auto) name_const = std::as_const((*type)).getName();
 
     EXPECT_EQ(name, Name{default_name});
     EXPECT_EQ(name_const, Name{default_name});
-}
 
-TEST(custom_access_test, AccessName_changeName) {
-    TestType type{Name{default_name}};
-
-    decltype(auto) name = type.getName();
     name = Name{default_name_change};
-    name = type.getName();
+    name = (*type).getName();
 
     EXPECT_EQ(name, Name{default_name_change});
 }
 
-TEST(custom_access_test, CustomAccessName) {
-    MockCustomAccessName mock;
-    traits::CustomAccessName<TestType>::mock = &mock;
-    using namespace testing;
+TEST_F(Name_Fixture, Access_by_trait_accessName_with_CustomAccessName) {
+    EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_name));
+    EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_name));
 
-    auto result = Name{default_name};
-    TestType type{result};
-
-    EXPECT_CALL(mock, get(_)).Times(1).WillRepeatedly(ReturnRef(result));
-    EXPECT_CALL(mock, getConst(_)).Times(1).WillRepeatedly(ReturnRef(result));
-
-    decltype(auto) name = traits::accessName::get(type);
-    decltype(auto) name_const = traits::accessName::get(std::as_const(type));
+    decltype(auto) name = traits::accessName::get((*type));
+    decltype(auto) name_const = traits::accessName::get(std::as_const((*type)));
 
     EXPECT_EQ(name, Name{default_name});
     EXPECT_EQ(name_const, Name{default_name});
-}
-
-TEST(custom_access_test, CustomAccessName_changeName) {
-    MockCustomAccessName mock;
-    traits::CustomAccessName<TestType>::mock = &mock;
-    using namespace testing;
-
-    auto result = Name{default_name};
-    TestType type{result};
-
-    EXPECT_CALL(mock, get(_)).Times(2).WillRepeatedly(ReturnRef(result));
-
-    decltype(auto) name = traits::accessName::get(type);
 
     name = Name{default_name_change};
-    name = traits::accessName::get(type);
+    name = traits::accessName::get((*type));
 
     EXPECT_EQ(name, Name{default_name_change});
 }

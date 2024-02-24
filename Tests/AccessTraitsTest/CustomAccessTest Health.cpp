@@ -4,48 +4,71 @@
 
 #include "Mocks/MockCustomAccessHealth.hpp"
 
-constexpr auto default_name = "TestName";
-constexpr auto default_hp = Health{10};
-constexpr auto default_hp_change = Health{100};
+using namespace testing;
 
-TEST(custom_access_test, AccessHealth) {
-    TestType type{
-        Name{default_name},
-        default_hp};
+class Health_Fixture : public Test {
+public:
+    constexpr static auto default_name = "TestName";
+    constexpr static auto default_float = 1.2f;
+    constexpr static auto default_int = 5;
+    constexpr static auto default_bool = true;
+    Health default_hp;
+    Health default_hp_change;
+    std::unique_ptr<TestType> type{nullptr};
 
-    decltype(auto) hp = type.getHealth();
-    decltype(auto) hp_const = std::as_const(type).getHealth();
+    CustomMock<TestType> customMock;
+
+protected:
+    void SetUp() override {
+        default_hp = Health{10};
+        default_hp = Health{100};
+        type = std::make_unique<TestType>(
+            /*Naming*/ Name{default_name},
+            /*Living*/ default_hp,
+            /*Wearing*/ std::ignore,
+            /*Damaging*/ std::ignore,
+            /*Protecting*/ std::ignore,
+            /*Healing*/ std::ignore,
+            /*Restoring*/ std::ignore,
+            /*float*/ default_float,
+            /*int*/ default_int,
+            /*bool*/ default_bool);
+
+        CustomMock<TestType>::mock = &customMock;
+    }
+
+    void TearDown() override {
+        type = nullptr;
+
+        CustomMock<TestType>::mock = nullptr;
+    }
+};
+
+TEST_F(Health_Fixture, Access_by_getHealth) {
+    decltype(auto) hp = (*type).getHealth();
+    decltype(auto) hp_const = std::as_const((*type)).getHealth();
 
     EXPECT_EQ(hp, default_hp);
     EXPECT_EQ(hp_const, default_hp);
 
     hp = default_hp_change;
-    hp = type.getHealth();
+    hp = (*type).getHealth();
 
     EXPECT_EQ(hp, default_hp_change);
 }
 
-TEST(custom_access_test, CustomAccessHealth) {
-    MockCustomAccessHealth mock;
-    traits::CustomAccessHealth<TestType>::mock = &mock;
-    using namespace testing;
+TEST_F(Health_Fixture, Access_by_trait_accessHealth_with_CustomAccessHealth) {
+    EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_hp));
+    EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_hp));
 
-    auto result = default_hp;
-    TestType type{
-        Name{default_name},
-        result};
-
-    EXPECT_CALL(mock, get(_)).Times(2).WillRepeatedly(ReturnRef(result));
-    EXPECT_CALL(mock, getConst(_)).Times(1).WillRepeatedly(ReturnRef(result));
-
-    decltype(auto) hp = traits::accessHealth::get(type);
-    decltype(auto) hp_const = traits::accessHealth::get(std::as_const(type));
+    decltype(auto) hp = traits::accessHealth::get((*type));
+    decltype(auto) hp_const = traits::accessHealth::get(std::as_const((*type)));
 
     EXPECT_EQ(hp, default_hp);
     EXPECT_EQ(hp_const, default_hp);
 
     hp = default_hp_change;
-    hp = traits::accessHealth::get(type);
+    hp = traits::accessHealth::get((*type));
 
     EXPECT_EQ(hp, default_hp_change);
 }

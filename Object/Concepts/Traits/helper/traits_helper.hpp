@@ -48,7 +48,7 @@
 
 #define CreateCustomAccessableConcept(NAME, TYPE)                                    \
     template <typename T>                                                            \
-    struct CustomAccess##NAME {};                                                    \
+    struct CustomAccess##NAME;                                                       \
                                                                                      \
     template <typename T>                                                            \
     concept Custom##NAME##Accessable = requires(std::remove_cvref_t<T> x) {          \

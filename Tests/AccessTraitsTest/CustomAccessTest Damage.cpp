@@ -4,52 +4,71 @@
 
 #include "Mocks/MockCustomAccessDamage.hpp"
 
-constexpr auto default_name = "TestName";
-constexpr auto default_damage = Damage{10};
-constexpr auto default_damage_change = Damage{100};
+using namespace testing;
 
-TEST(custom_access_test, AccessDamage) {
-    TestType type{
-        Name{default_name},
-        std::ignore,
-        std::ignore,
-        default_damage};
+class Damage_Fixture : public Test {
+public:
+    constexpr static auto default_name = "TestName";
+    constexpr static auto default_float = 1.2f;
+    constexpr static auto default_int = 5;
+    constexpr static auto default_bool = true;
+    Damage default_damage;
+    Damage default_damage_change;
+    std::unique_ptr<TestType> type{nullptr};
 
-    decltype(auto) damage = type.getDamage();
-    decltype(auto) damage_const = std::as_const(type).getDamage();
+    CustomMock<TestType> customMock;
+
+protected:
+    void SetUp() override {
+        default_damage = Damage{10};
+        default_damage_change = Damage{100};
+        type = std::make_unique<TestType>(
+            /*Naming*/ Name{default_name},
+            /*Living*/ std::ignore,
+            /*Wearing*/ std::ignore,
+            /*Damaging*/ default_damage,
+            /*Protecting*/ std::ignore,
+            /*Healing*/ std::ignore,
+            /*Restoring*/ std::ignore,
+            /*float*/ default_float,
+            /*int*/ default_int,
+            /*bool*/ default_bool);
+
+        CustomMock<TestType>::mock = &customMock;
+    }
+
+    void TearDown() override {
+        type = nullptr;
+
+        CustomMock<TestType>::mock = nullptr;
+    }
+};
+
+TEST_F(Damage_Fixture, Access_by_getDamage) {
+    decltype(auto) damage = (*type).getDamage();
+    decltype(auto) damage_const = std::as_const((*type)).getDamage();
 
     EXPECT_EQ(damage, default_damage);
     EXPECT_EQ(damage_const, default_damage);
 
     damage = default_damage_change;
-    damage = type.getDamage();
+    damage = (*type).getDamage();
 
     EXPECT_EQ(damage, default_damage_change);
 }
 
-TEST(custom_access_test, CustomAccessDamage) {
-    MockCustomAccessDamage mock;
-    traits::CustomAccessDamage<TestType>::mock = &mock;
-    using namespace testing;
+TEST_F(Damage_Fixture, Access_by_trait_accessDamage_with_CustomAccessDamage) {
+    EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_damage));
+    EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_damage));
 
-    auto result = default_damage;
-    TestType type{
-        Name{default_name},
-        std::ignore,
-        std::ignore,
-        result};
-
-    EXPECT_CALL(mock, get(_)).Times(2).WillRepeatedly(ReturnRef(result));
-    EXPECT_CALL(mock, getConst(_)).Times(1).WillRepeatedly(ReturnRef(result));
-
-    decltype(auto) damage = traits::accessDamage::get(type);
-    decltype(auto) damage_const = traits::accessDamage::get(std::as_const(type));
+    decltype(auto) damage = traits::accessDamage::get((*type));
+    decltype(auto) damage_const = traits::accessDamage::get(std::as_const((*type)));
 
     EXPECT_EQ(damage, default_damage);
     EXPECT_EQ(damage_const, default_damage);
 
     damage = default_damage_change;
-    damage = traits::accessDamage::get(type);
+    damage = traits::accessDamage::get((*type));
 
     EXPECT_EQ(damage, default_damage_change);
 }

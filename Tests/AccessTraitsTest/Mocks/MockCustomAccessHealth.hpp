@@ -1,22 +1,30 @@
 #pragma once
 #include <gmock/gmock.h>
+#include "MockCustomAccess.hpp"
 #include "Object/Concepts/Traits/HealthTraits.hpp"
 
-struct MockCustomAccessHealth {
-    MOCK_METHOD(Health&, get, (TestType& el));
-    MOCK_METHOD(const Health&, getConst, (const TestType& el));
+#ifdef CUSTOM_ACCESS_MOCK_MACRO
+StartCustomAccessMock(Health);
+MOCK_METHOD(Health&, get_, (TestType & el));
+MOCK_METHOD(const Health&, get_, (const TestType& el));
+EndCustomAccessMock();
+CustomMock(Health);
+#else
+template <typename T>
+struct traits::CustomAccessHealth {
+    inline static traits::CustomAccessHealth<T>* mock = nullptr;
+
+    MOCK_METHOD(Health&, get_, (TestType & el));
+    MOCK_METHOD(const Health&, get_, (const TestType& el));
+
+    static decltype(auto) get(auto& el) {
+        if (mock) {
+            return mock->get_(el);
+        }
+        throw std::logic_error("Mock not set for CustomAccessHealth!");
+    }
 };
 
 template <typename T>
-    requires std::is_base_of_v<TestType, std::remove_cvref_t<T>>
-struct traits::CustomAccessHealth<T> {
-    inline static MockCustomAccessHealth* mock = nullptr;
-    
-    static decltype(auto) get(auto& el) {
-        if constexpr (std::is_const_v<std::remove_reference_t<decltype(el)>>) {
-            return mock->getConst(el);
-        } else {
-            return mock->get(el);
-        }
-    }
-};
+using CustomMock = traits::CustomAccessHealth<T>;
+#endif

@@ -4,54 +4,71 @@
 
 #include "Mocks/MockCustomAccessProtection.hpp"
 
-constexpr auto default_name = "TestName";
-const auto default_protection = Protection{10};
-const auto default_protection_change = Protection{100};
+using namespace testing;
 
-TEST(custom_access_test, AccessProtection) {
-    TestType type{
-        Name{default_name},
-        std::ignore,
-        std::ignore,
-        std::ignore,
-        default_protection};
+class Protection_Fixture : public Test {
+public:
+    constexpr static auto default_name = "TestName";
+    constexpr static auto default_float = 1.2f;
+    constexpr static auto default_int = 5;
+    constexpr static auto default_bool = true;
+    Protection default_protection;
+    Protection default_protection_change;
+    std::unique_ptr<TestType> type{nullptr};
 
-    decltype(auto) protection = type.getProtection();
-    decltype(auto) protection_const = std::as_const(type).getProtection();
+    CustomMock<TestType> customMock;
+
+protected:
+    void SetUp() override {
+        default_protection = Protection{10};
+        default_protection_change = Protection{100};
+        type = std::make_unique<TestType>(
+            /*Naming*/ Name{default_name},
+            /*Living*/ std::ignore,
+            /*Wearing*/ std::ignore,
+            /*Damaging*/ std::ignore,
+            /*Protecting*/ default_protection,
+            /*Healing*/ std::ignore,
+            /*Restoring*/ std::ignore,
+            /*float*/ default_float,
+            /*int*/ default_int,
+            /*bool*/ default_bool);
+
+        CustomMock<TestType>::mock = &customMock;
+    }
+
+    void TearDown() override {
+        type = nullptr;
+
+        CustomMock<TestType>::mock = nullptr;
+    }
+};
+
+TEST_F(Protection_Fixture, Access_by_getProtection) {
+    decltype(auto) protection = (*type).getProtection();
+    decltype(auto) protection_const = std::as_const((*type)).getProtection();
 
     EXPECT_EQ(protection, default_protection);
     EXPECT_EQ(protection_const, default_protection);
 
     protection = default_protection_change;
-    protection = type.getProtection();
+    protection = (*type).getProtection();
 
     EXPECT_EQ(protection, default_protection_change);
 }
 
-TEST(custom_access_test, CustomAccessProtection) {
-    MockCustomAccessProtection mock;
-    traits::CustomAccessProtection<TestType>::mock = &mock;
-    using namespace testing;
+TEST_F(Protection_Fixture, Access_by_trait_accessProtection_with_CustomAccessProtection) {
+    EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_protection));
+    EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_protection));
 
-    auto result = default_protection;
-    TestType type{
-        Name{default_name},
-        std::ignore,
-        std::ignore,
-        std::ignore,
-        result};
-
-    EXPECT_CALL(mock, get(_)).Times(2).WillRepeatedly(ReturnRef(result));
-    EXPECT_CALL(mock, getConst(_)).Times(1).WillRepeatedly(ReturnRef(result));
-
-    decltype(auto) protection = traits::accessProtection::get(type);
-    decltype(auto) protection_const = traits::accessProtection::get(std::as_const(type));
+    decltype(auto) protection = traits::accessProtection::get((*type));
+    decltype(auto) protection_const = traits::accessProtection::get(std::as_const((*type)));
 
     EXPECT_EQ(protection, default_protection);
     EXPECT_EQ(protection_const, default_protection);
 
     protection = default_protection_change;
-    protection = traits::accessProtection::get(type);
+    protection = traits::accessProtection::get((*type));
 
     EXPECT_EQ(protection, default_protection_change);
 }

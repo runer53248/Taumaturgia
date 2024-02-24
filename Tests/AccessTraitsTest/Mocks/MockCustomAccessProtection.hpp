@@ -1,22 +1,30 @@
 #pragma once
 #include <gmock/gmock.h>
+#include "MockCustomAccess.hpp"
 #include "Object/Concepts/Traits/ProtectionTraits.hpp"
 
-struct MockCustomAccessProtection {
-    MOCK_METHOD(Protection&, get, (TestType& el));
-    MOCK_METHOD(const Protection&, getConst, (const TestType& el));
+#ifdef CUSTOM_ACCESS_MOCK_MACRO
+StartCustomAccessMock(Protection);
+MOCK_METHOD(Protection&, get_, (TestType & el));
+MOCK_METHOD(const Protection&, get_, (const TestType& el));
+EndCustomAccessMock();
+CustomMock(Protection);
+#else
+template <typename T>
+struct traits::CustomAccessProtection {
+    inline static traits::CustomAccessProtection<T>* mock = nullptr;
+
+    MOCK_METHOD(Protection&, get_, (TestType & el));
+    MOCK_METHOD(const Protection&, get_, (const TestType& el));
+
+    static decltype(auto) get(auto& el) {
+        if (mock) {
+            return mock->get_(el);
+        }
+        throw std::logic_error("Mock not set for CustomAccessProtection!");
+    }
 };
 
 template <typename T>
-    requires std::is_base_of_v<TestType, std::remove_cvref_t<T>>
-struct traits::CustomAccessProtection<T> {
-    inline static MockCustomAccessProtection* mock = nullptr;
-    
-    static decltype(auto) get(auto& el) {
-        if constexpr (std::is_const_v<std::remove_reference_t<decltype(el)>>) {
-            return mock->getConst(el);
-        } else {
-            return mock->get(el);
-        }
-    }
-};
+using CustomMock = traits::CustomAccessProtection<T>;
+#endif
