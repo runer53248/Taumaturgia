@@ -19,7 +19,7 @@ static_assert(std::is_same_v<Type3, Type4>);
 int main() {
     auto print = [](auto t) {
         using T = decltype(t);
-        std::cout << is_property_type<typename T::property_data::base_type> << '\n';
+        std::cout << is_type_with_added_properties<typename T::property_data::base_type> << '\n';
         std::cout << "RESULT type   = " << name<T>() << '\n';
         std::cout << "Base type     = " << name<typename T::property_data::base_type>() << '\n';
         std::cout << "Property type = " << name<typename T::property_data::property_type>() << "\n\n";

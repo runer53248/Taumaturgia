@@ -9,10 +9,10 @@
 namespace impl {
 constexpr char user_type_name[] = "UserProperty";
 
-template <typename TYPE, typename T>
+template <typename TYPE, typename T, typename... Args>
 struct UserProperty_ : T {
     template <typename TAG>
-    using self = UserProperty_<TYPE, TAG>;  // make yourself one template argument type to satisfy PropertyData
+    using self = UserProperty_<TYPE, TAG, Args...>;  // make yourself one template argument type to satisfy PropertyData
     using property_data = PropertyData<user_type_name, self, T>;
 
     UserProperty_() = default;
@@ -68,7 +68,7 @@ struct UserProperty_ : T {
         : T{std::forward<decltype(args)>(args)...}, type{type} {}
 
     template <typename... V>
-        requires (boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
+        requires(boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
     UserProperty_(const std::variant<V...>& type, auto&&... args)
         : T{std::forward<decltype(args)>(args)...}, type{std::get<TYPE>(type)} {}
 
@@ -77,23 +77,33 @@ struct UserProperty_ : T {
     UserProperty_([[maybe_unused]] const std::variant<V...>& type, auto&&... args)
         : T{std::forward<decltype(args)>(args)...} {}
 
-    template <typename RETURN>
+    template <typename RETURN, bool DIG = false, bool... DIGs>
     decltype(auto) getType() & {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
+            if constexpr (DIG) {
+                if constexpr (GetTypeable<T, RETURN>) {
+                    return T::template getType<RETURN, DIGs...>();
+                }
+            }
             return getType();
         }
         if constexpr (GetTypeable<T, RETURN>) {
-            return T::template getType<RETURN>();
+            return T::template getType<RETURN, DIGs...>();
         }
     }
 
-    template <typename RETURN>
+    template <typename RETURN, bool DIG = false, bool... DIGs>
     decltype(auto) getType() const& {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
+            if constexpr (DIG) {
+                if constexpr (GetTypeable<T, RETURN>) {
+                    return T::template getType<RETURN, DIGs...>();
+                }
+            }
             return getType();
         }
         if constexpr (GetTypeable<T, RETURN>) {
-            return T::template getType<RETURN>();
+            return T::template getType<RETURN, DIGs...>();
         }
     }
 
@@ -117,8 +127,8 @@ static_assert(Typeable<UserProperty_<int, UserProperty_Test>, int>);
 
 }  // namespace impl
 
-template <typename TYPE, typename T>
-using UserProperty = std::conditional_t<Typeable<T, TYPE>, T, impl::UserProperty_<TYPE, T>>;
+template <typename TYPE, typename T, typename... Args>
+using UserProperty = std::conditional_t<Typeable<T, TYPE>, T, impl::UserProperty_<TYPE, T, Args...>>;
 
 template <typename TYPE, typename T>
 struct UserStrategy_<TYPE, impl::UserProperty_<TYPE, T>> : UserStrategy_<TYPE, T> {};  // forward eventualy implemented strategy

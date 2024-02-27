@@ -1,9 +1,9 @@
 #pragma once
 
-template <class... T>
+template <typename... T>
 struct list {};
 
 struct tag {};
 
-template <template <typename> typename... T>
+template <template <typename...> typename... T>
 using taged_list = list<T<tag>...>;

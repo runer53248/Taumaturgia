@@ -15,7 +15,7 @@ using FloatProperty = UserProperty<float, T>;
 
 // ? ----------------------------------------
 
-template <typename T, template <typename> typename... properties>
+template <typename T, template <typename...> typename... properties>
 concept have_properties1 =
     mp_and<
         mp_contains<
@@ -24,7 +24,7 @@ concept have_properties1 =
 
 // ? ----------------------------------------
 
-template <template <typename> typename property>
+template <template <typename...> typename property>
 class equivalent_properties_predicate {
 private:
     template <typename lhp, typename rhp>
@@ -40,7 +40,7 @@ public:
     using type = equivalent_properties_predicate_impl<T, Property<property>>;
 };
 
-template <typename T, template <typename> typename... properties>
+template <typename T, template <typename...> typename... properties>
 concept have_properties2 =
     mp_and<
         mp_to_bool<

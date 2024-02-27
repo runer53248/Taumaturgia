@@ -3,7 +3,7 @@
 #include "taged_list.hpp"
 using namespace boost::mp11;
 
-template <template <typename> typename property>
+template <template <typename...> typename property>
 struct Property;
 
 template <typename Base, typename L>
@@ -31,7 +31,7 @@ using build_into_t = build_into_impl<Base, L>::type;
 // template <typename T>
 // using value_equal_zero = mp_bool<T::value == 0>;
 
-template <template <typename> typename T>
+template <template <typename...> typename T>
 concept property_improvement = requires(T<tag>) {
     typename T<tag>::improvement_of;
 };
@@ -94,28 +94,30 @@ using append_and_order_property_lists =
         // value_equal_zero>,
         mp_less>;
 
-template <template <typename> typename... properties>
+template <template <typename...> typename... properties>
 using create_ordered_property_list = append_and_order_property_lists<
     list<Property<properties>...>>;
 
 template <typename T>
-concept is_property_type = requires {
+concept is_type_with_added_properties = requires {
     typename T::property_data;
     typename T::property_data::base_type;
     typename T::property_data::property_type;
 };
 
-template <typename T, bool F = is_property_type<T>>
+template <typename T>
 struct Scheme;
 
 template <typename T>
-struct Scheme<T, false> {
+    requires(not is_type_with_added_properties<T>)
+struct Scheme<T> {
     using base = T;
     using list = list<>;
 };
 
 template <typename T>
-struct Scheme<T, true> {
+    requires(is_type_with_added_properties<T>)
+struct Scheme<T> {
     using base = Scheme<typename T::property_data::base_type>::base;  // most inner base type
     using list_helper = Scheme<typename T::property_data::base_type>::list;
     using list = append_and_order_property_lists<  // list of all properties needed to add into base type
@@ -123,10 +125,10 @@ struct Scheme<T, true> {
         list_helper>;
 };
 
-template <typename T, template <typename> typename... properties>
+template <typename T, template <typename...> typename... properties>
 struct add_properties_impl {
     using type = std::conditional_t<
-        is_property_type<T>,
+        is_type_with_added_properties<T>,
         build_into_t<
             typename Scheme<T>::base,
             append_and_order_property_lists<
@@ -137,5 +139,5 @@ struct add_properties_impl {
             create_ordered_property_list<properties...>>>;
 };
 
-template <typename T, template <typename> typename... properties>
+template <typename T, template <typename...> typename... properties>
 using add_properties = add_properties_impl<T, properties...>::type;
