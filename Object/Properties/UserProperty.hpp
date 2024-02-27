@@ -77,33 +77,33 @@ struct UserProperty_ : T {
     UserProperty_([[maybe_unused]] const std::variant<V...>& type, auto&&... args)
         : T{std::forward<decltype(args)>(args)...} {}
 
-    template <typename RETURN, bool DIG = false, bool... DIGs>
+    template <typename RETURN, int DIG = 0>
     decltype(auto) getType() & {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             if constexpr (DIG) {
                 if constexpr (GetTypeable<T, RETURN>) {
-                    return T::template getType<RETURN, DIGs...>();
+                    return T::template getType<RETURN, DIG - 1>();
                 }
             }
             return getType();
         }
         if constexpr (GetTypeable<T, RETURN>) {
-            return T::template getType<RETURN, DIGs...>();
+            return T::template getType<RETURN, DIG>();
         }
     }
 
-    template <typename RETURN, bool DIG = false, bool... DIGs>
+    template <typename RETURN, int DIG = 0>
     decltype(auto) getType() const& {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             if constexpr (DIG) {
                 if constexpr (GetTypeable<T, RETURN>) {
-                    return T::template getType<RETURN, DIGs...>();
+                    return T::template getType<RETURN, DIG - 1>();
                 }
             }
             return getType();
         }
         if constexpr (GetTypeable<T, RETURN>) {
-            return T::template getType<RETURN, DIGs...>();
+            return T::template getType<RETURN, DIG>();
         }
     }
 

@@ -45,7 +45,7 @@ using Type_adapter = add_properties<Type_basic, UserPropertyAdapter<TYPE>::templ
 
 int main() {
     std::cout << "taged_list         = " << name<taged_list<UserProperty2>>() << '\n';
-    std::cout << "Property         = " << name<Property<UserProperty2>::type<tag>>() << '\n';
+    std::cout << "Property           = " << name<Property<UserProperty2>::type<tag>>() << '\n';
     std::cout << '\n';
 
     std::cout << "Type_basic            = " << name<Type_basic>() << '\n';
@@ -67,43 +67,47 @@ int main() {
     Type_nest_unlimited_two type3{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
 
     std::cout << "Type_no_nest" << '\n';
+    std::cout << ((type_no.getType<Damage>() == traits::accessDamage::get(type_no)) and  //
+                  (type_no.getType<Damage>() == traits::accessType<Damage>::get(type_no)))
+              << '\n';
     std::cout << type_no.getType<Damage>() << '\n';
-    std::cout << traits::accessDamage::get(type_no) << '\n';
-    std::cout << traits::accessType<Damage>::get(type_no) << '\n';
-    std::cout << type_no.getType<Damage, true>() << '\n';                    // dig to deeper type if can
-    std::cout << type_no.getType<Damage, true, true>() << '\n';              // dig to even deeper type if can
-    std::cout << type_no.getType<Damage, true, true, true>() << '\n';        // dig to even deeper type if can
-    std::cout << type_no.getType<Damage, true, true, true, true>() << '\n';  // dig to even deeper type if can
+    std::cout << type_no.getType<Damage, 1>() << '\n';  // dig to deeper type if can
+    std::cout << type_no.getType<Damage, 2>() << '\n';  // dig to even deeper type if can
+    std::cout << type_no.getType<Damage, 3>() << '\n';  // dig to even deeper type if can
+    std::cout << type_no.getType<Damage, 4>() << '\n';  // dig to even deeper type if can
     std::cout << '\n';
 
     std::cout << "Type_unlimited_nest" << '\n';
+    std::cout << ((type_u.getType<Damage>() == traits::accessDamage::get(type_u)) and  //
+                  (type_u.getType<Damage>() == traits::accessType<Damage>::get(type_u)))
+              << '\n';
     std::cout << type_u.getType<Damage>() << '\n';
-    std::cout << traits::accessDamage::get(type_u) << '\n';
-    std::cout << traits::accessType<Damage>::get(type_u) << '\n';
-    std::cout << type_u.getType<Damage, true>() << '\n';                    // dig to deeper type if can
-    std::cout << type_u.getType<Damage, true, true>() << '\n';              // dig to even deeper type if can
-    std::cout << type_u.getType<Damage, true, true, true>() << '\n';        // dig to even deeper type if can
-    std::cout << type_u.getType<Damage, true, true, true, true>() << '\n';  // dig to even deeper type if can
+    std::cout << type_u.getType<Damage, 1>() << '\n';  // dig to deeper type if can
+    std::cout << type_u.getType<Damage, 2>() << '\n';  // dig to even deeper type if can
+    std::cout << type_u.getType<Damage, 3>() << '\n';  // dig to even deeper type if can
+    std::cout << type_u.getType<Damage, 4>() << '\n';  // dig to even deeper type if can
     std::cout << '\n';
 
     std::cout << "Type_nest_unlimited_one" << '\n';
+    std::cout << ((type2.getType<Damage>() == traits::accessDamage::get(type2)) and  //
+                  (type2.getType<Damage>() == traits::accessType<Damage>::get(type2)))
+              << '\n';
     std::cout << type2.getType<Damage>() << '\n';
-    std::cout << traits::accessDamage::get(type2) << '\n';
-    std::cout << traits::accessType<Damage>::get(type2) << '\n';
-    std::cout << type2.getType<Damage, true>() << '\n';                    // dig to deeper type if can
-    std::cout << type2.getType<Damage, true, true>() << '\n';              // dig to even deeper type if can
-    std::cout << type2.getType<Damage, true, true, true>() << '\n';        // dig to even deeper type if can
-    std::cout << type2.getType<Damage, true, true, true, true>() << '\n';  // dig to even deeper type if can
+    std::cout << type2.getType<Damage, 1>() << '\n';  // dig to deeper type if can
+    std::cout << type2.getType<Damage, 2>() << '\n';  // dig to even deeper type if can
+    std::cout << type2.getType<Damage, 3>() << '\n';  // dig to even deeper type if can
+    std::cout << type2.getType<Damage, 4>() << '\n';  // dig to even deeper type if can
     std::cout << '\n';
 
     std::cout << "Type_nest_unlimited_two" << '\n';
+    std::cout << ((type3.getType<Damage>() == traits::accessDamage::get(type3)) and  //
+                  (type3.getType<Damage>() == traits::accessType<Damage>::get(type3)))
+              << '\n';
     std::cout << type3.getType<Damage>() << '\n';
-    std::cout << traits::accessDamage::get(type3) << '\n';
-    std::cout << traits::accessType<Damage>::get(type3) << '\n';
-    std::cout << type3.getType<Damage, true>() << '\n';                    // dig to deeper type if can
-    std::cout << type3.getType<Damage, true, true>() << '\n';              // dig to even deeper type if can
-    std::cout << type3.getType<Damage, true, true, true>() << '\n';        // dig to even deeper type if can
-    std::cout << type3.getType<Damage, true, true, true, true>() << '\n';  // dig to even deeper type if can
+    std::cout << type3.getType<Damage, 1>() << '\n';  // dig to deeper type if can
+    std::cout << type3.getType<Damage, 2>() << '\n';  // dig to even deeper type if can
+    std::cout << type3.getType<Damage, 3>() << '\n';  // dig to even deeper type if can
+    std::cout << type3.getType<Damage, 4>() << '\n';  // dig to even deeper type if can
     std::cout << '\n';
 
     return 0;
