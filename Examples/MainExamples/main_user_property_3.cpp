@@ -5,10 +5,10 @@
 #include "Object/Properties/Properties.hpp"
 #include "Object/Properties/UserProperty.hpp"
 
-template <typename TYPE>
+template <typename TYPE, typename... Args>
 struct UserPropertyAdapter {
     template <typename T>
-    using type = UserProperty<TYPE, T>;
+    using type = UserProperty<TYPE, T, Args...>;
 };
 
 struct MyType {
@@ -21,13 +21,11 @@ static_assert(traits::GetTypeAccessable<Type_basic, Damage>);
 
 using Type_no_nest = UserProperty<Damage, UserProperty<Damage, UserProperty<Damage, MyType>>>;                              // UserProperty don't allow nesting - Typeable concept check disallow it
 using Type_unlimited_nest = impl::UserProperty_<Damage, impl::UserProperty_<Damage, impl::UserProperty_<Damage, MyType>>>;  // impl::UserProperty_ allow unlimited nesting
+using Type_unlimited_nest_collapse = add_properties<Type_unlimited_nest>;
 
 static_assert(std::is_same_v<
               UserPropertyAdapter<Damage>::type<Type_no_nest>,
               UserProperty<Damage, Type_no_nest>>);
-static_assert(std::is_same_v<
-              Property<UserPropertyAdapter<Damage>::type>,
-              Property<UserPropertyAdapter<Damage>::type>>);
 
 using Type_nest_one = add_properties<Type_no_nest, UserPropertyAdapter<Damage>::type, UserPropertyAdapter<Damage>::type>;   // add_properties allow nest one level at the time
 using Type_nest_two = add_properties<Type_nest_one, UserPropertyAdapter<Damage>::type, UserPropertyAdapter<Damage>::type>;  // add_properties allow nest one level at the time
@@ -51,6 +49,7 @@ int main() {
     std::cout << "Type_basic            = " << name<Type_basic>() << '\n';
     std::cout << "Type_no_nest          = " << name<Type_no_nest>() << '\n';
     std::cout << "Type_unlimited_nest   = " << name<Type_unlimited_nest>() << '\n';
+    std::cout << "Type_unlimited_nest_collapse   = " << name<Type_unlimited_nest_collapse>() << '\n';
     std::cout << "Type_nest_one         = " << name<Type_nest_one>() << '\n';
     std::cout << "Type_nest_two         = " << name<Type_nest_two>() << '\n';
     std::cout << "Type_complex          = " << name<Type_complex>() << '\n';
@@ -65,6 +64,9 @@ int main() {
 
     Type_nest_unlimited_one type2{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
     Type_nest_unlimited_two type3{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
+
+    std::cout << "Type_nest_unlimited_one         = " << name<Type_nest_unlimited_one>() << '\n';
+    std::cout << "Type_nest_unlimited_two         = " << name<Type_nest_unlimited_two>() << '\n';
 
     std::cout << "Type_no_nest" << '\n';
     std::cout << ((type_no.getType<Damage>() == traits::accessDamage::get(type_no)) and  //
