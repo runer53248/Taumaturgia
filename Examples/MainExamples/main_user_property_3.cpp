@@ -42,19 +42,19 @@ template <typename TYPE>
 using Type_adapter = add_properties<Type_basic, UserPropertyAdapter<TYPE>::template type>;
 
 int main() {
-    std::cout << "taged_list         = " << name<taged_list<UserProperty2>>() << '\n';
-    std::cout << "Property           = " << name<Property<UserProperty2>::type<tag>>() << '\n';
+    std::cout << "taged_list                     = " << name<taged_list<UserProperty2>>() << '\n';
+    std::cout << "Property                       = " << name<Property<UserProperty2>::type<tag>>() << '\n';
     std::cout << '\n';
 
-    std::cout << "Type_basic            = " << name<Type_basic>() << '\n';
-    std::cout << "Type_no_nest          = " << name<Type_no_nest>() << '\n';
-    std::cout << "Type_unlimited_nest   = " << name<Type_unlimited_nest>() << '\n';
+    std::cout << "Type_basic                     = " << name<Type_basic>() << '\n';
+    std::cout << "Type_no_nest                   = " << name<Type_no_nest>() << '\n';
+    std::cout << "Type_unlimited_nest            = " << name<Type_unlimited_nest>() << '\n';
     std::cout << "Type_unlimited_nest_collapse   = " << name<Type_unlimited_nest_collapse>() << '\n';
-    std::cout << "Type_nest_one         = " << name<Type_nest_one>() << '\n';
-    std::cout << "Type_nest_two         = " << name<Type_nest_two>() << '\n';
-    std::cout << "Type_complex          = " << name<Type_complex>() << '\n';
-    std::cout << "Type_tag_complex      = " << name<Type_tag_complex>() << '\n';
-    std::cout << "Type_adapter<Damage>  = " << name<Type_adapter<Damage>>() << '\n';
+    std::cout << "Type_nest_one                  = " << name<Type_nest_one>() << '\n';
+    std::cout << "Type_nest_two                  = " << name<Type_nest_two>() << '\n';
+    std::cout << "Type_complex                   = " << name<Type_complex>() << '\n';
+    std::cout << "Type_tag_complex               = " << name<Type_tag_complex>() << '\n';
+    std::cout << "Type_adapter<Damage>           = " << name<Type_adapter<Damage>>() << '\n';
 
     Type_no_nest type_no{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
     Type_unlimited_nest type_u{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
@@ -65,8 +65,8 @@ int main() {
     Type_nest_unlimited_one type2{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
     Type_nest_unlimited_two type3{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
 
-    std::cout << "Type_nest_unlimited_one         = " << name<Type_nest_unlimited_one>() << '\n';
-    std::cout << "Type_nest_unlimited_two         = " << name<Type_nest_unlimited_two>() << '\n';
+    std::cout << "Type_nest_unlimited_one        = " << name<Type_nest_unlimited_one>() << '\n';
+    std::cout << "Type_nest_unlimited_two        = " << name<Type_nest_unlimited_two>() << '\n';
 
     std::cout << "Type_no_nest" << '\n';
     std::cout << ((type_no.getType<Damage>() == traits::accessDamage::get(type_no)) and  //
