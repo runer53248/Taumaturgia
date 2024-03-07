@@ -42,6 +42,14 @@ add_executable(${PROJECT_NAME}-main_user_property3
     main_user_property_3.cpp
 )
 
+add_executable(${PROJECT_NAME}-main_user_property3-aware
+    main_user_property_3.cpp
+)
+target_compile_definitions(${PROJECT_NAME}-main_user_property3-aware 
+    PUBLIC USER_PROPERTY_SELF_AWARE
+)
+
+
 add_executable(${PROJECT_NAME}-main_mix_give_properties
     main_mix_give_properties.cpp
 )
@@ -52,4 +60,11 @@ add_executable(${PROJECT_NAME}-main_have_properties
 
 add_executable(${PROJECT_NAME}-main_improve_properties
     main_improve_properties.cpp
+)
+
+add_executable(${PROJECT_NAME}-main_improve_properties-aware
+    main_improve_properties.cpp
+)
+target_compile_definitions(${PROJECT_NAME}-main_improve_properties-aware
+    PUBLIC USER_PROPERTY_SELF_AWARE
 )

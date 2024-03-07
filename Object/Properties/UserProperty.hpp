@@ -14,6 +14,9 @@ struct UserProperty_ : T {
     template <typename TAG>
     using self = UserProperty_<TYPE, TAG, Args...>;  // make yourself one template argument type to satisfy PropertyData
     using property_data = PropertyData<user_type_name, self, T>;
+#ifdef USER_PROPERTY_SELF_AWARE
+    using improvement_of = self<T>;
+#endif
 
     UserProperty_() = default;
 

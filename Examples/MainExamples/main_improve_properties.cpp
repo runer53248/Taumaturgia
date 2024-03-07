@@ -36,7 +36,11 @@ int main() {
     static_assert(Property<UserProtecting>::value == Property<UserProtecting_2>::value);            // same priority value
     static_assert(Property<UserProtecting>::value == Property<UserProtecting>::value);              // same priority value
     static_assert(not same_priority<Property<UserProtecting>, Property<UserDamaging>>::value);      // not same_priority value - different types
+#ifdef USER_PROPERTY_SELF_AWARE
+    static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting_2>>::value);      // same_priority value - self type awarness
+#else
     static_assert(not same_priority<Property<UserProtecting>, Property<UserProtecting_2>>::value);  // not same_priority value - different type even if similiar
+#endif
     static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting>>::value);        // same type have same_priority value
 
     struct Type {
