@@ -11,6 +11,8 @@ public:
     constexpr static auto default_float = 1.2f;
     constexpr static auto default_int = 5;
     constexpr static auto default_bool = true;
+    constexpr static auto default_name_ = "TestName";
+    constexpr static auto default_name_change_ = "TestName121234123556426354376585856858357858356883465";
     Name default_name;
     Name default_name_change;
     std::unique_ptr<TestType> type{nullptr};
@@ -19,10 +21,10 @@ public:
 
 protected:
     void SetUp() override {
-        default_name = Name{"TestName"};
-        default_name_change = Name{"TestName121234123556426354376585856858357858356883465"};
+        default_name = Name{default_name_};
+        default_name_change = Name{default_name_change_};
         type = std::make_unique<TestType>(
-            /*Naming*/ Name{default_name},
+            /*Naming*/ default_name,
             /*Living*/ std::ignore,
             /*Wearing*/ std::ignore,
             /*Damaging*/ std::ignore,
@@ -32,6 +34,11 @@ protected:
             /*float*/ default_float,
             /*int*/ default_int,
             /*bool*/ default_bool);
+
+        static_assert(traits::GetNameAccessable<decltype(*type)>);
+        static_assert(traits::GetNameAccessable<decltype(std::as_const(*type))>);
+        static_assert(traits::CustomNameAccessable<decltype(*type)>);
+        static_assert(traits::CustomNameAccessable<decltype(std::as_const(*type))>);
 
         CustomMock<TestType>::mock = &customMock;
     }
@@ -47,13 +54,13 @@ TEST_F(Name_Fixture, Access_by_getName) {
     decltype(auto) name = (*type).getName();
     decltype(auto) name_const = std::as_const((*type)).getName();
 
-    EXPECT_EQ(name, Name{default_name});
-    EXPECT_EQ(name_const, Name{default_name});
+    EXPECT_EQ(name, default_name);
+    EXPECT_EQ(name_const, default_name);
 
-    name = Name{default_name_change};
+    name = default_name_change;
     name = (*type).getName();
 
-    EXPECT_EQ(name, Name{default_name_change});
+    EXPECT_EQ(name, default_name_change);
 }
 
 TEST_F(Name_Fixture, Access_by_trait_accessName_with_CustomAccessName) {
@@ -63,11 +70,11 @@ TEST_F(Name_Fixture, Access_by_trait_accessName_with_CustomAccessName) {
     decltype(auto) name = traits::accessName::get((*type));
     decltype(auto) name_const = traits::accessName::get(std::as_const((*type)));
 
-    EXPECT_EQ(name, Name{default_name});
-    EXPECT_EQ(name_const, Name{default_name});
+    EXPECT_EQ(name, default_name);
+    EXPECT_EQ(name_const, default_name);
 
-    name = Name{default_name_change};
+    name = default_name_change;
     name = traits::accessName::get((*type));
 
-    EXPECT_EQ(name, Name{default_name_change});
+    EXPECT_EQ(name, default_name_change);
 }
