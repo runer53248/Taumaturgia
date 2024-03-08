@@ -84,7 +84,7 @@ struct Type {
 
 template <typename T> requires std::is_base_of_v<Type, T>
 struct traits::CustomAccessName<T> {
-    static auto get(auto& el) {
+    static decltype(auto) get(auto& el) {
         return el.any_name();
     }
 };
