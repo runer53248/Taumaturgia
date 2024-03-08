@@ -25,7 +25,7 @@ using UserStrategy = std::conditional_t<
     UserStrategy_<TYPE, T> >;
 
 template <typename TYPE, typename T>
-concept is_user_strategy = UserStrategable<UserStrategy, TYPE, T>;
+concept is_user_strategy = UserStrategable<UserStrategy, TYPE, T>;  // unused
 
 template <typename TYPE>
 struct UserStrategy_<TYPE, Default> {

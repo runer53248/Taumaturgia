@@ -34,6 +34,9 @@ static_assert(Property<Restoring>::value < Property<Naming>::value);
 static_assert(Property<Naming>::value < Property<UserPropertyAdapter<float>::type>::value);
 static_assert(Property<UserPropertyAdapter<float>::type>::value == Property<UserPropertyAdapter<int>::type>::value);
 static_assert(Property<UserPropertyAdapter<float>::type>::value == Property<UserPropertyAdapter<bool>::type>::value);
+
+using helpers::same_priority;
+
 static_assert(not same_priority<
               Property<UserPropertyAdapter<float>::type>,
               Property<UserPropertyAdapter<int>::type>>::value);

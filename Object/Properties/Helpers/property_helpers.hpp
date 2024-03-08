@@ -1,10 +1,10 @@
 #pragma once
+#include "PropertyData.hpp"
+
 #include <boost/mp11.hpp>
-#include "taged_list.hpp"
 using namespace boost::mp11;
 
-template <template <typename...> typename property>
-struct Property;
+namespace helpers {
 
 template <typename Base, typename L>
 struct build_into_impl;
@@ -28,24 +28,18 @@ struct build_into_impl<Base, L> {
 template <typename Base, typename L>
 using build_into_t = build_into_impl<Base, L>::type;
 
-// template <typename T>
-// using value_equal_zero = mp_bool<T::value == 0>;
-
 template <template <typename...> typename T>
-concept property_improvement = requires(T<tag>) {
+concept is_property_improvement = requires(T<tag>) {
     typename T<tag>::improvement_of;
-};
-
-template <typename T>
-concept property_improvement_tag = requires(T) {
-    typename T::improvement_of;
 };
 
 template <typename A, typename B>
 struct same_priority {
-    // constexpr static bool value =
-    //     std::is_same_v<A, B> or
-    //     ((A::value == B::value) and A::value != std::numeric_limits<size_t>::max());
+    template <typename T>
+    using improvement_type_of = typename T::template type<tag>::improvement_of;
+
+    template <typename T>
+    using type_of = typename T::template type<tag>;
 
     constinit const static auto value = []() -> bool {
         if constexpr (std::is_same_v<A, B>) {
@@ -55,42 +49,36 @@ struct same_priority {
             return (A::value == B::value);
         }
         // same_priority true if any improved unordered Property improvement_of same as other
-        if constexpr (property_improvement_tag<typename A::template type<tag>> and property_improvement_tag<typename B::template type<tag>>) {
+        if constexpr (is_property_improvement<A::template type> and is_property_improvement<B::template type>) {
             return (std::is_same_v<
-                    typename A::template type<tag>::improvement_of,
-                    typename B::template type<tag>::improvement_of>);
+                    improvement_type_of<A>,
+                    improvement_type_of<B>>);
         }
-        if constexpr (property_improvement_tag<typename A::template type<tag>>) {
+        if constexpr (is_property_improvement<A::template type>) {
             return (std::is_same_v<
-                    typename A::template type<tag>::improvement_of,
-                    typename B::template type<tag>>);
+                    improvement_type_of<A>,
+                    type_of<B>>);
         }
-        if constexpr (property_improvement_tag<typename B::template type<tag>>) {
+        if constexpr (is_property_improvement<B::template type>) {
             return (std::is_same_v<
-                    typename A::template type<tag>,
-                    typename B::template type<tag>::improvement_of>);
+                    type_of<A>,
+                    improvement_type_of<B>>);
         }
         return false;
     }();
 };
 
-// template <typename A, typename B>
-// struct equivalent_priority {
-//     constexpr static bool value =
-//         (std::is_same_v<typename A::template type<tag>, typename B::template type<tag>>) or  // same Property or UserProperty (eg. UserProperty_<int, tag>)
-//         ((A::value == B::value) and A::value != std::numeric_limits<size_t>::max());       // same priority of known property
-// };
+// template <typename T>
+// using value_equal_zero = mp_bool<T::value == 0>;
 
 template <typename... PROPERTY_LISTS>
 using append_and_order_property_lists =
     mp_sort<
         // mp_remove_if< // will remove properties that have 0 value (are not in order_list)
-        // mp_unique<
         mp_unique_if<  //
             mp_append<
                 PROPERTY_LISTS...>,
             same_priority>,
-        // equivalent_priority>,
         // value_equal_zero>,
         mp_less>;
 
@@ -99,10 +87,19 @@ using create_ordered_property_list = append_and_order_property_lists<
     list<Property<properties>...>>;
 
 template <typename T>
+concept is_property_data = requires {
+    typename T::property_type;
+    typename T::base_type;
+    typename T::tags_list;
+    { T::name() } -> std::same_as<const char*>;
+
+    std::is_same_v<mp_clear<typename T::tags_list>, list<>>;
+};
+
+template <typename T>
 concept is_type_with_added_properties = requires {
     typename T::property_data;
-    typename T::property_data::base_type;
-    typename T::property_data::property_type;
+    requires is_property_data<typename T::property_data>;
 };
 
 template <typename T>
@@ -139,5 +136,7 @@ struct add_properties_impl {
             create_ordered_property_list<properties...>>>;
 };
 
+}  // namespace helpers
+
 template <typename T, template <typename...> typename... properties>
-using add_properties = add_properties_impl<T, properties...>::type;
+using add_properties = helpers::add_properties_impl<T, properties...>::type;

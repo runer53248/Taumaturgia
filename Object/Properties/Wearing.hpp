@@ -2,7 +2,7 @@
 #include <boost/mp11.hpp>
 #include "../Concepts/Types/Name.hpp"
 #include "../Strategies/WearStrategy.hpp"
-#include "PropertyData.hpp"
+#include "Helpers/PropertyData.hpp"
 
 namespace impl {
 constexpr char wearing_type_name[] = "Wearing";

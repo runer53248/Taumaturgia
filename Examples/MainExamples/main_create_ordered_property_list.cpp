@@ -5,6 +5,9 @@
 #include "../property_B.hpp"
 #include "Examples/preety_print.hpp"
 
+using helpers::same_priority;
+using helpers::create_ordered_property_list;
+
 int main() {
     std::cout << "A. 'create_ordered_property_list' examples:" << '\n'
               << '\n';

@@ -12,7 +12,7 @@ struct Property {
 private:
     // constinit const static auto index = mp_find<order_list, property<tag>>::value;
     constinit const static auto index = []() -> size_t {
-        if constexpr (property_improvement<property>) {
+        if constexpr (helpers::is_property_improvement<property>) {
             return mp_find<order_list, typename property<tag>::improvement_of>::value; // same priority for improved ordered properties
         } 
         return mp_find<order_list, property<tag>>::value;

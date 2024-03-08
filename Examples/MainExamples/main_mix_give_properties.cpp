@@ -16,6 +16,11 @@ static_assert(std::is_same_v<Type1, Type2>);
 static_assert(std::is_same_v<Type2, Type3>);
 static_assert(std::is_same_v<Type3, Type4>);
 
+using helpers::append_and_order_property_lists;
+using helpers::create_ordered_property_list;
+using helpers::is_type_with_added_properties;
+using helpers::Scheme;
+
 int main() {
     auto print = [](auto t) {
         using T = decltype(t);

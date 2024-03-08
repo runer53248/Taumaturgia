@@ -2,7 +2,7 @@
 #include <boost/mp11.hpp>
 #include "../Concepts/Types/Name.hpp"
 #include "../Strategies/AttackStrategy.hpp"
-#include "PropertyData.hpp"
+#include "Helpers/PropertyData.hpp"
 
 namespace impl {
 constexpr char damaging_type_name[] = "Damaging";

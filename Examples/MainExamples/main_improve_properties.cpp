@@ -2,6 +2,9 @@
 #include "../improved_types.hpp"
 #include "Examples/preety_print.hpp"
 
+using helpers::same_priority;
+using helpers::is_property_improvement;
+
 int main() {
     static_assert(Property<Damaging>::value == Property<impl::Damaging_>::value);
     static_assert(same_priority<Property<Damaging>, Property<impl::Damaging_>>::value);
@@ -11,10 +14,10 @@ int main() {
     static_assert(same_priority<Property<Damaging>, Property<DamagingImproved>>::value);
     static_assert(same_priority<Property<impl::Damaging_>, Property<DamagingImproved>>::value);
     std::cout << "build-in properties can be improved" << '\n';
-    std::cout << "Damaging priority = " << Property<Damaging>::value << " | improved = " << property_improvement<Damaging> << '\n';
-    std::cout << "impl::Damaging_ priority = " << Property<impl::Damaging_>::value << " | improved = " << property_improvement<impl::Damaging_> << '\n';
-    std::cout << "DamagingImproved priority = " << Property<DamagingImproved>::value << " | improved = " << property_improvement<DamagingImproved> << '\n';
-    std::cout << "DamagingImproved_ priority = " << Property<DamagingImproved_>::value << " | improved = " << property_improvement<DamagingImproved_> << '\n'
+    std::cout << "Damaging priority = " << Property<Damaging>::value << " | improved = " << is_property_improvement<Damaging> << '\n';
+    std::cout << "impl::Damaging_ priority = " << Property<impl::Damaging_>::value << " | improved = " << is_property_improvement<impl::Damaging_> << '\n';
+    std::cout << "DamagingImproved priority = " << Property<DamagingImproved>::value << " | improved = " << is_property_improvement<DamagingImproved> << '\n';
+    std::cout << "DamagingImproved_ priority = " << Property<DamagingImproved_>::value << " | improved = " << is_property_improvement<DamagingImproved_> << '\n'
               << '\n';
 
     // improvements of user properties
@@ -24,11 +27,11 @@ int main() {
     static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtectingImproved>>::value);    // ? same_priority value
     static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtectingImproved_2>>::value);  // ? same_priority value
     std::cout << "user properties can be improved" << '\n';
-    std::cout << "UserProtecting priority = " << Property<UserProtecting>::value << " | improved = " << property_improvement<UserProtecting> << '\n';
-    std::cout << "UserProtectingImproved priority = " << Property<UserProtectingImproved>::value << " | improved = " << property_improvement<UserProtectingImproved> << '\n';
-    std::cout << "UserProtectingImproved_ priority = " << Property<UserProtectingImproved_>::value << " | improved = " << property_improvement<UserProtectingImproved_> << '\n';
-    std::cout << "UserProtectingImproved_2 priority = " << Property<UserProtectingImproved_2>::value << " | improved = " << property_improvement<UserProtectingImproved_2> << '\n';
-    std::cout << "UserProtectingImproved_2_ priority = " << Property<UserProtectingImproved_2_>::value << " | improved = " << property_improvement<UserProtectingImproved_2_> << '\n'
+    std::cout << "UserProtecting priority = " << Property<UserProtecting>::value << " | improved = " << is_property_improvement<UserProtecting> << '\n';
+    std::cout << "UserProtectingImproved priority = " << Property<UserProtectingImproved>::value << " | improved = " << is_property_improvement<UserProtectingImproved> << '\n';
+    std::cout << "UserProtectingImproved_ priority = " << Property<UserProtectingImproved_>::value << " | improved = " << is_property_improvement<UserProtectingImproved_> << '\n';
+    std::cout << "UserProtectingImproved_2 priority = " << Property<UserProtectingImproved_2>::value << " | improved = " << is_property_improvement<UserProtectingImproved_2> << '\n';
+    std::cout << "UserProtectingImproved_2_ priority = " << Property<UserProtectingImproved_2_>::value << " | improved = " << is_property_improvement<UserProtectingImproved_2_> << '\n'
               << '\n';
 
     // UserProperty may have same priority value but are not considered same by same_priority struct

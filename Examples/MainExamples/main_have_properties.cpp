@@ -15,6 +15,8 @@ using FloatProperty = UserProperty<float, T>;
 
 // ? ----------------------------------------
 
+using helpers::Scheme;
+
 template <typename T, template <typename...> typename... properties>
 concept have_properties1 =
     mp_and<

@@ -22,6 +22,8 @@ static_assert(std::is_same_v<
               A<Element>,
               A<A<Element>>>);
 
+using helpers::build_into_t;
+
 int main() {
     std::cout << "C. 'build_into_t' from list examples:" << '\n'
               << '\n';

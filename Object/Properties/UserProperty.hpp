@@ -4,7 +4,7 @@
 #include "../Concepts/Typeable.hpp"
 #include "../Concepts/Types/Name.hpp"
 #include "../Strategies/UserStrategy.hpp"
-#include "PropertyData.hpp"
+#include "Helpers/PropertyData.hpp"
 
 namespace impl {
 constexpr char user_type_name[] = "UserProperty";
@@ -13,14 +13,15 @@ template <typename TYPE, typename T, typename... Args>
 struct UserProperty_ : T {
     template <typename TAG>
     using self = UserProperty_<TYPE, TAG, Args...>;  // make yourself one template argument type to satisfy PropertyData
-    using property_data = PropertyData<user_type_name, self, T>;
+    using property_data = PropertyData<user_type_name, self, T, Args...>; // ? should add TYPE into PropertyData?
 #ifdef USER_PROPERTY_SELF_AWARE
-    using improvement_of = self<T>;
+    using improvement_of = self<T>;  // will act like same type if TYPE and Args are same
 #endif
+    using hold_type = TYPE;  // unused
 
     UserProperty_() = default;
 
-    // for ordered UserProperty_ (require name)
+    // for ordered UserProperty_ (require T have name property)
 
     template <typename... INFO>
         requires(std::is_constructible_v<TYPE, INFO...> and sizeof...(INFO) > 0)
@@ -54,7 +55,7 @@ struct UserProperty_ : T {
     UserProperty_(const Name& name, [[maybe_unused]] const std::variant<V...>& type, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
-    // for unordered UserProperty_ (can exist before TYPE accuire name property)
+    // for unordered UserProperty_ (can exist before T accuire name property)
 
     template <typename... INFO>
         requires(std::is_constructible_v<TYPE, INFO...> and sizeof...(INFO) > 0)
