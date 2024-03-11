@@ -10,18 +10,18 @@ struct Element_name {
 
 struct Element_name_hp {
     Name name{};
-    Health hp{100};
+    Health hp{};
 };
 
 struct Element_name_hp_dmg : Element_name_hp {
-    Damage dmg{1};
+    Damage dmg{};
 };
 
 struct Element_hp_name {
     Element_hp_name(const Name& name, const Health& hp)  // name must always be the first argument
         : hp{hp}, name{name} {}
 
-    Health hp{100};
+    Health hp{};
     Name name{};
 };
 
@@ -51,11 +51,13 @@ int main() {
     std::cout << "1) add_properties<Empty, Naming, Protecting, Damaging, Living, Protecting, Damaging, Living> - will remove duplication and order properties" << '\n'
               << '\n';
 
-    using type_1 = add_properties<Empty, Naming, Damaging, Living, Protecting, Damaging, Living>;
-    using type_2 = add_properties<Element_name, Naming, Protecting, Damaging, Living, Protecting, Damaging, Living>;
-    using type_3 = add_properties<Element_name_hp, Naming, Protecting, Damaging, Living, Protecting, Damaging, Living>;
-    using type_4 = add_properties<Element_name_hp_dmg, Naming, Protecting, Damaging, Living, Protecting, Damaging, Living>;
-    using type_5 = add_properties<Element_hp_name, Naming, Protecting, Damaging, Living, Protecting, Damaging, Living>;
+    using p_list = properties_list<Naming, Damaging, Living, Protecting, Damaging, Living>;
+
+    using type_1 = p_list::add_properties<Empty>;
+    using type_2 = p_list::add_properties<Element_name>;
+    using type_3 = p_list::add_properties<Element_name_hp>;
+    using type_4 = p_list::add_properties<Element_name_hp_dmg>;
+    using type_5 = p_list::add_properties<Element_hp_name>;
 
     auto create_type = []<typename T>(T) {
         auto type = T{
@@ -83,7 +85,7 @@ int main() {
         default_name,        // own name as first argument
         default_protection,  //
         default_health,      // own hp moved at end
-        default_damage,      // own dmg moved
+        default_damage,      // own dmg moved at end
     };
     std::cout << "result type:   " << name<type_4>() << '\n';
     print_object(Object{type4});

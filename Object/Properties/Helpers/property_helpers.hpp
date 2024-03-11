@@ -140,3 +140,9 @@ struct add_properties_impl {
 
 template <typename T, template <typename...> typename... properties>
 using add_properties = helpers::add_properties_impl<T, properties...>::type;
+
+template <template <typename...> typename... properties>
+struct properties_list {
+    template <typename T>
+    using add_properties = ::add_properties<T, properties...>;
+};
