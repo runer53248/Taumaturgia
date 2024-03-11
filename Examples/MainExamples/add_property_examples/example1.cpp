@@ -25,12 +25,90 @@ struct Element_hp_name {
     Name name{};
 };
 
+const auto default_name = Name{"Element"};
+const auto default_health = Health{50};
+const auto default_damage = Damage{50};
+const auto default_protection = Protection{15, BodyLocation::Arms};
+
+template <auto F, typename... T, typename... Args>
+auto templated_call(Args&&... args) {
+    return F.template operator()<T...>(std::forward<Args>(args)...);
+}
+
+int main() {
+    std::cout << "add_properties example1" << '\n'
+              << '\n';
+
+    std::cout << "p_list::add_properties (and add_properties) removes duplications and orders properties" << '\n'
+              << '\n';
+
+    std::cout << "p_list = properties_list<Naming, Damaging, Living, Protecting, Damaging, Living>" << '\n'
+              << '\n';
+    using p_list = properties_list<Naming, Damaging, Living, Protecting, Damaging, Living>;
+
+    using base_1 = Empty;
+    using base_2 = Element_name;
+    using base_3 = Element_name_hp;
+    using base_4 = Element_name_hp_dmg;
+    using base_5 = Element_hp_name;
+    using base_6 = add_properties<Element_name, Damaging>;
+
+    auto create_type = []<typename T>() {
+        return p_list::add_properties<T>{
+            default_name,
+            default_health,
+            default_damage,
+            default_protection};
+    };
+
+    auto print_type = []<typename BASE, typename TYPE>(TYPE&& tp) {
+        std::cout << "base type:   " << name<BASE>() << '\n';
+        std::cout << "result type: " << name<TYPE>() << '\n';
+        print_object(Object{tp});
+    };
+
+    auto type1 = templated_call<create_type, base_1>();
+    templated_call<print_type, base_1>(type1);
+
+    auto type2 = templated_call<create_type, base_2>();
+    templated_call<print_type, base_1>(type2);
+
+    auto type3 = p_list::add_properties<base_3>{
+        default_name,        // own name as first argument
+        default_damage,      //
+        default_protection,  //
+        default_health,      // own hp moved at end of c-tor
+    };
+    templated_call<print_type, base_3>(type3);
+
+    auto type4 = p_list::add_properties<base_4>{
+        default_name,        // own name as first argument
+        default_protection,  //
+        default_health,      // own hp moved at end of c-tor - order depends on base struct c-tor order now
+        default_damage,      // own dmg moved at end
+    };
+    templated_call<print_type, base_4>(type4);
+
+    auto type5 = p_list::add_properties<base_5>{
+        default_name,        // own name as first argument
+        default_damage,      //
+        default_protection,  //
+        default_health,      // own hp moved at end of c-tor
+    };
+    templated_call<print_type, base_5>(type5);
+
+    auto type6 = templated_call<create_type, base_6>();  // all properties but name given by add_properties feature - correct order in c-tor
+    templated_call<print_type, base_6>(type6);
+
+    return 0;
+}
+
 using type_A = Living<Damaging<Element_name>>;
 using type_B = add_properties<Element_name, Damaging, Living, Damaging, Damaging, Living, Damaging>;
 using type_C = add_properties<Element_name, Damaging, Living, Damaging, Damaging, Living>;
 using type_D = add_properties<Element_name, Damaging, Damaging, Living, Damaging, Damaging, Damaging>;
-using type_E = add_properties<Element_name, Damaging, Damaging, Living, Damaging, Damaging>;
-using type_F = add_properties<Element_name, Living, Damaging>;
+using type_E = add_properties<Element_name, Damaging, Living, Damaging>;
+using type_F = add_properties<Element_name, Living, Damaging, Living>;
 
 // checks that show reordering and removing of duplicated Properties
 static_assert(std::is_same_v<type_B, type_A>);
@@ -38,66 +116,3 @@ static_assert(std::is_same_v<type_C, type_A>);
 static_assert(std::is_same_v<type_D, type_A>);
 static_assert(std::is_same_v<type_E, type_A>);
 static_assert(std::is_same_v<type_F, type_A>);
-
-const auto default_name = Name{"Element"};
-const auto default_health = Health{50};
-const auto default_damage = Damage{50};
-const auto default_protection = Protection{15, BodyLocation::Arms};
-
-int main() {
-    std::cout << "'add_properties' example:" << '\n'
-              << '\n';
-
-    std::cout << "1) add_properties<Empty, Naming, Protecting, Damaging, Living, Protecting, Damaging, Living> - will remove duplication and order properties" << '\n'
-              << '\n';
-
-    using p_list = properties_list<Naming, Damaging, Living, Protecting, Damaging, Living>;
-
-    using type_1 = p_list::add_properties<Empty>;
-    using type_2 = p_list::add_properties<Element_name>;
-    using type_3 = p_list::add_properties<Element_name_hp>;
-    using type_4 = p_list::add_properties<Element_name_hp_dmg>;
-    using type_5 = p_list::add_properties<Element_hp_name>;
-
-    auto create_type = []<typename T>(T) {
-        auto type = T{
-            default_name,
-            default_health,
-            default_damage,
-            default_protection};
-        std::cout << "result type:   " << name<T>() << '\n';
-        print_object(Object{type});
-    };
-
-    create_type(type_1{});
-    create_type(type_2{});
-
-    auto type3 = type_3{
-        default_name,        // own name as first argument
-        default_damage,      //
-        default_protection,  //
-        default_health,      // own hp moved at end
-    };
-    std::cout << "result type:   " << name<type_3>() << '\n';
-    print_object(Object{type3});
-
-    auto type4 = type_4{
-        default_name,        // own name as first argument
-        default_protection,  //
-        default_health,      // own hp moved at end
-        default_damage,      // own dmg moved at end
-    };
-    std::cout << "result type:   " << name<type_4>() << '\n';
-    print_object(Object{type4});
-
-    auto type5 = type_5{
-        default_name,        // own name as first argument
-        default_damage,      //
-        default_protection,  //
-        default_health,      // own hp moved at end
-    };
-    std::cout << "result type:   " << name<type_5>() << '\n';
-    print_object(Object{type5});
-
-    return 0;
-}
