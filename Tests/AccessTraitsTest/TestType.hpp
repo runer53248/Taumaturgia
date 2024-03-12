@@ -58,6 +58,6 @@ static_assert(not same_priority<
 //     UserProperty<int>,
 //     UserProperty<bool>)
 
-std::ostream& operator<<(std::ostream& stream, const Name& name) {
+constexpr auto& operator<<(std::ostream& stream, const Name& name) {
     return stream << std::string(name);
 }

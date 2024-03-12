@@ -3,7 +3,7 @@
 #include "../../Object/Concepts/Types/Duration.hpp"
 #include "PrintDurationType.hpp"
 
-auto& operator<<(std::ostream& out, const Duration& duration) {
+constexpr auto& operator<<(std::ostream& out, const Duration& duration) {
     auto value = duration.value();
     if (value == 1) {
         out << " (" << value << " " << duration.type() << ") ";

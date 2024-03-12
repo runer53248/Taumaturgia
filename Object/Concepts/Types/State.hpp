@@ -6,7 +6,7 @@ struct State {
     constexpr explicit State(EffectState state) noexcept
         : state_{state} {}
 
-    auto operator<=>(const State& other) const noexcept = default;
+    constexpr auto operator<=>(const State& other) const noexcept = default;
 
     auto& effectState() & noexcept { return state_; }
     auto effectState() && noexcept { return state_; }

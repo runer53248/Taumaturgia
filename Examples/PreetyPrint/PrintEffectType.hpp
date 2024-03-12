@@ -43,7 +43,6 @@ constexpr const char* toString(EffectType effect) noexcept {
     }
 }
 
-auto& operator<<(std::ostream& out, EffectType effect) {
-    out << " [" << toString(effect) << "]";
-    return out;
+constexpr auto& operator<<(std::ostream& out, EffectType effect) {
+    return out << " [" << toString(effect) << "]";
 }

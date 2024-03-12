@@ -13,7 +13,7 @@ struct Damage {
     constexpr Damage(int value, DamageType type, Effect effect)
         : value_{value}, type_{type}, effect_{effect} {}
 
-    auto operator<=>(const Damage& rhs) const = default;
+    constexpr auto operator<=>(const Damage& rhs) const = default;
 
     auto& value() & { return value_; }
     auto value() && { return value_; }

@@ -8,7 +8,7 @@ struct Duration {
     constexpr Duration(size_t value, DurationType type) noexcept
         : value_{value}, type_{type} {}
 
-    auto operator<=>(const Duration& other) const noexcept = default;
+    constexpr auto operator<=>(const Duration& other) const noexcept = default;
 
     auto& value() & noexcept { return value_; }
     auto value() && noexcept { return value_; }

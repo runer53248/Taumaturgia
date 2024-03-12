@@ -14,7 +14,7 @@ struct EffectContainer {
     constexpr EffectContainer(std::initializer_list<Effect> effects)
         : effects_{effects} {}
 
-    auto operator<=>(const EffectContainer&) const = default;
+    constexpr auto operator<=>(const EffectContainer&) const = default;
 
     auto begin() { return effects_.begin(); }
     auto end() { return effects_.end(); }

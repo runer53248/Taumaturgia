@@ -30,8 +30,8 @@ struct Effect {
     constexpr explicit Effect(EffectType attackEffect) noexcept
         : effectType_{attackEffect} {}
 
-    auto operator<=>(const Effect& other) const noexcept = default;
-    bool operator==(const Effect& other) const noexcept = default;
+    constexpr auto operator<=>(const Effect& other) const noexcept = default;
+    constexpr bool operator==(const Effect& other) const noexcept = default;
     constexpr bool operator==(const EffectType& other) const noexcept {
         return effectType_ == other;
     }

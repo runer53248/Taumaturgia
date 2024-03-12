@@ -35,7 +35,7 @@ protected:
     }
 };
 
-std::ostream& operator<<(std::ostream& stream, const Name& name) {
+constexpr auto& operator<<(std::ostream& stream, const Name& name) {
     return stream << std::string(name);
 }
 

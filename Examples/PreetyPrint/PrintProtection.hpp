@@ -5,7 +5,7 @@
 #include "PrintBodyLocation.hpp"
 #include "PrintEffectType.hpp"
 
-std::ostream& operator<<(std::ostream& out, const ArmorClass& ac) {
+constexpr auto& operator<<(std::ostream& out, const ArmorClass& ac) {
     out << "(Ac: " << ac.armorClass() << " to " << ac.location() << ") ";
     if (not ac.protectEffects().empty()) {
         out << "(protection";
@@ -17,7 +17,7 @@ std::ostream& operator<<(std::ostream& out, const ArmorClass& ac) {
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const Protection& protection) {
+constexpr auto& operator<<(std::ostream& out, const Protection& protection) {
     auto ac = protection.armorClass();
     auto location = protection.location();
     auto effects = protection.protectEffects();

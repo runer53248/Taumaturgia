@@ -21,7 +21,7 @@ struct CureHealth {
     constexpr CureHealth(int value, const EffectContainer& effects) noexcept
         : value_{value}, effects_{effects} {}
 
-    auto operator<=>(const CureHealth& other) const noexcept = default;
+    constexpr auto operator<=>(const CureHealth& other) const noexcept = default;
 
     void value(int value, CureValueType type) noexcept {
         value_ = value;

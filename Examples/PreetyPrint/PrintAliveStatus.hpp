@@ -15,7 +15,6 @@ constexpr const char* toString(AliveStatus status) noexcept {
     }
 }
 
-auto& operator<<(std::ostream& out, AliveStatus status) {
-    out << " [" << toString(status) << "] ";
-    return out;
+constexpr auto& operator<<(std::ostream& out, AliveStatus status) {
+    return out << " [" << toString(status) << "] ";
 }

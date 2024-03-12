@@ -21,7 +21,6 @@ constexpr const char* toString(BodyLocation location) noexcept {
     }
 }
 
-auto& operator<<(std::ostream& out, BodyLocation location) {
-    out << toString(location);
-    return out;
+constexpr auto& operator<<(std::ostream& out, BodyLocation location) {
+    return out << toString(location);
 }

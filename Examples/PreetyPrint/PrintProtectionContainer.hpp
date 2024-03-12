@@ -2,7 +2,7 @@
 #include <iostream>
 #include "PrintProtection.hpp"
 
-std::ostream& operator<<(std::ostream& out, const ProtectionContainer& armorWear) {
+constexpr auto& operator<<(std::ostream& out, const ProtectionContainer& armorWear) {
     out << "(armor class: " << armorWear.value() << ") ";
 
     if (not armorWear.protectEffects().empty()) {

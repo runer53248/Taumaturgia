@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../../Object/Concepts/Types/Health.hpp"
 
-std::ostream& operator<<(std::ostream& out, const Health& health) {
+constexpr auto& operator<<(std::ostream& out, const Health& health) {
     out << health.value() << " hp / " << health.maxValue() << " hp";
     if (not health.effects().empty()) {
         out << " {Effects: ";

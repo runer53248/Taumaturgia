@@ -5,14 +5,14 @@
 
 [[maybe_unused]] struct {
     template <typename T>
-    auto operator()(std::reference_wrapper<T>&& value) {
+    auto operator()(std::reference_wrapper<T>&& value) const {
         std::cout << '\n';
         return std::optional{value};
     }
 } print_new_line;
 
 struct {
-    auto operator()(WrappedType<Health> auto&& value) {
+    auto operator()(WrappedType<Health> auto&& value) const {
         auto& hp = value.get();
         if constexpr (not std::is_const_v<std::remove_reference_t<decltype(hp)>>) {
             std::cout << "[&]";  // value is reference_wrapper to non const type - can be changed
@@ -36,7 +36,7 @@ struct {
 } print_hp;
 
 struct {
-    auto operator()(WrappedType<CureHealth> auto&& value) {
+    auto operator()(WrappedType<CureHealth> auto&& value) const {
         auto& cureHealth = value.get();
         if constexpr (not std::is_const_v<std::remove_reference_t<decltype(cureHealth)>>) {
             std::cout << "[&]";
@@ -51,7 +51,7 @@ template <typename T>
 concept WrappedProtectionOrArmorClass = WrappedType<T, ArmorClass> or WrappedType<T, Protection>;
 
 struct {
-    auto operator()(WrappedProtectionOrArmorClass auto&& value) {
+    auto operator()(WrappedProtectionOrArmorClass auto&& value) const {
         auto& armor = value.get();  // can be either Protection or ArmorClass
         if constexpr (not std::is_const_v<std::remove_reference_t<decltype(armor)>>) {
             std::cout << "[&]";
@@ -72,7 +72,7 @@ struct {
 } print_protection;
 
 struct {
-    auto operator()(WrappedType<ProtectionContainer> auto&& value) {
+    auto operator()(WrappedType<ProtectionContainer> auto&& value) const {
         auto& armorWear = value.get();
         if constexpr (not std::is_const_v<std::remove_reference_t<decltype(armorWear)>>) {
             std::cout << "[&]";
@@ -93,7 +93,7 @@ struct {
 } print_wear;
 
 struct {
-    auto operator()(WrappedType<Damage> auto&& value) {
+    auto operator()(WrappedType<Damage> auto&& value) const {
         auto& damage = value.get();
         if constexpr (not std::is_const_v<std::remove_reference_t<decltype(damage)>>) {
             std::cout << "[&]";
@@ -107,7 +107,7 @@ struct {
 } print_dmg;
 
 struct {
-    auto operator()(WrappedType<EffectTypeContainer> auto&& value) {
+    auto operator()(WrappedType<EffectTypeContainer> auto&& value) const {
         auto& effects = value.get();
         if constexpr (not std::is_const_v<std::remove_reference_t<decltype(effects)>>) {
             std::cout << "[&]";

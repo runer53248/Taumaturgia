@@ -12,7 +12,7 @@ struct Health {
     constexpr Health(int value, const EffectContainer& effects) noexcept
         : value_{value}, effects_{effects} {}
 
-    auto operator<=>(const Health& other) const noexcept = default;
+    constexpr auto operator<=>(const Health& other) const noexcept = default;
 
     void value(int value) noexcept {
         if (value > MAX_VALUE) {

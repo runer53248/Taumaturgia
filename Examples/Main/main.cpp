@@ -139,7 +139,7 @@ void simple() {
 struct base {};
 using CureHealthType = UserProperty<int, UserProperty<CureValueType, UserProperty<EffectContainer, base>>>;
 
-std::ostream& operator<<(std::ostream& out, const EffectContainer& effectContainer) {
+constexpr auto& operator<<(std::ostream& out, const EffectContainer& effectContainer) {
     if (not effectContainer.empty()) {
         out << " {Effects: ";
         for (const auto& effect : effectContainer) {

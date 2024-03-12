@@ -6,9 +6,9 @@
 #include "PrintEffectState.hpp"
 #include "PrintEffectType.hpp"
 
-std::ostream& operator<<(std::ostream& out, const Damage& damage) {
-    std::cout << "(Damage: " << damage.value() << damage.type() << damage.effect().effectType() << damage.effect().duration();
-    std::cout << damage.effect().state().effectState();
-    std::cout << ")";
+auto& operator<<(std::ostream& out, const Damage& damage) {
+    out << "(Damage: " << damage.value() << damage.type() << damage.effect().effectType() << damage.effect().duration();
+    out << damage.effect().state().effectState();
+    out << ")";
     return out;
 }
