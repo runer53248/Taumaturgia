@@ -18,6 +18,7 @@ struct Element_name_hp_dmg : Element_name_hp {
 };
 
 struct Element_hp_name {
+    Element_hp_name() = delete;                          // by defalt deleted anyway - just show the point
     Element_hp_name(const Name& name, const Health& hp)  // name must always be the first argument
         : hp{hp}, name{name} {}
 
@@ -61,6 +62,13 @@ int main() {
             default_protection};
     };
 
+    auto fill_type = [](auto&& type) {
+        traits::accessName::get(type) = default_name;
+        traits::accessHealth::get(type) = default_health;
+        traits::accessDamage::get(type) = default_damage;
+        traits::accessProtection::get(type) = default_protection;
+    };
+
     auto print_type = []<typename BASE, typename TYPE>(TYPE&& tp) {
         std::cout << "base type:   " << name<BASE>() << '\n';
         std::cout << "result type: " << name<TYPE>() << '\n';
@@ -71,7 +79,7 @@ int main() {
     templated_call<print_type, base_1>(type1);
 
     auto type2 = templated_call<create_type, base_2>();
-    templated_call<print_type, base_1>(type2);
+    templated_call<print_type, base_2>(type2);
 
     auto type3 = p_list::add_properties<base_3>{
         default_name,        // own name as first argument
@@ -99,6 +107,32 @@ int main() {
 
     auto type6 = templated_call<create_type, base_6>();  // all properties but name given by add_properties feature - correct order in c-tor
     templated_call<print_type, base_6>(type6);
+
+    fill_type(type1);
+    fill_type(type2);
+    fill_type(type3);
+    fill_type(type4);
+    fill_type(type5);
+    fill_type(type6);
+
+    static_assert(std::is_same_v<decltype(type1), Living<Damaging<Protecting<Naming<base_1>>>>>);
+    static_assert(std::is_same_v<decltype(type1), add_properties<base_1, Naming, Living, Damaging, Protecting>>);
+    static_assert(std::is_same_v<decltype(type2), Living<Damaging<Protecting<base_2>>>>);
+    static_assert(std::is_same_v<decltype(type2), add_properties<base_2, Living, Damaging, Protecting>>);
+    static_assert(std::is_same_v<decltype(type3), Damaging<Protecting<base_3>>>);
+    static_assert(std::is_same_v<decltype(type3), add_properties<base_3, Damaging, Protecting>>);
+    static_assert(std::is_same_v<decltype(type4), Protecting<base_4>>);
+    static_assert(std::is_same_v<decltype(type4), add_properties<base_4, Protecting>>);
+    static_assert(std::is_same_v<decltype(type5), Damaging<Protecting<base_5>>>);
+    static_assert(std::is_same_v<decltype(type5), add_properties<base_5, Damaging, Protecting>>);
+    static_assert(std::is_same_v<decltype(type6), Living<Damaging<Protecting<Element_name>>>>);
+    static_assert(std::is_same_v<decltype(type6), add_properties<base_6, Living, Protecting>>);
+
+    static_assert(sizeof(type1) == sizeof(type2));
+    static_assert(sizeof(type2) == sizeof(type3));
+    static_assert(sizeof(type3) == sizeof(type4));
+    static_assert(sizeof(type4) == sizeof(type5));
+    static_assert(sizeof(type5) == sizeof(type6));
 
     return 0;
 }
