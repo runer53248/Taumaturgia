@@ -62,13 +62,6 @@ int main() {
             default_protection};
     };
 
-    auto fill_type = [](auto&& type) {
-        traits::accessName::get(type) = default_name;
-        traits::accessHealth::get(type) = default_health;
-        traits::accessDamage::get(type) = default_damage;
-        traits::accessProtection::get(type) = default_protection;
-    };
-
     auto print_type = []<typename BASE, typename TYPE>(TYPE&& tp) {
         std::cout << "base type:   " << name<BASE>() << '\n';
         std::cout << "result type: " << name<TYPE>() << '\n';
@@ -107,6 +100,13 @@ int main() {
 
     auto type6 = templated_call<create_type, base_6>();  // all properties but name given by add_properties feature - correct order in c-tor
     templated_call<print_type, base_6>(type6);
+
+    auto fill_type = [](auto&& type) {
+        traits::accessName::get(type) = default_name;
+        traits::accessHealth::get(type) = default_health;
+        traits::accessDamage::get(type) = default_damage;
+        traits::accessProtection::get(type) = default_protection;
+    };
 
     fill_type(type1);
     fill_type(type2);
