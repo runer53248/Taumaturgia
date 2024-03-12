@@ -13,6 +13,9 @@ CreateGetAccessableConcept_convertible(Name, std::string);
 CreateCustomAccessableConcept_convertible(Name, std::string);
 CreateUserTypeAccessableConcept_convertible(Name, Name, std::string);
 
+#ifdef ACCESS_TRAIT_MACRO
+CreateAccessTrait(Name, name, Name);
+#else
 struct accessName {
     static auto& get(NameAccessable auto& el) {
         return el.name;
@@ -35,5 +38,6 @@ struct accessName {
         return el.template getType<Name>();
     }
 };
+#endif
 
 }  // namespace traits

@@ -12,6 +12,9 @@ CreateGetAccessableConcept(Health, Health);
 CreateCustomAccessableConcept(Health, Health);
 CreateUserTypeAccessableConcept(Health, Health);
 
+#ifdef ACCESS_TRAIT_MACRO
+CreateAccessTrait(Health, hp, Health);
+#else
 struct accessHealth {
     static auto& get(HealthAccessable auto& el) {
         return el.hp;
@@ -34,5 +37,6 @@ struct accessHealth {
         return el.template getType<Health>();
     }
 };
+#endif
 
 }  // namespace traits

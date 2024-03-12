@@ -12,6 +12,9 @@ CreateGetAccessableConcept(Protection, Protection);
 CreateCustomAccessableConcept(Protection, Protection);
 CreateUserTypeAccessableConcept(Protection, Protection);
 
+#ifdef ACCESS_TRAIT_MACRO
+CreateAccessTrait(Protection, protection, Protection);
+#else
 struct accessProtection {
     static auto& get(ProtectionAccessable auto& el) {
         return el.protection;
@@ -34,5 +37,6 @@ struct accessProtection {
         return el.template getType<Protection>();
     }
 };
+#endif
 
 }  // namespace traits

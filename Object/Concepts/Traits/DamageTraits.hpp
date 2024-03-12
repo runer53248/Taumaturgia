@@ -12,6 +12,9 @@ CreateGetAccessableConcept(Damage, Damage);
 CreateCustomAccessableConcept(Damage, Damage);
 CreateUserTypeAccessableConcept(Damage, Damage);
 
+#ifdef ACCESS_TRAIT_MACRO
+CreateAccessTrait(Damage, dmg, Damage);
+#else
 struct accessDamage {
     static auto& get(DamageAccessable auto& el) {
         return el.dmg;
@@ -34,5 +37,6 @@ struct accessDamage {
         return el.template getType<Damage>();
     }
 };
+#endif
 
 }  // namespace traits

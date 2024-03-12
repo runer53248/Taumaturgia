@@ -12,6 +12,9 @@ CreateGetAccessableConcept(ArmorWear, ProtectionContainer);
 CreateCustomAccessableConcept(ArmorWear, ProtectionContainer);
 CreateUserTypeAccessableConcept(ArmorWear, ProtectionContainer);
 
+#ifdef ACCESS_TRAIT_MACRO
+CreateAccessTrait(ArmorWear, armorWear, ProtectionContainer);
+#else
 struct accessArmorWear {
     static auto& get(ArmorWearAccessable auto& el) {
         return el.armorWear;
@@ -34,5 +37,6 @@ struct accessArmorWear {
         return el.template getType<ProtectionContainer>();
     }
 };
+#endif
 
 }  // namespace traits

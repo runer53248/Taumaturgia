@@ -18,6 +18,8 @@ add_compile_options(
     -Wno-missing-braces
 )
 
+add_compile_definitions(ACCESS_TRAIT_MACRO)
+
 include_directories(${Taumaturgia_SOURCE_DIR})
 
 enable_testing()

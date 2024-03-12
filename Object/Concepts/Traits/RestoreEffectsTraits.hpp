@@ -12,6 +12,9 @@ CreateGetAccessableConcept(RestoreEffects, EffectTypeContainer);
 CreateCustomAccessableConcept(RestoreEffects, EffectTypeContainer);
 CreateUserTypeAccessableConcept(RestoreEffects, EffectTypeContainer);
 
+#ifdef ACCESS_TRAIT_MACRO
+CreateAccessTrait(RestoreEffects, restoreEffects, EffectTypeContainer);
+#else
 struct accessRestoreEffects {
     static auto& get(RestoreEffectsAccessable auto& el) {
         return el.restoreEffects;
@@ -34,5 +37,6 @@ struct accessRestoreEffects {
         return el.template getType<EffectTypeContainer>();
     }
 };
+#endif
 
 }  // namespace traits
