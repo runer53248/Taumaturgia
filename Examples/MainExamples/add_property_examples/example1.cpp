@@ -78,7 +78,7 @@ int main() {
         default_name,        // own name as first argument
         default_damage,      //
         default_protection,  //
-        default_health,      // own hp moved at end of c-tor
+        default_health       // own hp moved at end of c-tor
     };
     templated_call<print_type, base_3>(type3);
 
@@ -86,7 +86,7 @@ int main() {
         default_name,        // own name as first argument
         default_protection,  //
         default_health,      // own hp moved at end of c-tor - order depends on base struct c-tor order now
-        default_damage,      // own dmg moved at end
+        default_damage       // own dmg moved at end
     };
     templated_call<print_type, base_4>(type4);
 
@@ -94,7 +94,7 @@ int main() {
         default_name,        // own name as first argument
         default_damage,      //
         default_protection,  //
-        default_health,      // own hp moved at end of c-tor
+        default_health       // own hp moved at end of c-tor
     };
     templated_call<print_type, base_5>(type5);
 
