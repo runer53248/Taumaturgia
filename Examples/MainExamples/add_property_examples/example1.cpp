@@ -129,10 +129,10 @@ int main() {
     static_assert(std::is_same_v<decltype(type6), add_properties<base_6, Living, Protecting>>);
 
     static_assert(sizeof(type1) == sizeof(type2));
-    static_assert(sizeof(type2) == sizeof(type3));
-    static_assert(sizeof(type3) == sizeof(type4));
-    static_assert(sizeof(type4) == sizeof(type5));
-    static_assert(sizeof(type5) == sizeof(type6));
+    static_assert(sizeof(type1) == sizeof(type3));
+    static_assert(sizeof(type1) == sizeof(type4));
+    static_assert(sizeof(type1) == sizeof(type5));
+    static_assert(sizeof(type1) == sizeof(type6));
 
     return 0;
 }
