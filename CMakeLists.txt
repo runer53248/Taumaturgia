@@ -14,7 +14,6 @@ add_compile_options(
     -pedantic
     -Werror
 
-    -Wno-defaulted-function-deleted
     -Wno-missing-braces
 )
 
