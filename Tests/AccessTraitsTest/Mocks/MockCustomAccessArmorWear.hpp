@@ -26,5 +26,5 @@ struct traits::CustomAccessArmorWear {
 };
 
 template <typename T>
-using CustomMock = traits::CustomAccessArmorWear<T>;
+using CustomAccessArmorWearMock = traits::CustomAccessArmorWear<T>;
 #endif

@@ -16,7 +16,7 @@ public:
     EffectTypeContainer default_restoreEffects_change;
     std::unique_ptr<TestType> type{nullptr};
 
-    CustomMock<TestType> customMock;
+    CustomAccessRestoreEffectsMock<TestType> customMock;
 
 protected:
     void SetUp() override {
@@ -34,13 +34,13 @@ protected:
             /*int*/ default_int,
             /*bool*/ default_bool);
 
-        CustomMock<TestType>::mock = &customMock;
+        CustomAccessRestoreEffectsMock<TestType>::mock = &customMock;
     }
 
     void TearDown() override {
         type = nullptr;
 
-        CustomMock<TestType>::mock = nullptr;
+        CustomAccessRestoreEffectsMock<TestType>::mock = nullptr;
     }
 };
 

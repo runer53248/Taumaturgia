@@ -16,7 +16,7 @@ public:
     Protection default_protection_change;
     std::unique_ptr<TestType> type{nullptr};
 
-    CustomMock<TestType> customMock;
+    CustomAccessProtectionMock<TestType> customMock;
 
 protected:
     void SetUp() override {
@@ -34,13 +34,13 @@ protected:
             /*int*/ default_int,
             /*bool*/ default_bool);
 
-        CustomMock<TestType>::mock = &customMock;
+        CustomAccessProtectionMock<TestType>::mock = &customMock;
     }
 
     void TearDown() override {
         type = nullptr;
 
-        CustomMock<TestType>::mock = nullptr;
+        CustomAccessProtectionMock<TestType>::mock = nullptr;
     }
 };
 

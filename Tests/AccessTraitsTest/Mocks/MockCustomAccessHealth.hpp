@@ -26,5 +26,5 @@ struct traits::CustomAccessHealth {
 };
 
 template <typename T>
-using CustomMock = traits::CustomAccessHealth<T>;
+using CustomAccessHealthMock = traits::CustomAccessHealth<T>;
 #endif

@@ -16,7 +16,7 @@ public:
     Damage default_damage_change;
     std::unique_ptr<TestType> type{nullptr};
 
-    CustomMock<TestType> customMock;
+    CustomAccessDamageMock<TestType> customMock;
 
 protected:
     void SetUp() override {
@@ -34,13 +34,13 @@ protected:
             /*int*/ default_int,
             /*bool*/ default_bool);
 
-        CustomMock<TestType>::mock = &customMock;
+        CustomAccessDamageMock<TestType>::mock = &customMock;
     }
 
     void TearDown() override {
         type = nullptr;
 
-        CustomMock<TestType>::mock = nullptr;
+        CustomAccessDamageMock<TestType>::mock = nullptr;
     }
 };
 

@@ -16,7 +16,7 @@ public:
     Health default_hp_change;
     std::unique_ptr<TestType> type{nullptr};
 
-    CustomMock<TestType> customMock;
+    CustomAccessHealthMock<TestType> customMock;
 
 protected:
     void SetUp() override {
@@ -34,13 +34,13 @@ protected:
             /*int*/ default_int,
             /*bool*/ default_bool);
 
-        CustomMock<TestType>::mock = &customMock;
+        CustomAccessHealthMock<TestType>::mock = &customMock;
     }
 
     void TearDown() override {
         type = nullptr;
 
-        CustomMock<TestType>::mock = nullptr;
+        CustomAccessHealthMock<TestType>::mock = nullptr;
     }
 };
 

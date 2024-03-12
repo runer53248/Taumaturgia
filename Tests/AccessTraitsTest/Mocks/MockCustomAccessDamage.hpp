@@ -26,5 +26,5 @@ struct traits::CustomAccessDamage {
 };
 
 template <typename T>
-using CustomMock = traits::CustomAccessDamage<T>;
+using CustomAccessDamageMock = traits::CustomAccessDamage<T>;
 #endif

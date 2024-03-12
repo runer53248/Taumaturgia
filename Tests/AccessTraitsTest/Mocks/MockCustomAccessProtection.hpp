@@ -26,5 +26,5 @@ struct traits::CustomAccessProtection {
 };
 
 template <typename T>
-using CustomMock = traits::CustomAccessProtection<T>;
+using CustomAccessProtectionMock = traits::CustomAccessProtection<T>;
 #endif

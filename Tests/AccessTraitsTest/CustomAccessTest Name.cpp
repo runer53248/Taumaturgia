@@ -17,7 +17,7 @@ public:
     Name default_name_change;
     std::unique_ptr<TestType> type{nullptr};
 
-    CustomMock<TestType> customMock;
+    CustomAccessNameMock<TestType> customMock;
 
 protected:
     void SetUp() override {
@@ -40,13 +40,13 @@ protected:
         static_assert(traits::CustomNameAccessable<decltype(*type)>);
         static_assert(traits::CustomNameAccessable<decltype(std::as_const(*type))>);
 
-        CustomMock<TestType>::mock = &customMock;
+        CustomAccessNameMock<TestType>::mock = &customMock;
     }
 
     void TearDown() override {
         type = nullptr;
 
-        CustomMock<TestType>::mock = nullptr;
+        CustomAccessNameMock<TestType>::mock = nullptr;
     }
 };
 

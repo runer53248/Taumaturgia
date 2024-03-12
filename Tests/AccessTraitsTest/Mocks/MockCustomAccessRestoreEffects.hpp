@@ -25,5 +25,5 @@ struct traits::CustomAccessRestoreEffects {
 };
 
 template <typename T>
-using CustomMock = traits::CustomAccessRestoreEffects<T>;
+using CustomAccessRestoreEffectsMock = traits::CustomAccessRestoreEffects<T>;
 #endif

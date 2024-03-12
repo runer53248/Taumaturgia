@@ -28,5 +28,5 @@ struct traits::CustomAccessName {
 static_assert(traits::CustomNameAccessable<TestType>);
 
 template <typename T>
-using CustomMock = traits::CustomAccessName<T>;
+using CustomAccessNameMock = traits::CustomAccessName<T>;
 #endif
