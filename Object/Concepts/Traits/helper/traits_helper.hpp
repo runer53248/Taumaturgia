@@ -1,5 +1,7 @@
 #pragma once
 #include <type_traits>
+#include <utility>  // for as_const
+#include "same_as_ref.hpp"
 
 #define CreateAccessableConcept_convertible(NAME, MEMBER, TYPE)    \
     template <typename T>                                          \

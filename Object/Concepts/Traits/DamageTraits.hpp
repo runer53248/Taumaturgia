@@ -1,6 +1,4 @@
 #pragma once
-#include <utility>  // for as_const
-#include "helper/same_as_ref.hpp"
 #include "helper/traits_helper.hpp"
 
 struct Damage;
