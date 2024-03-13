@@ -1,20 +1,9 @@
 #pragma once
 
-void fillBackpack(auto& backpack) {
-#ifdef WITH_ADD_PROPERTIES
-    using weapon_1 = add_properties<Weapon, Damaging>;
-    using weapon_2 = Weapon;
-    using weapon_3 = CustomWeapon;
-    using weapon_4 = add_properties<CustomWeapon, Damaging>;
-    using weapon_5 = add_properties<DefaultWeapon, Damaging>;
-#else
-    using weapon_1 = Damaging<Weapon>;
-    using weapon_2 = Weapon;
-    using weapon_3 = CustomWeapon;
-    using weapon_4 = Damaging<CustomWeapon>;
-    using weapon_5 = Damaging<DefaultWeapon>;
-#endif
+#include "properties.hpp"
+#include "structs.hpp"
 
+void fillBackpack(auto& backpack) {
     backpack.emplace_back(weapon_1{
         Name{"SWORD"},
         Damage{16}});
@@ -36,11 +25,6 @@ void fillBackpack(auto& backpack) {
         Damage{32}});
 
 #ifdef WITH_ADD_PROPERTIES
-    using weapon_6 = add_properties<Weapon, Living, Healing, Living, Healing>;
-    using weapon_7 = add_properties<NoNameWeapon, Living, Healing, Living, Healing, Naming>;
-
-    static_assert(std::is_same_v<weapon_6, add_properties<Weapon, Living, Healing>>);
-
     auto gustav_2 = weapon_6(
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},
@@ -54,35 +38,18 @@ void fillBackpack(auto& backpack) {
         /*dmg*/ Damage{32},  // ? move damage here (it's it correct place)
         /*cureHealth*/ CureHealth{30});
 #else
-    using weapon_6 = Living<Healing<Living<Healing<Weapon>>>>;
-    using weapon_7 = Living<Healing<Living<Healing<Naming<NoNameWeapon>>>>>;
-
-    static_assert(std::is_same_v<weapon_6, Living<Healing<Weapon>>>);
-
     auto gustav_2 = weapon_6(
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},
         /*cureHealth*/ CureHealth{30},
-        Damage{32});
+        /*dmg*/ Damage{32});
+    backpack.emplace_back(gustav_2);
+
     weapon_7(
         Name{"INCOGNITO SWORD"},
         /*hp*/ Health{20},
         /*cureHealth*/ CureHealth{30},
-        Damage{32});
-    static_assert(std::is_same_v<decltype(gustav_2), Living<Healing<Weapon>>>);
-    backpack.emplace_back(gustav_2);
-#endif
-
-#ifdef WITH_ADD_PROPERTIES
-    using armor_1 = Armor;
-    using armor_2 = add_properties<Armor, Protecting>;
-    using armor_3 = add_properties<Helmet, Damaging>;
-    using armor_4 = Helmet;
-#else
-    using armor_1 = Armor;
-    using armor_2 = Protecting<Armor>;
-    using armor_3 = Damaging<Helmet>;
-    using armor_4 = Helmet;
+        /*dmg*/ Damage{32});
 #endif
 
     backpack.emplace_back(armor_1{
@@ -111,14 +78,6 @@ void fillBackpack(auto& backpack) {
             BodyLocation::Head,
             {EffectType::Stun}}});
 
-#ifdef WITH_ADD_PROPERTIES
-    using potion_1 = add_properties<Potion, Healing>;
-    using potion_2 = add_properties<Potion, Protecting>;
-#else
-    using potion_1 = Healing<Potion>;
-    using potion_2 = Protecting<Potion>;
-#endif
-
     backpack.emplace_back(potion_1(
         Name{"HEALING_POTION"},
         CureHealth{20}));
@@ -133,18 +92,6 @@ void fillBackpack(auto& backpack) {
             4,
             BodyLocation::Internal,
             {EffectType::Shock}}));  // TODO: ths protection should be temporary
-
-#ifdef WITH_ADD_PROPERTIES
-    using scroll_1 = Scroll;
-    using scroll_2 = add_properties<Scroll, Restoring>;
-    using scroll_3 = add_properties<Scroll, Damaging>;
-    using scroll_4 = add_properties<Scroll, Damaging, Healing>;
-#else
-    using scroll_1 = Scroll;
-    using scroll_2 = Restoring<Scroll>;
-    using scroll_3 = Damaging<Scroll>;
-    using scroll_4 = Damaging<Healing<Scroll>>;
-#endif
 
     backpack.emplace_back(scroll_1{
         Name{"USELESS_SCROLL"}});

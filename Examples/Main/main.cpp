@@ -1,94 +1,14 @@
 #include <vector>
 #include "Actions.hpp"
+#include "FillBackpack.hpp"
+#include "Object/Properties/UserProperty.hpp"
+#include "Print.hpp"
 #include "demangle_type_name.hpp"
 
-#ifndef USER_PROPERTIES
-    // use prepared properties
-    #include "Object/Properties/Properties.hpp"
-
-#else
-    // simulate prepared properties with UserProperty class
-    #include "Object/Properties/UserProperty.hpp"
-
-    template <typename TYPE, bool CONCEPT>
-    struct UserPropertyAdapter {
-        template <typename T>
-        using type = std::conditional_t<CONCEPT, T, UserProperty<TYPE, T>>;
-    };
-
-    template <typename TYPE>
-    using Living = UserPropertyAdapter<Health, Livingable<TYPE>>::template type<TYPE>;
-    template <typename TYPE>
-    using Wearing = UserPropertyAdapter<ProtectionContainer, Wearingable<TYPE>>::template type<TYPE>;
-    template <typename TYPE>
-    using Damaging = UserPropertyAdapter<Damage, Damagingable<TYPE>>::template type<TYPE>;
-    template <typename TYPE>
-    using Protecting = UserPropertyAdapter<Protection, Protectingable<TYPE>>::template type<TYPE>;
-    template <typename TYPE>
-    using Healing = UserPropertyAdapter<CureHealth, Healingable<TYPE>>::template type<TYPE>;
-    template <typename TYPE>
-    using Restoring = UserPropertyAdapter<EffectTypeContainer, Restoringable<TYPE>>::template type<TYPE>;
-    template <typename TYPE>
-    using Naming = UserPropertyAdapter<Name, Namingable<TYPE>>::template type<TYPE>;
-
-    #include "Object/Properties/Helpers/taged_list.hpp"
-
-    using order_list = taged_list<
-        Living,
-        Wearing,
-        Damaging,
-        Protecting,
-        Healing,
-        Restoring,
-        Naming  // Naming should be last property to add (used closest to type)
-        >;      // properties list in order
-
-    #include "Object/Properties/Helpers/Property.hpp"
-
-    struct Living_type {
-        Name name;
-        Health hp;
-    };
-
-    static_assert(std::is_same_v<Damaging<Living_type>, add_properties<Living_type, Naming, Living, Damaging>>);
-
-#endif
-
-#ifdef WITH_ADD_PROPERTIES
-    // use add_properties for creating type with properties
-    #include "Examples/Structs/CustomWeapon.hpp"
-
-    struct Type {};
-
-    using NoNameWeapon = add_properties<Type, Damaging>;
-    using Weapon = add_properties<Type, Naming, Damaging>;
-    using Player = add_properties<Type, Naming, Wearing, Protecting>;
-    using Enemy = add_properties<Type, Naming>;
-
-    using Scroll = add_properties<Type, Naming>;
-    using Potion = add_properties<Type, Naming>;
-    using Armor = add_properties<Type, Naming, Protecting>;
-    using Helmet = add_properties<Type, Naming, Protecting>;
-    using Npc = add_properties<Type, Living>;
-#else
-    // use old method of creating type with properties
-    #include "Examples/structs.hpp"
-#endif
-
-#include "Print.hpp"
-#include "FillBackpack.hpp"
-
-
 void simple() {
-#ifdef WITH_ADD_PROPERTIES
-    Object player = add_properties<Player, Living>{
+    Object player = player_type{
         Name{"Player"},
         Health{100}};
-#else
-    Object player(Living<Player>{
-        Name{"Player"},
-        Health{100}});
-#endif
 
     Object{
         Helmet{
@@ -135,7 +55,6 @@ void simple() {
     static_assert(std::is_same_v<decltype(val_3), const Damage&>);
 }
 
-#include "Object/Properties/UserProperty.hpp"
 struct base {};
 using CureHealthType = UserProperty<int, UserProperty<CureValueType, UserProperty<EffectContainer, base>>>;
 
