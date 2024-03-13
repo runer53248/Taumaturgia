@@ -1,7 +1,7 @@
 #include <typeinfo>
 #include "Examples/preety_print.hpp"
-#include "../basic_strategies.hpp"
-#include "../demangle_type_name.hpp"
+#include "../../basic_strategies.hpp"
+#include "../../demangle_type_name.hpp"
 
 struct test_struct {};
 struct test_struct_2 {};

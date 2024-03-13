@@ -1,5 +1,5 @@
-#include "../demangle_type_name.hpp"
-#include "../improved_types.hpp"
+#include "../../demangle_type_name.hpp"
+#include "../../improved_types.hpp"
 #include "Examples/preety_print.hpp"
 
 using helpers::is_property_improvement;

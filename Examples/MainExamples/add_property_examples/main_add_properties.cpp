@@ -1,8 +1,8 @@
-#include "../basic_strategies.hpp"
-#include "../demangle_type_name.hpp"
-#include "../is_base_of_template.hpp"
-#include "../property_A.hpp"
-#include "../property_B.hpp"
+#include "../../basic_strategies.hpp"
+#include "../../demangle_type_name.hpp"
+#include "../../is_base_of_template.hpp"
+#include "../../property_A.hpp"
+#include "../../property_B.hpp"
 #include "Examples/preety_print.hpp"
 
 struct Empty {};

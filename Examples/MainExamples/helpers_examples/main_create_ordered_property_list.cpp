@@ -1,12 +1,12 @@
-#include "../demangle_type_name.hpp"
-#include "../improved_types.hpp"
-#include "../is_base_of_template.hpp"
-#include "../property_A.hpp"
-#include "../property_B.hpp"
+#include "../../demangle_type_name.hpp"
+#include "../../improved_types.hpp"
+#include "../../is_base_of_template.hpp"
+#include "../../property_A.hpp"
+#include "../../property_B.hpp"
 #include "Examples/preety_print.hpp"
 
-using helpers::same_priority;
 using helpers::create_ordered_property_list;
+using helpers::same_priority;
 
 int main() {
     std::cout << "A. 'create_ordered_property_list' examples:" << '\n'
