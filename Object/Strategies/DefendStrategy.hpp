@@ -1,6 +1,6 @@
 #pragma once
 #include <concepts>
-#include "../Concepts/Protectingable.hpp"
+#include "Object/Concepts/Protectingable.hpp"
 
 enum class ActionStatus;
 

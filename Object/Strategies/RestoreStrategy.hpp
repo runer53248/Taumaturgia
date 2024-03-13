@@ -1,6 +1,6 @@
 #pragma once
 #include <concepts>
-#include "../Concepts/Restoringable.hpp"
+#include "Object/Concepts/Restoringable.hpp"
 
 enum class ActionStatus;
 

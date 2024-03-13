@@ -1,6 +1,6 @@
 #include <iostream>
-#include "../../../Object/Properties/Properties.hpp"
-#include "../../demangle_type_name.hpp"
+#include "Object/Properties/Properties.hpp"
+#include "Examples/demangle_type_name.hpp"
 
 struct Type {
     Name name;

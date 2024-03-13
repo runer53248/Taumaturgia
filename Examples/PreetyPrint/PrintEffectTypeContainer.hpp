@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "../../Object/Concepts/Types/EffectTypeContainer.hpp"
+#include "Object/Concepts/Types/EffectTypeContainer.hpp"
 #include "PrintEffectType.hpp"
 
 constexpr auto& operator<<(std::ostream& out, const EffectTypeContainer& effects) {

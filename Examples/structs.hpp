@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include "Structs/Armor.hpp"
 #include "Structs/CustomWeapon.hpp"
 #include "Structs/DefaultWeapon.hpp"

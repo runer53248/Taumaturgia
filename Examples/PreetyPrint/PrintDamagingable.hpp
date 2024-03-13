@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
-#include "../../Object/Concepts/Damagingable.hpp"
+#include "Object/Concepts/Damagingable.hpp"
+#include "Object/Concepts/Traits/NameTraits.hpp"
 #include "PrintDamageType.hpp"
 #include "PrintDuration.hpp"
 #include "PrintEffectType.hpp"

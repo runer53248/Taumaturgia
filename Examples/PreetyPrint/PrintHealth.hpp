@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "../../Object/Concepts/Types/Health.hpp"
+#include "Object/Concepts/Types/Health.hpp"
 
 constexpr auto& operator<<(std::ostream& out, const Health& health) {
     out << health.value() << " hp / " << health.maxValue() << " hp";

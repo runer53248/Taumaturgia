@@ -1,7 +1,7 @@
 #pragma once
 #include <boost/mp11.hpp>
-#include "../Concepts/Types/Name.hpp"
-#include "../Strategies/HealStrategy.hpp"
+#include "Object/Concepts/Types/Name.hpp"
+#include "Object/Strategies/HealStrategy.hpp"
 #include "Helpers/PropertyData.hpp"
 
 namespace impl {

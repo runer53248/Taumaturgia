@@ -1,4 +1,5 @@
-#include "../../Object/Properties/Properties.hpp"
+#include "Examples/PreetyPrint/preety_print_types.hpp"
+#include "Object/Properties/Properties.hpp"
 
 struct EmptyType {};
 
@@ -59,8 +60,6 @@ static_assert(std::is_same_v<Type_3, Type_4>);
 static_assert(std::is_same_v<Type_4, Type_5>);
 // Type_all passing all properties concepts have same size as empty type with all properties given
 static_assert(sizeof(Type_all) == sizeof(Type_5));
-
-#include "../../Examples/preety_print_types.hpp"
 
 int main() {
     Type_living type0{Name{"Valid"}, Health{50}};

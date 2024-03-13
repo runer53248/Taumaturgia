@@ -1,6 +1,6 @@
 #pragma once
 #include <concepts>
-#include "../Concepts/Typeable.hpp"
+#include "Object/Concepts/Typeable.hpp"
 
 enum class ActionStatus;
 

@@ -1,9 +1,9 @@
-#include "../../demangle_type_name.hpp"
-#include "../../improved_types.hpp"
-#include "../../is_base_of_template.hpp"
-#include "../../property_A.hpp"
-#include "../../property_B.hpp"
-#include "Examples/preety_print.hpp"
+#include "Examples/demangle_type_name.hpp"
+#include "Examples/improved_types.hpp"
+#include "Examples/is_base_of_template.hpp"
+#include "Examples/property_A.hpp"
+#include "Examples/property_B.hpp"
+#include "Examples/PreetyPrint/preety_print.hpp"
 
 using helpers::create_ordered_property_list;
 using helpers::same_priority;

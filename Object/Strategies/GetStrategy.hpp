@@ -1,7 +1,7 @@
 #pragma once
 #include <concepts>
-#include "../Concepts/Gettingable.hpp"
-#include "../Concepts/Types/VariantType.hpp"
+#include "Object/Concepts/Gettingable.hpp"
+#include "Object/Concepts/Types/VariantType.hpp"
 
 enum class Parameter;
 

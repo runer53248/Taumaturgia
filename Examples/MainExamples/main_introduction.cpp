@@ -1,4 +1,4 @@
-#include "../Benchmark.hpp"
+#include "Examples/Benchmark.hpp"
 #include "Object/DefaultStrategies.hpp"
 #include "Object/Object.hpp"
 #include "Object/Properties/Properties.hpp"

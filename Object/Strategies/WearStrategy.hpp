@@ -1,6 +1,6 @@
 #pragma once
 #include <concepts>
-#include "../Concepts/Wearingable.hpp"
+#include "Object/Concepts/Wearingable.hpp"
 
 enum class ActionStatus;
 

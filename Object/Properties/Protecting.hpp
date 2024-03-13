@@ -1,6 +1,6 @@
 #pragma once
-#include "../Concepts/Types/Name.hpp"
-#include "../Strategies/DefendStrategy.hpp"
+#include "Object/Concepts/Types/Name.hpp"
+#include "Object/Strategies/DefendStrategy.hpp"
 #include "Helpers/PropertyData.hpp"
 
 namespace impl {

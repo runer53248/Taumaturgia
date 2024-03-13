@@ -1,6 +1,6 @@
 #pragma once
 #include <concepts>
-#include "../Concepts/Healingable.hpp"
+#include "Object/Concepts/Healingable.hpp"
 
 enum class ActionStatus;
 

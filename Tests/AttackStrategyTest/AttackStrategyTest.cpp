@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "Examples/PreetyPrint/preety_print.hpp"
 
 #ifdef WITH_ADD_PROPERTIES
     #include "Object/DefaultStrategies.hpp"
@@ -48,8 +49,6 @@
     #include "Object/DefaultStrategies.hpp"
     #include "Object/Properties/Properties.hpp"
 #endif
-
-#include "Examples/preety_print.hpp"
 
 constexpr auto max_health = 100;
 

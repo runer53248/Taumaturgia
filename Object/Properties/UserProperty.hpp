@@ -1,9 +1,9 @@
 #pragma once
 #include <boost/mp11.hpp>
 #include <variant>
-#include "../Concepts/Typeable.hpp"
-#include "../Concepts/Types/Name.hpp"
-#include "../Strategies/UserStrategy.hpp"
+#include "Object/Concepts/Typeable.hpp"
+#include "Object/Concepts/Types/Name.hpp"
+#include "Object/Strategies/UserStrategy.hpp"
 #include "Helpers/PropertyData.hpp"
 
 namespace impl {

@@ -1,4 +1,4 @@
-#include "../../Object/Concepts/Namingable.hpp"
+#include "Object/Concepts/Namingable.hpp"
 // Namingable concepts is valif for types that:
 /////////////////////////////////////////////////
 // * type that have public name member convertible to std::string or const std::string
@@ -19,7 +19,7 @@ struct Valid_type_2_2 {
 static_assert(Namingable<Valid_type_2>);
 static_assert(Namingable<Valid_type_2_2>);
 /////////////////////////////////////////////////
-#include "../../Object/Concepts/Types/Name.hpp"
+#include "Object/Concepts/Types/Name.hpp"
 
 struct Valid_type_3 {
     Name name{"Valid"};
@@ -57,7 +57,7 @@ static_assert(Namingable<Valid_4<NoNameType, Name>>);
 /////////////////////////////////////////////////
 // * type resulted after gived Naming Properties
 
-#include "../../Object/Properties/Naming.hpp"
+#include "Object/Properties/Naming.hpp"
 
 using named_NoNameType = Naming<NoNameType>;
 using named_Valid_type_1 = Naming<Valid_type_1>;

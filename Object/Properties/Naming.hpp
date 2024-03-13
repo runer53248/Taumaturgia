@@ -1,5 +1,5 @@
 #pragma once
-#include "../Concepts/Namingable.hpp"
+#include "Object/Concepts/Namingable.hpp"
 #include "Helpers/PropertyData.hpp"
 
 namespace impl {
