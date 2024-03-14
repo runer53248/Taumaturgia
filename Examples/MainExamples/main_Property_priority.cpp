@@ -1,21 +1,37 @@
-#include "Examples/PreetyPrint/preety_print.hpp"
-#include "Examples/basic_strategies.hpp"
+#include <iostream>
 #include "Examples/demangle_type_name.hpp"
-#include "Examples/property_A.hpp"
-#include "Examples/property_B.hpp"
-#include "Examples/property_C.hpp"
+#include "Object/Properties/Properties.hpp"
+
+template <typename T>
+struct PlainProperty : T {
+    constexpr static char PlainProperty_name[] = "PlainProperty";
+    using property_data = PropertyData<PlainProperty_name, PlainProperty, T>;
+};
+
+// order in order_list
+// | Living
+// | Wearing
+// | Damaging
+// | Protecting
+// | Healing
+// | Restoring
+// V Naming
+//
+//... any not in order_list same last position (no ordering them but put close to type)
+
+//  order of apply to type
+//    <      -       -         -         -       -       -     ...
+// Living<Wearing<Damaging<Protecting<Healing<Restoring<Naming<...<TYPE>>>>>>>>
 
 int main() {
     std::cout << "B. 'Property<...>::value' priority examples:" << '\n'
               << '\n';
 
     std::cout << "1) print priority of unknown properties" << '\n';
-    std::cout << Property<A>::value << " - A priority" << '\n';
-    std::cout << Property<B>::value << " - B priority" << '\n';
-    std::cout << Property<C>::value << " - C priority" << '\n';
+    std::cout << Property<PlainProperty>::value << " - PlainProperty priority" << '\n';
     std::cout << '\n';
 
-    std::cout << "2) print priority of known properties" << '\n';
+    std::cout << "2) print priority of known from order_list properties" << '\n';
     std::cout << Property<Naming>::value << " - Naming priority" << '\n';
     std::cout << Property<Living>::value << " - Living priority" << '\n';
     std::cout << Property<Wearing>::value << " - Wearing priority" << '\n';

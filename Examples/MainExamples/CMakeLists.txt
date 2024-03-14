@@ -10,9 +10,8 @@ add_executable(${PROJECT_NAME}-main_plain_properties
     main_plain_properties.cpp
 )
 
-add_executable(${PROJECT_NAME}-main_Property
-    main_Property.cpp
-    ../../Object/Object.cpp
+add_executable(${PROJECT_NAME}-main_Property_priority
+    main_Property_priority.cpp
 )
 
 add_executable(${PROJECT_NAME}-main_introduction
