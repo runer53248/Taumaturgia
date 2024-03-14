@@ -17,7 +17,7 @@ constexpr auto& operator<<(std::ostream& out, const ArmorClass& ac) {
     return out;
 }
 
-constexpr auto& operator<<(std::ostream& out, const Protection& protection) {
+auto& operator<<(std::ostream& out, const Protection& protection) {
     auto ac = protection.armorClass();
     auto location = protection.location();
     auto effects = protection.protectEffects();
