@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Object/Properties/Helpers/taged_list.hpp"
 #include "Object/Properties/UserProperty.hpp"
 
 template <typename TYPE>
@@ -7,14 +8,13 @@ struct UserPropertyAdapter {
     using type = UserProperty<TYPE, T>;
 };
 
-#include "Object/Properties/Helpers/taged_list.hpp"
-
 using order_list = taged_list<
     UserPropertyAdapter<int>::type,
     UserPropertyAdapter<std::string>::type,
     UserPropertyAdapter<float>::type  // floats have less priority
     >;                                // properties list in order
-#include "Object/Properties/Helpers/Property.hpp"
+
+#include "Object/Properties/Helpers/Property.hpp"  // depends on order_list existence
 
 struct MyType_1 {
     std::string name{};
