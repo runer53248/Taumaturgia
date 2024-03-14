@@ -3,22 +3,7 @@
 #include "Examples/demangle_type_name.hpp"
 #include "Examples/property_A.hpp"
 #include "Examples/property_B.hpp"
-
-struct Empty {};
-
-static_assert(std::is_same_v<
-              A<A<A<Empty>>>,
-              A<Empty>>);
-
-template <typename T>
-using BaseA = impl::A_<T>;
-
-static_assert(derived_from_template_base<BaseA<Empty>, BaseA>);
-static_assert(not derived_from_template_base<B<Empty>, BaseA>);
-static_assert(derived_from_template_base<BaseA<B<Empty>>, BaseA>);
-static_assert(derived_from_template_base<Living<B<BaseA<Empty>>>, BaseA>);
-static_assert(derived_from_template_base<B<BaseA<Empty>>, BaseA>);
-static_assert(not derived_from_template_base<Empty, BaseA>);
+#include "Examples/property_C.hpp"
 
 int main() {
     std::cout << "B. 'Property<...>::value' priority examples:" << '\n'
@@ -27,6 +12,7 @@ int main() {
     std::cout << "1) print priority of unknown properties" << '\n';
     std::cout << Property<A>::value << " - A priority" << '\n';
     std::cout << Property<B>::value << " - B priority" << '\n';
+    std::cout << Property<C>::value << " - C priority" << '\n';
     std::cout << '\n';
 
     std::cout << "2) print priority of known properties" << '\n';
