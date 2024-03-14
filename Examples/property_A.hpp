@@ -15,6 +15,6 @@ struct A_ : T {
 
 template <typename T>
 using A = std::conditional_t<
-    is_derived_from_template_base<T, impl::A_>::value,
+    derived_from_template_base<T, impl::A_>,
     T,
     impl::A_<T>>;
