@@ -34,7 +34,7 @@ concept is_property_improvement = requires(T<tag>) {
 };
 
 template <typename A, typename B>
-struct same_priority {
+struct is_same_priority {
     template <typename T>
     using improvement_type_of = typename T::template type<tag>::improvement_of;
 
@@ -68,6 +68,9 @@ struct same_priority {
     }();
 };
 
+template <typename A, typename B>
+concept same_priority = is_same_priority<A, B>::value;
+
 // template <typename T>
 // using value_equal_zero = mp_bool<T::value == 0>;
 
@@ -78,7 +81,7 @@ using append_and_order_property_lists =
         mp_unique_if<  //
             mp_append<
                 PROPERTY_LISTS...>,
-            same_priority>,
+            is_same_priority>,
         // value_equal_zero>,
         mp_less>;
 

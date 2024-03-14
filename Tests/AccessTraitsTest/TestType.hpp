@@ -39,10 +39,10 @@ using helpers::same_priority;
 
 static_assert(not same_priority<
               Property<UserPropertyAdapter<float>::type>,
-              Property<UserPropertyAdapter<int>::type>>::value);
+              Property<UserPropertyAdapter<int>::type>>);
 static_assert(not same_priority<
               Property<UserPropertyAdapter<float>::type>,
-              Property<UserPropertyAdapter<bool>::type>>::value);
+              Property<UserPropertyAdapter<bool>::type>>);
 
 // C-tor args order
 //

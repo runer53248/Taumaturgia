@@ -1,8 +1,8 @@
+#include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Examples/improved_types.hpp"
 #include "Examples/property_A.hpp"
 #include "Examples/property_B.hpp"
-#include "Examples/PreetyPrint/preety_print.hpp"
 
 using helpers::create_ordered_property_list;
 using helpers::same_priority;
@@ -109,8 +109,8 @@ int main() {
     // user created properties with same encapsulated type don't count as build-in ones
     static_assert(Property<UserProtecting>::value != Property<Protecting>::value);
     static_assert(Property<UserDamaging>::value != Property<Damaging>::value);
-    static_assert(not same_priority<Property<UserProtecting>, Property<Protecting>>::value);
-    static_assert(not same_priority<Property<UserDamaging>, Property<Damaging>>::value);
+    static_assert(not same_priority<Property<UserProtecting>, Property<Protecting>>);
+    static_assert(not same_priority<Property<UserDamaging>, Property<Damaging>>);
     using type_x = create_ordered_property_list<UserProtecting, UserDamaging, Protecting, Damaging>;  // end with Protecting, Damaging
     using type_y = create_ordered_property_list<UserDamaging, UserProtecting, Damaging, Protecting>;  // end with Damaging, Protecting
     std::cout << "9) user created properties with same encapsulated type don't count as build-in ones (ie. not have its index)" << '\n';

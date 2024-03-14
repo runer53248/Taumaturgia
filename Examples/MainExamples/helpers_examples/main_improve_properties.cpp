@@ -1,18 +1,18 @@
+#include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Examples/improved_types.hpp"
-#include "Examples/PreetyPrint/preety_print.hpp"
 
 using helpers::is_property_improvement;
 using helpers::same_priority;
 
 int main() {
     static_assert(Property<Damaging>::value == Property<impl::Damaging_>::value);
-    static_assert(same_priority<Property<Damaging>, Property<impl::Damaging_>>::value);
+    static_assert(same_priority<Property<Damaging>, Property<impl::Damaging_>>);
 
     // improvements of build-in properties
     static_assert(Property<Damaging>::value == Property<DamagingImproved>::value);
-    static_assert(same_priority<Property<Damaging>, Property<DamagingImproved>>::value);
-    static_assert(same_priority<Property<impl::Damaging_>, Property<DamagingImproved>>::value);
+    static_assert(same_priority<Property<Damaging>, Property<DamagingImproved>>);
+    static_assert(same_priority<Property<impl::Damaging_>, Property<DamagingImproved>>);
     std::cout << "build-in properties can be improved" << '\n';
     std::cout << "Damaging priority = " << Property<Damaging>::value << " | improved = " << is_property_improvement<Damaging> << '\n';
     std::cout << "impl::Damaging_ priority = " << Property<impl::Damaging_>::value << " | improved = " << is_property_improvement<impl::Damaging_> << '\n';
@@ -22,10 +22,10 @@ int main() {
 
     // improvements of user properties
     static_assert(Property<UserProtectingImproved>::value == Property<UserProtecting>::value);
-    static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtecting>>::value);            // ? same_priority value
-    static_assert(same_priority<Property<UserProtecting>, Property<UserProtectingImproved>>::value);            // ? same_priority value
-    static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtectingImproved>>::value);    // ? same_priority value
-    static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtectingImproved_2>>::value);  // ? same_priority value
+    static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtecting>>);            // ? same_priority value
+    static_assert(same_priority<Property<UserProtecting>, Property<UserProtectingImproved>>);            // ? same_priority value
+    static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtectingImproved>>);    // ? same_priority value
+    static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtectingImproved_2>>);  // ? same_priority value
     std::cout << "user properties can be improved" << '\n';
     std::cout << "UserProtecting priority = " << Property<UserProtecting>::value << " | improved = " << is_property_improvement<UserProtecting> << '\n';
     std::cout << "UserProtectingImproved priority = " << Property<UserProtectingImproved>::value << " | improved = " << is_property_improvement<UserProtectingImproved> << '\n';
@@ -35,16 +35,16 @@ int main() {
               << '\n';
 
     // UserProperty may have same priority value but are not considered same by same_priority struct
-    static_assert(Property<UserProtecting>::value == Property<UserDamaging>::value);            // same priority value
-    static_assert(Property<UserProtecting>::value == Property<UserProtecting_2>::value);        // same priority value
-    static_assert(Property<UserProtecting>::value == Property<UserProtecting>::value);          // same priority value
-    static_assert(not same_priority<Property<UserProtecting>, Property<UserDamaging>>::value);  // not same_priority value - different types
+    static_assert(Property<UserProtecting>::value == Property<UserDamaging>::value);      // same priority value
+    static_assert(Property<UserProtecting>::value == Property<UserProtecting_2>::value);  // same priority value
+    static_assert(Property<UserProtecting>::value == Property<UserProtecting>::value);    // same priority value
+    static_assert(not same_priority<Property<UserProtecting>, Property<UserDamaging>>);   // not same_priority value - different types
 #ifdef USER_PROPERTY_SELF_AWARE
-    static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting_2>>::value);  // same_priority value - self type awarness
+    static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting_2>>);  // same_priority value - self type awarness
 #else
-    static_assert(not same_priority<Property<UserProtecting>, Property<UserProtecting_2>>::value);  // not same_priority value - different type even if similiar
+    static_assert(not same_priority<Property<UserProtecting>, Property<UserProtecting_2>>);  // not same_priority value - different type even if similiar
 #endif
-    static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting>>::value);  // same type have same_priority value
+    static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting>>);  // same type have same_priority value
 
     struct Type {
     public:
