@@ -13,13 +13,8 @@ struct Armor {
     Armor(std::string name, Protection protection)
         : name{name}, protection{protection} {}
 
-    auto& getProtection() {
-        return protection;
-    }
-
-    const auto& getProtection() const {
-        return protection;
-    }
+    auto& getProtection() { return protection; }
+    const auto& getProtection() const { return protection; }
 
 private:
     Protection protection;
@@ -36,13 +31,8 @@ struct Weapon_B {
     Weapon_B(std::string name, Damage dmg)
         : name{name}, dmg{dmg} {}
 
-    auto& getDmg() {
-        return dmg;
-    }
-
-    const auto& getDmg() const {
-        return dmg;
-    }
+    auto& getDmg() { return dmg; }
+    const auto& getDmg() const { return dmg; }
 
 private:
     Damage dmg;
@@ -54,13 +44,8 @@ struct Weapon_C {
     Weapon_C(const std::string& name, Damage dmg)
         : name{name}, dmg{dmg} {}
 
-    auto& Dmg() {
-        return dmg;
-    }
-
-    const auto& Dmg() const {
-        return dmg;
-    }
+    auto& Dmg() { return dmg; }
+    const auto& Dmg() const { return dmg; }
 
 private:
     Damage dmg;
@@ -85,21 +70,11 @@ struct Player_B {
     Player_B(const std::string& name, Health hp)
         : name{name}, hp{hp} {}
 
-    auto& Name() {
-        return name;
-    }
+    auto& Name() { return name; }
+    const auto& Name() const { return name; }
 
-    const auto& Name() const {
-        return name;
-    }
-
-    auto& getHealth() {
-        return hp;
-    }
-
-    const auto& getHealth() const {
-        return hp;
-    }
+    auto& getHealth() { return hp; }
+    const auto& getHealth() const { return hp; }
 
 private:
     std::string name;
