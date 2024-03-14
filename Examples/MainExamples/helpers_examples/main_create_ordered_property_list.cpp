@@ -1,6 +1,5 @@
 #include "Examples/demangle_type_name.hpp"
 #include "Examples/improved_types.hpp"
-#include "Examples/is_base_of_template.hpp"
 #include "Examples/property_A.hpp"
 #include "Examples/property_B.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"

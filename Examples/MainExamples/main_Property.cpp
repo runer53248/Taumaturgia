@@ -1,9 +1,32 @@
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/basic_strategies.hpp"
 #include "Examples/demangle_type_name.hpp"
-#include "Examples/is_base_of_template.hpp"
 #include "Examples/property_A.hpp"
 #include "Examples/property_B.hpp"
+
+struct Empty {};
+
+static_assert(std::is_same_v<
+              A<A<A<Empty>>>,
+              A<Empty>>);
+
+template <typename T>
+using BaseA = impl::A_<T>;
+
+static_assert(is_derived_from_template_base<BaseA<Empty>, BaseA>::value);
+static_assert(not is_derived_from_template_base<B<Empty>, BaseA>::value);
+static_assert(is_derived_from_template_base<BaseA<B<Empty>>, BaseA>::value);
+static_assert(is_derived_from_template_base<Living<B<BaseA<Empty>>>, BaseA>::value);
+static_assert(is_derived_from_template_base<B<BaseA<Empty>>, BaseA>::value);
+static_assert(not is_derived_from_template_base<Empty, BaseA>::value);
+
+static_assert(derived_from_template_base<BaseA<Empty>, BaseA>);
+static_assert(not derived_from_template_base<B<Empty>, BaseA>);
+static_assert(derived_from_template_base<BaseA<B<Empty>>, BaseA>);
+static_assert(derived_from_template_base<Living<B<BaseA<Empty>>>, BaseA>);
+static_assert(derived_from_template_base<B<BaseA<Empty>>, BaseA>);
+static_assert(not derived_from_template_base<Empty, BaseA>);
+
 
 int main() {
     std::cout << "B. 'Property<...>::value' priority examples:" << '\n'
