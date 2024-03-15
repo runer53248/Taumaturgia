@@ -28,9 +28,9 @@ struct build_into_impl<Base, L> {
 template <typename Base, typename L>
 using build_into_t = build_into_impl<Base, L>::type;
 
-template <template <typename...> typename T>
-concept is_property_improvement = requires(T<tag>) {
-    typename T<tag>::improvement_of;
+template <template <typename...> typename property>
+concept is_property_improvement = is_property<property> and requires {
+    typename property<tag>::improvement_of;
 };
 
 template <typename A, typename B>
@@ -86,23 +86,13 @@ using append_and_order_property_lists =
         mp_less>;
 
 template <template <typename...> typename... properties>
+    requires(is_property<properties> and ...)
 using create_ordered_property_list = append_and_order_property_lists<
     list<Property<properties>...>>;
 
 template <typename T>
-concept is_property_data = requires {
-    typename T::property_type;
-    typename T::base_type;
-    typename T::tags_list;
-    { T::name() } -> std::same_as<const char*>;
-
-    std::is_same_v<mp_clear<typename T::tags_list>, list<>>;
-};
-
-template <typename T>
 concept is_type_with_added_properties = requires {
     typename T::property_data;
-    requires is_property_data<typename T::property_data>;
 };
 
 template <typename T>
@@ -126,6 +116,7 @@ struct Scheme<T> {
 };
 
 template <typename T, template <typename...> typename... properties>
+    requires(is_property<properties> and ...)
 struct add_properties_impl {
     using type = std::conditional_t<
         is_type_with_added_properties<T>,
@@ -142,9 +133,11 @@ struct add_properties_impl {
 }  // namespace helpers
 
 template <typename T, template <typename...> typename... properties>
+    requires(is_property<properties> and ...)
 using add_properties = helpers::add_properties_impl<T, properties...>::type;
 
 template <template <typename...> typename... properties>
+    requires(is_property<properties> and ...)
 struct properties_list {
     template <typename T>
     using add_properties = ::add_properties<T, properties...>;

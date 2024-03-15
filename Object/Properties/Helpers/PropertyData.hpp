@@ -2,6 +2,7 @@
 #include "taged_list.hpp"
 
 template <template <typename...> typename property>
+    requires is_property<property>
 struct Property;
 
 template <const char* NAME, template <typename...> typename property, typename T, typename... Args>

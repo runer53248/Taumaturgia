@@ -8,6 +8,7 @@ static_assert(mp_size<order_list>::value);
 constexpr static auto properties_counter = mp_size<order_list>::value;
 
 template <template <typename...> typename property>
+    requires is_property<property>
 struct Property {
 private:
     // constinit const static auto index = mp_find<order_list, property<tag>>::value;

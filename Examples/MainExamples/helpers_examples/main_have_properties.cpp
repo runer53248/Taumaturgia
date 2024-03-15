@@ -19,6 +19,7 @@ using helpers::Scheme;
 
 template <typename T, template <typename...> typename... properties>
 concept have_properties1 =
+    (is_property<properties> and ...) and
     mp_and<
         mp_contains<
             typename Scheme<T>::list,
@@ -27,6 +28,7 @@ concept have_properties1 =
 // ? ----------------------------------------
 
 template <template <typename...> typename property>
+    requires is_property<property>
 class equivalent_properties_predicate {
 private:
     template <typename lhp, typename rhp>
@@ -44,6 +46,7 @@ public:
 
 template <typename T, template <typename...> typename... properties>
 concept have_properties2 =
+    (is_property<properties> and ...) and
     mp_and<
         mp_to_bool<
             mp_count_if<
