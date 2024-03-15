@@ -41,6 +41,24 @@ static_assert(std::is_same_v<
               Living<C<C<B<C<C<Damaging<Empty>>>>>>>,
               Living<C<B<Damaging<Empty>>>>>);
 
+// ! Healing as an example of build-in property do it wrong also
+//TODO: fix build-in properties
+static_assert(std::is_same_v<
+              Healing<Healing<Healing<Empty>>>,
+              Healing<Empty>>);
+static_assert(std::is_same_v<
+              B<Healing<Healing<Healing<Empty>>>>,
+              B<Healing<Empty>>>);
+static_assert(std::is_same_v<
+              Healing<Healing<Healing<B<Empty>>>>,
+              Healing<B<Empty>>>);
+static_assert(std::is_same_v<
+              Healing<Healing<B<Healing<Healing<Empty>>>>>,
+              Healing<B<Healing<Empty>>>>); // ! wrong - should be Healing<B<Empty>>
+static_assert(std::is_same_v<
+              Living<Healing<Healing<B<Healing<Healing<Damaging<Empty>>>>>>>,
+              Living<Healing<B<Healing<Damaging<Empty>>>>>>); // ! wrong - should be Living<A<Healing<Damaging<Empty>>>>
+
 using example_none = Empty;  // no property
 
 using example_other = Living<Empty>;  // other property
