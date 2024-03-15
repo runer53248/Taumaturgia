@@ -26,7 +26,7 @@ int main() {
                       Living<B<T<Damaging<Empty>>>>>);  // * most inner only
     };
 
-    most_inner_only_test.operator()<A>();        // * A plain property (using derived_from_template_base) use most inner only
+    most_inner_only_test.operator()<A>();        // * A plain property (using derived_from_property) use most inner only
     most_inner_only_test.operator()<Healing>();  // * build-in Healing properties use most inner only
 
     auto derived_from_property_test = []<template <typename> typename property> {
@@ -37,22 +37,22 @@ int main() {
         using example_inner_base = Damaging<Living<Protecting<property<Empty>>>>;            // property most inner
         using example_middle_base = Healing<Protecting<property<Living<Damaging<Empty>>>>>;  // property in middle
 
-        static_assert(not derived_from_template_base<
+        static_assert(not derived_from_property<
                       example_none,
                       property>);
-        static_assert(not derived_from_template_base<
+        static_assert(not derived_from_property<
                       example_other,
                       property>);
-        static_assert(derived_from_template_base<
+        static_assert(derived_from_property<
                       example_base,
                       property>);
-        static_assert(derived_from_template_base<
+        static_assert(derived_from_property<
                       example_outer_base,
                       property>);
-        static_assert(derived_from_template_base<
+        static_assert(derived_from_property<
                       example_inner_base,
                       property>);
-        static_assert(derived_from_template_base<
+        static_assert(derived_from_property<
                       example_middle_base,
                       property>);
     };

@@ -1,5 +1,5 @@
 #pragma once
-#include "Examples/is_derived_from_template_base.hpp"
+#include "Object/Properties/Helpers/derived_from_property.hpp"
 #include "Object/Properties/Helpers/PropertyData.hpp"
 
 namespace impl {
@@ -15,6 +15,6 @@ struct A_ : T {
 
 template <typename T>
 using A = std::conditional_t<
-    derived_from_template_base<T, impl::A_>,
+    derived_from_property<T, impl::A_>,
     T,
     impl::A_<T>>;
