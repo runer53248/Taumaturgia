@@ -1,6 +1,7 @@
 #pragma once
 #include <type_traits>
 #include "Object/Properties/Helpers/PropertyData.hpp"
+#include "Object/Properties/Helpers/propertyable.hpp"
 
 namespace impl {
 
@@ -12,11 +13,6 @@ struct C_ : T {
 };
 
 }  // namespace impl
-
-template <typename T, template <typename> typename property>
-concept propertyable = requires(T x) {
-    std::is_nothrow_convertible_v<T, property<T>>;
-};
 
 template <typename T>
 using C = std::conditional_t<
