@@ -5,7 +5,7 @@
 
 struct Empty {};
 
-// ! A using derived_from_template_base do it wrong
+// ! A using derived_from_template_base use most inner only
 static_assert(std::is_same_v<
               A<A<A<Empty>>>,
               A<Empty>>);
@@ -17,14 +17,14 @@ static_assert(std::is_same_v<
               A<B<Empty>>>);
 static_assert(std::is_same_v<
               A<A<B<A<A<Empty>>>>>,
-              A<B<A<Empty>>>>);  // ! wrong - should be A<B<Empty>>
+              B<A<Empty>>>);  // ! most inner used in build-in properties
 static_assert(std::is_same_v<
               Living<A<A<B<A<A<Damaging<Empty>>>>>>>,
-              Living<A<B<A<Damaging<Empty>>>>>>);  // ! wrong - should be Living<A<B<Damaging<Empty>>>>
+              Living<B<A<Damaging<Empty>>>>>);  // ! most inner used in build-in properties
 
 // B dont have this feature at all
 
-// * C using propertyable do it right
+// ! C using propertyable use most outer only
 static_assert(std::is_same_v<
               C<C<C<Empty>>>,
               C<Empty>>);
@@ -36,13 +36,12 @@ static_assert(std::is_same_v<
               C<B<Empty>>>);
 static_assert(std::is_same_v<
               C<C<B<C<C<Empty>>>>>,
-              C<B<Empty>>>);
+              C<B<Empty>>>);  // ! most outer only
 static_assert(std::is_same_v<
               Living<C<C<B<C<C<Damaging<Empty>>>>>>>,
-              Living<C<B<Damaging<Empty>>>>>);
+              Living<C<B<Damaging<Empty>>>>>);  // ! most outer only
 
-// ! Healing as an example of build-in property do it wrong also
-//TODO: fix build-in properties
+// ! build-in properties use most outer only
 static_assert(std::is_same_v<
               Healing<Healing<Healing<Empty>>>,
               Healing<Empty>>);
@@ -54,10 +53,33 @@ static_assert(std::is_same_v<
               Healing<B<Empty>>>);
 static_assert(std::is_same_v<
               Healing<Healing<B<Healing<Healing<Empty>>>>>,
-              Healing<B<Healing<Empty>>>>); // ! wrong - should be Healing<B<Empty>>
+              B<Healing<Empty>>>);  // ! most inner used in build-in properties
 static_assert(std::is_same_v<
               Living<Healing<Healing<B<Healing<Healing<Damaging<Empty>>>>>>>,
-              Living<Healing<B<Healing<Damaging<Empty>>>>>>); // ! wrong - should be Living<A<Healing<Damaging<Empty>>>>
+              Living<B<Healing<Damaging<Empty>>>>>);  // ! most inner used in build-in properties
+
+// ! switch order to most outer for build-in properties
+template <typename T>
+using Healing2 = std::conditional_t<
+    propertyable<T, impl::Healing_> or Healingable<T>,
+    T,
+    impl::Healing_<T>>;
+
+static_assert(std::is_same_v<
+              Healing2<Healing2<Healing2<Empty>>>,
+              Healing2<Empty>>);
+static_assert(std::is_same_v<
+              B<Healing2<Healing2<Healing2<Empty>>>>,
+              B<Healing2<Empty>>>);
+static_assert(std::is_same_v<
+              Healing2<Healing2<Healing2<B<Empty>>>>,
+              Healing2<B<Empty>>>);
+static_assert(std::is_same_v<
+              Healing2<Healing2<B<Healing2<Healing2<Empty>>>>>,
+              Healing2<B<Empty>>>);  // ! most outer only
+static_assert(std::is_same_v<
+              Living<Healing2<Healing2<B<Healing2<Healing2<Damaging<Empty>>>>>>>,
+              Living<Healing2<B<Damaging<Empty>>>>>);  // ! most outer only
 
 using example_none = Empty;  // no property
 
