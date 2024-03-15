@@ -2,7 +2,7 @@
 #include <boost/core/demangle.hpp>
 #include <typeinfo>
 
-template <class T>
+template <typename T>
 inline std::string name() {
     return boost::core::demangle(typeid(T).name());
 }
