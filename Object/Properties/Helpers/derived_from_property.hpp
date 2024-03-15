@@ -3,6 +3,7 @@
 #include "taged_list.hpp"
 
 template <typename derived, template <typename> typename property>
+    requires is_property<property>
 struct is_derived_from_property_impl {
     template <typename T>
     static constexpr std::true_type test(const property<T>*);        // for properties (ie. impl::Wearing_<T>)
