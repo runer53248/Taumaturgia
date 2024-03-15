@@ -7,73 +7,58 @@ struct Empty {};
 //  .  outer  .   .   .  inner  .
 // ...<  X  <...<...<...<  X  <...<Empty>>>>>>>
 
-// * A using derived_from_template_base use most inner only
-static_assert(std::is_same_v<
-              A<A<A<Empty>>>,
-              A<Empty>>);
-static_assert(std::is_same_v<
-              B<A<A<A<Empty>>>>,
-              B<A<Empty>>>);
-static_assert(std::is_same_v<
-              A<A<A<B<Empty>>>>,
-              A<B<Empty>>>);
-static_assert(std::is_same_v<
-              A<A<B<A<A<Empty>>>>>,
-              B<A<Empty>>>);  // * most inner only
-static_assert(std::is_same_v<
-              Living<A<A<B<A<A<Damaging<Empty>>>>>>>,
-              Living<B<A<Damaging<Empty>>>>>);  // * most inner only
+int main() {
+    auto most_inner_only_test = []<template <typename> typename T> {
+        static_assert(std::is_same_v<
+                      T<T<T<Empty>>>,
+                      T<Empty>>);
+        static_assert(std::is_same_v<
+                      B<T<T<T<Empty>>>>,
+                      B<T<Empty>>>);
+        static_assert(std::is_same_v<
+                      T<T<T<B<Empty>>>>,
+                      T<B<Empty>>>);
+        static_assert(std::is_same_v<
+                      T<T<B<T<T<Empty>>>>>,
+                      B<T<Empty>>>);  // * most inner only
+        static_assert(std::is_same_v<
+                      Living<T<T<B<T<T<Damaging<Empty>>>>>>>,
+                      Living<B<T<Damaging<Empty>>>>>);  // * most inner only
+    };
 
-// B dont have this feature at all
+    most_inner_only_test.operator()<A>();        // * A plain property (using derived_from_template_base) use most inner only
+    most_inner_only_test.operator()<Healing>();  // * build-in Healing properties use most inner only
 
-// * build-in Healing properties use most inner only
-static_assert(std::is_same_v<
-              Healing<Healing<Healing<Empty>>>,
-              Healing<Empty>>);
-static_assert(std::is_same_v<
-              B<Healing<Healing<Healing<Empty>>>>,
-              B<Healing<Empty>>>);
-static_assert(std::is_same_v<
-              Healing<Healing<Healing<B<Empty>>>>,
-              Healing<B<Empty>>>);
-static_assert(std::is_same_v<
-              Healing<Healing<B<Healing<Healing<Empty>>>>>,
-              B<Healing<Empty>>>);  // * most inner only used in build-in properties
-static_assert(std::is_same_v<
-              Living<Healing<Healing<B<Healing<Healing<Damaging<Empty>>>>>>>,
-              Living<B<Healing<Damaging<Empty>>>>>);  // * most inner only used in build-in properties
+    auto derived_from_property_test = []<template <typename> typename property> {
+        using example_none = Empty;                                                          // no property
+        using example_other = Living<Empty>;                                                 // other property
+        using example_base = property<Empty>;                                                // just property
+        using example_outer_base = property<Protecting<Living<Damaging<Empty>>>>;            // property most outer
+        using example_inner_base = Damaging<Living<Protecting<property<Empty>>>>;            // property most inner
+        using example_middle_base = Healing<Protecting<property<Living<Damaging<Empty>>>>>;  // property in middle
 
-using example_none = Empty;  // no property
-using example_other = Living<Empty>;  // other property
-template <template <typename> typename BASE>
-using example_base = BASE<Empty>;  // just base
-template <template <typename> typename BASE>
-using example_outer_base = BASE<Protecting<Living<Damaging<Empty>>>>;  // base most outer property
-template <template <typename> typename BASE>
-using example_inner_base = Damaging<Living<Protecting<BASE<Empty>>>>;  // base most inner properrty
-template <template <typename> typename BASE>
-using example_middle_base = Healing<Protecting<BASE<Living<Damaging<Empty>>>>>;  // base in middle
+        static_assert(not derived_from_template_base<
+                      example_none,
+                      property>);
+        static_assert(not derived_from_template_base<
+                      example_other,
+                      property>);
+        static_assert(derived_from_template_base<
+                      example_base,
+                      property>);
+        static_assert(derived_from_template_base<
+                      example_outer_base,
+                      property>);
+        static_assert(derived_from_template_base<
+                      example_inner_base,
+                      property>);
+        static_assert(derived_from_template_base<
+                      example_middle_base,
+                      property>);
+    };
 
-template <typename T>
-using Base = B<T>;  // without duplication removal feature
-
-static_assert(not derived_from_template_base<
-              example_none,
-              Base>);
-static_assert(not derived_from_template_base<
-              example_other,
-              Base>);
-static_assert(derived_from_template_base<
-              example_base<Base>,
-              Base>);
-static_assert(derived_from_template_base<
-              example_outer_base<Base>,
-              Base>);
-static_assert(derived_from_template_base<
-              example_inner_base<Base>,
-              Base>);
-static_assert(derived_from_template_base<
-              example_middle_base<Base>,
-              Base>);
-
-int main() {}
+    derived_from_property_test.operator()<impl::A_>();        // without duplication removal feature
+    derived_from_property_test.operator()<A>();               // with duplication removal feature
+    derived_from_property_test.operator()<impl::Wearing_>();  // without duplication removal feature
+    derived_from_property_test.operator()<Wearing>();         // with duplication removal feature
+}
