@@ -31,6 +31,8 @@ struct AttackStrategy_<CustomWeapon> {
 
         if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) {  // when got Damagingable property
             status = default_attack_behavior(obj, suspect);
+        } else {
+            std::cout << '\n';
         }
 
         for (Damagingable auto& other : obj.others) {
