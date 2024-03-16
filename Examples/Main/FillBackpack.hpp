@@ -17,7 +17,7 @@ void fillBackpack(auto& backpack) {
 
     backpack.emplace_back(weapon_4{
         Name{"New_Custom_SWORD"},
-        Damage{32}});  // became Damagingable - custom AttackStrategy_<CustomWeapon> from 'CustomWeapon.hpp' will handle it
+        Damage{32}});
 
     backpack.emplace_back(weapon_5{
         Name{"Default_BATTLE_SWORD"},
@@ -90,7 +90,7 @@ void fillBackpack(auto& backpack) {
         ArmorClass{
             4,
             BodyLocation::Internal,
-            {EffectType::Shock}}));  // TODO: ths protection should be temporary
+            {EffectType::Shock}}));  // TODO: this protection should be temporary
 
     backpack.emplace_back(scroll_1{
         Name{"USELESS_SCROLL"}});

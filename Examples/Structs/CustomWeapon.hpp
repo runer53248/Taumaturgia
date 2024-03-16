@@ -18,9 +18,9 @@ struct AttackStrategy_<CustomWeapon> {
     //     auto* suspect = Whom(owner, target);
     //     ActionStatus base_status = default_attack_behavior(obj, suspect);
 
-    //     for (auto& other : obj.others) {
+    //     for (Damagingable auto& other : obj.others) {
     //         default_attack_behavior(other, suspect);
-    //         print_subAttacks(other);
+    //         std::cout << "\t\t " << other << "\n";
     //     }
     //     return base_status;
     // }
@@ -33,15 +33,10 @@ struct AttackStrategy_<CustomWeapon> {
             status = default_attack_behavior(obj, suspect);
         }
 
-        for (auto& other : obj.others) {
+        for (Damagingable auto& other : obj.others) {
             status = default_attack_behavior(other, suspect);
-            print_subAttacks(other);
+            std::cout << "\t\t " << other << '\n';
         }
         return status;
-    }
-
-    bool print_subAttacks(Damagingable auto& obj) const {
-        std::cout << "\t\t " << obj << "\n";
-        return true;
     }
 };

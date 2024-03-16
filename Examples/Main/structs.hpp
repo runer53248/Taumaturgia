@@ -27,7 +27,7 @@
     using weapon_1 = add_properties<Weapon, Damaging>;
     using weapon_2 = Weapon;
     using weapon_3 = CustomWeapon;
-    using weapon_4 = add_properties<CustomWeapon, Damaging>;
+    using weapon_4 = add_properties<CustomWeapon, Damaging>;   // CustomWeapon became Damagingable
     using weapon_5 = add_properties<DefaultWeapon, Damaging>;
     using weapon_6 = add_properties<Weapon, Living, Healing, Living, Healing>;
     using weapon_7 = add_properties<NoNameWeapon, Living, Healing, Living, Healing, Naming>;
@@ -62,7 +62,7 @@
     using weapon_1 = Damaging<Weapon>;
     using weapon_2 = Weapon;
     using weapon_3 = CustomWeapon;
-    using weapon_4 = Damaging<CustomWeapon>;
+    using weapon_4 = Damaging<CustomWeapon>;   // CustomWeapon became Damagingable
     using weapon_5 = Damaging<DefaultWeapon>;
     using weapon_6 = Living<Healing<Living<Healing<Weapon>>>>;
     using weapon_7 = Living<Healing<Living<Healing<Naming<NoNameWeapon>>>>>;

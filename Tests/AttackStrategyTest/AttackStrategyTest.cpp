@@ -29,16 +29,11 @@
                 status = default_attack_behavior(obj, suspect);
             }
 
-            for (auto& other : obj.others) {
+            for (Damagingable auto& other : obj.others) {
                 status = default_attack_behavior(other, suspect);
-                print_subAttacks(other);
+                std::cout << "\t\t " << other << "\n";
             }
             return status;
-        }
-
-        bool print_subAttacks(Damagingable auto& obj) const {
-            std::cout << "\t\t " << obj << "\n";
-            return true;
         }
     };
 
