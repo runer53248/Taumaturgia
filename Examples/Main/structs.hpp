@@ -8,7 +8,7 @@
 
     using NoNameWeapon = add_properties<Type, Damaging>;
     using Weapon = add_properties<Type, Naming, Damaging>;
-    using Player = add_properties<Type, Naming, Wearing, Protecting>;
+    using Player = add_properties<Type, Naming, Wearing, Restoring>;
     using Enemy = add_properties<Type, Naming>;
     using Scroll = add_properties<Type, Naming>;
     using Potion = add_properties<Type, Naming>;
