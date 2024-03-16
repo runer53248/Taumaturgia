@@ -16,11 +16,11 @@ struct Weapon {
     Weapon(const Name& name, Damage dmg) noexcept
         : name{name}, dmg{dmg} {}
 
-    auto& Dmg() {
+    auto& Dmg() noexcept {
         return dmg;
     }
 
-    const auto& Dmg() const {
+    const auto& Dmg() const noexcept {
         return dmg;
     }
 

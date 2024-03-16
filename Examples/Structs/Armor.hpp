@@ -13,11 +13,11 @@ struct Armor {
     Armor(std::string name, Protection protection)
         : name{name}, protection{protection} {}
 
-    auto& getProtection() {
+    auto& getProtection() noexcept {
         return protection;
     }
 
-    const auto& getProtection() const {
+    const auto& getProtection() const noexcept {
         return protection;
     }
 
