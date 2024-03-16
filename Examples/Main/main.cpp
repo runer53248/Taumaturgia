@@ -1,59 +1,9 @@
 #include <vector>
 #include "Actions.hpp"
+#include "Examples/demangle_type_name.hpp"
 #include "FillBackpack.hpp"
 #include "Object/Properties/UserProperty.hpp"
 #include "Print.hpp"
-#include "Examples/demangle_type_name.hpp"
-
-void simple() {
-    Object player = player_type{
-        Name{"Player"},
-        Health{100}};
-
-    Object{
-        Helmet{
-            Name{"VIKING_HELM"},
-            ArmorClass{
-                2,
-                BodyLocation::Head,
-                {EffectType::Stun}}}}
-        .defend(&player);
-
-    print_person(player);
-
-    Object log(Weapon{
-        Name{"Log"},
-        Damage{
-            6,
-            Effect{
-                EffectType::Stun,
-                Duration{1, DurationType::Round}}}});
-
-    Object log_2(Weapon{
-        Name{"Log 2"},
-        Damage{
-            6,
-            Effect{
-                EffectType::Freeze,
-                Duration{1, DurationType::Round}}}});
-
-    std::cout << "attack with Stunning " << log.name() << " (have protection):\n";
-    log.attack(&log, &player);
-    print_person(player);
-
-    std::cout << "attack with Freezing " << log_2.name() << " (don't have protection):\n";
-    log_2.attack(&log_2, &player);
-    print_person(player);
-    std::cout << '\n';
-
-    auto weapon_2 = Weapon{Name{"Weapon"}, Damage{6}};
-    decltype(auto) val_2 = traits::accessDamage::get(weapon_2);  // reference
-    static_assert(std::is_same_v<decltype(val_2), Damage&>);
-
-    const auto weapon_3 = Weapon{Name{"Weapon"}, Damage{6}};
-    decltype(auto) val_3 = traits::accessDamage::get(weapon_3);  // const reference
-    static_assert(std::is_same_v<decltype(val_3), const Damage&>);
-}
 
 struct base {};
 using CureHealthType = UserProperty<int, UserProperty<CureValueType, UserProperty<EffectContainer, base>>>;
@@ -70,8 +20,6 @@ constexpr auto& operator<<(std::ostream& out, const EffectContainer& effectConta
 }
 
 int main() {
-    simple();
-
     CureHealthType cureHealthType{5, CureValueType::CURRENT_PERCENT, EffectContainer{Effect{EffectType::Burn}, Effect{EffectType::Devour}}};
 
     std::cout << traits::accessType<int>::get(cureHealthType);
