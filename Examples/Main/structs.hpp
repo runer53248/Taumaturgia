@@ -16,6 +16,14 @@
     using Helmet = add_properties<Type, Naming, Protecting>;
     using Npc = add_properties<Type, Living>;
 
+    using living_weapon = add_properties<Weapon, Living>;
+    using living_player = add_properties<Player, Living>;
+    using living_enemy = add_properties<Enemy, Living>;
+
+    using named_npc = add_properties<Npc, Naming>;
+
+    using restoring_potion = add_properties<Potion, Restoring>;
+
     using weapon_1 = add_properties<Weapon, Damaging>;
     using weapon_2 = Weapon;
     using weapon_3 = CustomWeapon;
@@ -42,6 +50,14 @@
 #else
     // use old method of creating type with properties
     #include "Examples/structs.hpp"
+
+    using living_weapon = Living<Weapon>;
+    using living_player = Living<Player>;
+    using living_enemy = Living<Enemy>;
+
+    using named_npc = Naming<Npc>;
+
+    using restoring_potion = Restoring<Potion>;
 
     using weapon_1 = Damaging<Weapon>;
     using weapon_2 = Weapon;

@@ -1,111 +1,80 @@
 #include <vector>
 #include "Actions.hpp"
-#include "Examples/demangle_type_name.hpp"
 #include "FillBackpack.hpp"
 #include "Object/Properties/UserProperty.hpp"
 #include "Print.hpp"
 
-struct base {};
-using CureHealthType = UserProperty<int, UserProperty<CureValueType, UserProperty<EffectContainer, base>>>;
-
 int main() {
-    CureHealthType cureHealthType{5, CureValueType::CURRENT_PERCENT, EffectContainer{Effect{EffectType::Burn}, Effect{EffectType::Devour}}};
-
-    std::cout << traits::accessType<int>::get(cureHealthType);
-    std::cout << toString(traits::accessType<CureValueType>::get(cureHealthType));
-    std::cout << traits::accessType<EffectContainer>::get(cureHealthType) << '\n';
-
     std::vector<Object> backpack;
 
-    using type_old = Living<Healing<Living<Healing<Weapon>>>>;  // ! will not reorder Damaging property from Weapon
-    using type_new = add_properties<Weapon, Living, Healing, Living, Healing>;
-
-    type_old old_t{};
-    std::cout << traits::accessName::get(old_t) << '\n';
-    std::cout << name<type_old>() << '\n';
-    std::cout << name<Living<Healing<Damaging<Naming<Weapon>>>>>() << '\n';
-    type_new new_t{};
-    std::cout << traits::accessName::get(new_t) << '\n';
-    std::cout << name<type_new>() << '\n';
-    std::cout << name<add_properties<Weapon, Living, Healing, Damaging, Naming>>() << '\n';
+    fillBackpack(backpack);
 
 #ifdef WITH_ADD_PROPERTIES
     std::cout << "*** WITH_ADD_PROPERTIES ***" << '\n';
 
-    // static_assert(std::is_same_v<type_old, Living<Healing<Damaging<Naming<Type, defaultWeaponName>>>>>); //!
-    // static_assert(std::is_same_v<type_old, Living<Healing<Damaging<Naming<Type>>>>>);  //!
-    static_assert(std::is_same_v<type_new, Living<Damaging<Healing<Naming<Type>>>>>);
+    using gustav_weapon = add_properties<Weapon, Living, Healing, Living, Healing>;
+    static_assert(std::is_same_v<gustav_weapon, add_properties<Weapon, Living, Healing>>);
 
-    fillBackpack(backpack);
+    static_assert(std::is_same_v<
+                  gustav_weapon,
+                  Living<Damaging<Healing<Naming<Type>>>>>);  // Type is base from with Weapon is build
+    // static_assert(std::is_same_v<gustav_weapon, Living<Damaging<Healing<Naming<Weapon>>>>>); // ! old way will not reorder Damaging property from build Weapon type
 
-    auto gustav = type_new{
+    auto gustav = gustav_weapon{
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},
-        /*dmg*/ std::ignore,     // ? need to add damage here
-        /*healHp*/ CureHealth{}  // * can be ommited
-    };                           // duplicated Living and Healing will be ignored
-
-    static_assert(std::is_same_v<decltype(gustav), add_properties<Weapon, Living, Healing>>);
+        /*dmg*/ std::ignore,       // must be ignored but not ommited if later is present
+        /*healHp*/ CureHealth{}};  // can be ommited
 #else
     std::cout << "*** WITHOUT_ADD_PROPERTIES ***" << '\n';
 
-    // std::cout << name<UserProperty<int, tag>>() << '\n';
-    // std::cout << UserProperty<int, tag>::property_data::name() << '\n';
-    // std::cout << name<UserProperty<int, tag>::property_data::base_type>() << '\n';
+    using gustav_weapon = Living<Healing<Living<Healing<Weapon>>>>;
+    static_assert(std::is_same_v<gustav_weapon, Living<Healing<Weapon>>>);
 
-    // std::cout << name<type_old>() << '\n';
-    // // std::cout << name<Living<Healing<Damaging<Naming<Weapon>>>>>() << '\n';
-    // std::cout << name<Living<Healing<Weapon>>>() << '\n';
-    // std::cout << name<type_new>() << '\n';
-    // std::cout << name<Living<Damaging<Healing<Naming<Weapon>>>>>() << '\n';
+    static_assert(std::is_same_v<
+                  gustav_weapon,
+                  Living<Healing<Damaging<Naming<Weapon>>>>>);
 
-    static_assert(std::is_same_v<type_old, Living<Healing<Damaging<Naming<Weapon>>>>>);  // * ignore Damaging and Naming
-    static_assert(std::is_same_v<type_new, Living<Damaging<Healing<Naming<Weapon>>>>>);  // * ignore Damaging and Naming
-
-    fillBackpack(backpack);
-
-    auto gustav = type_old{
+    auto gustav = gustav_weapon{
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},
-        /*healHp*/ CureHealth{}};  // duplicated Living and Healing will be ignored
-
-    static_assert(std::is_same_v<decltype(gustav), Living<Healing<Weapon>>>);
+        /*healHp*/ CureHealth{},
+        /*dmg*/ Damage{}};  // can be ommited - type inside Weapon type
 #endif
 
-    // gustav.name = Name{"Franco The Inteligent Sword"};
-    // gustav.hp = Health{75}; // can't be accessed now - is private
-    // gustav.getHealth() = Health{75}; // access version
     traits::accessName::get(gustav) = Name{"Franco The Inteligent Sword"};
     traits::accessHealth::get(gustav) = Health{75};  // universal access version
     traits::accessCureHealth::get(gustav) = CureHealth{30};
-    traits::accessDamage::get(gustav) = Damage{
-        100,
-        DamageType::Magical,
-        Effect{
-            EffectType::Stun,
-            Duration{3, DurationType::Round},
-            State{EffectState::Active}}};
+    traits::accessDamage::get(gustav) = Damage{100,
+                                               DamageType::Magical,
+                                               Effect{
+                                                   EffectType::Stun,
+                                                   Duration{3, DurationType::Round},
+                                                   State{EffectState::Active}}};
 
-    Object gustav_obj{gustav};
-    std::cout << '\n'
-              << gustav_obj.name() << '\n';
-    get_print_const_ref(gustav_obj);
-    std::cout << '\n';
-    get_print_ref(gustav_obj);
-    std::cout << '\n';
-    get_print_with_damage_as_const(gustav_obj);
-    std::cout << '\n';
-    backpack.push_back(std::move(gustav_obj));
+    {
+        Object gustav_obj{gustav};
 
-    backpack.push_back(Living<Weapon>{
+        std::cout << '\n';
+        std::cout << gustav_obj.name() << '\n';
+        get_print_const_ref(gustav_obj);
+        std::cout << '\n';
+        get_print_ref(gustav_obj);
+        std::cout << '\n';
+        get_print_with_damage_as_const(gustav_obj);
+        std::cout << '\n';
+        backpack.push_back(std::move(gustav_obj));
+    }
+
+    backpack.push_back(living_weapon{
         Name{"Living_SWORD"},
         Health{20},
         Damage{20}});
 
-    Object player(Living<Player>{
+    Object player(living_player{
         Name{"Knight"},
         Health{100}});
-    Object enemy(Living<Enemy>{
+    Object enemy(living_enemy{
         Name{"Ogr"},
         Health{200}});
     Object enemy_2(Enemy{
@@ -115,7 +84,9 @@ int main() {
     print_person(enemy_2);
     std::cout << "\n";
 
-    Object scroll = Damaging<Scroll>{
+    using damaging_scroll = scroll_3;
+
+    Object scroll = damaging_scroll{
         Name{"SLEEP_SCROLL"},
         Damage{
             0,
@@ -127,7 +98,7 @@ int main() {
     std::cout << "Current player:  //////////////////////////////\n\n";
     print_object(player);
 
-    Object burn = Damaging<Scroll>{
+    Object burn = damaging_scroll{
         Name{"Burn_scroll"},
         Damage{
             0,
@@ -178,7 +149,7 @@ int main() {
     // print_person(enemy);
     // std::cout << '\n';
 
-    Object npc(Naming<Npc>{
+    Object npc(named_npc{
         Name{"Npc"}});
     std::cout << "defend with " << franco.name() << ":\n";
     franco.defend(&npc);  // npc can't defend with franco - ignored
@@ -196,9 +167,11 @@ int main() {
     print_person(enemy_2);  // enemy_2 dont have hp
     std::cout << '\n';
 
+    using healing_potion = potion_1;
+
     print_person(npc);
     std::cout << "print npc after healing:\n";
-    Object{Healing<Potion>{
+    Object{healing_potion{
                Name{"HEALING_POTION"},
                CureHealth{100}}}
         .heal(&npc);
@@ -207,7 +180,7 @@ int main() {
 
     print_person(npc);
     std::cout << "print npc after stun restoration:\n";
-    Object{Restoring<Potion>{
+    Object{restoring_potion{
                Name{"Stun restore potion"},
                {EffectType::Stun, EffectType::Daze}}}
         .restore(&npc);
@@ -216,7 +189,7 @@ int main() {
 
     print_person(enemy);
     std::cout << "print devoured enemy after stun restoration:\n";
-    Object{Restoring<Potion>{
+    Object{restoring_potion{
                Name{"Stun restore potion"},
                {EffectType::Stun, EffectType::Daze}}}
         .restore(&enemy);
@@ -232,7 +205,7 @@ int main() {
     std::cout << '\n';
 
     std::cout << "print potion restore effects:\n";
-    Object restore_potion{Restoring<Potion>{
+    Object restore_potion{restoring_potion{
         Name{"Multi restore potion"},
         {EffectType::Stun,
          EffectType::Daze,
@@ -268,7 +241,7 @@ int main() {
         });
     std::cout << '\n';
 
-    const Object potion{Healing<Potion>{
+    const Object potion{healing_potion{
         Name{"HEALING_POTION"},
         CureHealth{75}}};
 
