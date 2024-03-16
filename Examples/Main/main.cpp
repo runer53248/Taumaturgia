@@ -8,17 +8,6 @@
 struct base {};
 using CureHealthType = UserProperty<int, UserProperty<CureValueType, UserProperty<EffectContainer, base>>>;
 
-constexpr auto& operator<<(std::ostream& out, const EffectContainer& effectContainer) {
-    if (not effectContainer.empty()) {
-        out << " {Effects: ";
-        for (const auto& effect : effectContainer) {
-            out << effect.effectType() << effect.duration();
-        }
-        out << "}";
-    }
-    return out;
-}
-
 int main() {
     CureHealthType cureHealthType{5, CureValueType::CURRENT_PERCENT, EffectContainer{Effect{EffectType::Burn}, Effect{EffectType::Devour}}};
 

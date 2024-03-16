@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "Object/Concepts/Types/CureHealth.hpp"
+#include "PrintEffectContainer.hpp"
 
 constexpr const char* toString(CureValueType type) noexcept {
     switch (type) {
@@ -17,12 +18,6 @@ constexpr const char* toString(CureValueType type) noexcept {
 
 constexpr auto& operator<<(std::ostream& out, const CureHealth& cureHealth) {
     out << cureHealth.value() << toString(cureHealth.valueType()) << " hp";
-    if (not cureHealth.effects().empty()) {
-        out << " {Effects: ";
-        for (const auto& effect : cureHealth.effects()) {
-            out << effect.effectType() << effect.duration();
-        }
-        out << "}";
-    }
+    out << cureHealth.effects();
     return out;
 }
