@@ -12,8 +12,8 @@ struct UserPropertyAdapter {
 };
 
 struct MyType {
-    MyType() = default;
-    MyType(auto&&...){};  // sink extra arguments
+    MyType() noexcept = default;
+    MyType(auto&&...) noexcept {};  // sink extra arguments
 };
 
 using Type_basic = UserProperty<Damage, MyType>;

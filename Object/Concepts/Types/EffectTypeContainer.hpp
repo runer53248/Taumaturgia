@@ -8,24 +8,24 @@ struct EffectTypeContainer {
     template <typename T>
     using container_type = std::set<T>;
 
-    EffectTypeContainer() = default;
+    EffectTypeContainer() noexcept = default;
 
-    EffectTypeContainer(std::initializer_list<EffectType> effectTypes)
+    EffectTypeContainer(std::initializer_list<EffectType> effectTypes) noexcept
         : effectTypes_{effectTypes} {}
 
-    EffectTypeContainer(EffectType effectType)
+    EffectTypeContainer(EffectType effectType) noexcept
         : effectTypes_{effectType} {}
 
-    auto operator<=>(const EffectTypeContainer&) const = default;
+    auto operator<=>(const EffectTypeContainer&) const noexcept = default;
 
-    auto begin() { return effectTypes_.begin(); }
-    auto end() { return effectTypes_.end(); }
-    auto cbegin() const { return effectTypes_.begin(); }
-    auto cend() const { return effectTypes_.end(); }
-    auto begin() const { return effectTypes_.begin(); }
-    auto end() const { return effectTypes_.end(); }
+    auto begin() noexcept { return effectTypes_.begin(); }
+    auto end() noexcept { return effectTypes_.end(); }
+    auto cbegin() const noexcept { return effectTypes_.begin(); }
+    auto cend() const noexcept { return effectTypes_.end(); }
+    auto begin() const noexcept { return effectTypes_.begin(); }
+    auto end() const noexcept { return effectTypes_.end(); }
 
-    bool contains(const EffectType& type) const {
+    bool contains(const EffectType& type) const noexcept {
         return effectTypes_.contains(type);
     }
 

@@ -9,7 +9,7 @@ using namespace std::chrono;
 
 template <typename FUN>
 struct Benchmark {
-    Benchmark(FUN&& fun)
+    Benchmark(FUN&& fun) noexcept
         : fun{std::move(fun)} {}
 
     template <typename... Args>

@@ -25,10 +25,10 @@ struct Health {
 
     constexpr auto maxValue() const noexcept { return MAX_VALUE; }
 
-    auto& effects() & { return effects_; }
-    auto effects() && { return effects_; }
-    auto& effects() const& { return effects_; }
-    auto effects() const&& { return effects_; }
+    auto& effects() & noexcept { return effects_; }
+    auto effects() && noexcept { return effects_; }
+    auto& effects() const& noexcept { return effects_; }
+    auto effects() const&& noexcept { return effects_; }
 
     void addHealth(int value) {
         if (value <= 0)

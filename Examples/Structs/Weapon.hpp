@@ -10,13 +10,11 @@
 struct Weapon {
     Name name;
 
-    Weapon() = default;
-    Weapon(const Name& name)
+    Weapon() noexcept = default;
+    Weapon(const Name& name) noexcept
         : name{name} {}
-    Weapon(const Name& name, Damage dmg)
+    Weapon(const Name& name, Damage dmg) noexcept
         : name{name}, dmg{dmg} {}
-
-    ~Weapon() = default;
 
     auto& Dmg() {
         return dmg;

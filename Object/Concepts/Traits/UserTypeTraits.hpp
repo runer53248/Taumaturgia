@@ -24,13 +24,13 @@ template <typename TYPE>
 struct accessType {
     template <GetTypeAccessable<TYPE> T>
         requires(not CustomTypeAccessable<T, TYPE>)  // prefer custom access getters
-    static decltype(auto) get(T& el) {
+    static decltype(auto) get(T& el) noexcept {
         return el.template getType<TYPE>();
     }
 
     template <CustomTypeAccessable<TYPE> T>
         requires(not GetTypeAccessable<TYPE, T>)
-    static decltype(auto) get(T& el) {
+    static decltype(auto) get(T& el) noexcept {
         return CustomAccessType<TYPE, std::remove_cvref_t<T>>::get(el);
     }
 };

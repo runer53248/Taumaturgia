@@ -31,10 +31,10 @@ struct CureHealth {
     constexpr auto value() const& noexcept { return value_; }
     constexpr auto valueType() const& noexcept { return value_type_; }
 
-    auto& effects() & { return effects_; }
-    auto effects() && { return effects_; }
-    auto& effects() const& { return effects_; }
-    auto effects() const&& { return effects_; }
+    auto& effects() & noexcept { return effects_; }
+    auto effects() && noexcept { return effects_; }
+    auto& effects() const& noexcept { return effects_; }
+    auto effects() const&& noexcept { return effects_; }
 
     void apply(Health& health) const noexcept {
         if (health.value() <= 0) {

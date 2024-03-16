@@ -14,24 +14,24 @@ CreateUserTypeAccessableConcept(CureHealth, CureHealth);
 CreateAccessTrait(CureHealth, cureHealth, CureHealth);
 #else
 struct accessCureHealth {
-    static auto& get(CureHealthAccessable auto& el) {
+    static auto& get(CureHealthAccessable auto& el) noexcept{
         return el.cureHealth;
     }
 
     template <GetCureHealthAccessable T>
         requires(not(CustomCureHealthAccessable<T> or UserTypeCureHealthAccessable<T>))
-    static decltype(auto) get(T& el) {
+    static decltype(auto) get(T& el) noexcept {
         return el.getCureHealth();
     }
 
     template <CustomCureHealthAccessable T>
         requires(not UserTypeCureHealthAccessable<T>)
-    static decltype(auto) get(T& el) {
+    static decltype(auto) get(T& el) noexcept{
         return CustomAccessCureHealth<std::remove_cvref_t<T>>::get(el);
     }
 
     template <UserTypeCureHealthAccessable T>
-    static decltype(auto) get(T& el) {
+    static decltype(auto) get(T& el) noexcept {
         return el.template getType<CureHealth>();
     }
 };

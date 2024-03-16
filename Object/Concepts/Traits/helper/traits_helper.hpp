@@ -68,24 +68,24 @@
 #ifdef ACCESS_TRAIT_MACRO
 #define CreateAccessTrait(NAME, MEMBER, TYPE)                                           \
     struct access##NAME {                                                               \
-        static auto& get(NAME##Accessable auto& el) {                                   \
+        static auto& get(NAME##Accessable auto& el) noexcept {                          \
             return el.MEMBER;                                                           \
         }                                                                               \
                                                                                         \
         template <Get##NAME##Accessable T>                                              \
             requires(not(Custom##NAME##Accessable<T> or UserType##NAME##Accessable<T>)) \
-        static decltype(auto) get(T& el) {                                              \
+        static decltype(auto) get(T& el) noexcept {                                     \
             return el.get##NAME();                                                      \
         }                                                                               \
                                                                                         \
         template <Custom##NAME##Accessable T>                                           \
             requires(not UserType##NAME##Accessable<T>)                                 \
-        static decltype(auto) get(T& el) {                                              \
+        static decltype(auto) get(T& el) noexcept {                                     \
             return CustomAccess##NAME<std::remove_cvref_t<T>>::get(el);                 \
         }                                                                               \
                                                                                         \
         template <UserType##NAME##Accessable T>                                         \
-        static decltype(auto) get(T& el) {                                              \
+        static decltype(auto) get(T& el) noexcept {                                     \
             return el.template getType<TYPE>();                                         \
         }                                                                               \
     };

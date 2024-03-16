@@ -8,31 +8,31 @@ struct EffectContainer {
     template <typename T>
     using container_type = std::vector<T>;
 
-    constexpr EffectContainer() = default;
-    constexpr EffectContainer(const Effect& effect)
+    constexpr EffectContainer() noexcept = default;
+    constexpr EffectContainer(const Effect& effect) noexcept
         : effects_{effect} {}
-    constexpr EffectContainer(std::initializer_list<Effect> effects)
+    constexpr EffectContainer(std::initializer_list<Effect> effects) noexcept
         : effects_{effects} {}
 
-    constexpr auto operator<=>(const EffectContainer&) const = default;
+    constexpr auto operator<=>(const EffectContainer&) const noexcept = default;
 
-    auto begin() { return effects_.begin(); }
-    auto end() { return effects_.end(); }
-    auto cbegin() const { return effects_.begin(); }
-    auto cend() const { return effects_.end(); }
-    auto begin() const { return effects_.begin(); }
-    auto end() const { return effects_.end(); }
+    auto begin() noexcept { return effects_.begin(); }
+    auto end() noexcept { return effects_.end(); }
+    auto cbegin() const noexcept { return effects_.begin(); }
+    auto cend() const noexcept { return effects_.end(); }
+    auto begin() const noexcept { return effects_.begin(); }
+    auto end() const noexcept { return effects_.end(); }
 
     bool empty() const noexcept {
         return effects_.empty();
     }
 
-    auto& effects() & { return effects_; }
-    auto effects() && { return effects_; }  // don't return reference from temporary objects
-    auto& effects() const& { return effects_; }
-    auto effects() const&& { return effects_; }
+    auto& effects() & noexcept { return effects_; }
+    auto effects() && noexcept { return effects_; }  // don't return reference from temporary objects
+    auto& effects() const& noexcept { return effects_; }
+    auto effects() const&& noexcept { return effects_; }
 
-    bool isEffectType(const Effect& effect) const {
+    bool isEffectType(const Effect& effect) const noexcept {
         return std::ranges::find(effects_, effect) != effects_.end();
     }
 

@@ -10,11 +10,11 @@ struct ProtectionContainer {
 
     friend constexpr auto operator<=>(const ProtectionContainer& lhs, const ProtectionContainer& rhs) noexcept = default;
 
-    auto value() const& {
+    auto value() const& noexcept {
         return globalArmor_;
     }
 
-    auto protectEffects() const& {
+    auto protectEffects() const& noexcept {
         return globalProtectEffects_;
     }
 
@@ -28,10 +28,10 @@ struct ProtectionContainer {
         return result;
     }
 
-    auto& armorAtLocation(BodyLocation location) const& {
+    auto& armorAtLocation(BodyLocation location) const& noexcept {
         return protections_.at(static_cast<size_t>(location));
     }
-    auto& armorAtLocation(BodyLocation location) & {
+    auto& armorAtLocation(BodyLocation location) & noexcept {
         return protections_.at(static_cast<size_t>(location));
     }
 
