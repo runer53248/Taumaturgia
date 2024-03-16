@@ -8,26 +8,20 @@
     // simulate prepared properties with UserProperty class
     #include "Object/Properties/UserProperty.hpp"
 
-    template <typename TYPE, bool CONCEPT>
-    struct UserPropertyAdapter {
-        template <typename T>
-        using type = std::conditional_t<CONCEPT, T, UserProperty<TYPE, T>>;
-    };
-
     template <typename TYPE>
-    using Living = UserPropertyAdapter<Health, Livingable<TYPE>>::template type<TYPE>;
+    using Living = UserPropertyConceptAdapter<Health, Livingable<TYPE>>::template type<TYPE>;
     template <typename TYPE>
-    using Wearing = UserPropertyAdapter<ProtectionContainer, Wearingable<TYPE>>::template type<TYPE>;
+    using Wearing = UserPropertyConceptAdapter<ProtectionContainer, Wearingable<TYPE>>::template type<TYPE>;
     template <typename TYPE>
-    using Damaging = UserPropertyAdapter<Damage, Damagingable<TYPE>>::template type<TYPE>;
+    using Damaging = UserPropertyConceptAdapter<Damage, Damagingable<TYPE>>::template type<TYPE>;
     template <typename TYPE>
-    using Protecting = UserPropertyAdapter<Protection, Protectingable<TYPE>>::template type<TYPE>;
+    using Protecting = UserPropertyConceptAdapter<Protection, Protectingable<TYPE>>::template type<TYPE>;
     template <typename TYPE>
-    using Healing = UserPropertyAdapter<CureHealth, Healingable<TYPE>>::template type<TYPE>;
+    using Healing = UserPropertyConceptAdapter<CureHealth, Healingable<TYPE>>::template type<TYPE>;
     template <typename TYPE>
-    using Restoring = UserPropertyAdapter<EffectTypeContainer, Restoringable<TYPE>>::template type<TYPE>;
+    using Restoring = UserPropertyConceptAdapter<EffectTypeContainer, Restoringable<TYPE>>::template type<TYPE>;
     template <typename TYPE>
-    using Naming = UserPropertyAdapter<Name, Namingable<TYPE>>::template type<TYPE>;
+    using Naming = UserPropertyConceptAdapter<Name, Namingable<TYPE>>::template type<TYPE>;
 
     #include "Object/Properties/Helpers/taged_list.hpp"
 
@@ -42,12 +36,13 @@
         >;      // properties list in order
 
     #include "Object/Properties/Helpers/Property.hpp"
-
-    struct Living_type {
-        Name name;
-        Health hp;
-    };
-
-    static_assert(std::is_same_v<Damaging<Living_type>, add_properties<Living_type, Naming, Living, Damaging>>);
-
 #endif
+
+struct Living_type {
+    Name name;
+    Health hp;
+};
+
+static_assert(std::is_same_v<
+                Damaging<Living_type>,
+                add_properties<Living_type, Naming, Living, Damaging> >);

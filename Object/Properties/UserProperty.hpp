@@ -134,5 +134,17 @@ static_assert(Typeable<UserProperty_<int, UserProperty_Test>, int>);
 template <typename TYPE, typename T, typename... Args>
 using UserProperty = std::conditional_t<Typeable<T, TYPE>, T, impl::UserProperty_<TYPE, T, Args...>>;
 
+template <typename TYPE, typename... Args>
+struct UserPropertyAdapter {
+    template <typename T>
+    using type = UserProperty<TYPE, T, Args...>;
+};
+
+template <typename TYPE, bool CONCEPT, typename... Args>
+struct UserPropertyConceptAdapter {
+    template <typename T>
+    using type = std::conditional_t<CONCEPT, T, UserProperty<TYPE, T, Args...>>;
+};
+
 template <typename TYPE, typename T>
 struct UserStrategy_<TYPE, impl::UserProperty_<TYPE, T>> : UserStrategy_<TYPE, T> {};  // forward eventualy implemented strategy

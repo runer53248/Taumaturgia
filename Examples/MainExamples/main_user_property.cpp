@@ -2,12 +2,6 @@
 #include "Object/Properties/Helpers/taged_list.hpp"
 #include "Object/Properties/UserProperty.hpp"
 
-template <typename TYPE>
-struct UserPropertyAdapter {
-    template <typename T>
-    using type = UserProperty<TYPE, T>;
-};
-
 using order_list = taged_list<
     UserPropertyAdapter<int>::type,
     UserPropertyAdapter<std::string>::type,

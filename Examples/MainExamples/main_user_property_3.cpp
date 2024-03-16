@@ -5,12 +5,6 @@
 #include "Object/Properties/Properties.hpp"
 #include "Object/Properties/UserProperty.hpp"
 
-template <typename TYPE, typename... Args>
-struct UserPropertyAdapter {
-    template <typename T>
-    using type = UserProperty<TYPE, T, Args...>;
-};
-
 struct MyType {
     MyType() noexcept = default;
     MyType(auto&&...) noexcept {};  // sink extra arguments

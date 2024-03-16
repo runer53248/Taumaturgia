@@ -4,12 +4,6 @@
 
 struct MyType {};
 
-template <typename TYPE>
-struct UserPropertyAdapter {
-    template <typename T>
-    using type = UserProperty<TYPE, T>;
-};
-
 using TestType = add_properties<
     MyType,
     //
