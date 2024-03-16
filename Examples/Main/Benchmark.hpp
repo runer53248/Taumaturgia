@@ -44,7 +44,7 @@ struct Benchmark {
         dur_aprox /= repetition;
 
         std::cout << "dur_aprox: " << dur_aprox
-                  // << " after repeat " << repetition << " times"
+                  // << " after repeat it " << repetition << " times"
                   << '\n';
         return result;
     }

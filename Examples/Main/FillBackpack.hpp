@@ -1,5 +1,4 @@
 #pragma once
-
 #include "properties.hpp"
 #include "structs.hpp"
 

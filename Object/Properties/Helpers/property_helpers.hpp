@@ -71,18 +71,13 @@ struct is_same_priority {
 template <typename A, typename B>
 concept same_priority = is_same_priority<A, B>::value;
 
-// template <typename T>
-// using value_equal_zero = mp_bool<T::value == 0>;
-
 template <typename... PROPERTY_LISTS>
 using append_and_order_property_lists =
     mp_sort<
-        // mp_remove_if< // will remove properties that have 0 value (are not in order_list)
         mp_unique_if<  //
             mp_append<
                 PROPERTY_LISTS...>,
             is_same_priority>,
-        // value_equal_zero>,
         mp_less>;
 
 template <template <typename...> typename... properties>
