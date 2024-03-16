@@ -12,8 +12,8 @@ struct CustomWeapon {  // is not Damagingable but still counts as AttackStratega
 static_assert(Damagingable<DefaultWeapon>);
 static_assert(not Damagingable<CustomWeapon>);
 
-template <>
-struct AttackStrategy_<CustomWeapon> {
+template <std::convertible_to<CustomWeapon> T>
+struct AttackStrategy_<T> {
     // ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const {  // when get Damagingable property
     //     auto* suspect = Whom(owner, target);
     //     ActionStatus base_status = default_attack_behavior(obj, suspect);
