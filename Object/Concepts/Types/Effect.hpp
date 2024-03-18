@@ -60,6 +60,10 @@ struct Effect {
     auto duration() const& noexcept { return duration_; }
     auto duration() const&& noexcept { return duration_; }
 
+    bool empty() const noexcept {
+        return effectType_ == EffectType::None;
+    }
+
     bool isActive() const noexcept {
         return state_.effectState() == EffectState::Active;
     }

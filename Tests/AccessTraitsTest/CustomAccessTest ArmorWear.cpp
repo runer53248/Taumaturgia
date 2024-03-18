@@ -12,16 +12,16 @@ public:
     constexpr static auto default_float = 1.2f;
     constexpr static auto default_int = 5;
     constexpr static auto default_bool = true;
-    ProtectionContainer default_armor;
-    ProtectionContainer default_armor_change;
+    WearContainer default_armor;
+    WearContainer default_armor_change;
     std::unique_ptr<TestType> type{nullptr};
 
     CustomAccessArmorWearMock<TestType> customMock;
 
 protected:
     void SetUp() override {
-        default_armor = ProtectionContainer{10};
-        default_armor_change = ProtectionContainer{100};
+        default_armor = WearContainer{10};
+        default_armor_change = WearContainer{100};
         type = std::make_unique<TestType>(
             /*Naming*/ Name{default_name},
             /*Living*/ std::ignore,

@@ -113,7 +113,7 @@ int main() {
     Damage damage{10};
     EffectTypeContainer effectTypeContainer{};
     ArmorClass armorClass{4, BodyLocation::Internal, {EffectType::Sleep}};
-    ProtectionContainer protectionContainer{};
+    WearContainer protectionContainer{};
 
     Healing<Living<Restoring<Damaging<Protecting<Wearing<Potion>>>>>>{
         Name{"SHIELD_POTION"},

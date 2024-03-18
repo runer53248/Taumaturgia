@@ -33,7 +33,7 @@ inline ActionStatus default_attack_behavior(Damagingable auto& obj, Object* targ
             }
 
             if (opt_wear.has_value()) {  // target can have protection against effect from wearables
-                ProtectionContainer& target_wear = opt_wear.value();
+                WearContainer& target_wear = opt_wear.value();
                 if (target_wear.protectEffects().contains(attackEffect.effectType())) {  // check wear protection against attack effect
                     return std::optional{ActionStatus::Partial_Success};
                 }

@@ -11,7 +11,7 @@
     template <typename TYPE>
     using Living = UserPropertyConceptAdapter<Health, Livingable<TYPE>>::template type<TYPE>;
     template <typename TYPE>
-    using Wearing = UserPropertyConceptAdapter<ProtectionContainer, Wearingable<TYPE>>::template type<TYPE>;
+    using Wearing = UserPropertyConceptAdapter<WearContainer, Wearingable<TYPE>>::template type<TYPE>;
     template <typename TYPE>
     using Damaging = UserPropertyConceptAdapter<Damage, Damagingable<TYPE>>::template type<TYPE>;
     template <typename TYPE>

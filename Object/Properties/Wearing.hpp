@@ -14,9 +14,9 @@ struct Wearing_ : T {
     Wearing_() = default;
 
     template <typename... INFO>
-        requires(std::is_constructible_v<ProtectionContainer, INFO...> and sizeof...(INFO) > 0)
+        requires(std::is_constructible_v<WearContainer, INFO...> and sizeof...(INFO) > 0)
     Wearing_(const Name& name, std::tuple<INFO...>&& armorWear, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::move(std::make_from_tuple<ProtectionContainer>(std::forward<decltype(armorWear)>(armorWear)))} {}
+        : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::move(std::make_from_tuple<WearContainer>(std::forward<decltype(armorWear)>(armorWear)))} {}
 
     Wearing_(const Name& name)
         : T{name} {}
@@ -24,19 +24,19 @@ struct Wearing_ : T {
     Wearing_(const Name& name, [[maybe_unused]] decltype(std::ignore) armorWear, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
-    Wearing_(const Name& name, ProtectionContainer&& armorWear, auto&&... args)
+    Wearing_(const Name& name, WearContainer&& armorWear, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::move(armorWear)} {}
 
-    Wearing_(const Name& name, const ProtectionContainer& armorWear, auto&&... args)
+    Wearing_(const Name& name, const WearContainer& armorWear, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, armorWear{armorWear} {}
 
     template <typename... V>
-        requires boost::mp11::mp_contains<std::variant<V...>, ProtectionContainer>::value
+        requires boost::mp11::mp_contains<std::variant<V...>, WearContainer>::value
     Wearing_(const Name& name, const std::variant<V...>& armorWear, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::get<ProtectionContainer>(armorWear)} {}
+        : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::get<WearContainer>(armorWear)} {}
 
     template <typename... V>
-        requires(not boost::mp11::mp_contains<std::variant<V...>, ProtectionContainer>::value)
+        requires(not boost::mp11::mp_contains<std::variant<V...>, WearContainer>::value)
     Wearing_(const Name& name, [[maybe_unused]] const std::variant<V...>& armorWear, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...} {}
 
@@ -49,7 +49,7 @@ struct Wearing_ : T {
     }
 
 private:
-    ProtectionContainer armorWear{};
+    WearContainer armorWear{};
 };
 
 namespace Test {

@@ -6,7 +6,7 @@
 #include "Enums/EffectType.hpp"
 #include "Enums/Parameter.hpp"
 #include "Health.hpp"
-#include "ProtectionContainer.hpp"
+#include "WearContainer.hpp"
 
 using get_variant_type = std::variant<std::monostate,
                                       std::reference_wrapper<Health>,
@@ -14,14 +14,14 @@ using get_variant_type = std::variant<std::monostate,
                                       std::reference_wrapper<Damage>,
                                       std::reference_wrapper<Protection>,
                                       std::reference_wrapper<EffectTypeContainer>,
-                                      std::reference_wrapper<ProtectionContainer>>;
+                                      std::reference_wrapper<WearContainer>>;
 using get_variant_const_type = std::variant<std::monostate,
                                             std::reference_wrapper<const Health>,
                                             std::reference_wrapper<const CureHealth>,
                                             std::reference_wrapper<const Damage>,
                                             std::reference_wrapper<const Protection>,
                                             std::reference_wrapper<const EffectTypeContainer>,
-                                            std::reference_wrapper<const ProtectionContainer>>;
+                                            std::reference_wrapper<const WearContainer>>;
 
 using get_optional_variant_type = std::optional<get_variant_type>;
 using get_optional_variant_const_type = std::optional<get_variant_const_type>;
@@ -65,6 +65,6 @@ constexpr auto get_opt_ref_wrapper(GetOptVarianted auto&& opt_variant) {
         return extract_to_opt_ref_wrapper<EffectTypeContainer>(opt_variant);
     }
     if constexpr (param == Parameter::Wear) {
-        return extract_to_opt_ref_wrapper<ProtectionContainer>(opt_variant);
+        return extract_to_opt_ref_wrapper<WearContainer>(opt_variant);
     }
 }

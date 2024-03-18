@@ -13,26 +13,13 @@ struct Protection {
 
     auto operator<=>(const Protection& other) const noexcept = default;
 
-    auto armorClass() const noexcept {
-        return ac_.armorClass();
-    }
+    decltype(auto) armorClass() const noexcept { return ac_.armorClass(); }
+    decltype(auto) location() const noexcept { return ac_.location(); }
 
-    auto location() const noexcept {
-        return ac_.location();
-    }
-
-    auto& protectEffects() & noexcept {
-        return ac_.protectEffects();
-    }
-    auto protectEffects() && noexcept {
-        return ac_.protectEffects();
-    }
-    auto& protectEffects() const& noexcept {
-        return ac_.protectEffects();
-    }
-    auto protectEffects() const&& noexcept {
-        return ac_.protectEffects();
-    }
+    decltype(auto) protectEffects() & noexcept { return ac_.protectEffects(); }
+    decltype(auto) protectEffects() && noexcept { return ac_.protectEffects(); }
+    decltype(auto) protectEffects() const& noexcept { return ac_.protectEffects(); }
+    decltype(auto) protectEffects() const&& noexcept { return ac_.protectEffects(); }
 
 private:
     ArmorClass ac_{};

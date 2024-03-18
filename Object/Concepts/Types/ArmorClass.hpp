@@ -20,26 +20,12 @@ struct ArmorClass {
 
     auto operator<=>(const ArmorClass& other) const noexcept = default;
 
-    auto armorClass() const noexcept {
-        return value_;
-    }
-
-    auto location() const noexcept {
-        return location_;
-    }
-
-    auto& protectEffects() & noexcept {
-        return protectEffects_;
-    }
-    auto protectEffects() && noexcept {
-        return protectEffects_;
-    }
-    auto& protectEffects() const& noexcept {
-        return protectEffects_;
-    }
-    auto protectEffects() const&& noexcept {
-        return protectEffects_;
-    }
+    auto armorClass() const noexcept { return value_; }
+    auto location() const noexcept { return location_; }
+    auto& protectEffects() & noexcept { return protectEffects_; }
+    auto protectEffects() && noexcept { return protectEffects_; }
+    auto& protectEffects() const& noexcept { return protectEffects_; }
+    auto protectEffects() const&& noexcept { return protectEffects_; }
 
 private:
     int value_{};

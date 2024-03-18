@@ -3,20 +3,15 @@
 #include <optional>
 #include "Protection.hpp"
 
-struct ProtectionContainer {
-    ProtectionContainer() noexcept = default;
-    explicit ProtectionContainer(int baseValue) noexcept
+struct WearContainer {
+    WearContainer() noexcept = default;
+    explicit WearContainer(int baseValue) noexcept
         : globalArmor_{baseValue} {}
 
-    friend constexpr auto operator<=>(const ProtectionContainer& lhs, const ProtectionContainer& rhs) noexcept = default;
+    friend constexpr auto operator<=>(const WearContainer& lhs, const WearContainer& rhs) noexcept = default;
 
-    auto value() const& noexcept {
-        return globalArmor_;
-    }
-
-    auto protectEffects() const& noexcept {
-        return globalProtectEffects_;
-    }
+    auto value() const& noexcept { return globalArmor_; }
+    const auto& protectEffects() const& noexcept { return globalProtectEffects_; }
 
     std::vector<BodyLocation> getWearedLocations() const {
         std::vector<BodyLocation> result{};
@@ -28,7 +23,7 @@ struct ProtectionContainer {
         return result;
     }
 
-    auto& armorAtLocation(BodyLocation location) const& noexcept {
+    const auto& armorAtLocation(BodyLocation location) const& noexcept {
         return protections_.at(static_cast<size_t>(location));
     }
     auto& armorAtLocation(BodyLocation location) & noexcept {

@@ -5,8 +5,8 @@
 
 #ifdef CUSTOM_ACCESS_MOCK_MACRO
 StartCustomAccessMock(ArmorWear);
-MOCK_METHOD(ProtectionContainer&, get_, (TestType & el));
-MOCK_METHOD(const ProtectionContainer&, get_, (const TestType& el));
+MOCK_METHOD(WearContainer&, get_, (TestType & el));
+MOCK_METHOD(const WearContainer&, get_, (const TestType& el));
 EndCustomAccessMock();
 CustomMock(ArmorWear);
 #else
@@ -14,8 +14,8 @@ template <typename T>
 struct traits::CustomAccessArmorWear {
     inline static traits::CustomAccessArmorWear<T>* mock = nullptr;
 
-    MOCK_METHOD(ProtectionContainer&, get_, (TestType & el));
-    MOCK_METHOD(const ProtectionContainer&, get_, (const TestType& el));
+    MOCK_METHOD(WearContainer&, get_, (TestType & el));
+    MOCK_METHOD(const WearContainer&, get_, (const TestType& el));
 
     static decltype(auto) get(auto& el) {
         if (mock) {

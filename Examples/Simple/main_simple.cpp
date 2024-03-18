@@ -61,11 +61,11 @@ struct traits::CustomAccessDamage<T> {
 
 struct Player {
     std::string name;
-    ProtectionContainer armorWear{10};
+    WearContainer armorWear{10};
 };
 
 struct Player_B {
-    ProtectionContainer armorWear{10};
+    WearContainer armorWear{10};
 
     Player_B(const std::string& name, Health hp)
         : name{name}, hp{hp} {}
@@ -191,7 +191,7 @@ int main() {
 
     std::cout << "Paladin change shield: \n";
     getOpt<Parameter::Wear>(paladin)
-        .and_then([&](ProtectionContainer& wear) {
+        .and_then([&](WearContainer& wear) {
             Protection& other_protection = getOpt<Parameter::Protection>(shield_2).value().get();  // we now that it exist so don't check optional here
 
             auto opt_protection = wear.wearProtection(other_protection);  // change protection slot
@@ -210,7 +210,7 @@ int main() {
 
     std::cout << "Paladin remove all weared protection: \n";
     getOpt<Parameter::Wear>(paladin)
-        .and_then([&](ProtectionContainer& wear) {  // remove all armor
+        .and_then([&](WearContainer& wear) {  // remove all armor
             for (auto location : wear.getWearedLocations()) {
                 auto opt_armor = wear.removeArmorAtLocation(location);
                 if (opt_armor) {

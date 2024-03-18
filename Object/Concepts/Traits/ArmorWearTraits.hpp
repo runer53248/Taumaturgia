@@ -1,17 +1,17 @@
 #pragma once
 #include "helper/traits_helper.hpp"
 
-struct ProtectionContainer;
+struct WearContainer;
 
 namespace traits {
 
-CreateAccessableConcept(ArmorWear, armorWear, ProtectionContainer);
-CreateGetAccessableConcept(ArmorWear, ProtectionContainer);
-CreateCustomAccessableConcept(ArmorWear, ProtectionContainer);
-CreateUserTypeAccessableConcept(ArmorWear, ProtectionContainer);
+CreateAccessableConcept(ArmorWear, armorWear, WearContainer);
+CreateGetAccessableConcept(ArmorWear, WearContainer);
+CreateCustomAccessableConcept(ArmorWear, WearContainer);
+CreateUserTypeAccessableConcept(ArmorWear, WearContainer);
 
 #ifdef ACCESS_TRAIT_MACRO
-CreateAccessTrait(ArmorWear, armorWear, ProtectionContainer);
+CreateAccessTrait(ArmorWear, armorWear, WearContainer);
 #else
 struct accessArmorWear {
     static auto& get(ArmorWearAccessable auto& el) noexcept {
@@ -32,7 +32,7 @@ struct accessArmorWear {
 
     template <UserTypeArmorWearAccessable T>
     static decltype(auto) get(T& el) noexcept {
-        return el.template getType<ProtectionContainer>();
+        return el.template getType<WearContainer>();
     }
 };
 #endif

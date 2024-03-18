@@ -2,7 +2,7 @@
 
 inline ActionStatus default_defend_behavior(Protectingable auto& obj, Object* target) {
     auto is_success = getOpt<Parameter::Wear>(*target).and_then([&](auto&& ref_wrap) {
-        ProtectionContainer& target_protection = ref_wrap;
+        WearContainer& target_protection = ref_wrap;
         target_protection.wearProtection(traits::accessProtection::get(obj));
         return std::optional{true};
     });
