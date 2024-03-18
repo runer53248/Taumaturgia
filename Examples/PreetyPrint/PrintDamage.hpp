@@ -6,9 +6,16 @@
 #include "PrintEffectState.hpp"
 #include "PrintEffectType.hpp"
 
+#include "PrintWrapper.hpp"
+
 auto& operator<<(std::ostream& out, const Damage& damage) {
-    out << "(Damage: " << damage.value() << damage.type() << damage.effect().effectType() << damage.effect().duration();
-    out << damage.effect().state().effectState();
-    out << ")";
-    return out;
+    return print_in_round_braces(
+        out, "Damage",
+        [&] {
+            out << damage.value() << ' ' << damage.type();
+            if (damage.effect().empty()) {
+                return;
+            }
+            out << ' ' << damage.effect();
+        });
 }

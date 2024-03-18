@@ -7,11 +7,10 @@
 #include "PrintEffectType.hpp"
 
 constexpr auto& operator<<(std::ostream& out, const Damagingable auto& obj) {
-    auto dmg = traits::accessDamage::get(obj);
-    out << " for " << dmg.value() << " dmg";
-    out << " with " << traits::accessName::get(obj);
-    out << " " << dmg.effect().effectType();
-    out << " " << dmg.effect().duration();
-    out << " " << dmg.type();
+    const auto dmg = traits::accessDamage::get(obj);
+    const auto name = traits::accessName::get(obj);
+    out << " for " << dmg.value() << " dmg"
+        << " with " << name
+        << " " << dmg;
     return out;
 }

@@ -44,5 +44,5 @@ constexpr const char* toString(EffectType effect) noexcept {
 }
 
 constexpr auto& operator<<(std::ostream& out, EffectType effect) {
-    return out << " [" << toString(effect) << "]";
+    return out << '[' << toString(effect) << ']';
 }

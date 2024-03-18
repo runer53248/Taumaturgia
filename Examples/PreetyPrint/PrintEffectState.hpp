@@ -18,5 +18,5 @@ constexpr const char* toString(EffectState state) noexcept {
 }
 
 constexpr auto& operator<<(std::ostream& out, EffectState state) {
-    return out << toString(state);
+    return out << '[' << toString(state) << ']';
 }

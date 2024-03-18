@@ -6,9 +6,9 @@
 constexpr auto& operator<<(std::ostream& out, const Duration& duration) {
     auto value = duration.value();
     if (value == 1) {
-        out << " (" << value << " " << duration.type() << ") ";
+        out << "(" << value << " " << duration.type() << ")";
     } else {
-        out << " (" << value << " " << duration.type() << "s) ";
+        out << "(" << value << " " << duration.type() << "s)";
     }
     return out;
 }
