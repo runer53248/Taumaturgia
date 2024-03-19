@@ -6,23 +6,16 @@
 struct Health {
     constexpr Health() noexcept = default;
     constexpr explicit Health(int value) noexcept
-        : value_{value} {}
+        : value_{std::min(value, MAX_VALUE)} {}
     constexpr Health(int value, const Effect& effect) noexcept
-        : value_{value}, effects_{EffectContainer{effect}} {}
+        : value_{std::min(value, MAX_VALUE)}, effects_{EffectContainer{effect}} {}
     constexpr Health(int value, const EffectContainer& effects) noexcept
-        : value_{value}, effects_{effects} {}
+        : value_{std::min(value, MAX_VALUE)}, effects_{effects} {}
 
     constexpr auto operator<=>(const Health& other) const noexcept = default;
 
-    void value(int value) noexcept {
-        if (value > MAX_VALUE) {
-            value_ = MAX_VALUE;
-            return;
-        }
-        value_ = value;
-    }
+    void value(int value) noexcept { value_ = std::min(value, MAX_VALUE); }
     constexpr auto value() const noexcept { return value_; }
-
     constexpr auto maxValue() const noexcept { return MAX_VALUE; }
 
     auto& effects() & noexcept { return effects_; }
@@ -31,8 +24,9 @@ struct Health {
     auto effects() const&& noexcept { return effects_; }
 
     void addHealth(int value) {
-        if (value <= 0)
+        if (value <= 0) {
             return;
+        }
         auto range = std::minmax(value, value_);
 
         if (MAX_VALUE - range.second < range.first) {
@@ -43,8 +37,9 @@ struct Health {
     }
 
     void removeHealth(int value) {
-        if (value <= 0)
+        if (value <= 0) {
             return;
+        }
         auto range = std::minmax(value, value_);
 
         if (std::numeric_limits<int>::min() + range.second > range.first) {
