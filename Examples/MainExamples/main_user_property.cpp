@@ -129,7 +129,7 @@ int main() {
     {
         using UserClass5_1 = add_properties<MyType_1, UserPropertyAdapter<int>::type, UserPropertyAdapter<float>::type>;
         UserClass5_1 type1{Name{}, 5, 2.3f};
-        std::cout << "default trait::accessType \n";
+        std::cout << "default traits::accessType \n";
         decltype(auto) x = traits::accessType<float>::get(std::as_const(type1));
         std::cout << x << '\n';
         decltype(auto) y = traits::accessType<float>::get(type1);
@@ -142,7 +142,7 @@ int main() {
     }
 
     {
-        std::cout << "custom trait::accessType for one type\n";
+        std::cout << "custom traits::accessType for one type\n";
         using UserClass5_2 = add_properties<MyType_2, UserPropertyAdapter<int>::type, UserPropertyAdapter<float>::type>;
         UserClass5_2 type2{Name{}, 5, 2.3f};
         decltype(auto) x = traits::accessType<float>::get(std::as_const(type2));
@@ -157,7 +157,7 @@ int main() {
     }
 
     {
-        std::cout << "custom trait::accessType for all types\n";
+        std::cout << "custom traits::accessType for all types\n";
         using UserClass5_3 = add_properties<MyType_3, UserPropertyAdapter<int>::type, UserPropertyAdapter<float>::type>;
         UserClass5_3 type3{Name{}, 5, 2.3f};
         decltype(auto) x = traits::accessType<float>::get(std::as_const(type3));

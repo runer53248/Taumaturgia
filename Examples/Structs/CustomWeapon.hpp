@@ -6,7 +6,7 @@ struct CustomWeapon {  // is not Damagingable but still counts as AttackStratega
     Name name;
     std::vector<DefaultWeapon> others{// will be used in AttackStrategy_<CustomWeapon>
                                       DefaultWeapon{Name{"Light weapon"}, Damage{10}},
-                                      DefaultWeapon{Name{"Medium weapon"}, Damage{20}}};
+                                      DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
 };
 
 static_assert(Damagingable<DefaultWeapon>);
