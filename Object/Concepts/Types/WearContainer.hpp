@@ -30,28 +30,33 @@ struct WearContainer {
         return protections_.at(static_cast<size_t>(location));
     }
 
+    // return Protection removed from same location if existed
     std::optional<Protection> wearProtection(const Protection& ac) & {
-        std::optional<Protection> result = removeArmorAtLocation(ac.location());
-        armorAtLocation(ac.location()) = ac;
+        BodyLocation changedLocation = ac.location();
+
+        std::optional<Protection> result = removeArmorAtLocation(changedLocation);
+        armorAtLocation(changedLocation) = ac;
         globalArmor_ += ac.armorClass();
         globalProtectEffects_.addEffectTypes(ac.protectEffects());
         return result;
     }
 
     std::optional<Protection> removeArmorAtLocation(BodyLocation location) & {
-        if (auto result = armorAtLocation(location)) {
+        auto opt_result = armorAtLocation(location);
+        if (opt_result) {
             armorAtLocation(location) = {};
-            globalArmor_ -= result.value().armorClass();
+            const auto& removed_armor = opt_result.value();
+            globalArmor_ -= removed_armor.armorClass();
 
-            globalProtectEffects_.removeEffectTypes(result.value().protectEffects());
-            for (auto opt_protection : protections_) {
+            globalProtectEffects_.removeEffectTypes(removed_armor.protectEffects());
+            for (const auto& opt_protection : protections_) {
                 if (opt_protection) {
-                    globalProtectEffects_.addEffectTypes(opt_protection.value().protectEffects());
+                    const auto& protection_at_location = opt_protection.value();
+                    globalProtectEffects_.addEffectTypes(protection_at_location.protectEffects());
                 }
             }
-            return result;
         }
-        return {};
+        return opt_result;
     }
 
 private:

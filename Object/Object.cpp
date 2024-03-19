@@ -21,6 +21,12 @@ ActionStatus Object::defend(Object* owner, Object* target) const {
     }
     return object_->action(Actions::Defend, owner, target);
 }
+ActionStatus Object::wear(Object* owner, Object* target) const {
+    if (not can_wear) {
+        return ActionStatus::None;
+    }
+    return object_->action(Actions::Wear, owner, target);
+}
 ActionStatus Object::heal(Object* owner, Object* target) const {
     if (not can_heal) {
         return ActionStatus::None;
@@ -39,36 +45,24 @@ bool Object::checkGetParam() const {
         return false;
     }
     if constexpr (param == Parameter::Protection) {
-        if (not can_defend) {
-            return false;
-        }
+        return can_defend;
     }
     if constexpr (param == Parameter::CureHealth) {
-        if (not can_heal) {
-            return false;
-        }
+        return can_heal;
     }
     if constexpr (param == Parameter::Damage) {
-        if (not can_attack) {
-            return false;
-        }
+        return can_attack;
     }
     if constexpr (param == Parameter::Health) {
-        if (not can_alive) {
-            return false;
-        }
+        return can_alive;
     }
     if constexpr (param == Parameter::Restore) {
-        if (not can_restore) {
-            return false;
-        }
+        return can_restore;
     }
     if constexpr (param == Parameter::Wear) {
-        if (not can_wear) {
-            return false;
-        }
+        return can_wear;
     }
-    return true;
+    return false;
 }
 
 template bool Object::checkGetParam<Parameter::Protection>() const;

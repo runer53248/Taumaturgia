@@ -4,6 +4,7 @@ class Object::Action_impl {
 public:
     static constexpr ActionStatus attack(Namingable auto const& type, Object* owner, Object* target);
     static constexpr ActionStatus defend(Namingable auto const& type, Object* owner, Object* target);
+    static constexpr ActionStatus wear(Namingable auto const& type, Object* owner, Object* target);
     static constexpr ActionStatus heal(Namingable auto const& type, Object* owner, Object* target);
     static constexpr ActionStatus restore(Namingable auto const& type, Object* owner, Object* target);
     static constexpr auto get_impl(Gettingable auto& type, Parameter param);
@@ -23,6 +24,15 @@ constexpr ActionStatus Object::Action_impl::defend(const T& type, Object* owner,
     if constexpr (DefendStrategable<DefendStrategy, T>) {
         static constinit DefendStrategy<T> defendStrategy_{};
         return defendStrategy_(type, owner, target);
+    }
+    return ActionStatus::None;
+}
+
+template <Namingable T>
+constexpr ActionStatus Object::Action_impl::wear(const T& type, Object* owner, Object* target) {
+    if constexpr (WearStrategable<WearStrategy, T>) {
+        static constinit WearStrategy<T> wearStrategy_{};
+        return wearStrategy_(type, owner, target);
     }
     return ActionStatus::None;
 }
@@ -101,6 +111,8 @@ constexpr ActionStatus Object::ObjectModel<T>::action(Actions action, Object* ow
         return Action_impl::heal(type_, owner, target);
     case Actions::Restore:
         return Action_impl::restore(type_, owner, target);
+    case Actions::Wear:
+        return Action_impl::wear(type_, owner, target);
     }
     return ActionStatus::None;
 }

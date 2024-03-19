@@ -75,6 +75,7 @@ public:
     std::optional<AliveStatus> alive() const;
     ActionStatus attack(Object* owner, Object* target = nullptr) const;
     ActionStatus defend(Object* owner, Object* target = nullptr) const;
+    ActionStatus wear(Object* owner, Object* target = nullptr) const;
     ActionStatus heal(Object* owner, Object* target = nullptr) const;
     ActionStatus restore(Object* owner, Object* target = nullptr) const;
 

@@ -6,6 +6,8 @@
 
     struct Type {};
 
+    using ArmorSet = add_properties<Type, Naming, Wearing>;
+
     using NoNameWeapon = add_properties<Type, Damaging>;
     using Weapon = add_properties<Type, Naming, Damaging>;
     using Player = add_properties<Type, Naming, Wearing, Restoring>;
@@ -50,6 +52,10 @@
 #else
     // use old method of creating type with properties
     #include "Examples/structs.hpp"
+
+    struct Empty {};
+
+    using ArmorSet = Wearing<Naming<Empty>>;
 
     using living_weapon = Living<Weapon>;
     using living_player = Living<Player>;

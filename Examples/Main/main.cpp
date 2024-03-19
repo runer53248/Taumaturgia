@@ -36,7 +36,7 @@ int main() {
 
     wear(backpack, player);
 
-    enemy_wear(backpack, enemy);
+    enemy_defend(backpack, enemy);
 
     restore(backpack, player);
 
