@@ -5,15 +5,15 @@
 constexpr const char* toString(BodyLocation location) noexcept {
     switch (location) {
     case BodyLocation::Head:
-        return "Head";
+        return "\033[1;37mHead\033[0m";
     case BodyLocation::Body:
-        return "Body";
+        return "\033[1;37mBody\033[0m";
     case BodyLocation::Arms:
-        return "Arms";
+        return "\033[1;37mArms\033[0m";
     case BodyLocation::Legs:
-        return "Legs";
+        return "\033[1;37mLegs\033[0m";
     case BodyLocation::Internal:
-        return "Internal";
+        return "\033[1;37mInternal\033[0m";
     case BodyLocation::ALL:
         return "ALL";
     default:

@@ -5,11 +5,11 @@
 constexpr const char* toString(DamageType damageType) noexcept {
     switch (damageType) {
     case DamageType::Physical:
-        return "Physical";
+        return "\033[1;37mPhysical\033[0m";
     case DamageType::Magical:
-        return "Magical";
+        return "\033[1;34mMagical\033[0m";
     case DamageType::Divine:
-        return "Divine";
+        return "\033[1;33mDivine\033[0m";
     default:
         return "Unknown";
     }
