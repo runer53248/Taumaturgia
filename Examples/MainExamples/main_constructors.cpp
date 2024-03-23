@@ -9,54 +9,52 @@ struct Potion {
 };
 
 int main() {
-    Name spiked_shield_potion_name{"Spiked Shield Potion"};
-
-    Protecting<Damaging<Potion>>{
-        spiked_shield_potion_name,
-        ArmorClass{4, BodyLocation::Internal, {EffectType::Sleep}},
-        Damage{10, Effect{EffectType::Bleed}}};
-
-    Damaging<Protecting<Potion>>{
-        spiked_shield_potion_name,
-        Damage{10, Effect{EffectType::Bleed}},
-        ArmorClass{4, BodyLocation::Internal, {EffectType::Sleep}}};
+    const Name spiked_shield_potion_name{"Spiked Shield Potion"};
+    const auto restore_effect_initializer = {EffectType::Sleep, EffectType::Sleep};
+    const auto protecting_effect_initializer = {EffectType::Sleep};
+    constexpr Effect damage_effect{EffectType::Bleed};
+    constexpr auto armor_value{4};
+    constexpr auto armor_location{BodyLocation::Internal};
+    constexpr auto damage_value{10};
 
     using restoring_protecting_damaging_potion = Restoring<Protecting<Damaging<Potion>>>;
 
     // constructor: all properties set
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
-        {EffectType::Sleep, EffectType::Sleep},                      // restoring
-        ArmorClass{4, BodyLocation::Internal, {EffectType::Sleep}},  // protecting
-        Damage{10, Effect{EffectType::Bleed}}};                      // damaging
+        restore_effect_initializer,                                              // restoring
+        ArmorClass{armor_value, armor_location, protecting_effect_initializer},  // protecting
+        Damage{damage_value, damage_effect}};                                    // damaging
+
+    // constructor: all properties set from tuples
+    restoring_protecting_damaging_potion{
+        spiked_shield_potion_name,
+        std::tuple(restore_effect_initializer),                                  // restoring
+        std::tuple(armor_value, armor_location, protecting_effect_initializer),  // protecting
+        std::tuple(damage_value, damage_effect)};                                // damaging
 
     // constructor: ignoring first 2 properties
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
-        std::ignore,                             // restoring
-        std::ignore,                             // protecting
-        Damage{10, Effect{EffectType::Bleed}}};  // damaging
+        std::ignore,                           // restoring
+        std::ignore,                           // protecting
+        Damage{damage_value, damage_effect}};  // damaging
 
-    // constructor: first property only
+    // constructor: last property set from tuple
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
-        {EffectType::Sleep, EffectType::Sleep}};  // restoring
+        std::ignore,                               // restoring
+        std::ignore,                               // protecting
+        std::tuple{damage_value, damage_effect}};  // damaging
+
+    // constructor: first property set
+    restoring_protecting_damaging_potion{
+        spiked_shield_potion_name,
+        restore_effect_initializer};  // restoring
 
     // constructor: all properties default
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name};
-
-    // constructor: properties set from tuples
-    restoring_protecting_damaging_potion{
-        spiked_shield_potion_name,
-        std::make_tuple(std::initializer_list{EffectType::Sleep, EffectType::Sleep}),          // restoring
-        std::make_tuple(4, BodyLocation::Internal, std::initializer_list{EffectType::Sleep}),  // protecting
-        std::make_tuple(10, Effect{EffectType::Bleed})};                                       // damaging
-
-    // constructor: first property set from tuple
-    restoring_protecting_damaging_potion{
-        spiked_shield_potion_name,
-        std::make_tuple(EffectType::Sleep)};  // restoring
 
     // constructor: incorect tuple to set property
     try {
@@ -69,9 +67,9 @@ int main() {
         std::cout << "exception: " << err.what() << '\n';
     }
 
-    EffectTypeContainer restore{{EffectType::Sleep, EffectType::Sleep}};
-    Protection protection{ArmorClass{4, BodyLocation::Internal, std::initializer_list{EffectType::Sleep}}};
-    Damage damage{10, Effect{EffectType::Bleed}};
+    EffectTypeContainer restore{restore_effect_initializer};
+    Protection protection{ArmorClass{armor_value, armor_location, protecting_effect_initializer}};
+    Damage damage{damage_value, damage_effect};
 
     using container = std::variant<std::monostate, Damage, Protection, EffectTypeContainer>;
 
