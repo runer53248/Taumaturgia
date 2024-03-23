@@ -1,8 +1,9 @@
 #pragma once
 #include <boost/mp11.hpp>
+#include "Helpers/PropertyData.hpp"
+#include "Helpers/constructible_from_args.hpp"
 #include "Object/Concepts/Types/Name.hpp"
 #include "Object/Strategies/RestoreStrategy.hpp"
-#include "Helpers/PropertyData.hpp"
 
 namespace impl {
 constexpr char restoring_type_name[] = "Restoring";
@@ -14,9 +15,14 @@ struct Restoring_ : T {
     Restoring_() = default;
 
     template <typename... INFO>
-        requires(std::is_constructible_v<EffectTypeContainer, INFO...> and sizeof...(INFO) > 0)
     Restoring_(const Name& name, std::tuple<INFO...>&& restoreEffects, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, restoreEffects{std::move(std::make_from_tuple<EffectTypeContainer>(std::forward<decltype(restoreEffects)>(restoreEffects)))} {}
+
+    template <typename... INFO>
+        requires(not constructible_from_args<EffectTypeContainer, INFO...>)
+    Restoring_(const Name&, std::tuple<INFO...>&&, auto&&...) {
+        throw std::logic_error("Can't create EffectTypeContainer from given arguments.");
+    }
 
     Restoring_(const Name& name)
         : T{name} {}

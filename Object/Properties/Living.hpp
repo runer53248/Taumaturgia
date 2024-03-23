@@ -1,8 +1,9 @@
 #pragma once
 #include <boost/mp11.hpp>
+#include "Helpers/PropertyData.hpp"
+#include "Helpers/constructible_from_args.hpp"
 #include "Object/Concepts/Types/Name.hpp"
 #include "Object/Strategies/AliveStrategy.hpp"
-#include "Helpers/PropertyData.hpp"
 
 namespace impl {
 constexpr char living_type_name[] = "Living";
@@ -14,9 +15,14 @@ struct Living_ : T {
     Living_() = default;
 
     template <typename... INFO>
-        requires(std::is_constructible_v<Health, INFO...> and sizeof...(INFO) > 0)
     Living_(const Name& name, std::tuple<INFO...>&& hp, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, hp{std::move(std::make_from_tuple<Health>(std::forward<decltype(hp)>(hp)))} {}
+
+    template <typename... INFO>
+        requires(not constructible_from_args<Health, INFO...>)
+    Living_(const Name&, std::tuple<INFO...>&&, auto&&...) {
+        throw std::logic_error("Can't create Health from given arguments.");
+    }
 
     Living_(const Name& name)
         : T{name} {}

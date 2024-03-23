@@ -1,8 +1,9 @@
 #pragma once
 #include <boost/mp11.hpp>
+#include "Helpers/PropertyData.hpp"
+#include "Helpers/constructible_from_args.hpp"
 #include "Object/Concepts/Types/Name.hpp"
 #include "Object/Strategies/HealStrategy.hpp"
-#include "Helpers/PropertyData.hpp"
 
 namespace impl {
 constexpr char healing_type_name[] = "Healing";
@@ -14,10 +15,15 @@ struct Healing_ : T {
     Healing_() = default;
 
     template <typename... INFO>
-        requires(std::is_constructible_v<CureHealth, INFO...> and sizeof...(INFO) > 0)
     Healing_(const Name& name, std::tuple<INFO...>&& cureHealth, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...},
           cureHealth{std::move(std::make_from_tuple<CureHealth>(std::forward<decltype(cureHealth)>(cureHealth)))} {}
+
+    template <typename... INFO>
+        requires(not constructible_from_args<CureHealth, INFO...>)
+    Healing_(const Name&, std::tuple<INFO...>&&, auto&&...) {
+        throw std::logic_error("Can't create CureHealth from given arguments.");
+    }
 
     Healing_(const Name& name)
         : T{name} {}

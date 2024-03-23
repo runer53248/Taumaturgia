@@ -1,7 +1,8 @@
 #pragma once
+#include "Helpers/PropertyData.hpp"
+#include "Helpers/constructible_from_args.hpp"
 #include "Object/Concepts/Types/Name.hpp"
 #include "Object/Strategies/DefendStrategy.hpp"
-#include "Helpers/PropertyData.hpp"
 
 namespace impl {
 constexpr char protecting_type_name[] = "Protecting";
@@ -13,9 +14,14 @@ struct Protecting_ : T {
     Protecting_() = default;
 
     template <typename... INFO>
-        requires(std::is_constructible_v<Protection, INFO...> and sizeof...(INFO) > 0)
     Protecting_(const Name& name, std::tuple<INFO...>&& protection, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, protection{std::move(std::make_from_tuple<Protection>(std::forward<decltype(protection)>(protection)))} {}
+
+    template <typename... INFO>
+        requires(not constructible_from_args<Protection, INFO...>)
+    Protecting_(const Name&, std::tuple<INFO...>&&, auto&&...) {
+        throw std::logic_error("Can't create Protection from given arguments.");
+    }
 
     Protecting_(const Name& name)
         : T{name} {}

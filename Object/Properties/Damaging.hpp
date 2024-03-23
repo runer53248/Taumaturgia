@@ -1,8 +1,9 @@
 #pragma once
 #include <boost/mp11.hpp>
+#include "Helpers/PropertyData.hpp"
+#include "Helpers/constructible_from_args.hpp"
 #include "Object/Concepts/Types/Name.hpp"
 #include "Object/Strategies/AttackStrategy.hpp"
-#include "Helpers/PropertyData.hpp"
 
 namespace impl {
 constexpr char damaging_type_name[] = "Damaging";
@@ -14,9 +15,14 @@ struct Damaging_ : T {
     Damaging_() = default;
 
     template <typename... INFO>
-        requires(std::is_constructible_v<Damage, INFO...> and sizeof...(INFO) > 0)
     Damaging_(const Name& name, std::tuple<INFO...>&& dmg, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, dmg{std::move(std::make_from_tuple<Damage>(std::forward<decltype(dmg)>(dmg)))} {
+    }
+
+    template <typename... INFO>
+        requires(not constructible_from_args<Damage, INFO...>)
+    Damaging_(const Name&, std::tuple<INFO...>&&, auto&&...) {
+        throw std::logic_error("Can't create Damage from given arguments.");
     }
 
     Damaging_(const Name& name)

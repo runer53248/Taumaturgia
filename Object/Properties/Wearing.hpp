@@ -1,8 +1,9 @@
 #pragma once
 #include <boost/mp11.hpp>
+#include "Helpers/PropertyData.hpp"
+#include "Helpers/constructible_from_args.hpp"
 #include "Object/Concepts/Types/Name.hpp"
 #include "Object/Strategies/WearStrategy.hpp"
-#include "Helpers/PropertyData.hpp"
 
 namespace impl {
 constexpr char wearing_type_name[] = "Wearing";
@@ -14,9 +15,14 @@ struct Wearing_ : T {
     Wearing_() = default;
 
     template <typename... INFO>
-        requires(std::is_constructible_v<WearContainer, INFO...> and sizeof...(INFO) > 0)
     Wearing_(const Name& name, std::tuple<INFO...>&& armorWear, auto&&... args)
         : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::move(std::make_from_tuple<WearContainer>(std::forward<decltype(armorWear)>(armorWear)))} {}
+
+    template <typename... INFO>
+        requires(not constructible_from_args<WearContainer, INFO...>)
+    Wearing_(const Name&, std::tuple<INFO...>&&, auto&&...) {
+        throw std::logic_error("Can't create WearContainer from given arguments.");
+    }
 
     Wearing_(const Name& name)
         : T{name} {}

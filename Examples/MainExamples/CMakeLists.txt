@@ -1,6 +1,10 @@
 add_subdirectory(add_property_examples)
 add_subdirectory(helpers_examples)
 
+add_executable(${PROJECT_NAME}-constructors
+    main_constructors.cpp
+)
+
 add_executable(${PROJECT_NAME}-main_ignore_and_tuple
     main_ignore_and_tuple.cpp
     ../../Object/Object.cpp
