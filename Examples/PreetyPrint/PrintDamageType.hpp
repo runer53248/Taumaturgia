@@ -15,6 +15,6 @@ constexpr const char* toString(DamageType damageType) noexcept {
     }
 }
 
-constexpr auto& operator<<(std::ostream& out, DamageType damageType) {
+auto& operator<<(std::ostream& out, DamageType damageType) {
     return out << toString(damageType);
 }

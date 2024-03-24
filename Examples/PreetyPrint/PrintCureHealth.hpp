@@ -16,7 +16,7 @@ constexpr const char* toString(CureValueType type) noexcept {
     }
 }
 
-constexpr auto& operator<<(std::ostream& out, const CureHealth& cureHealth) {
+auto& operator<<(std::ostream& out, const CureHealth& cureHealth) {
     const auto& effects = cureHealth.effects();
 
     return print_in_round_braces(

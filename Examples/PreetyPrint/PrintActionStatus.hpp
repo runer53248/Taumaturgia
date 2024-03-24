@@ -21,6 +21,6 @@ constexpr const char* toString(ActionStatus status) noexcept {
     }
 }
 
-constexpr auto& operator<<(std::ostream& out, ActionStatus actionStatus) {
+auto& operator<<(std::ostream& out, ActionStatus actionStatus) {
     return out << ' ' << toString(actionStatus) << ' ';
 }

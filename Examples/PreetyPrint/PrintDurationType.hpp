@@ -21,6 +21,6 @@ switch (duration) {
     }
 }
 
-constexpr auto& operator<<(std::ostream& out, DurationType duration) {
+auto& operator<<(std::ostream& out, DurationType duration) {
     return out << toString(duration);
 }

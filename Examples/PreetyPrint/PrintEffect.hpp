@@ -6,7 +6,7 @@
 #include "PrintState.hpp"
 #include "PrintWrapper.hpp"
 
-constexpr auto& operator<<(std::ostream& out, const Effect& effect) {
+auto& operator<<(std::ostream& out, const Effect& effect) {
     auto effectType = effect.effectType();
     if (effectType == EffectType::None) {
         return out;

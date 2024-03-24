@@ -3,7 +3,7 @@
 #include "Object/Concepts/Types/Health.hpp"
 #include "PrintWrapper.hpp"
 
-constexpr auto& operator<<(std::ostream& out, const Health& health) {
+auto& operator<<(std::ostream& out, const Health& health) {
     return print_in_round_braces(
         out, "Health",
         [&] {

@@ -3,7 +3,7 @@
 #include "Object/Concepts/Types/EffectContainer.hpp"
 #include "PrintEffect.hpp"
 
-constexpr auto& operator<<(std::ostream& out, const EffectContainer& effectContainer) {
+auto& operator<<(std::ostream& out, const EffectContainer& effectContainer) {
     if (effectContainer.empty()) {
         return out;
     }

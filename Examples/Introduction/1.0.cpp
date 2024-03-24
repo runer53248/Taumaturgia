@@ -94,7 +94,7 @@ static_assert(std::is_same_v<Naming<Valid_5>, Valid_5>);
 /////////////////////////////////////////////////
 #include <iostream>
 
-constexpr auto& operator<<(std::ostream& out, const Name& name) {
+auto& operator<<(std::ostream& out, const Name& name) {
     return out << name.operator std::string();
 }
 
