@@ -4,6 +4,11 @@ project (Taumaturgia)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(Boost)
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+endif()
+
 add_compile_options(
     -fwrapv
     -Wall 
@@ -21,6 +26,9 @@ add_compile_definitions(ACCESS_TRAIT_MACRO)
 
 include_directories(${Taumaturgia_SOURCE_DIR})
 
-enable_testing()
+find_package(GTest REQUIRED)
+
 add_subdirectory(Examples)
+
+enable_testing()
 add_subdirectory(Tests)

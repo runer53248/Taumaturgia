@@ -35,9 +35,11 @@ struct AttackStrategy_<T> {
             std::cout << '\n';
         }
 
-        for (Damagingable auto& other : obj.others) {
-            status = default_attack_behavior(other, suspect);
-            std::cout << "\t\t " << other << '\n';
+        if constexpr (Damagingable<typename decltype(obj.others)::value_type>) {
+            for (auto& other : obj.others) {
+                status = default_attack_behavior(other, suspect);
+                std::cout << "\t\t " << other << '\n';
+            }
         }
         return status;
     }
