@@ -10,13 +10,13 @@
 namespace impl {
 constexpr char user_type_name[] = "UserProperty";
 
-template <typename TYPE, typename T, typename... Args>
+template <typename TYPE, typename T, typename... Tags>
 struct UserProperty_ : T {
     template <typename TAG>
-    using self = UserProperty_<TYPE, TAG, Args...>;                        // make yourself one template argument type to satisfy PropertyData
-    using property_data = PropertyData<user_type_name, self, T, Args...>;  // ? should add TYPE into PropertyData?
+    using self = UserProperty_<TYPE, TAG, Tags...>;                        // make yourself one template argument type to satisfy PropertyData
+    using property_data = PropertyData<user_type_name, self, T, Tags...>;  // ? should add TYPE into PropertyData?
 #ifdef USER_PROPERTY_SELF_AWARE
-    using improvement_of = self<T>;  // will act like same type if TYPE and Args are same
+    using improvement_of = self<T>;  // will act like same type if TYPE and Tags are same
 #endif
     using hold_type = TYPE;  // unused
 
@@ -24,68 +24,104 @@ struct UserProperty_ : T {
 
     // for ordered UserProperty_ (require T have name property)
 
-    template <typename... INFO>
-    UserProperty_(const Name& name, std::tuple<INFO...>&& type, auto&&... args)
+    template <typename... INFO, typename... Args>
+    UserProperty_(const Name& name, std::tuple<INFO...>&& type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
-        : T{name, std::forward<decltype(args)>(args)...}, type{std::move(std::make_from_tuple<TYPE>(std::forward<decltype(type)>(type)))} {}
+        : T{name, std::forward<Args>(args)...},
+          type{std::make_from_tuple<TYPE>(std::move(type))} {}
 
-    template <typename... INFO>
+    template <typename... INFO, typename... Args>
+    UserProperty_(const Name& name, const std::tuple<INFO...>& type, Args&&... args)
+        requires(not std::is_same_v<TYPE, Name>)
+        : T{name, std::forward<Args>(args)...},
+          type{std::make_from_tuple<TYPE>(type)} {}
+
+    template <typename... INFO, typename... Args>
         requires(not constructible_from_args<TYPE, INFO...>)
-    UserProperty_(const Name&, std::tuple<INFO...>&&, auto&&...) {
-        throw std::logic_error("Can't create TYPE from given arguments.");
+    UserProperty_(const Name&, std::tuple<INFO...>&&, Args&&...) {
+        throw std::logic_error("Can't create TYPE from given tuple.");
+    }
+
+    template <typename... INFO, typename... Args>
+        requires(not constructible_from_args<TYPE, INFO...>)
+    UserProperty_(const Name&, const std::tuple<INFO...>&, Args&&...) {
+        throw std::logic_error("Can't create TYPE from given tuple.");
     }
 
     UserProperty_(const Name& name)
         requires(not std::is_same_v<TYPE, Name>)
         : T{name} {}
 
-    UserProperty_(const Name& name, [[maybe_unused]] decltype(std::ignore) type, auto&&... args)
+    template <typename... Args>
+    UserProperty_(const Name& name, [[maybe_unused]] decltype(std::ignore) type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+        : T{name, std::forward<Args>(args)...} {}
 
-    UserProperty_(const Name& name, TYPE&& type, auto&&... args)
+    template <typename... Args>
+    UserProperty_(const Name& name, TYPE&& type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
-        : T{name, std::forward<decltype(args)>(args)...}, type{std::move(type)} {}
+        : T{name, std::forward<Args>(args)...}, type{std::move(type)} {}
 
-    UserProperty_(const Name& name, const TYPE& type, auto&&... args)
+    template <typename... Args>
+    UserProperty_(const Name& name, const TYPE& type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
-        : T{name, std::forward<decltype(args)>(args)...}, type{type} {}
+        : T{name, std::forward<Args>(args)...}, type{type} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires(boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
-    UserProperty_(const Name& name, const std::variant<V...>& type, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, type{std::get<TYPE>(type)} {}
+    UserProperty_(const Name& name, const std::variant<V...>& type, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, type{std::get<TYPE>(type)} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires(not boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
-    UserProperty_(const Name& name, [[maybe_unused]] const std::variant<V...>& type, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    UserProperty_(const Name& name, [[maybe_unused]] const std::variant<V...>& type, Args&&... args)
+        : T{name, std::forward<Args>(args)...} {}
 
     // for unordered UserProperty_ (can exist before T accuire name property)
 
-    template <typename... INFO>
-        requires(std::is_constructible_v<TYPE, INFO...> and sizeof...(INFO) > 0)
-    UserProperty_(std::tuple<INFO...>&& type, auto&&... args)
-        : T{std::forward<decltype(args)>(args)...}, type{std::move(std::make_from_tuple<TYPE>(std::forward<decltype(type)>(type)))} {}
+    template <typename... INFO, typename... Args>
+    UserProperty_(std::tuple<INFO...>&& type, Args&&... args)
+        : T{std::forward<Args>(args)...},
+          type{std::make_from_tuple<TYPE>(std::move(type))} {}
 
-    UserProperty_([[maybe_unused]] decltype(std::ignore) type, auto&&... args)
-        : T{std::forward<decltype(args)>(args)...} {}
+    template <typename... INFO, typename... Args>
+    UserProperty_(const std::tuple<INFO...>& type, Args&&... args)
+        : T{std::forward<Args>(args)...},
+          type{std::make_from_tuple<TYPE>(type)} {}
 
-    UserProperty_(TYPE&& type, auto&&... args)
-        : T{std::forward<decltype(args)>(args)...}, type{std::move(type)} {}
+    template <typename... INFO,  typename... Args>
+        requires(not constructible_from_args<TYPE, INFO...>)
+    UserProperty_(std::tuple<INFO...>&&, Args&&...) {
+        throw std::logic_error("Can't create TYPE from given tuple.");
+    }
 
-    UserProperty_(const TYPE& type, auto&&... args)
-        : T{std::forward<decltype(args)>(args)...}, type{type} {}
+    template <typename... INFO, typename... Args>
+        requires(not constructible_from_args<TYPE, INFO...>)
+    UserProperty_(const std::tuple<INFO...>&, Args&&...) {
+        throw std::logic_error("Can't create TYPE from given tuple.");
+    }
 
-    template <typename... V>
+    template <typename... Args>
+    UserProperty_([[maybe_unused]] decltype(std::ignore) type, Args&&... args)
+        : T{std::forward<Args>(args)...} {}
+
+    template <typename... Args>
+    UserProperty_(TYPE&& type, Args&&... args)
+        : T{std::forward<Args>(args)...}, type{std::move(type)} {}
+
+    template <typename... Args>
+    UserProperty_(const TYPE& type, Args&&... args)
+        : T{std::forward<Args>(args)...}, type{type} {}
+
+    template <typename... V, typename... Args>
         requires(boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
-    UserProperty_(const std::variant<V...>& type, auto&&... args)
-        : T{std::forward<decltype(args)>(args)...}, type{std::get<TYPE>(type)} {}
+    UserProperty_(const std::variant<V...>& type, Args&&... args)
+        : T{std::forward<Args>(args)...}, type{std::get<TYPE>(type)} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires(not boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
-    UserProperty_([[maybe_unused]] const std::variant<V...>& type, auto&&... args)
-        : T{std::forward<decltype(args)>(args)...} {}
+    UserProperty_([[maybe_unused]] const std::variant<V...>& type, Args&&... args)
+        : T{std::forward<Args>(args)...} {}
 
     template <typename RETURN, int DIG = 0>
     decltype(auto) getType() & {

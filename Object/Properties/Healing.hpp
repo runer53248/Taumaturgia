@@ -14,38 +14,52 @@ struct Healing_ : T {
 
     Healing_() = default;
 
-    template <typename... INFO>
-    Healing_(const Name& name, std::tuple<INFO...>&& cureHealth, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...},
-          cureHealth{std::move(std::make_from_tuple<CureHealth>(std::forward<decltype(cureHealth)>(cureHealth)))} {}
+    template <typename... INFO, typename... Args>
+    Healing_(const Name& name, std::tuple<INFO...>&& cureHealth, Args&&... args)
+        : T{name, std::forward<Args>(args)...},
+          cureHealth{std::make_from_tuple<CureHealth>(std::move(cureHealth))} {}
 
-    template <typename... INFO>
+    template <typename... INFO, typename... Args>
+    Healing_(const Name& name, const std::tuple<INFO...>& cureHealth, Args&&... args)
+        : T{name, std::forward<Args>(args)...},
+          cureHealth{std::make_from_tuple<CureHealth>(cureHealth)} {}
+
+    template <typename... INFO, typename... Args>
         requires(not constructible_from_args<CureHealth, INFO...>)
-    Healing_(const Name&, std::tuple<INFO...>&&, auto&&...) {
-        throw std::logic_error("Can't create CureHealth from given arguments.");
+    Healing_(const Name&, std::tuple<INFO...>&&, Args&&...) {
+        throw std::logic_error("Can't create CureHealth from given tuple.");
+    }
+
+    template <typename... INFO, typename... Args>
+        requires(not constructible_from_args<CureHealth, INFO...>)
+    Healing_(const Name&, const std::tuple<INFO...>&, Args&&...) {
+        throw std::logic_error("Can't create CureHealth from given tuple.");
     }
 
     Healing_(const Name& name)
         : T{name} {}
 
-    Healing_(const Name& name, [[maybe_unused]] decltype(std::ignore) cureHealth, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    template <typename... Args>
+    Healing_(const Name& name, [[maybe_unused]] decltype(std::ignore) cureHealth, Args&&... args)
+        : T{name, std::forward<Args>(args)...} {}
 
-    Healing_(const Name& name, CureHealth&& cureHealth, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, cureHealth{std::move(cureHealth)} {}
+    template <typename... Args>
+    Healing_(const Name& name, CureHealth&& cureHealth, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, cureHealth{std::move(cureHealth)} {}
 
-    Healing_(const Name& name, const CureHealth& cureHealth, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, cureHealth{cureHealth} {}
+    template <typename... Args>
+    Healing_(const Name& name, const CureHealth& cureHealth, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, cureHealth{cureHealth} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires boost::mp11::mp_contains<std::variant<V...>, CureHealth>::value
-    Healing_(const Name& name, const std::variant<V...>& cureHealth, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, cureHealth{std::get<CureHealth>(cureHealth)} {}
+    Healing_(const Name& name, const std::variant<V...>& cureHealth, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, cureHealth{std::get<CureHealth>(cureHealth)} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires(not boost::mp11::mp_contains<std::variant<V...>, CureHealth>::value)
-    Healing_(const Name& name, [[maybe_unused]] const std::variant<V...>& cureHealth, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    Healing_(const Name& name, [[maybe_unused]] const std::variant<V...>& cureHealth, Args&&... args)
+        : T{name, std::forward<Args>(args)...} {}
 
     auto& getCureHealth() & {
         return cureHealth;

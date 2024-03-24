@@ -13,37 +13,52 @@ struct Protecting_ : T {
 
     Protecting_() = default;
 
-    template <typename... INFO>
-    Protecting_(const Name& name, std::tuple<INFO...>&& protection, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, protection{std::move(std::make_from_tuple<Protection>(std::forward<decltype(protection)>(protection)))} {}
+    template <typename... INFO, typename... Args>
+    Protecting_(const Name& name, std::tuple<INFO...>&& protection, Args&&... args)
+        : T{name, std::forward<Args>(args)...},
+          protection{std::make_from_tuple<Protection>(std::move(protection))} {}
 
-    template <typename... INFO>
+    template <typename... INFO, typename... Args>
+    Protecting_(const Name& name, const std::tuple<INFO...>& protection, Args&&... args)
+        : T{name, std::forward<Args>(args)...},
+          protection{std::make_from_tuple<Protection>(protection)} {}
+
+    template <typename... INFO, typename... Args>
         requires(not constructible_from_args<Protection, INFO...>)
-    Protecting_(const Name&, std::tuple<INFO...>&&, auto&&...) {
-        throw std::logic_error("Can't create Protection from given arguments.");
+    Protecting_(const Name&, std::tuple<INFO...>&&, Args&&...) {
+        throw std::logic_error("Can't create Protection from given tuple.");
+    }
+
+    template <typename... INFO, typename... Args>
+        requires(not constructible_from_args<Protection, INFO...>)
+    Protecting_(const Name&, const std::tuple<INFO...>&, Args&&...) {
+        throw std::logic_error("Can't create Protection from given tuple.");
     }
 
     Protecting_(const Name& name)
         : T{name} {}
 
-    Protecting_(const Name& name, [[maybe_unused]] decltype(std::ignore) protection, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    template <typename... Args>
+    Protecting_(const Name& name, [[maybe_unused]] decltype(std::ignore) protection, Args&&... args)
+        : T{name, std::forward<Args>(args)...} {}
 
-    Protecting_(const Name& name, Protection&& protection, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, protection{std::move(protection)} {}
+    template <typename... Args>
+    Protecting_(const Name& name, Protection&& protection, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, protection{std::move(protection)} {}
 
-    Protecting_(const Name& name, const Protection& protection, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, protection{protection} {}
+    template <typename... Args>
+    Protecting_(const Name& name, const Protection& protection, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, protection{protection} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires boost::mp11::mp_contains<std::variant<V...>, Protection>::value
-    Protecting_(const Name& name, const std::variant<V...>& protection, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, protection{std::get<Protection>(protection)} {}
+    Protecting_(const Name& name, const std::variant<V...>& protection, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, protection{std::get<Protection>(protection)} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires(not boost::mp11::mp_contains<std::variant<V...>, Protection>::value)
-    Protecting_(const Name& name, [[maybe_unused]] const std::variant<V...>& protection, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    Protecting_(const Name& name, [[maybe_unused]] const std::variant<V...>& protection, Args&&... args)
+        : T{name, std::forward<Args>(args)...} {}
 
     auto& getProtection() & {
         return protection;

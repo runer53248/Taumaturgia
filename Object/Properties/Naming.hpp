@@ -11,8 +11,9 @@ struct Naming_ : T {
 
     Naming_() = default;
 
-    Naming_(const Name& name, auto&&... args)
-        : T{std::forward<decltype(args)>(args)...}, name{name} {}
+template <typename... Args>
+    Naming_(const Name& name, Args&&... args)
+        : T{std::forward<Args>(args)...}, name{name} {}
 
     auto& getName() & {
         return name;

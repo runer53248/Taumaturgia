@@ -14,40 +14,56 @@ struct Restoring_ : T {
 
     Restoring_() = default;
 
-    template <typename... INFO>
-    Restoring_(const Name& name, std::tuple<INFO...>&& restoreEffects, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, restoreEffects{std::move(std::make_from_tuple<EffectTypeContainer>(std::forward<decltype(restoreEffects)>(restoreEffects)))} {}
+    template <typename... INFO, typename... Args>
+    Restoring_(const Name& name, std::tuple<INFO...>&& restoreEffects, Args&&... args)
+        : T{name, std::forward<Args>(args)...},
+          restoreEffects{std::make_from_tuple<EffectTypeContainer>(std::move(restoreEffects))} {}
 
-    template <typename... INFO>
+    template <typename... INFO, typename... Args>
+    Restoring_(const Name& name, const std::tuple<INFO...>& restoreEffects, Args&&... args)
+        : T{name, std::forward<Args>(args)...},
+          restoreEffects{std::make_from_tuple<EffectTypeContainer>(restoreEffects)} {}
+
+    template <typename... INFO, typename... Args>
         requires(not constructible_from_args<EffectTypeContainer, INFO...>)
-    Restoring_(const Name&, std::tuple<INFO...>&&, auto&&...) {
-        throw std::logic_error("Can't create EffectTypeContainer from given arguments.");
+    Restoring_(const Name&, std::tuple<INFO...>&&, Args&&...) {
+        throw std::logic_error("Can't create EffectTypeContainer from given tuple.");
+    }
+
+    template <typename... INFO, typename... Args>
+        requires(not constructible_from_args<EffectTypeContainer, INFO...>)
+    Restoring_(const Name&, const std::tuple<INFO...>&, Args&&...) {
+        throw std::logic_error("Can't create EffectTypeContainer from given tuple.");
     }
 
     Restoring_(const Name& name)
         : T{name} {}
 
-    Restoring_(const Name& name, [[maybe_unused]] decltype(std::ignore) restoreEffects, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    template <typename... Args>
+    Restoring_(const Name& name, [[maybe_unused]] decltype(std::ignore) restoreEffects, Args&&... args)
+        : T{name, std::forward<Args>(args)...} {}
 
-    Restoring_(const Name& name, EffectTypeContainer&& restoreEffects, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, restoreEffects{std::move(restoreEffects)} {}
+    template <typename... Args>
+    Restoring_(const Name& name, EffectTypeContainer&& restoreEffects, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, restoreEffects{std::move(restoreEffects)} {}
 
-    Restoring_(const Name& name, const EffectTypeContainer& restoreEffects, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, restoreEffects{restoreEffects} {}
+    template <typename... Args>
+    Restoring_(const Name& name, const EffectTypeContainer& restoreEffects, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, restoreEffects{restoreEffects} {}
 
-    Restoring_(const Name& name, std::initializer_list<EffectType> restoreEffects, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, restoreEffects{restoreEffects} {}
+    template <typename... Args>
+    Restoring_(const Name& name, std::initializer_list<EffectType> restoreEffects, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, restoreEffects{restoreEffects} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires(boost::mp11::mp_contains<std::variant<V...>, EffectTypeContainer>::value and (sizeof...(V) > 0))
-    Restoring_(const Name& name, const std::variant<V...>& restoreEffects, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, restoreEffects{std::get<EffectTypeContainer>(restoreEffects)} {}
+    Restoring_(const Name& name, const std::variant<V...>& restoreEffects, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, restoreEffects{std::get<EffectTypeContainer>(restoreEffects)} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires(not boost::mp11::mp_contains<std::variant<V...>, EffectTypeContainer>::value and (sizeof...(V) > 0))
-    Restoring_(const Name& name, [[maybe_unused]] const std::variant<V...>& restoreEffects, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    Restoring_(const Name& name, [[maybe_unused]] const std::variant<V...>& restoreEffects, Args&&... args)
+        : T{name, std::forward<Args>(args)...} {}
 
     auto& getRestoreEffects() & {
         return restoreEffects;

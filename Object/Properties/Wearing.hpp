@@ -14,37 +14,52 @@ struct Wearing_ : T {
 
     Wearing_() = default;
 
-    template <typename... INFO>
-    Wearing_(const Name& name, std::tuple<INFO...>&& armorWear, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::move(std::make_from_tuple<WearContainer>(std::forward<decltype(armorWear)>(armorWear)))} {}
+    template <typename... INFO, typename... Args>
+    Wearing_(const Name& name, std::tuple<INFO...>&& armorWear, Args&&... args)
+        : T{name, std::forward<Args>(args)...},
+          armorWear{std::make_from_tuple<WearContainer>(std::move(armorWear))} {}
 
-    template <typename... INFO>
+    template <typename... INFO, typename... Args>
+    Wearing_(const Name& name, const std::tuple<INFO...>& armorWear, Args&&... args)
+        : T{name, std::forward<Args>(args)...},
+          armorWear{std::make_from_tuple<WearContainer>(armorWear)} {}
+
+    template <typename... INFO, typename... Args>
         requires(not constructible_from_args<WearContainer, INFO...>)
-    Wearing_(const Name&, std::tuple<INFO...>&&, auto&&...) {
-        throw std::logic_error("Can't create WearContainer from given arguments.");
+    Wearing_(const Name&, std::tuple<INFO...>&&, Args&&...) {
+        throw std::logic_error("Can't create WearContainer from given tuple.");
+    }
+
+    template <typename... INFO, typename... Args>
+        requires(not constructible_from_args<WearContainer, INFO...>)
+    Wearing_(const Name&, const std::tuple<INFO...>&, Args&&...) {
+        throw std::logic_error("Can't create WearContainer from given tuple.");
     }
 
     Wearing_(const Name& name)
         : T{name} {}
 
-    Wearing_(const Name& name, [[maybe_unused]] decltype(std::ignore) armorWear, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    template <typename... Args>
+    Wearing_(const Name& name, [[maybe_unused]] decltype(std::ignore) armorWear, Args&&... args)
+        : T{name, std::forward<Args>(args)...} {}
 
-    Wearing_(const Name& name, WearContainer&& armorWear, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::move(armorWear)} {}
+    template <typename... Args>
+    Wearing_(const Name& name, WearContainer&& armorWear, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, armorWear{std::move(armorWear)} {}
 
-    Wearing_(const Name& name, const WearContainer& armorWear, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, armorWear{armorWear} {}
+    template <typename... Args>
+    Wearing_(const Name& name, const WearContainer& armorWear, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, armorWear{armorWear} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires boost::mp11::mp_contains<std::variant<V...>, WearContainer>::value
-    Wearing_(const Name& name, const std::variant<V...>& armorWear, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, armorWear{std::get<WearContainer>(armorWear)} {}
+    Wearing_(const Name& name, const std::variant<V...>& armorWear, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, armorWear{std::get<WearContainer>(armorWear)} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires(not boost::mp11::mp_contains<std::variant<V...>, WearContainer>::value)
-    Wearing_(const Name& name, [[maybe_unused]] const std::variant<V...>& armorWear, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    Wearing_(const Name& name, [[maybe_unused]] const std::variant<V...>& armorWear, Args&&... args)
+        : T{name, std::forward<Args>(args)...} {}
 
     auto& getArmorWear() & {
         return armorWear;

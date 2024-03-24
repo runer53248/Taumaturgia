@@ -14,37 +14,52 @@ struct Living_ : T {
 
     Living_() = default;
 
-    template <typename... INFO>
-    Living_(const Name& name, std::tuple<INFO...>&& hp, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, hp{std::move(std::make_from_tuple<Health>(std::forward<decltype(hp)>(hp)))} {}
+    template <typename... INFO, typename... Args>
+    Living_(const Name& name, std::tuple<INFO...>&& hp, Args&&... args)
+        : T{name, std::forward<Args>(args)...},
+          hp{std::make_from_tuple<Health>(std::move(hp))} {}
 
-    template <typename... INFO>
+    template <typename... INFO, typename... Args>
+    Living_(const Name& name, const std::tuple<INFO...>& hp, Args&&... args)
+        : T{name, std::forward<Args>(args)...},
+          hp{std::make_from_tuple<Health>(hp)} {}
+
+    template <typename... INFO, typename... Args>
         requires(not constructible_from_args<Health, INFO...>)
-    Living_(const Name&, std::tuple<INFO...>&&, auto&&...) {
-        throw std::logic_error("Can't create Health from given arguments.");
+    Living_(const Name&, std::tuple<INFO...>&&, Args&&...) {
+        throw std::logic_error("Can't create Health from given tuple.");
+    }
+
+    template <typename... INFO, typename... Args>
+        requires(not constructible_from_args<Health, INFO...>)
+    Living_(const Name&, const std::tuple<INFO...>&, Args&&...) {
+        throw std::logic_error("Can't create Health from given tuple.");
     }
 
     Living_(const Name& name)
         : T{name} {}
 
-    Living_(const Name& name, [[maybe_unused]] decltype(std::ignore) hp, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    template <typename... Args>
+    Living_(const Name& name, [[maybe_unused]] decltype(std::ignore) hp, Args&&... args)
+        : T{name, std::forward<Args>(args)...} {}
 
-    Living_(const Name& name, Health&& hp, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, hp{std::move(hp)} {}
+    template <typename... Args>
+    Living_(const Name& name, Health&& hp, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, hp{std::move(hp)} {}
 
-    Living_(const Name& name, const Health& hp, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, hp{hp} {}
+    template <typename... Args>
+    Living_(const Name& name, const Health& hp, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, hp{hp} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires boost::mp11::mp_contains<std::variant<V...>, Health>::value
-    Living_(const Name& name, const std::variant<V...>& hp, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, hp{std::get<Health>(hp)} {}
+    Living_(const Name& name, const std::variant<V...>& hp, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, hp{std::get<Health>(hp)} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires(not boost::mp11::mp_contains<std::variant<V...>, Health>::value)
-    Living_(const Name& name, [[maybe_unused]] const std::variant<V...>& hp, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    Living_(const Name& name, [[maybe_unused]] const std::variant<V...>& hp, Args&&... args)
+        : T{name, std::forward<Args>(args)...} {}
 
     auto& getHealth() & {
         return hp;

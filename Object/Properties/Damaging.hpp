@@ -14,38 +14,54 @@ struct Damaging_ : T {
 
     Damaging_() = default;
 
-    template <typename... INFO>
-    Damaging_(const Name& name, std::tuple<INFO...>&& dmg, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, dmg{std::move(std::make_from_tuple<Damage>(std::forward<decltype(dmg)>(dmg)))} {
+    template <typename... INFO, typename... Args>
+    Damaging_(const Name& name, std::tuple<INFO...>&& dmg, Args&&... args)
+        : T{name, std::forward<Args>(args)...},
+          dmg{std::make_from_tuple<Damage>(std::move(dmg))} {
     }
 
-    template <typename... INFO>
+    template <typename... INFO, typename... Args>
+    Damaging_(const Name& name, const std::tuple<INFO...>& dmg, Args&&... args)
+        : T{name, std::forward<Args>(args)...},
+          dmg{std::make_from_tuple<Damage>(dmg)} {
+    }
+
+    template <typename... INFO, typename... Args>
         requires(not constructible_from_args<Damage, INFO...>)
-    Damaging_(const Name&, std::tuple<INFO...>&&, auto&&...) {
-        throw std::logic_error("Can't create Damage from given arguments.");
+    Damaging_(const Name&, std::tuple<INFO...>&&, Args&&...) {
+        throw std::logic_error("Can't create Damage from given tuple.");
+    }
+
+    template <typename... INFO, typename... Args>
+        requires(not constructible_from_args<Damage, INFO...>)
+    Damaging_(const Name&, const std::tuple<INFO...>&, Args&&...) {
+        throw std::logic_error("Can't create Damage from given tuple.");
     }
 
     Damaging_(const Name& name)
         : T{name} {}
 
-    Damaging_(const Name& name, [[maybe_unused]] decltype(std::ignore) dmg, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    template <typename... Args>
+    Damaging_(const Name& name, [[maybe_unused]] decltype(std::ignore) dmg, Args&&... args)
+        : T{name, std::forward<Args>(args)...} {}
 
-    Damaging_(const Name& name, Damage&& dmg, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, dmg{std::move(dmg)} {}
+    template <typename... Args>
+    Damaging_(const Name& name, Damage&& dmg, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, dmg{std::move(dmg)} {}
 
-    Damaging_(const Name& name, const Damage& dmg, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, dmg{dmg} {}
+    template <typename... Args>
+    Damaging_(const Name& name, const Damage& dmg, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, dmg{dmg} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires boost::mp11::mp_contains<std::variant<V...>, Damage>::value
-    Damaging_(const Name& name, const std::variant<V...>& dmg, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...}, dmg{std::get<Damage>(dmg)} {}
+    Damaging_(const Name& name, const std::variant<V...>& dmg, Args&&... args)
+        : T{name, std::forward<Args>(args)...}, dmg{std::get<Damage>(dmg)} {}
 
-    template <typename... V>
+    template <typename... V, typename... Args>
         requires(not boost::mp11::mp_contains<std::variant<V...>, Damage>::value)
-    Damaging_(const Name& name, [[maybe_unused]] const std::variant<V...>& dmg, auto&&... args)
-        : T{name, std::forward<decltype(args)>(args)...} {}
+    Damaging_(const Name& name, [[maybe_unused]] const std::variant<V...>& dmg, Args&&... args)
+        : T{name, std::forward<Args>(args)...} {}
 
     auto& getDamage() & {
         return dmg;
