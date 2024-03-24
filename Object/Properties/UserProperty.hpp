@@ -123,7 +123,7 @@ struct UserProperty_ : T {
     UserProperty_([[maybe_unused]] const std::variant<V...>& type, Args&&... args)
         : T{std::forward<Args>(args)...} {}
 
-    template <typename RETURN, int DIG = 0>
+    template <typename RETURN = TYPE, int DIG = 0>
     decltype(auto) getType() & {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             if constexpr (DIG) {
@@ -138,7 +138,7 @@ struct UserProperty_ : T {
         }
     }
 
-    template <typename RETURN, int DIG = 0>
+    template <typename RETURN = TYPE, int DIG = 0>
     decltype(auto) getType() const& {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             if constexpr (DIG) {
