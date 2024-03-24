@@ -5,7 +5,7 @@
 #include "Object/Strategies/DefendStrategy.hpp"
 
 namespace impl {
-constexpr char protecting_type_name[] = "Protecting";
+constinit char protecting_type_name[] = "Protecting";
 
 template <typename T>
 struct Protecting_ : T {

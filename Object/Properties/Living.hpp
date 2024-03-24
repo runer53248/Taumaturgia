@@ -6,7 +6,7 @@
 #include "Object/Strategies/AliveStrategy.hpp"
 
 namespace impl {
-constexpr char living_type_name[] = "Living";
+constinit char living_type_name[] = "Living";
 
 template <typename T>
 struct Living_ : T {

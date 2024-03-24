@@ -6,7 +6,7 @@
 #include "Object/Strategies/RestoreStrategy.hpp"
 
 namespace impl {
-constexpr char restoring_type_name[] = "Restoring";
+constinit char restoring_type_name[] = "Restoring";
 
 template <typename T>
 struct Restoring_ : T {

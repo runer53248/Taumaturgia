@@ -3,7 +3,7 @@
 #include "Helpers/PropertyData.hpp"
 
 namespace impl {
-constexpr char naming_type_name[] = "Naming";
+constinit char naming_type_name[] = "Naming";
 
 template <typename T>
 struct Naming_ : T {

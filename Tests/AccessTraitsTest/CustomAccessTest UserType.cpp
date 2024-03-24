@@ -6,17 +6,16 @@
 
 using namespace testing;
 
+constinit auto default_name = "TestName";
+constinit float default_userType = 15.0f;
+constinit float default_userType_change = 12.45f;
+constinit int default_userType2 = 20;
+constinit int default_userType2_change = 45;
+constinit bool default_userType3 = true;
+constinit bool default_userType3_change = false;
+
 class UserType_with_UserProperty_Fixture : public Test {
 public:
-    constexpr static auto default_name = "TestName";
-
-    float default_userType = 15.0f;
-    float default_userType_change = 12.45f;
-    int default_userType2 = 20;
-    int default_userType2_change = 45;
-    bool default_userType3 = true;
-    bool default_userType3_change = false;
-
     std::unique_ptr<TestType> type{nullptr};
 
     traits::CustomAccessType<float, TestType> customMock;

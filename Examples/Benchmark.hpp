@@ -7,6 +7,8 @@
 using namespace std::chrono_literals;
 using namespace std::chrono;
 
+constinit size_t repetition = 10'000;
+
 template <typename FUN>
 struct Benchmark {
     Benchmark(FUN&& fun) noexcept
@@ -14,7 +16,6 @@ struct Benchmark {
 
     template <typename... Args>
     auto operator()(Args&&... args) {
-        constexpr size_t repetition = 10'000;
         using time_type = nanoseconds;
         auto begin_value = time_type{0};
         std::vector<time_type> times;

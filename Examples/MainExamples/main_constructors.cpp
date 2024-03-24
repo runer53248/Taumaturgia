@@ -8,14 +8,15 @@ struct Potion {
     Name name;
 };
 
+constinit Effect damage_effect{EffectType::Bleed};
+constinit auto armor_value{4};
+constinit auto armor_location{BodyLocation::Internal};
+constinit auto damage_value{10};
+
 int main() {  // TODO: implement test based on this example
     const Name spiked_shield_potion_name{"Spiked Shield Potion"};
-    static constexpr auto restore_effect_initializer = {EffectType::Sleep, EffectType::Sleep};
-    static constexpr auto protecting_effect_initializer = {EffectType::Sleep};
-    constexpr Effect damage_effect{EffectType::Bleed};
-    constexpr auto armor_value{4};
-    constexpr auto armor_location{BodyLocation::Internal};
-    constexpr auto damage_value{10};
+    const auto restore_effect_initializer = {EffectType::Sleep, EffectType::Sleep};
+    const auto protecting_effect_initializer = {EffectType::Sleep};
 
     EffectTypeContainer restore{restore_effect_initializer};
     Protection protection{ArmorClass{armor_value, armor_location, protecting_effect_initializer}};

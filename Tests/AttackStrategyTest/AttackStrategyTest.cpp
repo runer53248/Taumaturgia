@@ -47,14 +47,14 @@ struct AttackStrategy_<CustomWeapon> {
 #include "Object/Properties/Properties.hpp"
 #endif
 
-constexpr auto max_health = 100;
+constinit auto max_health = 100;
 
-constexpr auto damage_1 = 10;
-constexpr auto damage_2 = 20;
-constexpr auto damage_3 = 32;
+constinit auto damage_1 = 10;
+constinit auto damage_2 = 20;
+constinit auto damage_3 = 32;
 
-constexpr auto effect_1 = Effect{EffectType::Stun};
-constexpr auto effect_2 = Effect{EffectType::Freeze, Duration{1, DurationType::Round}};
+constinit auto effect_1 = Effect{EffectType::Stun};
+constinit auto effect_2 = Effect{EffectType::Freeze, Duration{1, DurationType::Round}};
 
 TEST(AttackStrategyTest, initial_player_state) {
     Object player{Living<Player>{Name{"Player"}, Health{max_health}}};

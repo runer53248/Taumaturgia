@@ -6,14 +6,14 @@
 struct test_struct {};
 struct test_struct_2 {};
 
-constexpr char a_type_name[] = "A";
+constinit char a_type_name[] = "A";
 
 template <typename T>
 struct A : T {
     using property_data = PropertyData<a_type_name, A, T>;
 };
 
-constexpr char b_type_name[] = "B";
+constinit char b_type_name[] = "B";
 
 template <typename T>
 struct B : T {

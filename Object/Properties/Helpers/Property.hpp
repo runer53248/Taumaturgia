@@ -16,7 +16,7 @@ private:
     }();
 
 public:
-    constexpr static auto value = (properties_counter > index) ? index + 1 : std::numeric_limits<size_t>::max();  // index of property starting from 1 (or max if not found)
+    static constexpr auto value = (properties_counter > index) ? index + 1 : std::numeric_limits<size_t>::max();  // index of property starting from 1 (or max if not found)
     template <typename T>
     using type = property<T>;
 };

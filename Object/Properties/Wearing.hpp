@@ -6,7 +6,7 @@
 #include "Object/Strategies/WearStrategy.hpp"
 
 namespace impl {
-constexpr char wearing_type_name[] = "Wearing";
+constinit char wearing_type_name[] = "Wearing";
 
 template <typename T>
 struct Wearing_ : T {

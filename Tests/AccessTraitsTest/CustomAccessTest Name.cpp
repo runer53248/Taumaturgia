@@ -6,13 +6,14 @@
 
 using namespace testing;
 
+constinit auto default_float = 1.2f;
+constinit auto default_int = 5;
+constinit auto default_bool = true;
+constinit auto default_name_ = "TestName";
+constinit auto default_name_change_ = "TestName121234123556426354376585856858357858356883465";
+
 class Name_Fixture : public Test {
 public:
-    constexpr static auto default_float = 1.2f;
-    constexpr static auto default_int = 5;
-    constexpr static auto default_bool = true;
-    constexpr static auto default_name_ = "TestName";
-    constexpr static auto default_name_change_ = "TestName121234123556426354376585856858357858356883465";
     Name default_name;
     Name default_name_change;
     std::unique_ptr<TestType> type{nullptr};

@@ -6,12 +6,13 @@
 
 using namespace testing;
 
+constinit auto default_name = "TestName";
+constinit auto default_float = 1.2f;
+constinit auto default_int = 5;
+constinit auto default_bool = true;
+
 class ArmorWear_Fixture : public Test {
 public:
-    constexpr static auto default_name = "TestName";
-    constexpr static auto default_float = 1.2f;
-    constexpr static auto default_int = 5;
-    constexpr static auto default_bool = true;
     WearContainer default_armor;
     WearContainer default_armor_change;
     std::unique_ptr<TestType> type{nullptr};

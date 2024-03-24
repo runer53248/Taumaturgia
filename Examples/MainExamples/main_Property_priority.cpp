@@ -2,9 +2,10 @@
 #include "Examples/demangle_type_name.hpp"
 #include "Object/Properties/Properties.hpp"
 
+constinit char PlainProperty_name[] = "PlainProperty";
+
 template <typename T>
 struct PlainProperty : T {
-    constexpr static char PlainProperty_name[] = "PlainProperty";
     using property_data = PropertyData<PlainProperty_name, PlainProperty, T>;
 };
 

@@ -6,7 +6,7 @@
 #include "Object/Strategies/HealStrategy.hpp"
 
 namespace impl {
-constexpr char healing_type_name[] = "Healing";
+constinit char healing_type_name[] = "Healing";
 
 template <typename T>
 struct Healing_ : T {

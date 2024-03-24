@@ -8,7 +8,7 @@
 #include "Object/Strategies/UserStrategy.hpp"
 
 namespace impl {
-constexpr char user_type_name[] = "UserProperty";
+constinit char user_type_name[] = "UserProperty";
 
 template <typename TYPE, typename T, typename... Tags>
 struct UserProperty_ : T {

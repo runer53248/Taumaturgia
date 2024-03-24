@@ -6,12 +6,13 @@
 
 using namespace testing;
 
+constinit auto default_name = "TestName";
+constinit auto default_float = 1.2f;
+constinit auto default_int = 5;
+constinit auto default_bool = true;
+
 class CureHealth_Fixture : public Test {
 public:
-    constexpr static auto default_name = "TestName";
-    constexpr static auto default_float = 1.2f;
-    constexpr static auto default_int = 5;
-    constexpr static auto default_bool = true;
     CureHealth default_cureHp;
     CureHealth default_cureHp_change;
     std::unique_ptr<TestType> type{nullptr};

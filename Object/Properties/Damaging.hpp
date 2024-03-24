@@ -6,7 +6,7 @@
 #include "Object/Strategies/AttackStrategy.hpp"
 
 namespace impl {
-constexpr char damaging_type_name[] = "Damaging";
+constinit char damaging_type_name[] = "Damaging";
 
 template <typename T>
 struct Damaging_ : T {

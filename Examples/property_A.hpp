@@ -4,7 +4,7 @@
 
 namespace impl {
 
-constexpr char a_type_name[] = "A";
+constinit char a_type_name[] = "A";
 
 template <typename T>
 struct A_ : T {
