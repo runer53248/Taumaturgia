@@ -11,11 +11,8 @@ template <template <typename...> typename property>
     requires is_property<property>
 struct Property {
 private:
-    constinit const static auto index = []() -> size_t {
-        if constexpr (helpers::is_property_improvement<property>) {
-            return mp_find<order_list, typename property<tag>::improvement_of>::value;  // priority for improved property is same as property its improving
-        }
-        return mp_find<order_list, property<tag>>::value;
+    constinit const static size_t index = []() {
+        return mp_find<order_list, helpers::best_property_tag<property>>::value;
     }();
 
 public:

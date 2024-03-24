@@ -6,6 +6,7 @@ using namespace boost::mp11;
 
 namespace helpers {
 
+namespace impl {
 template <typename Base, typename L>
 struct build_into_impl;
 
@@ -24,22 +25,38 @@ template <typename Base, typename L>
 struct build_into_impl<Base, L> {
     using type = Base;
 };
+}  // namespace impl
 
 template <typename Base, typename L>
-using build_into_t = build_into_impl<Base, L>::type;
+using build_into_t = impl::build_into_impl<Base, L>::type;
 
 template <template <typename...> typename property>
 concept is_property_improvement = is_property<property> and requires {
     typename property<tag>::improvement_of;
 };
 
+namespace impl {
+template <template <typename...> typename property, bool = helpers::is_property_improvement<property>>
+struct best_property_tag_impl;
+
+template <template <typename...> typename property>
+struct best_property_tag_impl<property, true> {
+    using type = property<tag>::improvement_of;
+};
+
+template <template <typename...> typename property>
+struct best_property_tag_impl<property, false> {
+    using type = property<tag>;
+};
+}  // namespace impl
+
+template <template <typename...> typename property>
+using best_property_tag = impl::best_property_tag_impl<property>::type;
+
 template <typename A, typename B>
 struct is_same_priority {
     template <typename T>
-    using improvement_type_of = typename T::template type<tag>::improvement_of;
-
-    template <typename T>
-    using type_of = typename T::template type<tag>;
+    using best_property_tag = best_property_tag<T::template type>;
 
     constinit const static auto value = []() -> bool {
         if constexpr (std::is_same_v<A, B>) {
@@ -49,20 +66,10 @@ struct is_same_priority {
             return (A::value == B::value);
         }
         // same_priority true if any improved unordered Property improvement_of same as other
-        if constexpr (is_property_improvement<A::template type> and is_property_improvement<B::template type>) {
+        if constexpr (is_property_improvement<A::template type> or is_property_improvement<B::template type>) {
             return (std::is_same_v<
-                    improvement_type_of<A>,
-                    improvement_type_of<B>>);
-        }
-        if constexpr (is_property_improvement<A::template type>) {
-            return (std::is_same_v<
-                    improvement_type_of<A>,
-                    type_of<B>>);
-        }
-        if constexpr (is_property_improvement<B::template type>) {
-            return (std::is_same_v<
-                    type_of<A>,
-                    improvement_type_of<B>>);
+                    best_property_tag<A>,
+                    best_property_tag<B>>);
         }
         return false;
     }();
@@ -110,6 +117,7 @@ struct Scheme<T> {
         list_helper>;
 };
 
+namespace impl {
 template <typename T, template <typename...> typename... properties>
     requires(is_property<properties> and ...)
 struct add_properties_impl {
@@ -124,12 +132,13 @@ struct add_properties_impl {
             T,
             create_ordered_property_list<properties...>>>;
 };
+}  // namespace impl
 
 }  // namespace helpers
 
 template <typename T, template <typename...> typename... properties>
     requires(is_property<properties> and ...)
-using add_properties = helpers::add_properties_impl<T, properties...>::type;
+using add_properties = helpers::impl::add_properties_impl<T, properties...>::type;
 
 template <template <typename...> typename... properties>
     requires(is_property<properties> and ...)

@@ -1,16 +1,17 @@
 #pragma once
 #include <concepts>
+#include <functional>
 #include <memory>
 #include <optional>
 #include "Concepts/Namingable.hpp"
-#include "Strategies/Strategies.hpp"
-
 #include "Enums/ActionStatus.hpp"
 #include "Enums/Actions.hpp"
 #include "Enums/AliveStatus.hpp"
+#include "Strategies/Strategies.hpp"
 
+#ifndef _MSC_VER
 #include <experimental/propagate_const>
-#include <functional>
+#endif
 
 class Object;
 
@@ -49,7 +50,11 @@ private:
         T type_;
     };
 
+#ifndef _MSC_VER
     std::experimental::propagate_const<std::unique_ptr<ObjectConcept>> object_;
+#else
+    std::unique_ptr<ObjectConcept> object_;
+#endif
 
 public:
     const bool can_alive{};
