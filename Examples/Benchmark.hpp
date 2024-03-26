@@ -49,7 +49,7 @@ struct Benchmark {
         std::cout << "last run duration: " << duration << '\n';
 
         auto dur_aprox = std::accumulate(times.begin(), times.end(), begin_value);
-        dur_aprox /= repetition;
+        dur_aprox /= static_cast<int>(repetition);
 
         std::cout << "dur_aprox: " << dur_aprox << " (after repeat: " << repetition << " times)\n";
         return result;
