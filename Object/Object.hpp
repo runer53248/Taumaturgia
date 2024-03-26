@@ -20,7 +20,7 @@ concept Objected = std::same_as<T, Object> or std::same_as<T, const Object>;
 
 class Object {
 private:
-    struct ObjectConcept {  // TODO: implement copy
+    class ObjectConcept {  // TODO: implement copy
     public:
         virtual constexpr ~ObjectConcept() = default;
 
@@ -31,10 +31,8 @@ private:
         virtual constexpr get_optional_variant_const_type get(Parameter param) const = 0;
     };
 
-    class Action_impl;
-
     template <Namingable T>
-    struct ObjectModel : ObjectConcept {
+    class ObjectModel : public ObjectConcept {
     public:
         constexpr ObjectModel(const T& type);
         constexpr ~ObjectModel() override = default;
@@ -42,7 +40,6 @@ private:
         constexpr std::string name() const override;
         constexpr std::optional<AliveStatus> alive() const override;
         constexpr ActionStatus action(Actions action, Object* owner, Object* target) const override;
-
         constexpr get_optional_variant_type get(Parameter param) override;
         constexpr get_optional_variant_const_type get(Parameter param) const override;
 
