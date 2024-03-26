@@ -12,12 +12,7 @@ constexpr std::string Object::ObjectModel<T>::name() const {
 
 template <Namingable T>
 constexpr std::optional<AliveStatus> Object::ObjectModel<T>::alive() const {
-    if constexpr (is_alive_strategy<T>) {
-        static constinit AliveStrategy<T> aliveStrategy_{};
-        return aliveStrategy_(type_);
-    } else {
-        return {};
-    }
+    return action_impl::alive(type_);
 }
 
 template <Namingable T>
@@ -27,18 +22,10 @@ constexpr ActionStatus Object::ObjectModel<T>::action(Actions action, Object* ow
 
 template <Namingable T>
 constexpr auto Object::ObjectModel<T>::get(Parameter param) -> get_optional_variant_type {
-    if constexpr (is_get_strategy<T>) {
-        return action_impl::get_impl(type_, param);
-    } else {
-        return {};
-    }
+    return action_impl::get_impl(type_, param);
 }
 
 template <Namingable T>
 constexpr auto Object::ObjectModel<T>::get(Parameter param) const -> get_optional_variant_const_type {
-    if constexpr (is_get_strategy<T>) {
-        return action_impl::get_impl(type_, param);
-    } else {
-        return {};
-    }
+    return action_impl::get_impl(type_, param);
 }

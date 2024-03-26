@@ -46,47 +46,63 @@ static constexpr ActionStatus action(const T& type, Args&&... args) {
 
 }  // namespace details
 
-constexpr ActionStatus action(Actions action, Namingable auto const& type, Object* owner, Object* target) {
+template <typename T>
+constexpr std::optional<AliveStatus> alive(const T& type) {
+    return {};
+}
+
+template <is_alive_strategy T>
+constexpr std::optional<AliveStatus> alive(const T& type) {
+    static constinit AliveStrategy<T> strategy_{};
+    return strategy_(type);
+}
+
+template <typename... Args>
+constexpr ActionStatus action(Actions action, Namingable auto const& type, Args&&... args) {
     switch (action) {
     case Actions::Attack:
-        return details::action<Actions::Attack>(type, owner, target);
+        return details::action<Actions::Attack>(type, std::forward<Args>(args)...);
     case Actions::Defend:
-        return details::action<Actions::Defend>(type, owner, target);
+        return details::action<Actions::Defend>(type, std::forward<Args>(args)...);
     case Actions::Heal:
-        return details::action<Actions::Heal>(type, owner, target);
+        return details::action<Actions::Heal>(type, std::forward<Args>(args)...);
     case Actions::Restore:
-        return details::action<Actions::Restore>(type, owner, target);
+        return details::action<Actions::Restore>(type, std::forward<Args>(args)...);
     case Actions::Wear:
-        return details::action<Actions::Wear>(type, owner, target);
+        return details::action<Actions::Wear>(type, std::forward<Args>(args)...);
     default:
         return ActionStatus::None;
     }
 }
 
-template <Gettingable G>
-constexpr auto get_impl(G& type, Parameter param) {
+template <typename T>
+constexpr auto get_impl(T& type, Parameter param) {
     using result_type = std::conditional_t<
         std::is_const_v<std::remove_reference_t<decltype(type)>>,
         get_optional_variant_const_type,
         get_optional_variant_type>;
 
-    switch (param) {
-        static constinit GetStrategy<G> getStrategy_{};
-    case Parameter::Protection:
-        return getStrategy_.template operator()<Parameter::Protection>(type);
-    case Parameter::Damage:
-        return getStrategy_.template operator()<Parameter::Damage>(type);
-    case Parameter::Health:
-        return getStrategy_.template operator()<Parameter::Health>(type);
-    case Parameter::CureHealth:
-        return getStrategy_.template operator()<Parameter::CureHealth>(type);
-    case Parameter::Restore:
-        return getStrategy_.template operator()<Parameter::Restore>(type);
-    case Parameter::Wear:
-        return getStrategy_.template operator()<Parameter::Wear>(type);
-    default:
+    if constexpr (is_get_strategy<T>) {
+        static constinit GetStrategy<T> getStrategy_{};
+        switch (param) {
+        case Parameter::Protection:
+            return getStrategy_.template operator()<Parameter::Protection>(type);
+        case Parameter::Damage:
+            return getStrategy_.template operator()<Parameter::Damage>(type);
+        case Parameter::Health:
+            return getStrategy_.template operator()<Parameter::Health>(type);
+        case Parameter::CureHealth:
+            return getStrategy_.template operator()<Parameter::CureHealth>(type);
+        case Parameter::Restore:
+            return getStrategy_.template operator()<Parameter::Restore>(type);
+        case Parameter::Wear:
+            return getStrategy_.template operator()<Parameter::Wear>(type);
+        default:
+            return result_type{};
+        };
+    } else {
         return result_type{};
-    };
+    }
 }
 
 }  // namespace action_impl
