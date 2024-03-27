@@ -53,6 +53,8 @@ private:
     std::unique_ptr<ObjectConcept> object_;
 #endif
 
+    ActionStatus doAction(Actions action, Object* owner, Object* target) const;
+
 public:
     const bool can_alive{};
     const bool can_attack{};
@@ -81,6 +83,7 @@ public:
     ActionStatus heal(Object* owner, Object* target = nullptr) const;
     ActionStatus restore(Object* owner, Object* target = nullptr) const;
 
+    bool checkAction(Actions action) const;
     bool checkGetParam(Parameter param) const;
 
     template <Parameter param>
