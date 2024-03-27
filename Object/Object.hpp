@@ -16,7 +16,7 @@
 class Object;
 
 template <typename T>
-concept Objected = std::same_as<T, Object> or std::same_as<T, const Object>;
+concept is_object = std::same_as<T, Object> or std::same_as<T, const Object>;
 
 class Object {
 private:
@@ -81,22 +81,35 @@ public:
     ActionStatus heal(Object* owner, Object* target = nullptr) const;
     ActionStatus restore(Object* owner, Object* target = nullptr) const;
 
-    template <Parameter param>
-    bool checkGetParam() const;
+    bool checkGetParam(Parameter param) const;
 
     template <Parameter param>
-    friend constexpr auto getOptVariant(Objected auto& object) {  // return type depends on object constness
-        if (object.template checkGetParam<param>()) {
-            return object.object_->get(param);  // return get_optional_variant_type or get_optional_variant_const_type
-        }
-        return decltype(object.object_->get(param)){};
-    }
+    friend decltype(auto) getOpt(is_object auto& object);
 
     template <Parameter param>
-    friend constexpr auto getOpt(Objected auto& object) {
-        auto opt_variant = getOptVariant<param>(object);
-        return get_opt_ref_wrapper<param>(opt_variant);
-    }
+    decltype(auto) getOpt() const;
+
+    template <Parameter param>
+    decltype(auto) getOpt();
 };
+
+template <Parameter param>
+decltype(auto) getOpt(is_object auto& object) {
+    if (object.checkGetParam(param)) {
+        return get_opt_ref_wrapper<param>(object.object_->get(param));
+    }
+    using get_result_type = decltype(object.object_->get(param));
+    return get_opt_ref_wrapper<param>(get_result_type{});
+}
+
+template <Parameter param>
+decltype(auto) Object::getOpt() const {
+    return ::getOpt<param>(*this);
+}
+
+template <Parameter param>
+decltype(auto) Object::getOpt() {
+    return ::getOpt<param>(*this);
+}
 
 #include "ObjectModel.hpp"

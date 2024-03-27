@@ -42,9 +42,9 @@ int main() {
                    EffectType::Freeze,
                    Duration{1, DurationType::Round}}}});
 
-    std::cout << "attack with Stunning " << stuning_log.name() << '\n';
-    stuning_log.attack(&player);
-    std::cout << "attack with Freezing " << freezing_log.name() << '\n';
+    std::cout << "attack with " << stuning_log.name() << '\n';
+    stuning_log.attack(&player, &player);
+    std::cout << "attack with " << freezing_log.name() << '\n';
     freezing_log.attack(&player);
 
     print_person(player);

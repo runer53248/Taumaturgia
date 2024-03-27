@@ -39,35 +39,25 @@ ActionStatus Object::restore(Object* owner, Object* target) const {
     }
     return object_->action(Actions::Restore, owner, target);
 }
-template <Parameter param>
-bool Object::checkGetParam() const {
+
+bool Object::checkGetParam(Parameter param) const {
     if (not can_get) {
         return false;
     }
-    if constexpr (param == Parameter::Protection) {
-        return can_defend;
-    }
-    if constexpr (param == Parameter::CureHealth) {
-        return can_heal;
-    }
-    if constexpr (param == Parameter::Damage) {
-        return can_attack;
-    }
-    if constexpr (param == Parameter::Health) {
+    switch (param) {
+    case Parameter::Health:
         return can_alive;
-    }
-    if constexpr (param == Parameter::Restore) {
+    case Parameter::CureHealth:
+        return can_heal;
+    case Parameter::Protection:
+        return can_defend;
+    case Parameter::Damage:
+        return can_attack;
+    case Parameter::Restore:
         return can_restore;
-    }
-    if constexpr (param == Parameter::Wear) {
+    case Parameter::Wear:
         return can_wear;
+    default:
+        return false;
     }
-    return false;
 }
-
-template bool Object::checkGetParam<Parameter::Protection>() const;
-template bool Object::checkGetParam<Parameter::CureHealth>() const;
-template bool Object::checkGetParam<Parameter::Damage>() const;
-template bool Object::checkGetParam<Parameter::Health>() const;
-template bool Object::checkGetParam<Parameter::Restore>() const;
-template bool Object::checkGetParam<Parameter::Wear>() const;

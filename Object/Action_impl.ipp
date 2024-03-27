@@ -47,7 +47,7 @@ static constexpr ActionStatus action(const T& type, Args&&... args) {
 }  // namespace details
 
 template <typename T>
-constexpr std::optional<AliveStatus> alive(const T& type) {
+constexpr std::optional<AliveStatus> alive([[maybe_unused]] const T& type) {
     return {};
 }
 
