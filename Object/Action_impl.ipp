@@ -76,13 +76,15 @@ constexpr ActionStatus action(Actions action, Namingable auto const& type, Args&
 }
 
 template <typename T>
-constexpr auto get_impl(T& type, Parameter param) {
+constexpr auto get_impl(T& type, Parameter param) {  // implement test for get
     using result_type = std::conditional_t<
         std::is_const_v<std::remove_reference_t<decltype(type)>>,
         get_optional_variant_const_type,
         get_optional_variant_type>;
 
-    if constexpr (is_get_strategy<T>) {
+    if constexpr (not Gettingable<T>) {
+        return result_type{};
+    } else {
         static constinit GetStrategy<T> getStrategy_{};
         switch (param) {
         case Parameter::Protection:
@@ -100,8 +102,6 @@ constexpr auto get_impl(T& type, Parameter param) {
         default:
             return result_type{};
         };
-    } else {
-        return result_type{};
     }
 }
 
