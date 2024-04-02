@@ -44,7 +44,7 @@ struct WearContainer {
     std::optional<Protection> removeArmorAtLocation(BodyLocation location) & {
         auto opt_result = armorAtLocation(location);
         if (opt_result) {
-            armorAtLocation(location) = {};
+            armorAtLocation(location) = Protection{};
             const auto& removed_armor = opt_result.value();
             globalArmor_ -= removed_armor.armorClass();
 

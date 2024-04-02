@@ -20,7 +20,10 @@ add_compile_options(
     -Werror
 
     -Wno-missing-braces
+    -fsanitize=undefined
 )
+
+link_libraries(-lubsan)
 
 add_compile_definitions(ACCESS_TRAIT_MACRO)
 

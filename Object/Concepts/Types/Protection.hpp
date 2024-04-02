@@ -12,7 +12,7 @@ struct Protection {
         requires std::is_constructible_v<ArmorClass, decltype(std::forward<Args>(args))...>
         : ac_{std::forward<Args>(args)...} {}
 
-    auto operator<=>(const Protection& other) const noexcept = default;
+    std::strong_ordering operator<=>(const Protection& other) const noexcept = default;
 
     decltype(auto) armorClass() const noexcept { return ac_.armorClass(); }
     decltype(auto) location() const noexcept { return ac_.location(); }
