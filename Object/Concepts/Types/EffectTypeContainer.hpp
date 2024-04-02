@@ -16,7 +16,7 @@ struct EffectTypeContainer {
     EffectTypeContainer(EffectType effectType) noexcept
         : effectTypes_{effectType} {}
 
-    auto operator<=>(const EffectTypeContainer&) const noexcept = default;
+    std::strong_ordering operator<=>(const EffectTypeContainer&) const noexcept = default;
 
     auto begin() noexcept { return effectTypes_.begin(); }
     auto end() noexcept { return effectTypes_.end(); }

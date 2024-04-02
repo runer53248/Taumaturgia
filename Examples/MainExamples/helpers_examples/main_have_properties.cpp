@@ -22,7 +22,7 @@ concept have_properties1 =
     (is_property<properties> and ...) and
     mp_and<
         mp_contains<
-            typename Scheme<T>::list,
+            typename Scheme<T>::list_t,
             Property<properties>>...>::value;
 
 // ? ----------------------------------------
@@ -50,7 +50,7 @@ concept have_properties2 =
     mp_and<
         mp_to_bool<
             mp_count_if<
-                typename Scheme<T>::list,
+                typename Scheme<T>::list_t,
                 equivalent_properties_predicate<properties>::template type>>...>::value;
 
 // ? ----------------------------------------

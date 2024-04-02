@@ -1,5 +1,6 @@
 #pragma once
 #include <concepts>
+#include <optional>
 #include "Object/Concepts/Livingable.hpp"
 
 enum class AliveStatus : signed char;

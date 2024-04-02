@@ -37,10 +37,10 @@ int main() {
     print(Type4{});
 
     std::cout << "create_ordered_property_list           = " << name<create_ordered_property_list<Living, Healing>>() << '\n';
-    std::cout << "Scheme<Type0>::list                    = " << name<Scheme<Type0>::list>() << '\n';
+    std::cout << "Scheme<Type0>::list_t                    = " << name<Scheme<Type0>::list_t>() << '\n';
     std::cout << "append_and_order_property_lists<Type0> = "
               << name<append_and_order_property_lists<  //
-                     Scheme<Type0>::list,               //
+                     Scheme<Type0>::list_t,               //
                      create_ordered_property_list<Living, Healing>>>()
               << '\n';
     std::cout << "Property<Living>  priority = " << Property<Living>::value << '\n';

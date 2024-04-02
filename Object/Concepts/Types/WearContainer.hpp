@@ -8,7 +8,7 @@ struct WearContainer {
     explicit WearContainer(int baseValue) noexcept
         : globalArmor_{baseValue} {}
 
-    friend constexpr auto operator<=>(const WearContainer& lhs, const WearContainer& rhs) noexcept = default;
+    friend std::strong_ordering operator<=>(const WearContainer& lhs, const WearContainer& rhs) noexcept = default;
 
     auto value() const& noexcept { return globalArmor_; }
     const auto& protectEffects() const& noexcept { return globalProtectEffects_; }
