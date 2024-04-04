@@ -56,12 +56,15 @@ struct Restoring_ : T {
         : T{name, std::forward<Args>(args)...}, restoreEffects{restoreEffects} {}
 
     template <typename... V, typename... Args>
-        requires(boost::mp11::mp_contains<std::variant<V...>, EffectTypeContainer>::value and (sizeof...(V) > 0))
+        requires type_is_possible<EffectTypeContainer, V...>
     Restoring_(const Name& name, const std::variant<V...>& restoreEffects, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, restoreEffects{std::get<EffectTypeContainer>(restoreEffects)} {}
+        : T{name, std::forward<Args>(args)...},
+          restoreEffects{std::get_if<EffectTypeContainer>(&restoreEffects)
+                             ? std::get<EffectTypeContainer>(restoreEffects)
+                             : EffectTypeContainer{}} {}
 
     template <typename... V, typename... Args>
-        requires(not boost::mp11::mp_contains<std::variant<V...>, EffectTypeContainer>::value and (sizeof...(V) > 0))
+        requires type_is_not_possible<EffectTypeContainer, V...>
     Restoring_(const Name& name, [[maybe_unused]] const std::variant<V...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 

@@ -52,12 +52,15 @@ struct Living_ : T {
         : T{name, std::forward<Args>(args)...}, hp{hp} {}
 
     template <typename... V, typename... Args>
-        requires boost::mp11::mp_contains<std::variant<V...>, Health>::value
+        requires type_is_possible<Health, V...>
     Living_(const Name& name, const std::variant<V...>& hp, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, hp{std::get<Health>(hp)} {}
+        : T{name, std::forward<Args>(args)...},
+          hp{std::get_if<Health>(&hp)
+                 ? std::get<Health>(hp)
+                 : Health{}} {}
 
     template <typename... V, typename... Args>
-        requires(not boost::mp11::mp_contains<std::variant<V...>, Health>::value)
+        requires type_is_not_possible<Health, V...>
     Living_(const Name& name, [[maybe_unused]] const std::variant<V...>& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 

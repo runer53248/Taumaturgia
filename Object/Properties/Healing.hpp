@@ -52,12 +52,15 @@ struct Healing_ : T {
         : T{name, std::forward<Args>(args)...}, cureHealth{cureHealth} {}
 
     template <typename... V, typename... Args>
-        requires boost::mp11::mp_contains<std::variant<V...>, CureHealth>::value
+        requires type_is_possible<CureHealth, V...>
     Healing_(const Name& name, const std::variant<V...>& cureHealth, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, cureHealth{std::get<CureHealth>(cureHealth)} {}
+        : T{name, std::forward<Args>(args)...},
+          cureHealth{std::get_if<CureHealth>(&cureHealth)
+                         ? std::get<CureHealth>(cureHealth)
+                         : CureHealth{}} {}
 
     template <typename... V, typename... Args>
-        requires(not boost::mp11::mp_contains<std::variant<V...>, CureHealth>::value)
+        requires type_is_not_possible<CureHealth, V...>
     Healing_(const Name& name, [[maybe_unused]] const std::variant<V...>& cureHealth, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 

@@ -68,12 +68,15 @@ struct UserProperty_ : T {
         : T{name, std::forward<Args>(args)...}, type{type} {}
 
     template <typename... V, typename... Args>
-        requires(boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
+        requires type_is_possible<TYPE, V...>
     UserProperty_(const Name& name, const std::variant<V...>& type, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, type{std::get<TYPE>(type)} {}
+        : T{name, std::forward<Args>(args)...},
+          type{std::get_if<TYPE>(&type)
+                   ? std::get<TYPE>(type)
+                   : TYPE{}} {}
 
     template <typename... V, typename... Args>
-        requires(not boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
+        requires type_is_not_possible<TYPE, V...>
     UserProperty_(const Name& name, [[maybe_unused]] const std::variant<V...>& type, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
@@ -89,7 +92,7 @@ struct UserProperty_ : T {
         : T{std::forward<Args>(args)...},
           type{std::make_from_tuple<TYPE>(type)} {}
 
-    template <typename... INFO,  typename... Args>
+    template <typename... INFO, typename... Args>
         requires(not constructible_from_args<TYPE, INFO...>)
     UserProperty_(std::tuple<INFO...>&&, Args&&...) {
         throw std::logic_error("Can't create TYPE from given tuple.");
@@ -114,12 +117,15 @@ struct UserProperty_ : T {
         : T{std::forward<Args>(args)...}, type{type} {}
 
     template <typename... V, typename... Args>
-        requires(boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
+        requires type_is_possible<TYPE, V...>
     UserProperty_(const std::variant<V...>& type, Args&&... args)
-        : T{std::forward<Args>(args)...}, type{std::get<TYPE>(type)} {}
+        : T{std::forward<Args>(args)...},
+          type{std::get_if<TYPE>(&type)
+                   ? std::get<TYPE>(type)
+                   : TYPE{}} {}
 
     template <typename... V, typename... Args>
-        requires(not boost::mp11::mp_contains<std::variant<V...>, TYPE>::value and (sizeof...(V) > 0))
+        requires type_is_not_possible<TYPE, V...>
     UserProperty_([[maybe_unused]] const std::variant<V...>& type, Args&&... args)
         : T{std::forward<Args>(args)...} {}
 
