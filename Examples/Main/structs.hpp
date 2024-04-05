@@ -1,5 +1,12 @@
 #pragma once
 
+#include "Object/Properties/Properties.hpp"
+
+struct Living_type {
+    Name name;
+    Health hp;
+};
+
 #ifdef WITH_ADD_PROPERTIES
     // use add_properties for creating type with properties
     #include "Examples/Structs/CustomWeapon.hpp"

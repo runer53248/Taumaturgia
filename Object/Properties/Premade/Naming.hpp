@@ -1,6 +1,6 @@
 #pragma once
 #include "Object/Concepts/Namingable.hpp"
-#include "Helpers/PropertyData.hpp"
+#include "Object/Properties/Helpers/PropertyData.hpp"
 
 namespace impl {
 constinit char naming_type_name[] = "Naming";

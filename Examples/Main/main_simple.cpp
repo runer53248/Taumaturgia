@@ -1,6 +1,5 @@
 #include <vector>
 #include "Print.hpp"
-#include "properties.hpp"
 #include "structs.hpp"
 
 int main() {
