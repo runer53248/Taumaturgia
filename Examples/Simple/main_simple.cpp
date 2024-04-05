@@ -3,9 +3,13 @@
 #include "Object/DefaultStrategies.hpp"
 #include "Object/Properties/Properties.hpp"
 
+// MARK: Item
+
 struct Item {
     std::string name;
 };
+
+// MARK: Armor
 
 struct Armor {
     Name name;
@@ -20,10 +24,14 @@ private:
     Protection protection;
 };
 
+// MARK: Weapon_A
+
 struct Weapon_A {
     std::string name;
     Damage dmg;
 };
+
+// MARK: Weapon_B
 
 struct Weapon_B {
     std::string name;
@@ -38,6 +46,8 @@ private:
     Damage dmg;
 };
 
+// MARK: Weapon_C
+
 struct Weapon_C {
     std::string name;
 
@@ -51,6 +61,8 @@ private:
     Damage dmg;
 };
 
+// MARK: CustomAccessDamage<Weapon_C>
+
 template <typename T>
     requires std::is_base_of_v<Weapon_C, T>
 struct traits::CustomAccessDamage<T> {
@@ -59,10 +71,14 @@ struct traits::CustomAccessDamage<T> {
     }
 };
 
+// MARK: Player
+
 struct Player {
     std::string name;
     WearContainer armorWear{10};
 };
+
+// MARK: Player_B
 
 struct Player_B {
     WearContainer armorWear{10};
@@ -81,6 +97,8 @@ private:
     Health hp;
 };
 
+// MARK: CustomAccessName<Player_B>
+
 template <typename T>
     requires std::is_base_of_v<Player_B, T>
 struct traits::CustomAccessName<T> {
@@ -88,6 +106,8 @@ struct traits::CustomAccessName<T> {
         return el.Name();
     }
 };
+
+// MARK: main
 
 int main() {
     std::vector<Object> container;

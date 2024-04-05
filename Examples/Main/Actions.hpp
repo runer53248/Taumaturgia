@@ -2,6 +2,8 @@
 #include "Object/DefaultStrategies.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 
+// MARK: attack
+
 void attack(auto& backpack, auto& player, auto& enemy) {
     std::cout << "Items I can attack with:  //////////////////////////////\n\n";
     for (const auto& item : backpack) {
@@ -19,6 +21,8 @@ void attack(auto& backpack, auto& player, auto& enemy) {
         std::cout << '\n';
     }
 }
+
+// MARK: wear
 
 void wear(auto& backpack, auto& player) {
     std::cout << "Items I can wear on:  //////////////////////////////\n";
@@ -45,6 +49,8 @@ void wear(auto& backpack, auto& player) {
     }
 }
 
+// MARK: defend
+
 void defend(auto& backpack, auto& player) {
     std::cout << "Items I can defend with:  //////////////////////////////\n\n";
     for (const auto& item : backpack) {
@@ -67,6 +73,8 @@ void defend(auto& backpack, auto& player) {
         std::cout << '\n';
     }
 }
+
+// MARK: enemy_defend
 
 void enemy_defend(auto& backpack, auto& enemy) {
     std::cout << "Items enemy try wear on:  //////////////////////////////\n";
@@ -93,6 +101,8 @@ void enemy_defend(auto& backpack, auto& enemy) {
     }
 }
 
+// MARK: restore
+
 void restore(auto& backpack, auto& player) {
     std::cout << "Items I can restore with:  //////////////////////////////\n\n";
     for (const auto& item : backpack) {
@@ -111,6 +121,8 @@ void restore(auto& backpack, auto& player) {
         std::cout << '\n';
     }
 }
+
+// MARK: heal
 
 void heal(auto& backpack, auto& player) {
     std::cout << "Items I can heal with:  //////////////////////////////\n\n";

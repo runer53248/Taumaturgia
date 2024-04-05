@@ -61,6 +61,8 @@ int main() {
          EffectType::Infection,
          EffectType::Poison}}};
 
+    // MARK: print Restore
+
     getOpt<Parameter::Restore>(restore_potion)
         .and_then(print_restore)
         .and_then(print_new_line);
@@ -69,6 +71,8 @@ int main() {
     print_object_properties(restore_potion);
     print_object_properties(player);
     std::cout << '\n';
+
+    // MARK: print Health
 
     getOpt<Parameter::Health>(player)
         .and_then([](Health& hp) {
@@ -92,6 +96,8 @@ int main() {
     const Object potion{healing_potion{
         Name{"HEALING_POTION"},
         CureHealth{75}}};
+
+    // MARK: print CureHealth
 
     getOpt<Parameter::CureHealth>(potion)
         .and_then([](const CureHealth& cure) {

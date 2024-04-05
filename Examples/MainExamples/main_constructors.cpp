@@ -28,28 +28,28 @@ int main() {
 
     using restoring_protecting_damaging_potion = Restoring<Protecting<Damaging<Potion>>>;
 
-    // constructor: all properties set from lvalue
+    // MARK: set all from lvalue
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         restore,     // restoring
         protection,  // protecting
         damage};     // damaging
 
-    // constructor: all properties set from const lvalue
+    // MARK: set all from const lvalue
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         const_restore,     // restoring
         const_protection,  // protecting
         const_damage};     // damaging
 
-    // constructor: all properties set from move types or initializer_list
+    // MARK: set all from move types or initializer_list
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         restore_effect_initializer,                                              // restoring
         ArmorClass{armor_value, armor_location, protecting_effect_initializer},  // protecting
         Damage{damage_value, damage_effect}};                                    // damaging
 
-    // constructor: all properties set from tuples by rvalues
+    // MARK: set all from tuples by rvalues
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         std::tuple(restore_effect_initializer),                                  // restoring
@@ -60,51 +60,51 @@ int main() {
     std::tuple protecting_tuple(armor_value, armor_location, protecting_effect_initializer);
     std::tuple damaging_tuple(damage_value, damage_effect);
 
-    // constructor: all properties set from tuples by lvalues
+    // MARK: set all from tuples by lvalues
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         restoring_tuple,   // restoring
         protecting_tuple,  // protecting
         damaging_tuple};   // damaging
 
-    // constructor: last property set from lvalue
+    // MARK: set last from lvalue
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         std::ignore,  // restoring
         std::ignore,  // protecting
         damage};      // damaging
 
-    // constructor: last property set from rvalue
+    // MARK: set last from rvalue
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         std::ignore,                           // restoring
         std::ignore,                           // protecting
         Damage{damage_value, damage_effect}};  // damaging
 
-    // constructor: last property set from tuple by lvalue
+    // MARK: set last from tuple by lvalue
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         std::ignore,      // restoring
         std::ignore,      // protecting
         damaging_tuple};  // damaging
 
-    // constructor: last property set from tuple by rvalue
+    // MARK: set last from tuple by rvalue
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         std::ignore,                               // restoring
         std::ignore,                               // protecting
         std::tuple{damage_value, damage_effect}};  // damaging
 
-    // constructor: first property set
+    // MARK: set first
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         restore_effect_initializer};  // restoring
 
-    // constructor: all properties default
+    // MARK: all properties default
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name};
 
-    // constructor: incorrect tuple to set property
+    // MARK: incorrect tuple
     try {
         restoring_protecting_damaging_potion{
             spiked_shield_potion_name,
@@ -115,7 +115,7 @@ int main() {
         std::cout << "exception: " << err.what() << '\n';
     }
 
-    // constructor: incorrect tuple to set property
+    // MARK: incorrect tuple
     try {
         std::tuple tuple_invalid_for_restoring{"test"};
         std::tuple tuple_invalid_for_damaging{"test"};
@@ -129,7 +129,7 @@ int main() {
         std::cout << "exception: " << err.what() << '\n';
     }
 
-    // constructor: incorrect tuple to set property
+    // MARK: incorrect tuple
     try {
         std::tuple tuple_invalid_for_restoring{"test"};
         std::tuple tuple_invalid_for_damaging{"test"};
@@ -145,35 +145,35 @@ int main() {
 
     using container = std::variant<std::monostate, Damage, Protection, EffectTypeContainer>;
 
-    // constructor: properties set from moved types or initializer_list
+    // MARK: set from moved types or initializer_list
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         {restore_effect_initializer},                                            // restoring
         ArmorClass{armor_value, armor_location, protecting_effect_initializer},  // protecting
         Damage{damage_value, damage_effect}};                                    // damaging
 
-    // constructor: properties set from lvalue
+    // MARK: set from lvalue
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         restore,     // restoring
         protection,  // protecting
         damage};     // damaging
 
-    // constructor: properties set from const lvalue
+    // MARK: set from const lvalue
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         const_restore,     // restoring
         const_protection,  // protecting
         const_damage};     // damaging
 
-    // constructor: properties set from variants
+    // MARK: set from variants
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         container{restore},     // restoring
         container{protection},  // protecting
         container{damage}};     // damaging
 
-    //constructor: properties set from variants (conditional check)
+    // MARK: set from variants (conditional check)
     try {
         restoring_protecting_damaging_potion{
             spiked_shield_potion_name,
@@ -186,7 +186,7 @@ int main() {
 
     std::variant<std::monostate, Damage> damage_variant{damage};
 
-    // constructor: properties set if correct variant given
+    // MARK: set if correct variant given
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name,
         damage_variant,   // restoring

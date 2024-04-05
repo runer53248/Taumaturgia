@@ -1,6 +1,8 @@
 #pragma once
 #include "Examples/PreetyPrint/preety_print.hpp"
 
+// MARK: get_print_const_ref
+
 void get_print_const_ref(const Object& obj) {
     std::cout << "get_print_const_ref:\n";
     obj.getOpt<Parameter::Health>()  // getOpt as method
@@ -16,6 +18,8 @@ void get_print_const_ref(const Object& obj) {
         .and_then(print_dmg)
         .and_then(print_new_line);
 }
+
+// MARK: get_print_ref
 
 // non-const object will return optional to non-const reference wraper - printing will then show [&]
 void get_print_ref(is_object auto& obj) {
@@ -33,6 +37,8 @@ void get_print_ref(is_object auto& obj) {
         .and_then(print_dmg)
         .and_then(print_new_line);
 }
+
+// MARK: get_print_with_damage_as_const
 
 void get_print_with_damage_as_const(auto& obj) {
     std::cout << "get_print_with_damage_as_const:\n";

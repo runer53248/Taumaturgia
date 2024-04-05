@@ -18,11 +18,9 @@ struct UserProperty_ : T {
 #ifdef USER_PROPERTY_SELF_AWARE
     using improvement_of = self<T>;  // will act like same type if TYPE and Tags are same
 #endif
-    using hold_type = TYPE;  // unused
+    // using hold_type = TYPE;  // unused
 
-    UserProperty_() = default;
-
-    // for ordered UserProperty_ (require T have name property)
+    // MARK: Namingable tuple C-tors
 
     template <typename... INFO, typename... Args>
     UserProperty_(const Name& name, std::tuple<INFO...>&& type, Args&&... args)
@@ -48,6 +46,8 @@ struct UserProperty_ : T {
         throw std::logic_error("Can't create TYPE from given tuple.");
     }
 
+    // MARK: Namingable default and ignore C-tors
+
     UserProperty_(const Name& name)
         requires(not std::is_same_v<TYPE, Name>)
         : T{name} {}
@@ -56,6 +56,8 @@ struct UserProperty_ : T {
     UserProperty_(const Name& name, [[maybe_unused]] decltype(std::ignore) type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<Args>(args)...} {}
+
+    // MARK: Namingable type C-tors
 
     template <typename... Args>
     UserProperty_(const Name& name, TYPE&& type, Args&&... args)
@@ -66,6 +68,8 @@ struct UserProperty_ : T {
     UserProperty_(const Name& name, const TYPE& type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<Args>(args)...}, type{type} {}
+
+    // MARK: Namingable variant C-tors
 
     template <typename... V, typename... Args>
         requires type_is_possible<TYPE, V...>
@@ -80,7 +84,7 @@ struct UserProperty_ : T {
     UserProperty_(const Name& name, [[maybe_unused]] const std::variant<V...>& type, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
-    // for unordered UserProperty_ (can exist before T accuire name property)
+    // MARK: tuple C-tors
 
     template <typename... INFO, typename... Args>
     UserProperty_(std::tuple<INFO...>&& type, Args&&... args)
@@ -104,9 +108,15 @@ struct UserProperty_ : T {
         throw std::logic_error("Can't create TYPE from given tuple.");
     }
 
+    // MARK: default and ignore C-tors
+
+    UserProperty_() = default;
+
     template <typename... Args>
     UserProperty_([[maybe_unused]] decltype(std::ignore) type, Args&&... args)
         : T{std::forward<Args>(args)...} {}
+
+    // MARK: type C-tors
 
     template <typename... Args>
     UserProperty_(TYPE&& type, Args&&... args)
@@ -115,6 +125,8 @@ struct UserProperty_ : T {
     template <typename... Args>
     UserProperty_(const TYPE& type, Args&&... args)
         : T{std::forward<Args>(args)...}, type{type} {}
+
+    // MARK: variant C-tors
 
     template <typename... V, typename... Args>
         requires type_is_possible<TYPE, V...>
@@ -128,6 +140,8 @@ struct UserProperty_ : T {
         requires type_is_not_possible<TYPE, V...>
     UserProperty_([[maybe_unused]] const std::variant<V...>& type, Args&&... args)
         : T{std::forward<Args>(args)...} {}
+
+    // MARK: getType
 
     template <typename RETURN = TYPE, int DIG = 0>
     decltype(auto) getType() & {
