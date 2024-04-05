@@ -7,9 +7,10 @@ struct Protection {
     Protection() noexcept = default;
     Protection(const ArmorClass& ac) noexcept
         : ac_{ac} {}
+
     template <typename... Args>
+        requires std::is_constructible_v<ArmorClass, Args...>
     Protection(Args&&... args) noexcept  // no explicit gives some oportunities
-        requires std::is_constructible_v<ArmorClass, decltype(std::forward<Args>(args))...>
         : ac_{std::forward<Args>(args)...} {}
 
     std::strong_ordering operator<=>(const Protection& other) const noexcept = default;
