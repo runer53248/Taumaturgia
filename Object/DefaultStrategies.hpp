@@ -1,6 +1,6 @@
 #pragma once
 #include "Object.hpp"
-#include "StrategyHelpers.hpp"
+#include "Strategies/Helpers/Whom.hpp"
 #include "Strategies/DefaultStrategies/DefaultAliveStrategy.hpp"
 #include "Strategies/DefaultStrategies/DefaultAttackStrategy.hpp"
 #include "Strategies/DefaultStrategies/DefaultDefendStrategy.hpp"

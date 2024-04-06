@@ -20,7 +20,14 @@ inline ActionStatus default_wear_behavior(Wearingable auto& obj, Object* target)
     return result.value_or(ActionStatus::Fail);
 }
 
+#ifndef NO_PREMADE_STRATEGIES
 ActionStatus WearStrategy_<Default>::operator()(Wearingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     return default_wear_behavior(obj, suspect);
 }
+#else
+ActionStatus UserStrategy_<WearContainer, Default>::operator()(Wearingable auto& obj, Object* owner, Object* target) const {
+    auto* suspect = Whom(owner, target);
+    return default_wear_behavior(obj, suspect);
+}
+#endif

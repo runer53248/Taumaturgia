@@ -36,16 +36,29 @@
     template <typename TYPE>
     using Naming = UserPropertyConceptAdapter<Name, Namingable<TYPE>>::template type<TYPE>;
 
-    template <typename T, typename... Args>
-    struct WearStrategy_<impl::UserProperty_<WearContainer, T, Args...>> : WearStrategy_<T> {};  // forward eventualy implemented strategy
-    template <typename T, typename... Args>
-    struct AttackStrategy_<impl::UserProperty_<Damage, T, Args...>> : AttackStrategy_<T> {};  // forward eventualy implemented strategy
-    template <typename T, typename... Args>
-    struct DefendStrategy_<impl::UserProperty_<Protection, T, Args...>> : DefendStrategy_<T> {};  // forward eventualy implemented strategy
-    template <typename T, typename... Args>
-    struct HealStrategy_<impl::UserProperty_<CureHealth, T, Args...>> : HealStrategy_<T> {};  // forward eventualy implemented strategy
-    template <typename T, typename... Args>
-    struct RestoreStrategy_<impl::UserProperty_<EffectTypeContainer, T, Args...>> : RestoreStrategy_<T> {};  // forward eventualy implemented strategy
+    #ifndef NO_PREMADE_STRATEGIES
+        template <typename T, typename... Args>
+        struct WearStrategy_<impl::UserProperty_<WearContainer, T, Args...>> : WearStrategy_<T> {};  // forward eventualy implemented strategy
+        template <typename T, typename... Args>
+        struct AttackStrategy_<impl::UserProperty_<Damage, T, Args...>> : AttackStrategy_<T> {};  // forward eventualy implemented strategy
+        template <typename T, typename... Args>
+        struct DefendStrategy_<impl::UserProperty_<Protection, T, Args...>> : DefendStrategy_<T> {};  // forward eventualy implemented strategy
+        template <typename T, typename... Args>
+        struct HealStrategy_<impl::UserProperty_<CureHealth, T, Args...>> : HealStrategy_<T> {};  // forward eventualy implemented strategy
+        template <typename T, typename... Args>
+        struct RestoreStrategy_<impl::UserProperty_<EffectTypeContainer, T, Args...>> : RestoreStrategy_<T> {};  // forward eventualy implemented strategy
+    #else
+        template <typename T, typename... Args>
+        struct UserStrategy_<WearContainer, impl::UserProperty_<WearContainer, T, Args...>> : UserStrategy_<WearContainer, T> {};  // forward eventualy implemented strategy
+        template <typename T, typename... Args>
+        struct UserStrategy_<Damage, impl::UserProperty_<Damage, T, Args...>> : UserStrategy_<Damage, T> {};  // forward eventualy implemented strategy
+        template <typename T, typename... Args>
+        struct UserStrategy_<Protection, impl::UserProperty_<Protection, T, Args...>> : UserStrategy_<Protection, T> {};  // forward eventualy implemented strategy
+        template <typename T, typename... Args>
+        struct UserStrategy_<CureHealth, impl::UserProperty_<CureHealth, T, Args...>> : UserStrategy_<CureHealth, T> {};  // forward eventualy implemented strategy
+        template <typename T, typename... Args>
+        struct UserStrategy_<EffectTypeContainer, impl::UserProperty_<EffectTypeContainer, T, Args...>> : UserStrategy_<EffectTypeContainer, T> {};  // forward eventualy implemented strategy
+    #endif
 #endif
 
 #include "Helpers/taged_list.hpp"

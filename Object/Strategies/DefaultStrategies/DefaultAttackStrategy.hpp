@@ -55,7 +55,14 @@ inline ActionStatus default_attack_behavior(Damagingable auto& obj, Object* targ
     return is_success.value_or(ActionStatus::Fail);
 }
 
+#ifndef NO_PREMADE_STRATEGIES
 ActionStatus AttackStrategy_<Default>::operator()(Damagingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     return default_attack_behavior(obj, suspect);
 }
+#else
+ActionStatus UserStrategy_<Damage, Default>::operator()(Damagingable auto& obj, Object* owner, Object* target) const {
+    auto* suspect = Whom(owner, target);
+    return default_attack_behavior(obj, suspect);
+}
+#endif

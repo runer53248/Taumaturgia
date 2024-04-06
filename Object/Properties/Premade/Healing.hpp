@@ -1,9 +1,9 @@
 #pragma once
 #include <boost/mp11.hpp>
+#include "Object/Concepts/Types/Name.hpp"
 #include "Object/Properties/Helpers/PropertyData.hpp"
 #include "Object/Properties/Helpers/constructible_from_args.hpp"
-#include "Object/Concepts/Types/Name.hpp"
-#include "Object/Strategies/HealStrategy.hpp"
+#include "Object/Strategies/Premade/HealStrategy.hpp"
 
 namespace impl {
 constinit char healing_type_name[] = "Healing";

@@ -13,7 +13,12 @@ static_assert(Damagingable<DefaultWeapon>);
 static_assert(not Damagingable<CustomWeapon>);
 
 template <std::convertible_to<CustomWeapon> T>
+#ifndef NO_PREMADE_STRATEGIES
 struct AttackStrategy_<T> {
+#else
+struct UserStrategy_<Damage, T> {
+#endif
+
     // ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const {  // when get Damagingable property
     //     auto* suspect = Whom(owner, target);
     //     ActionStatus base_status = default_attack_behavior(obj, suspect);

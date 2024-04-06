@@ -210,5 +210,6 @@ struct UserPropertyConceptAdapter {
     using type = std::conditional_t<CONCEPT, T, UserProperty<TYPE, T, Args...>>;
 };
 
-template <typename TYPE, typename T>
-struct UserStrategy_<TYPE, impl::UserProperty_<TYPE, T>> : UserStrategy_<TYPE, T> {};  // forward eventualy implemented strategy
+// TODO: check is this needed?
+// template <typename TYPE, typename T>
+// struct UserStrategy_<TYPE, impl::UserProperty_<TYPE, T>> : UserStrategy_<TYPE, T> {};  // forward eventualy implemented strategy

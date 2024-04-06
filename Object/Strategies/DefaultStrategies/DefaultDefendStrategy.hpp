@@ -16,7 +16,14 @@ inline ActionStatus default_defend_behavior(Protectingable auto& obj, Object* ta
     return ActionStatus::Fail;
 }
 
+#ifndef NO_PREMADE_STRATEGIES
 ActionStatus DefendStrategy_<Default>::operator()(Protectingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     return default_defend_behavior(obj, suspect);
 }
+#else
+ActionStatus UserStrategy_<Protection, Default>::operator()(Protectingable auto& obj, Object* owner, Object* target) const {
+    auto* suspect = Whom(owner, target);
+    return default_defend_behavior(obj, suspect);
+}
+#endif

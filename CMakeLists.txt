@@ -27,7 +27,9 @@ link_libraries(-lubsan)
 
 add_compile_definitions(
   ACCESS_TRAIT_MACRO
-  # NO_PREMADE_PROPERTIES
+
+  NO_PREMADE_PROPERTIES
+  NO_PREMADE_STRATEGIES # work only with NO_PREMADE_PROPERTIES
 )
 
 include_directories(${Taumaturgia_SOURCE_DIR})

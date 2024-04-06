@@ -1,9 +1,9 @@
 #pragma once
 #include <boost/mp11.hpp>
+#include "Object/Concepts/Types/Name.hpp"
 #include "Object/Properties/Helpers/PropertyData.hpp"
 #include "Object/Properties/Helpers/constructible_from_args.hpp"
-#include "Object/Concepts/Types/Name.hpp"
-#include "Object/Strategies/AttackStrategy.hpp"
+#include "Object/Strategies/Premade/AttackStrategy.hpp"
 
 namespace impl {
 constinit char damaging_type_name[] = "Damaging";
@@ -88,5 +88,10 @@ static_assert(Damagingable<Damaging_<Damaging_Test>>);
 template <typename T>
 using Damaging = std::conditional_t<Damagingable<T>, T, impl::Damaging_<T>>;
 
+#ifndef NO_PREMADE_STRATEGIES
 template <typename T>
 struct AttackStrategy_<impl::Damaging_<T>> : AttackStrategy_<T> {};  // forward eventualy implemented strategy
+#else
+template <typename T>
+struct UserStrategy_<Damage, impl::Damaging_<T>> : UserStrategy_<Damage, T> {};  // forward eventualy implemented strategy
+#endif

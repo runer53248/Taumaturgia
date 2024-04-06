@@ -1,9 +1,9 @@
 #pragma once
 #include <boost/mp11.hpp>
+#include "Object/Concepts/Types/Name.hpp"
 #include "Object/Properties/Helpers/PropertyData.hpp"
 #include "Object/Properties/Helpers/constructible_from_args.hpp"
-#include "Object/Concepts/Types/Name.hpp"
-#include "Object/Strategies/WearStrategy.hpp"
+#include "Object/Strategies/Premade/WearStrategy.hpp"
 
 namespace impl {
 constinit char wearing_type_name[] = "Wearing";

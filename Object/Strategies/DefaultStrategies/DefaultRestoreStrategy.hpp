@@ -21,7 +21,14 @@ inline ActionStatus default_restore_behavior(Restoringable auto& obj, Object* ta
     return ActionStatus::Fail;
 }
 
+#ifndef NO_PREMADE_STRATEGIES
 ActionStatus RestoreStrategy_<Default>::operator()(Restoringable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     return default_restore_behavior(obj, suspect);
 }
+#else
+ActionStatus UserStrategy_<EffectTypeContainer, Default>::operator()(Restoringable auto& obj, Object* owner, Object* target) const {
+    auto* suspect = Whom(owner, target);
+    return default_restore_behavior(obj, suspect);
+}
+#endif
