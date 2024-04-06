@@ -1,10 +1,7 @@
 #pragma once
-#include <type_traits>
-#include "Traits/ArmorWearTraits.hpp"
-#include "Types/WearContainer.hpp"
+#include "Object/Concepts/Traits/ArmorWearTraits.hpp"
+#include "Object/Concepts/Types/WearContainer.hpp"
+#include "Object/Concepts/trait_accessible.hpp"
 
 template <typename T>
-concept Wearingable = requires(std::remove_cvref_t<T> x) {
-    { traits::accessArmorWear::get(x) } -> same_as_ref<WearContainer>;
-    { traits::accessArmorWear::get(std::as_const(x)) } -> same_as_ref<const WearContainer>;
-};
+concept Wearingable = trait_accessible<T, traits::accessArmorWear, WearContainer>;

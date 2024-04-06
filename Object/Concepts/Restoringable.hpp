@@ -1,10 +1,7 @@
 #pragma once
-#include <type_traits>
-#include "Traits/RestoreEffectsTraits.hpp"
-#include "Types/EffectTypeContainer.hpp"
+#include "Object/Concepts/Traits/RestoreEffectsTraits.hpp"
+#include "Object/Concepts/Types/EffectTypeContainer.hpp"
+#include "Object/Concepts/trait_accessible.hpp"
 
 template <typename T>
-concept Restoringable = requires(std::remove_cvref_t<T> x) {
-    { traits::accessRestoreEffects::get(x) } -> same_as_ref<EffectTypeContainer>;
-    { traits::accessRestoreEffects::get(std::as_const(x)) } -> same_as_ref<const EffectTypeContainer>;
-};
+concept Restoringable = trait_accessible<T, traits::accessRestoreEffects, EffectTypeContainer>;

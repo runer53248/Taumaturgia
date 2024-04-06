@@ -17,7 +17,7 @@ concept UserStrategable = requires(Strategy<TYPE, UserType> strategy, UserType& 
 
 template <typename TYPE, typename T>
 using UserStrategy = std::conditional_t<
-    Typeable<T, TYPE>,
+    getType_or_custom_accessable<T, TYPE>,
     std::conditional_t<
         UserStrategable<UserStrategy_, TYPE, T>,
         UserStrategy_<TYPE, T>,
@@ -29,5 +29,5 @@ concept is_user_strategy = UserStrategable<UserStrategy, TYPE, T>;  // unused
 
 template <typename TYPE>
 struct UserStrategy_<TYPE, Default> {
-    void operator()(Typeable<TYPE> auto& obj) const;
+    void operator()(getType_or_custom_accessable<TYPE> auto& obj) const;
 };

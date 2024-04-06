@@ -29,7 +29,7 @@ struct UserProtectingImproved_ : T {  // example of improving user property
     UserProtectingImproved_() noexcept = default;
 };
 template <typename T>
-using UserProtectingImproved = std::conditional_t<Typeable<T, Protection>, T, UserProtectingImproved_<T>>;
+using UserProtectingImproved = std::conditional_t<getType_or_custom_accessable<T, Protection>, T, UserProtectingImproved_<T>>;
 
 template <typename T>
 struct UserProtectingImproved_2_ : T {  // example of improving use property
@@ -39,4 +39,4 @@ struct UserProtectingImproved_2_ : T {  // example of improving use property
     UserProtectingImproved_2_() noexcept = default;
 };
 template <typename T>
-using UserProtectingImproved_2 = std::conditional_t<Typeable<T, Protection>, T, UserProtectingImproved_2_<T>>;
+using UserProtectingImproved_2 = std::conditional_t<getType_or_custom_accessable<T, Protection>, T, UserProtectingImproved_2_<T>>;
