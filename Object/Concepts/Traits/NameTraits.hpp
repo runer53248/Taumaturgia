@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "helper/traits_helper.hpp"
+#include "Helpers/traits_helper.hpp"
 
 struct Name;
 

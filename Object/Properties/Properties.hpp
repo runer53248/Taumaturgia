@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef USER_PROPERTIES
+#ifndef NO_PREMADE_PROPERTIES
     #include "Premade/Damaging.hpp"
     #include "Premade/Healing.hpp"
     #include "Premade/Living.hpp"
