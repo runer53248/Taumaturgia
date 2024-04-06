@@ -3,7 +3,7 @@
 #include "Object/Concepts/Types/Name.hpp"
 #include "Object/Properties/Helpers/PropertyData.hpp"
 #include "Object/Properties/Helpers/constructible_from_args.hpp"
-#include "Object/Strategies/Premade/AliveStrategy.hpp"
+#include "Object/Strategies/AliveStrategy.hpp"
 
 namespace impl {
 constinit char living_type_name[] = "Living";
