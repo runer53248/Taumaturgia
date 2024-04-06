@@ -1,4 +1,6 @@
 #pragma once
+#include "Taumaturgia/Enums/ActionStatus.hpp"
+#include "Taumaturgia/Object/Object.hpp"
 
 inline ActionStatus default_defend_behavior(Protectingable auto& obj, Object* target) {
     auto is_success = getOpt<Parameter::Wear>(*target).and_then([&](auto&& ref_wrap) {

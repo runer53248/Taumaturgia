@@ -1,7 +1,7 @@
 #include "Examples/Benchmark.hpp"
-#include "Taumaturgia/Object/DefaultStrategies.hpp"
 #include "Taumaturgia/Object/Object.hpp"
 #include "Taumaturgia/Properties/Properties.hpp"
+#include "Taumaturgia/Strategies/DefaultStrategies.hpp"
 
 struct BaseType {
     std::string name{"BaseType"};

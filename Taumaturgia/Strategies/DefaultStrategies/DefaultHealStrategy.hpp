@@ -1,4 +1,6 @@
 #pragma once
+#include "Taumaturgia/Enums/ActionStatus.hpp"
+#include "Taumaturgia/Object/Object.hpp"
 
 inline ActionStatus default_heal_behavior(Healingable auto& obj, Object* target) {
     auto is_success = getOpt<Parameter::Health>(*target).and_then([&](auto&& ref_wrap) {

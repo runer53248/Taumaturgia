@@ -1,6 +1,6 @@
 #pragma once
 #include "DefaultWeapon.hpp"
-#include "Taumaturgia/Object/DefaultStrategies.hpp"
+#include "Taumaturgia/Strategies/DefaultStrategies.hpp"
 
 struct CustomWeapon {  // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
     Name name;

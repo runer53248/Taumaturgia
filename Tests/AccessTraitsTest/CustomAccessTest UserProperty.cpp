@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Taumaturgia/Object/DefaultStrategies.hpp"
+#include "Taumaturgia/Strategies/DefaultStrategies.hpp"
 #include "Taumaturgia/Properties/Properties.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
 

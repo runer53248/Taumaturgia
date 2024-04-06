@@ -1,4 +1,6 @@
 #pragma once
+#include "Taumaturgia/Enums/ActionStatus.hpp"
+#include "Taumaturgia/Object/Object.hpp"
 
 inline ActionStatus default_attack_behavior(Damagingable auto& obj, Object* target) {
     auto opt_protection = getOpt<Parameter::Protection>(*target);

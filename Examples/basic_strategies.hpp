@@ -1,3 +1,4 @@
+#include "Taumaturgia/Enums/AliveStatus.hpp"
 #include "Taumaturgia/Object/Object.hpp"
 #include "Taumaturgia/Properties/Properties.hpp"
 #include "Taumaturgia/Strategies/DefaultStrategies/DefaultGetStrategy.hpp"

@@ -2,8 +2,8 @@
 #include "Examples/PreetyPrint/preety_print.hpp"
 
 #ifdef WITH_ADD_PROPERTIES
-#include "Taumaturgia/Object/DefaultStrategies.hpp"
 #include "Taumaturgia/Properties/Properties.hpp"
+#include "Taumaturgia/Strategies/DefaultStrategies.hpp"
 
 struct Type {};
 
@@ -47,8 +47,8 @@ struct UserStrategy_<Damage, CustomWeapon> {
 #include "Examples/Structs/CustomWeapon.hpp"
 #include "Examples/Structs/Player.hpp"
 #include "Examples/Structs/Weapon.hpp"
-#include "Taumaturgia/Object/DefaultStrategies.hpp"
 #include "Taumaturgia/Properties/Properties.hpp"
+#include "Taumaturgia/Strategies/DefaultStrategies.hpp"
 #endif
 
 constinit auto max_health = 100;

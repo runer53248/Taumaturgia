@@ -1,4 +1,6 @@
 #pragma once
+#include <stdexcept>
+
 class Object;
 
 inline Object* Whom(Object* const owner, Object* const target) {

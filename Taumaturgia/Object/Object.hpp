@@ -4,9 +4,7 @@
 #include <memory>
 #include <optional>
 #include "Taumaturgia/Concepts/Namingable.hpp"
-#include "Taumaturgia/Enums/ActionStatus.hpp"
 #include "Taumaturgia/Enums/Actions.hpp"
-#include "Taumaturgia/Enums/AliveStatus.hpp"
 #include "Taumaturgia/Strategies/Strategies.hpp"
 
 #ifndef _MSC_VER

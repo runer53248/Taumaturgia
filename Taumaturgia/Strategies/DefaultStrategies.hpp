@@ -1,0 +1,10 @@
+#pragma once
+#include "Strategies.hpp"
+#include "Helpers/Whom.hpp"
+#include "DefaultStrategies/DefaultAliveStrategy.hpp"
+#include "DefaultStrategies/DefaultAttackStrategy.hpp"
+#include "DefaultStrategies/DefaultDefendStrategy.hpp"
+#include "DefaultStrategies/DefaultWearStrategy.hpp"
+#include "DefaultStrategies/DefaultGetStrategy.hpp"
+#include "DefaultStrategies/DefaultHealStrategy.hpp"
+#include "DefaultStrategies/DefaultRestoreStrategy.hpp"

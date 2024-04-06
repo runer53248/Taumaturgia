@@ -1,4 +1,5 @@
 #pragma once
+#include "Taumaturgia/Enums/ActionStatus.hpp"
 
 namespace action_impl {
 
