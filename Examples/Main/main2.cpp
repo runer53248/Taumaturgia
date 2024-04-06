@@ -1,6 +1,6 @@
 #include <vector>
 #include "Actions.hpp"
-#include "Object/Properties/Properties.hpp"
+#include "Taumaturgia/Properties/Properties.hpp"
 #include "Print.hpp"
 
 #include "Examples/Structs/Helmet.hpp"

@@ -7,7 +7,7 @@ add_executable(${PROJECT_NAME}-constructors
 
 add_executable(${PROJECT_NAME}-main_ignore_and_tuple
     main_ignore_and_tuple.cpp
-    ../../Object/Object.cpp
+    ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
 add_executable(${PROJECT_NAME}-main_plain_properties
@@ -20,7 +20,7 @@ add_executable(${PROJECT_NAME}-main_Property_priority
 
 add_executable(${PROJECT_NAME}-main_introduction
     main_introduction.cpp
-    ../../Object/Object.cpp
+    ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
 add_executable(${PROJECT_NAME}-main_user_property

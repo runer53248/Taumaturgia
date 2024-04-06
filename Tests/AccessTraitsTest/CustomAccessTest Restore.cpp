@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Object/DefaultStrategies.hpp"
+#include "Taumaturgia/Object/DefaultStrategies.hpp"
 #include "TestType.hpp"
 
 #include "Mocks/MockCustomAccessRestoreEffects.hpp"

@@ -1,5 +1,5 @@
 #pragma once
-#include "Object/Properties/Helpers/PropertyData.hpp"
+#include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 
 constinit char b_type_name[] = "B";
 template <typename T>

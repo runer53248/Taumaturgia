@@ -1,6 +1,6 @@
 #include "Examples/property_A.hpp"
 #include "Examples/property_B.hpp"
-#include "Object/Properties/Properties.hpp"
+#include "Taumaturgia/Properties/Properties.hpp"
 
 struct Empty {};
 

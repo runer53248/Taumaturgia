@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Object/Properties/Properties.hpp"
+#include "Taumaturgia/Properties/Properties.hpp"
 
 struct Living_type {
     Name name;

@@ -32,7 +32,7 @@ add_compile_definitions(
   NO_PREMADE_STRATEGIES # work only with NO_PREMADE_PROPERTIES
 )
 
-include_directories(${Taumaturgia_SOURCE_DIR})
+include_directories(${PROJECT_SOURCE_DIR})
 
 find_package(GTest REQUIRED)
 

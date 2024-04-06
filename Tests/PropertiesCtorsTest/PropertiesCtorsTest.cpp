@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Object/Properties/Properties.hpp"
+#include "Taumaturgia/Properties/Properties.hpp"
 
 struct Type {
     Name name;

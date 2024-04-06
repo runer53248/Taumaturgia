@@ -1,12 +1,12 @@
 add_executable(AttackStrategyTest-1
-    ${PROJECT_SOURCE_DIR}/Object/Object.cpp
+    ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
     AttackStrategyTest.cpp)
 target_link_libraries(AttackStrategyTest-1 PRIVATE 
     GTest::GTest GTest::Main)
 add_test(NAME AttackStrategyTest-1 COMMAND AttackStrategyTest-1 --gtest_color=yes)
 
 add_executable(AttackStrategyTest-2
-    ${PROJECT_SOURCE_DIR}/Object/Object.cpp
+    ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
     AttackStrategyTest.cpp)
 target_link_libraries(AttackStrategyTest-2 PRIVATE 
     GTest::GTest GTest::Main)

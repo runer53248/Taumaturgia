@@ -1,6 +1,6 @@
-#include "Object/Object.hpp"
-#include "Object/Properties/Properties.hpp"
-#include "Object/Strategies/DefaultStrategies/DefaultGetStrategy.hpp"
+#include "Taumaturgia/Object/Object.hpp"
+#include "Taumaturgia/Properties/Properties.hpp"
+#include "Taumaturgia/Strategies/DefaultStrategies/DefaultGetStrategy.hpp"
 
 std::optional<AliveStatus> AliveStrategy_<Default>::operator()(Livingable auto&) const {
     return AliveStatus::Living;

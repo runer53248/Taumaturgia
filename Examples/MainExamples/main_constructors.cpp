@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 #include "Examples/PreetyPrint/preety_print.hpp"
-#include "Object/DefaultStrategies.hpp"
-#include "Object/Properties/Properties.hpp"
+#include "Taumaturgia/Object/DefaultStrategies.hpp"
+#include "Taumaturgia/Properties/Properties.hpp"
 
 struct Potion {
     Name name;

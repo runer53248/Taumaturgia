@@ -1,6 +1,6 @@
 #pragma once
-#include "Object/Properties/Helpers/derived_from_property.hpp"
-#include "Object/Properties/Helpers/PropertyData.hpp"
+#include "Taumaturgia/Properties/Helpers/derived_from_property.hpp"
+#include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 
 namespace impl {
 

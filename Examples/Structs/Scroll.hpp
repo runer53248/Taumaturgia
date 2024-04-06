@@ -1,5 +1,5 @@
 #pragma once
-#include "Object/Concepts/Types/Name.hpp"
+#include "Taumaturgia/Concepts/Types/Name.hpp"
 
 struct Scroll {
     Name name;

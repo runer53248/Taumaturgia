@@ -1,7 +1,7 @@
 #pragma once
 #include <gmock/gmock.h>
 #include "MockCustomAccess.hpp"
-#include "Object/Concepts/Traits/NameTraits.hpp"
+#include "Taumaturgia/Concepts/Traits/NameTraits.hpp"
 
 #ifdef CUSTOM_ACCESS_MOCK_MACRO
 StartCustomAccessMock(Name);

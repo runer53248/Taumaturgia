@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "Object/DefaultStrategies.hpp"
-#include "Object/Properties/Properties.hpp"
-#include "Object/Properties/UserProperty.hpp"
+#include "Taumaturgia/Object/DefaultStrategies.hpp"
+#include "Taumaturgia/Properties/Properties.hpp"
+#include "Taumaturgia/Properties/UserProperty.hpp"
 
 using namespace testing;
 

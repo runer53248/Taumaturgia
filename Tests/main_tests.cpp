@@ -1,6 +1,6 @@
 #include <vector>
-#include "Object/Object.hpp"
-#include "Object/Properties/Properties.hpp"
+#include "Taumaturgia/Object/Object.hpp"
+#include "Taumaturgia/Properties/Properties.hpp"
 
 struct Scroll {
     Name name;

@@ -1,6 +1,6 @@
 #include <iostream>
-#include "Object/Properties/Helpers/taged_list.hpp"
-#include "Object/Properties/UserProperty.hpp"
+#include "Taumaturgia/Properties/Helpers/taged_list.hpp"
+#include "Taumaturgia/Properties/UserProperty.hpp"
 
 using order_list = taged_list<
     UserPropertyAdapter<int>::type,
@@ -8,7 +8,7 @@ using order_list = taged_list<
     UserPropertyAdapter<float>::type  // floats have less priority
     >;                                // properties list in order
 
-#include "Object/Properties/Helpers/Property.hpp"  // depends on order_list existence
+#include "Taumaturgia/Properties/Helpers/Property.hpp"  // depends on order_list existence
 
 struct name_type1 {
     std::string name{};

@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Object/Enums/ActionStatus.hpp"
+#include "Taumaturgia/Enums/ActionStatus.hpp"
 
 constexpr const char* toString(ActionStatus status) noexcept {
     switch (status) {

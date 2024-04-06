@@ -1,16 +1,16 @@
 add_executable(${PROJECT_NAME}-main_build_into_t
     main_build_into_t.cpp
-    ../../../Object/Object.cpp
+    ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
 add_executable(${PROJECT_NAME}-main_scheme
     main_scheme.cpp
-    ../../../Object/Object.cpp
+    ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
 add_executable(${PROJECT_NAME}-main_create_ordered_property_list
     main_create_ordered_property_list.cpp
-    ../../../Object/Object.cpp
+    ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
 add_executable(${PROJECT_NAME}-main_mix_give_properties

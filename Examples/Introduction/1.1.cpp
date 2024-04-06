@@ -1,5 +1,5 @@
 #include "Examples/PreetyPrint/preety_print_types.hpp"
-#include "Object/Properties/Properties.hpp"
+#include "Taumaturgia/Properties/Properties.hpp"
 
 struct EmptyType {};
 

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Examples/demangle_type_name.hpp"
-#include "Object/Properties/Properties.hpp"
+#include "Taumaturgia/Properties/Properties.hpp"
 
 constinit char PlainProperty_name[] = "PlainProperty";
 
