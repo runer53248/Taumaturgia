@@ -45,6 +45,7 @@ protected:
     }
 };
 
+#ifndef NO_PREMADE_PROPERTIES
 TEST_F(Damage_Fixture, Access_by_getDamage) {
     decltype(auto) damage = (*type).getDamage();
     decltype(auto) damage_const = std::as_const((*type)).getDamage();
@@ -57,10 +58,13 @@ TEST_F(Damage_Fixture, Access_by_getDamage) {
 
     EXPECT_EQ(damage, default_damage_change);
 }
+#endif
 
 TEST_F(Damage_Fixture, Access_by_trait_accessDamage_with_CustomAccessDamage) {
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_damage));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_damage));
+#endif
 
     decltype(auto) damage = traits::accessDamage::get((*type));
     decltype(auto) damage_const = traits::accessDamage::get(std::as_const((*type)));

@@ -45,6 +45,8 @@ protected:
     }
 };
 
+
+#ifndef NO_PREMADE_PROPERTIES
 TEST_F(ArmorWear_Fixture, Access_by_getArmorWear) {
     decltype(auto) armor = (*type).getArmorWear();
     decltype(auto) armor_const = std::as_const(*type).getArmorWear();
@@ -60,10 +62,13 @@ TEST_F(ArmorWear_Fixture, Access_by_getArmorWear) {
 
     EXPECT_EQ(armor, default_armor_change);
 }
+#endif
 
 TEST_F(ArmorWear_Fixture, Access_by_trait_accessArmorWear_with_CustomAccessArmorWear) {
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_armor));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_armor));
+#endif
 
     decltype(auto) armor = traits::accessArmorWear::get(*type);
     decltype(auto) armor_const = traits::accessArmorWear::get(std::as_const(*type));

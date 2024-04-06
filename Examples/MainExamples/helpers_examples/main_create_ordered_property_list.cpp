@@ -7,6 +7,14 @@
 using helpers::create_ordered_property_list;
 using helpers::same_priority;
 
+#ifndef NO_PREMADE_PROPERTIES
+template <typename T>
+using Damaging_impl = impl::Damaging_<T>;
+#else
+template <typename T>
+using Damaging_impl = UserPropertyAdapter<Damage>::template type<T>;
+#endif
+
 int main() {
     std::cout << "A. 'create_ordered_property_list' examples:" << '\n'
               << '\n';
@@ -85,14 +93,14 @@ int main() {
     std::cout << name<type_9>() << " - all properties are unknown" << '\n';  // all properties are unknown
     std::cout << '\n';
 
-    using type_x0 = create_ordered_property_list<Damaging, DamagingImproved, impl::Damaging_, DamagingImproved_>;
-    using type_x1 = create_ordered_property_list<impl::Damaging_, DamagingImproved, Damaging, DamagingImproved_>;
-    using type_x2 = create_ordered_property_list<DamagingImproved_, impl::Damaging_, DamagingImproved, Damaging>;
-    using type_y0 = create_ordered_property_list<DamagingImproved, Damaging, impl::Damaging_, DamagingImproved_>;
-    using type_y1 = create_ordered_property_list<DamagingImproved, impl::Damaging_, Damaging, DamagingImproved_>;
-    using type_y2 = create_ordered_property_list<DamagingImproved_, DamagingImproved, impl::Damaging_, Damaging>;
+    using type_x0 = create_ordered_property_list<Damaging, DamagingImproved, Damaging_impl, DamagingImproved_>;
+    using type_x1 = create_ordered_property_list<Damaging_impl, DamagingImproved, Damaging, DamagingImproved_>;
+    using type_x2 = create_ordered_property_list<DamagingImproved_, Damaging_impl, DamagingImproved, Damaging>;
+    using type_y0 = create_ordered_property_list<DamagingImproved, Damaging, Damaging_impl, DamagingImproved_>;
+    using type_y1 = create_ordered_property_list<DamagingImproved, Damaging_impl, Damaging, DamagingImproved_>;
+    using type_y2 = create_ordered_property_list<DamagingImproved_, DamagingImproved, Damaging_impl, Damaging>;
     static_assert(std::is_same_v<type_x0, list<Property<Damaging>>>);
-    static_assert(std::is_same_v<type_x1, list<Property<impl::Damaging_>>>);
+    static_assert(std::is_same_v<type_x1, list<Property<Damaging_impl>>>);
     static_assert(std::is_same_v<type_x2, list<Property<DamagingImproved_>>>);
     static_assert(std::is_same_v<type_y0, list<Property<DamagingImproved>>>);
     static_assert(std::is_same_v<type_y1, list<Property<DamagingImproved>>>);
@@ -106,11 +114,20 @@ int main() {
     std::cout << name<type_y2>() << '\n'
               << '\n';
 
-    // user created properties with same encapsulated type don't count as build-in ones
+#ifndef NO_PREMADE_PROPERTIES
+    // UserProperty created properties with same encapsulated type aren't equivelent to build-in ones
     static_assert(Property<UserProtecting>::value != Property<Protecting>::value);
     static_assert(Property<UserDamaging>::value != Property<Damaging>::value);
     static_assert(not same_priority<Property<UserProtecting>, Property<Protecting>>);
     static_assert(not same_priority<Property<UserDamaging>, Property<Damaging>>);
+#else
+    // UserProperty created properties with same encapsulated type are equivelent to created by UserPropertyConceptAdapter
+    static_assert(Property<UserProtecting>::value == Property<Protecting>::value);
+    static_assert(Property<UserDamaging>::value == Property<Damaging>::value);
+    static_assert(same_priority<Property<UserProtecting>, Property<Protecting>>);
+    static_assert(same_priority<Property<UserDamaging>, Property<Damaging>>);
+#endif
+
     using type_x = create_ordered_property_list<UserProtecting, UserDamaging, Protecting, Damaging>;  // end with Protecting, Damaging
     using type_y = create_ordered_property_list<UserDamaging, UserProtecting, Damaging, Protecting>;  // end with Damaging, Protecting
     std::cout << "9) user created properties with same encapsulated type don't count as build-in ones (ie. not have its index)" << '\n';
@@ -118,16 +135,16 @@ int main() {
     std::cout << name<type_y>() << '\n'
               << '\n';
 
-    using type_a = create_ordered_property_list<Damaging, impl::Damaging_>;  // only Damaging
-    using type_b = create_ordered_property_list<impl::Damaging_, Damaging>;  // only impl::Damaging_
+    using type_a = create_ordered_property_list<Damaging, Damaging_impl>;  // only Damaging
+    using type_b = create_ordered_property_list<Damaging_impl, Damaging>;  // only Damaging_impl
     static_assert(not std::is_same_v<type_a, type_b>);
     std::cout << "10) build-in property and its conditional variant are distinque" << '\n';
     std::cout << name<type_a>() << '\n';
     std::cout << name<type_b>() << '\n'
               << '\n';
 
-    using type_c = create_ordered_property_list<impl::Damaging_, Living, Damaging>;
-    using type_d = create_ordered_property_list<Living, impl::Damaging_, Damaging>;
+    using type_c = create_ordered_property_list<Damaging_impl, Living, Damaging>;
+    using type_d = create_ordered_property_list<Living, Damaging_impl, Damaging>;
     static_assert(std::is_same_v<type_c, type_d>);
     std::cout << name<type_c>() << '\n';
     std::cout << name<type_d>() << '\n'

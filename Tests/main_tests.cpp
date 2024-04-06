@@ -35,6 +35,14 @@ struct HealingHealth {  // Living and Healing
     CureHealth cureHealth{};
 };
 
+#ifndef NO_PREMADE_PROPERTIES
+template <typename T>
+using Living_impl = impl::Living_<T>;
+#else
+template <typename T>
+using Living_impl = UserPropertyAdapter<Health>::template type<T>;
+#endif
+
 int main() {
     static_assert(std::is_same_v<Living<Damaging<Healing<HealingHealth>>>, Damaging<HealingHealth>>);
     static_assert(std::is_same_v<Living<Healing<HealingHealth>>, HealingHealth>);
@@ -47,7 +55,7 @@ int main() {
     static_assert(std::is_same_v<GetStrategy<Default>, GetStrategy<Npc>>);             // Npc will use default Get strategy - Livable concept pass
     static_assert(std::is_same_v<GetStrategy<Default>, GetStrategy<Living<Player>>>);  // Player will use default Get strategy - Livable concept pass
 
-    static_assert(std::is_same_v<impl::Living_<Player>, Living<Player>>);  // Livable traits added
+    static_assert(std::is_same_v<Living_impl<Player>, Living<Player>>);  // Livable traits added
     static_assert(std::is_same_v<Npc, Living<Npc>>);                       // Livable concept pass
 
     static_assert(not std::is_same_v<AttackStrategy<Default>, AttackStrategy<Player>>);

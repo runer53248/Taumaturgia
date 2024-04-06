@@ -36,8 +36,10 @@ protected:
             /*int*/ default_int,
             /*bool*/ default_bool);
 
+#ifndef NO_PREMADE_PROPERTIES
         static_assert(traits::GetNameAccessable<decltype(*type)>);
         static_assert(traits::GetNameAccessable<decltype(std::as_const(*type))>);
+#endif
         static_assert(traits::CustomNameAccessable<decltype(*type)>);
         static_assert(traits::CustomNameAccessable<decltype(std::as_const(*type))>);
 
@@ -51,6 +53,7 @@ protected:
     }
 };
 
+#ifndef NO_PREMADE_PROPERTIES
 TEST_F(Name_Fixture, Access_by_getName) {
     decltype(auto) name = (*type).getName();
     decltype(auto) name_const = std::as_const((*type)).getName();
@@ -63,10 +66,13 @@ TEST_F(Name_Fixture, Access_by_getName) {
 
     EXPECT_EQ(name, default_name_change);
 }
+#endif
 
 TEST_F(Name_Fixture, Access_by_trait_accessName_with_CustomAccessName) {
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_name));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_name));
+#endif
 
     decltype(auto) name = traits::accessName::get((*type));
     decltype(auto) name_const = traits::accessName::get(std::as_const((*type)));

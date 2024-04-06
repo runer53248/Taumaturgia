@@ -104,6 +104,8 @@ int main() {
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name};
 
+// TODO: fix ambigious calls
+#ifndef NO_PREMADE_PROPERTIES
     // MARK: incorrect tuple
     try {
         restoring_protecting_damaging_potion{
@@ -142,6 +144,7 @@ int main() {
     } catch (const std::logic_error& err) {
         std::cout << "exception: " << err.what() << '\n';
     }
+#endif
 
     using container = std::variant<std::monostate, Damage, Protection, EffectTypeContainer>;
 

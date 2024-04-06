@@ -11,6 +11,16 @@
 #else
     #include "UserProperty.hpp"
 
+    #include "Object/Concepts/Types/Name.hpp"
+    #include "Object/Concepts/Types/Health.hpp"
+    #include "Object/Concepts/Types/WearContainer.hpp"
+    #include "Object/Concepts/Types/Damage.hpp"
+    #include "Object/Concepts/Types/CureHealth.hpp"
+    #include "Object/Concepts/Types/Protection.hpp"
+
+    #include "Object/Concepts/Namingable.hpp"
+    #include "Object/Strategies/Strategies.hpp" // will also include all properties concepts
+
     template <typename TYPE>
     using Living = UserPropertyConceptAdapter<Health, Livingable<TYPE>>::template type<TYPE>;
     template <typename TYPE>
@@ -26,8 +36,19 @@
     template <typename TYPE>
     using Naming = UserPropertyConceptAdapter<Name, Namingable<TYPE>>::template type<TYPE>;
 
-    #include "Helpers/taged_list.hpp"
+    template <typename T, typename... Args>
+    struct WearStrategy_<impl::UserProperty_<WearContainer, T, Args...>> : WearStrategy_<T> {};  // forward eventualy implemented strategy
+    template <typename T, typename... Args>
+    struct AttackStrategy_<impl::UserProperty_<Damage, T, Args...>> : AttackStrategy_<T> {};  // forward eventualy implemented strategy
+    template <typename T, typename... Args>
+    struct DefendStrategy_<impl::UserProperty_<Protection, T, Args...>> : DefendStrategy_<T> {};  // forward eventualy implemented strategy
+    template <typename T, typename... Args>
+    struct HealStrategy_<impl::UserProperty_<CureHealth, T, Args...>> : HealStrategy_<T> {};  // forward eventualy implemented strategy
+    template <typename T, typename... Args>
+    struct RestoreStrategy_<impl::UserProperty_<EffectTypeContainer, T, Args...>> : RestoreStrategy_<T> {};  // forward eventualy implemented strategy
 #endif
+
+#include "Helpers/taged_list.hpp"
 
 using order_list = taged_list<
     Living,

@@ -45,8 +45,8 @@ protected:
     }
 };
 
+#ifndef NO_PREMADE_PROPERTIES
 TEST_F(RestoreEffects_Fixture, Access_by_getRestoreEffects) {
-
     decltype(auto) restoreEffects = (*type).getRestoreEffects();
     decltype(auto) restoreEffects_const = std::as_const((*type)).getRestoreEffects();
 
@@ -58,10 +58,13 @@ TEST_F(RestoreEffects_Fixture, Access_by_getRestoreEffects) {
 
     EXPECT_EQ(restoreEffects, default_restoreEffects_change);
 }
+#endif
 
 TEST_F(RestoreEffects_Fixture, Access_by_trait_accessRestoreEffects_with_CustomAccessRestoreEffects) {
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_restoreEffects));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_restoreEffects));
+#endif
 
     decltype(auto) restoreEffects = traits::accessRestoreEffects::get((*type));
     decltype(auto) restoreEffects_const = traits::accessRestoreEffects::get(std::as_const((*type)));

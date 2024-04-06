@@ -13,27 +13,13 @@ using IntProperty = UserProperty<int, T>;
 template <typename T>
 using FloatProperty = UserProperty<float, T>;
 
-// ? ----------------------------------------
-
-using helpers::Scheme;
-
-template <typename T, template <typename...> typename... properties>
-concept have_properties1 =
-    (is_property<properties> and ...) and
-    mp_and<
-        mp_contains<
-            typename Scheme<T>::list_t,
-            Property<properties>>...>::value;
-
-// ? ----------------------------------------
-
 template <template <typename...> typename property>
     requires is_property<property>
 class equivalent_properties_predicate {
 private:
     template <typename lhp, typename rhp>
     struct equivalent_properties_predicate_impl {
-         static constexpr bool value =
+        static constexpr bool value =
             // (std::is_same_v<lhp, rhp>) or                                                       // same property
             (std::is_same_v<typename lhp::template type<tag>, typename rhp::template type<tag>>) or  // same Property or UserProperty (eg. UserProperty_<int, tag>)
             ((lhp::value == rhp::value) and lhp::value != std::numeric_limits<size_t>::max());       // same priority of known property
@@ -44,6 +30,9 @@ public:
     using type = equivalent_properties_predicate_impl<T, Property<property>>;
 };
 
+using helpers::Scheme;
+
+//TODO: add have_properties feature
 template <typename T, template <typename...> typename... properties>
 concept have_properties2 =
     (is_property<properties> and ...) and
@@ -53,107 +42,75 @@ concept have_properties2 =
                 typename Scheme<T>::list_t,
                 equivalent_properties_predicate<properties>::template type>>...>::value;
 
-// ? ----------------------------------------
-
 using living_type = add_properties<Type, Living>;
-// static_assert(have_properties1<living_type,
-//                                Living>);  // ! not check eqivalent properties with same priority
-static_assert(have_properties2<living_type,
-                               Living>);  // ? check eqivalent properties with same priority
-
 using int_property_type = add_properties<Type, IntProperty>;
-// static_assert(have_properties1<int_property_type,
-//                                IntProperty>);  // ! dont work with UserProperty
-static_assert(have_properties2<int_property_type,
-                               IntProperty>);  // ? work with UserProperty
-
 using float_property_type = add_properties<Type, FloatProperty>;
-// static_assert(have_properties1<float_property_type,
-//                                FloatProperty>);  // ! dont work with UserProperty
-static_assert(have_properties2<float_property_type,
-                               FloatProperty>);  // ? work with UserProperty
-
 using int_float_property_type = add_properties<Type, IntProperty, FloatProperty>;
-// static_assert(have_properties1<int_float_property_type,
-//                                FloatProperty>);  // ! dont work with UserProperty
-static_assert(have_properties2<int_float_property_type,
-                               FloatProperty>);  // ? work with UserProperty
 
-// static_assert(have_properties1<int_float_property_type,
-//                                IntProperty>,     // ! dont work with UserProperty
-//                                FloatProperty>);  // ! dont work with UserProperty
+static_assert(have_properties2<living_type,
+                               Living>);
+static_assert(have_properties2<int_property_type,
+                               IntProperty>);
+static_assert(have_properties2<float_property_type,
+                               FloatProperty>);
+static_assert(have_properties2<int_float_property_type,
+                               FloatProperty>);
 static_assert(have_properties2<int_float_property_type,
                                IntProperty,
-                               FloatProperty>);  // ? work with UserProperty
+                               FloatProperty>);
 
-static_assert(have_properties1<living_type,
-                               impl::Living_>);
+#ifndef NO_PREMADE_PROPERTIES
+template <typename T>
+using Living_impl = impl::Living_<T>;
+template <typename T>
+using Healing_impl = impl::Healing_<T>;
+#else
+template <typename T>
+using Living_impl = UserPropertyAdapter<Health>::template type<T>;
+template <typename T>
+using Healing_impl = UserPropertyAdapter<CureHealth>::template type<T>;
+#endif
+
+using living_type = add_properties<Type, Living>;  // duplication of living_type
+
 static_assert(have_properties2<living_type,
-                               impl::Living_>);
+                               Living_impl>);
 
 using living_healing_type = add_properties<Type, Living, Healing>;
 
-static_assert(have_properties1<living_healing_type,
-                               impl::Living_,
-                               impl::Healing_>);
 static_assert(have_properties2<living_healing_type,
-                               impl::Living_,
-                               impl::Healing_>);
-
-static_assert(have_properties1<living_healing_type,
-                               impl::Healing_>);
+                               Living_impl,
+                               Healing_impl>);
 static_assert(have_properties2<living_healing_type,
-                               impl::Healing_>);
-
-// static_assert(have_properties1<living_healing_type,
-//                                impl::Healing_,
-//                                Living>);   // ! not check eqivalent properties with same priority
+                               Healing_impl>);
 static_assert(have_properties2<living_healing_type,
-                               impl::Healing_,
+                               Healing_impl,
                                Living>);
-
-// static_assert(have_properties1<living_healing_type,
-//                                Living,     // ! not check eqivalent properties with same priority
-//                                impl::Healing_>);
 static_assert(have_properties2<living_healing_type,
                                Living,
-                               impl::Healing_>);
-
-// static_assert(have_properties1<living_healing_type,
-//                                Living,     // ! not check eqivalent properties with same priority
-//                                Healing>);  // ! not check eqivalent properties with same priority
+                               Healing_impl>);
 static_assert(have_properties2<living_healing_type,
                                Living,
                                Healing>);
-
-// static_assert(have_properties1<living_healing_type,
-//                                Healing>);  // ! not check eqivalent properties with same priority
 static_assert(have_properties2<living_healing_type,
                                Healing>);
-
-// static_assert(have_properties1<living_healing_type,
-//                                Living>);  // ! not check eqivalent properties with same priority
 static_assert(have_properties2<living_healing_type,
                                Living>);
-
-// ? ----------------------------------------
 
 static_assert(have_properties2<
               add_properties<Type, Living, Healing>,
               Living,
               Living,
               Healing,
-              impl::Living_,
-              impl::Healing_>);  // TODO: consider removing duplicates and sorting properties before specialize have_properties2
+              Living_impl,
+              Healing_impl>);  // TODO: consider removing duplicates and sorting properties before specialize have_properties2
 static_assert(have_properties2<
               add_properties<Type, Living, Healing>,
-              impl::Healing_>);
+              Healing_impl>);
 static_assert(not have_properties2<
               add_properties<Type, Living>,
-              impl::Living_,
-              impl::Healing_>);
-
-// ? ----------------------------------------
+              Living_impl,
+              Healing_impl>);
 
 int main() {
     std::cout << name<add_properties<Type, IntProperty>>() << '\n';

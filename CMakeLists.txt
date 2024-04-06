@@ -25,7 +25,10 @@ add_compile_options(
 
 link_libraries(-lubsan)
 
-add_compile_definitions(ACCESS_TRAIT_MACRO)
+add_compile_definitions(
+  ACCESS_TRAIT_MACRO
+  # NO_PREMADE_PROPERTIES
+)
 
 include_directories(${Taumaturgia_SOURCE_DIR})
 

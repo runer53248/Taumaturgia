@@ -45,6 +45,7 @@ protected:
     }
 };
 
+#ifndef NO_PREMADE_PROPERTIES
 TEST_F(CureHealth_Fixture, Access_by_getCureHealth) {
     decltype(auto) cureHp = (*type).getCureHealth();
     decltype(auto) cureHp_const = std::as_const((*type)).getCureHealth();
@@ -60,10 +61,13 @@ TEST_F(CureHealth_Fixture, Access_by_getCureHealth) {
 
     EXPECT_EQ(cureHp, default_cureHp_change);
 }
+#endif
 
 TEST_F(CureHealth_Fixture, Access_by_trait_accessCureHealth_with_CustomAccessCureHealth) {
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_cureHp));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_cureHp));
+#endif
 
     decltype(auto) cureHp = traits::accessCureHealth::get((*type));
     decltype(auto) cureHp_const = traits::accessCureHealth::get(std::as_const((*type)));

@@ -2,10 +2,21 @@
 #include "Object/Properties/Properties.hpp"
 #include "Object/Properties/UserProperty.hpp"
 
+#ifndef NO_PREMADE_PROPERTIES
+template <typename T>
+using Damaging_impl = impl::Damaging_<T>;
+#else
+namespace impl {
+constinit char damaging_type_name[] = "Damaging";
+}
+template <typename T>
+using Damaging_impl = UserPropertyAdapter<Damage>::template type<T>;
+#endif
+
 template <typename T>
 struct DamagingImproved_ : T {  // example of improving build-in property - may be used as replacement of impl::Damaging_
     using property_data = PropertyData<impl::damaging_type_name, DamagingImproved_, T>;
-    using improvement_of = impl::Damaging_<T>;
+    using improvement_of = Damaging_impl<T>;
 
     DamagingImproved_() noexcept = default;
 

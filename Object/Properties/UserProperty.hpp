@@ -1,8 +1,10 @@
 #pragma once
 #include <boost/mp11.hpp>
+#include <stdexcept>
 #include <variant>
 #include "Helpers/PropertyData.hpp"
 #include "Helpers/constructible_from_args.hpp"
+// #include "Object/Concepts/Namingable.hpp"
 #include "Object/Concepts/Typeable.hpp"
 #include "Object/Concepts/Types/Name.hpp"
 #include "Object/Strategies/UserStrategy.hpp"
@@ -23,14 +25,14 @@ struct UserProperty_ : T {
     // MARK: Namingable tuple C-tors
 
     template <typename... INFO, typename... Args>
-    UserProperty_(const Name& name, std::tuple<INFO...>&& type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
+    UserProperty_(const Name& name, std::tuple<INFO...>&& type, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           type{std::make_from_tuple<TYPE>(std::move(type))} {}
 
     template <typename... INFO, typename... Args>
-    UserProperty_(const Name& name, const std::tuple<INFO...>& type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
+    UserProperty_(const Name& name, const std::tuple<INFO...>& type, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           type{std::make_from_tuple<TYPE>(type)} {}
 
@@ -72,7 +74,7 @@ struct UserProperty_ : T {
     // MARK: Namingable variant C-tors
 
     template <typename... V, typename... Args>
-        requires type_is_possible<TYPE, V...>
+        requires type_is_possible<TYPE, V...> /*and Namingable<T>*/
     UserProperty_(const Name& name, const std::variant<V...>& type, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           type{std::get_if<TYPE>(&type)
@@ -80,7 +82,7 @@ struct UserProperty_ : T {
                    : TYPE{}} {}
 
     template <typename... V, typename... Args>
-        requires type_is_not_possible<TYPE, V...>
+        requires type_is_not_possible<TYPE, V...> /*and Namingable<T>*/
     UserProperty_(const Name& name, [[maybe_unused]] const std::variant<V...>& type, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 

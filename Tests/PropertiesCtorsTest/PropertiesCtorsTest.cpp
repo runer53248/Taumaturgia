@@ -25,6 +25,8 @@ constinit const auto restore_effect_initializer = {EffectType::Sleep, EffectType
 EffectTypeContainer default_restore{restore_effect_initializer};
 const EffectTypeContainer const_default_restore{restore_effect_initializer};
 
+#ifndef NO_PREMADE_PROPERTIES
+
 // empty c-tor
 TEST(CtorTest, empty) {
     restoring_protecting_damaging_type type{};
@@ -289,3 +291,5 @@ TEST(CtorTest, arguments_wrong_limited_variant_rvalue) {
         FAIL();
     }
 }
+
+#endif

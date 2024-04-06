@@ -35,7 +35,7 @@ int main() {
     std::cout << "base_new:         " << name<Scheme<test_type_new>::base>() << '\n';
     std::cout << "list_helper:      " << name<Scheme<test_type_bad>::list_helper>() << '\n';
     std::cout << "list_helper_new:  " << name<Scheme<test_type_new>::list_helper>() << '\n';
-    std::cout << "list_t:             " << name<Scheme<test_type_bad>::list_t>() << '\n';
+    std::cout << "list_t:           " << name<Scheme<test_type_bad>::list_t>() << '\n';
     std::cout << "list_new:         " << name<Scheme<test_type_new>::list_t>() << '\n';
     std::cout << "result_bad:       " << name<test_type_bad>() << '\n';
     std::cout << "result_new:       " << name<test_type_new>() << '\n';
@@ -47,7 +47,7 @@ int main() {
     std::cout << "base_new:         " << name<Scheme<test_type2_new>::base>() << '\n';
     std::cout << "list_helper:      " << name<Scheme<test_type2_bad>::list_helper>() << '\n';
     std::cout << "list_helper_new:  " << name<Scheme<test_type2_new>::list_helper>() << '\n';
-    std::cout << "list_t:             " << name<Scheme<test_type2_bad>::list_t>() << '\n';
+    std::cout << "list_t:           " << name<Scheme<test_type2_bad>::list_t>() << '\n';
     std::cout << "list_new:         " << name<Scheme<test_type2_new>::list_t>() << '\n';
     std::cout << "result_bad:       " << name<test_type2_bad>() << '\n';
     std::cout << "result_new:       " << name<test_type2_new>() << '\n';
@@ -62,13 +62,33 @@ int main() {
                                      test_type2_bad>);
     static_assert(std::is_same_v<Scheme<test_type_bad>::base,
                                  Scheme<test_type2_bad>::base>);
-    static_assert(std::is_same_v<Scheme<test_type_bad>::list_t,
-                                 Scheme<test_type2_bad>::list_t>);
 
-    static_assert(not std::is_same_v<Damaging<Living<Naming<test_struct>>>,  // ! incorect order
-                                     Naming<Damaging<Living<test_struct>>>>);
-    static_assert(std::is_same_v<add_properties<test_struct, Damaging, Living, Naming>,  // add_properties can handle ordering
-                                 add_properties<test_struct, Naming, Damaging, Living>>);
+    using test_type_bad = Damaging<Living<Naming<test_struct>>>;   // duplicate of test_type_bad
+    using test_type2_bad = Naming<Damaging<Living<test_struct>>>;  // duplicate of test_type2_bad
+    //TODO: check differences of list_t in example
+#ifndef NO_PREMADE_PROPERTIES
+    static_assert(std::is_same_v<Scheme<test_type_bad>::list_t,
+                                 Scheme<test_type2_bad>::list_t>);  // !
+    std::cout << "Scheme::list_t of bad types:\n";
+    std::cout << name<Scheme<test_type_bad>::list_t>() << '\n';
+    std::cout << name<Scheme<test_type2_bad>::list_t>() << '\n';
+    std::cout << '\n';
+#else
+    static_assert(not std::is_same_v<Scheme<test_type_bad>::list_t,
+                                     Scheme<test_type2_bad>::list_t>);  // !
+    std::cout << "Scheme::list_t of bad types:\n";
+    std::cout << name<Scheme<test_type_bad>::list_t>() << '\n';
+    std::cout << name<Scheme<test_type2_bad>::list_t>() << '\n';
+    std::cout << '\n';
+#endif
+
+    using test_type_new = add_properties<test_struct, Damaging, Living, Naming>;   // duplicate of test_type_new
+    using test_type2_new = add_properties<test_struct, Naming, Damaging, Living>;  // duplicate of test_type2_new
+
+    static_assert(not std::is_same_v<test_type_bad,
+                                     test_type2_bad>);  // ! incorect order
+    static_assert(std::is_same_v<test_type_new,
+                                 test_type2_new>);  // add_properties can handle ordering
 
     std::cout << "Check literals pointers of property_data::name():\n\n";
 
@@ -112,25 +132,25 @@ int main() {
     std::cout << "x_type:       " << name<x_type>() << '\n';
     std::cout << "base:         " << name<Scheme<x_type>::base>() << '\n';
     std::cout << "list_helper:  " << name<Scheme<x_type>::list_helper>() << '\n';
-    std::cout << "list_t:         " << name<Scheme<x_type>::list_t>() << '\n';
+    std::cout << "list_t:       " << name<Scheme<x_type>::list_t>() << '\n';
     std::cout << '\n';
     using y_type = add_properties<x_type, Wearing, Restoring>;
     std::cout << "y_type:       " << name<y_type>() << " Need to be fixed - should be the same as z_type" << '\n';
     std::cout << "base:         " << name<Scheme<y_type>::base>() << '\n';
     std::cout << "list_helper:  " << name<Scheme<y_type>::list_helper>() << '\n';
-    std::cout << "list_t:         " << name<Scheme<y_type>::list_t>() << '\n';
+    std::cout << "list_t:       " << name<Scheme<y_type>::list_t>() << '\n';
     std::cout << '\n';
     using z_type = add_properties<test_struct, Wearing, Restoring, Protecting, Living>;  // correctly ordered type
     std::cout << "z_type:       " << name<z_type>() << '\n';
     std::cout << "base:         " << name<Scheme<z_type>::base>() << '\n';
     std::cout << "list_helper:  " << name<Scheme<z_type>::list_helper>() << '\n';
-    std::cout << "list_t:         " << name<Scheme<z_type>::list_t>() << '\n';
+    std::cout << "list_t:       " << name<Scheme<z_type>::list_t>() << '\n';
     std::cout << '\n';
 
     using b_type = add_properties<test_struct, B, Wearing, Restoring, A, A, Protecting, Living, B>;  // correctly ordered type
     std::cout << "b_type:       " << name<b_type>() << '\n';
     std::cout << "base:         " << name<Scheme<b_type>::base>() << '\n';
     std::cout << "list_helper:  " << name<Scheme<b_type>::list_helper>() << '\n';
-    std::cout << "list_t:         " << name<Scheme<b_type>::list_t>() << '\n';
+    std::cout << "list_t:       " << name<Scheme<b_type>::list_t>() << '\n';
     std::cout << '\n';
 }

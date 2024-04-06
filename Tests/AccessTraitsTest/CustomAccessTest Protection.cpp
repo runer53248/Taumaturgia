@@ -45,6 +45,7 @@ protected:
     }
 };
 
+#ifndef NO_PREMADE_PROPERTIES
 TEST_F(Protection_Fixture, Access_by_getProtection) {
     decltype(auto) protection = (*type).getProtection();
     decltype(auto) protection_const = std::as_const((*type)).getProtection();
@@ -57,10 +58,13 @@ TEST_F(Protection_Fixture, Access_by_getProtection) {
 
     EXPECT_EQ(protection, default_protection_change);
 }
+#endif
 
 TEST_F(Protection_Fixture, Access_by_trait_accessProtection_with_CustomAccessProtection) {
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_protection));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_protection));
+#endif
 
     decltype(auto) protection = traits::accessProtection::get((*type));
     decltype(auto) protection_const = traits::accessProtection::get(std::as_const((*type)));

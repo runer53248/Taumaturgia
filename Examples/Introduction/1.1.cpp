@@ -69,14 +69,14 @@ int main() {
     Type_all typeAll{Name{"Valid"}, Health{}, WearContainer{}, Damage{}, Protection{}, CureHealth{}, EffectTypeContainer{}};
 
     // Type_3, Type_4 and Type_5 are the same type
-    Type_3 type3_0{};                                                                                                             // all properties defaulted
-    Type_3 type3{Name{"Valid"}, Health{50}};                                                                                      // rest of properties defaulted by not mention them
-    Type_4 type4{Name{"Valid"}, std::ignore, std::ignore, std::ignore, std::ignore, CureHealth{25}, std::ignore};                 // ignore some of properties
+    Type_3 type3_0{};                                                                                                       // all properties defaulted
+    Type_3 type3{Name{"Valid"}, Health{50}};                                                                                // rest of properties defaulted by not mention them
+    Type_4 type4{Name{"Valid"}, std::ignore, std::ignore, std::ignore, std::ignore, CureHealth{25}, std::ignore};           // ignore some of properties
     Type_5 type5{Name{"Valid"}, Health{25}, WearContainer{}, Damage{}, Protection{}, CureHealth{}, EffectTypeContainer{}};  // set all properties
-    using health_tuple = std::tuple<int, EffectContainer>;                                                                        // types used in Health C-tor
-    using protectionContainer_tuple = std::tuple<int>;                                                                            // types used in WearContainer C-tor
-    using cureHealth_tuple = std::tuple<int, CureValueType>;                                                                      // types used in CureHealth C-tor
-    Type_5 type5_1{Name{"Valid"},                                                                                                 // create properties from tuples
+    using health_tuple = std::tuple<int, EffectContainer>;                                                                  // types used in Health C-tor
+    using protectionContainer_tuple = std::tuple<int>;                                                                      // types used in WearContainer C-tor
+    using cureHealth_tuple = std::tuple<int, CureValueType>;                                                                // types used in CureHealth C-tor
+    Type_5 type5_1{Name{"Valid"},                                                                                           // create properties from tuples
                    health_tuple{25, {Effect{EffectType::Burn}, Effect{EffectType::Freeze}}},
                    protectionContainer_tuple{10},
                    Damage{},
@@ -89,6 +89,8 @@ int main() {
     std::vector<variant_type_1> vec{Health{125}, WearContainer{}, Damage{20, DamageType::Magical}, Protection{}, CureHealth{}, EffectTypeContainer{}};
     Type_5 type5_2{Name{"Valid"}, vec[0], vec[1], vec[2], vec[3], vec[4], vec[5]};  // create properties from variants
     Type_5 type5_3{Name{"Valid"}, varDmg, varDmg, varDmg};                          // create properties from wrong variants
+
+#ifndef NO_PREMADE_PROPERTIES
 
     std::cout << "type3_0 Name:       " << type3_0.getName() << '\n';
     std::cout << "type3 Hp:           " << type3.getHealth() << '\n';
@@ -118,6 +120,7 @@ int main() {
     std::cout << "Protection:   " << type5.getProtection() << '\n';
     std::cout << "CureHp:       " << type5.getCureHealth() << '\n';
     std::cout << "Restore:      " << type5.getRestoreEffects() << '\n';
+#endif
 
     return 0;
 }
