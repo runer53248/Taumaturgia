@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Concepts/Types/Name.hpp"
+#include "Taumaturgia/Types/Name.hpp"
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Strategies/Premade/DefendStrategy.hpp"

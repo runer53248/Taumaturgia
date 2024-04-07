@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Taumaturgia/Concepts/Types/Enums/BodyLocation.hpp"
+#include "Taumaturgia/Types/Enums/BodyLocation.hpp"
 
 constexpr const char* toString(BodyLocation location) noexcept {
     switch (location) {

@@ -1,6 +1,6 @@
 #pragma once
-#include "Taumaturgia/Concepts/Types/Damage.hpp"
-#include "Taumaturgia/Concepts/Types/Name.hpp"
+#include "Taumaturgia/Types/Damage.hpp"
+#include "Taumaturgia/Types/Name.hpp"
 
 // struct Weapon {
 //     Name name;

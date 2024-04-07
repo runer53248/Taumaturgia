@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Taumaturgia/Concepts/Types/Enums/EffectType.hpp"
+#include "Taumaturgia/Types/Enums/EffectType.hpp"
 
 constexpr const char* toString(EffectType effect) noexcept {
     switch (effect) {

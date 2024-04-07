@@ -1,6 +1,6 @@
 #pragma once
-#include "Taumaturgia/Concepts/Types/Name.hpp"
-#include "Taumaturgia/Concepts/Types/Protection.hpp"
+#include "Taumaturgia/Types/Name.hpp"
+#include "Taumaturgia/Types/Protection.hpp"
 
 // struct Armor {
 //     Name name;

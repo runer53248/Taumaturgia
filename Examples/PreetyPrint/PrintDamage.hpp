@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Taumaturgia/Concepts/Types/Damage.hpp"
+#include "Taumaturgia/Types/Damage.hpp"
 #include "PrintDamageType.hpp"
 #include "PrintDuration.hpp"
 #include "PrintEffectState.hpp"

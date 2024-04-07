@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Taumaturgia/Concepts/Types/Effect.hpp"
+#include "Taumaturgia/Types/Effect.hpp"
 #include "PrintDuration.hpp"
 #include "PrintEffectType.hpp"
 #include "PrintState.hpp"

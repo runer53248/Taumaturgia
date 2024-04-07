@@ -1,6 +1,6 @@
 #pragma once
 #include <boost/mp11.hpp>
-#include "Taumaturgia/Concepts/Types/Name.hpp"
+#include "Taumaturgia/Types/Name.hpp"
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Strategies/Premade/RestoreStrategy.hpp"

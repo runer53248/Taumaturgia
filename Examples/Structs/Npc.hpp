@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Concepts/Types/Health.hpp"
+#include "Taumaturgia/Types/Health.hpp"
 
 struct Npc {  // don't have name
     Health hp{5};

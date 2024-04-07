@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "Taumaturgia/Concepts/Types/WearContainer.hpp"
+#include "Taumaturgia/Types/WearContainer.hpp"
 
 struct Player {
     std::string name;  // string used as name

@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Taumaturgia/Concepts/Types/WearContainer.hpp"
+#include "Taumaturgia/Types/WearContainer.hpp"
 #include "PrintProtection.hpp"
 
 auto& operator<<(std::ostream& out, const WearContainer& armorWear) {

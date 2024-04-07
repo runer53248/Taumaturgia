@@ -1,7 +1,7 @@
 #pragma once
 #include <concepts>
 #include "Taumaturgia/Concepts/Gettingable.hpp"
-#include "Taumaturgia/Concepts/Types/VariantType.hpp"
+#include "Taumaturgia/Types/VariantType.hpp"
 
 enum class Parameter;
 

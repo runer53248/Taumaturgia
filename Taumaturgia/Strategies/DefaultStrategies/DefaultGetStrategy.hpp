@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Concepts/Types/Enums/Parameter.hpp"
+#include "Taumaturgia/Types/Enums/Parameter.hpp"
 #include "Taumaturgia/Strategies/GetStrategy.hpp"
 
 template <Parameter PARAMETER>

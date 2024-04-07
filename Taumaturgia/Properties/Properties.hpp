@@ -11,12 +11,12 @@
 #else
     #include "UserProperty.hpp"
 
-    #include "Taumaturgia/Concepts/Types/Name.hpp"
-    #include "Taumaturgia/Concepts/Types/Health.hpp"
-    #include "Taumaturgia/Concepts/Types/WearContainer.hpp"
-    #include "Taumaturgia/Concepts/Types/Damage.hpp"
-    #include "Taumaturgia/Concepts/Types/CureHealth.hpp"
-    #include "Taumaturgia/Concepts/Types/Protection.hpp"
+    #include "Taumaturgia/Types/Name.hpp"
+    #include "Taumaturgia/Types/Health.hpp"
+    #include "Taumaturgia/Types/WearContainer.hpp"
+    #include "Taumaturgia/Types/Damage.hpp"
+    #include "Taumaturgia/Types/CureHealth.hpp"
+    #include "Taumaturgia/Types/Protection.hpp"
 
     #include "Taumaturgia/Concepts/Namingable.hpp"
     #include "Taumaturgia/Strategies/Strategies.hpp" // will also include all properties concepts

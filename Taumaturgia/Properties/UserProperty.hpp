@@ -6,7 +6,7 @@
 #include "Helpers/constructible_from_args.hpp"
 // #include "Object/Concepts/Namingable.hpp"
 #include "Taumaturgia/Concepts/Typeable.hpp"
-#include "Taumaturgia/Concepts/Types/Name.hpp"
+#include "Taumaturgia/Types/Name.hpp"
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
 
 namespace impl {
