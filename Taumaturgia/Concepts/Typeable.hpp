@@ -1,6 +1,6 @@
 #pragma once
 #include "Helpers/trait_accessable.hpp"
-#include "Traits/UserTypeTraits.hpp"
+#include "Taumaturgia/Traits/UserTypeTraits.hpp"
 
 template <typename T, typename RESULT_TYPE>
 concept getType_or_custom_accessable = trait_accessable<T, traits::accessType<RESULT_TYPE>, RESULT_TYPE>;
