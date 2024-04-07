@@ -1,11 +1,11 @@
 #pragma once
-#include "Taumaturgia/Types/Name.hpp"
+#include "Taumaturgia/Concepts/Protectingable.hpp"
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
-#include "Taumaturgia/Strategies/Premade/DefendStrategy.hpp"
+#include "Taumaturgia/Types/Name.hpp"
 
 namespace impl {
-constinit char protecting_type_name[] = "Protecting";
+inline constinit char protecting_type_name[] = "Protecting";
 
 template <typename T>
 struct Protecting_ : T {
@@ -84,6 +84,3 @@ static_assert(Protectingable<Protecting_<Protecting_Test>>);
 
 template <typename T>
 using Protecting = std::conditional_t<Protectingable<T>, T, impl::Protecting_<T>>;
-
-template <typename T>
-struct DefendStrategy_<impl::Protecting_<T>> : DefendStrategy_<T> {};  // forward eventualy implemented strategy

@@ -59,18 +59,6 @@ static_assert(have_properties2<int_float_property_type,
                                IntProperty,
                                FloatProperty>);
 
-#ifndef NO_PREMADE_PROPERTIES
-template <typename T>
-using Living_impl = impl::Living_<T>;
-template <typename T>
-using Healing_impl = impl::Healing_<T>;
-#else
-template <typename T>
-using Living_impl = UserPropertyAdapter<Health>::template type<T>;
-template <typename T>
-using Healing_impl = UserPropertyAdapter<CureHealth>::template type<T>;
-#endif
-
 using living_type = add_properties<Type, Living>;  // duplication of living_type
 
 static_assert(have_properties2<living_type,

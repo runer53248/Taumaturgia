@@ -20,16 +20,16 @@ add_compile_options(
     -Werror
 
     -Wno-missing-braces
-    -fsanitize=undefined
+    # -fsanitize=undefined
 )
 
-link_libraries(-lubsan)
+# link_libraries(-lubsan)
 
 add_compile_definitions(
   ACCESS_TRAIT_MACRO
 
-  NO_PREMADE_PROPERTIES
-  NO_PREMADE_STRATEGIES # work only with NO_PREMADE_PROPERTIES
+  # NO_PREMADE_PROPERTIES
+  NO_PREMADE_STRATEGIES
 )
 
 include_directories(${PROJECT_SOURCE_DIR})

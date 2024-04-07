@@ -39,7 +39,7 @@ static_assert(Namingable<Type>);
 ```
 
 ```cpp
-#include "Object/Concepts/Types/Name.hpp"
+#include "Object/Types/Name.hpp"
 struct Type {
     Name name{"Valid"};
 };

@@ -35,14 +35,6 @@ struct HealingHealth {  // Living and Healing
     CureHealth cureHealth{};
 };
 
-#ifndef NO_PREMADE_PROPERTIES
-template <typename T>
-using Living_impl = impl::Living_<T>;
-#else
-template <typename T>
-using Living_impl = UserPropertyAdapter<Health>::template type<T>;
-#endif
-
 int main() {
     static_assert(std::is_same_v<Living<Damaging<Healing<HealingHealth>>>, Damaging<HealingHealth>>);
     static_assert(std::is_same_v<Living<Healing<HealingHealth>>, HealingHealth>);

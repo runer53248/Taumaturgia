@@ -7,14 +7,6 @@
 using helpers::create_ordered_property_list;
 using helpers::same_priority;
 
-#ifndef NO_PREMADE_PROPERTIES
-template <typename T>
-using Damaging_impl = impl::Damaging_<T>;
-#else
-template <typename T>
-using Damaging_impl = UserPropertyAdapter<Damage>::template type<T>;
-#endif
-
 int main() {
     std::cout << "A. 'create_ordered_property_list' examples:" << '\n'
               << '\n';

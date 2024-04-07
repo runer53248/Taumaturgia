@@ -1,12 +1,12 @@
 #pragma once
 #include <boost/mp11.hpp>
-#include "Taumaturgia/Types/Name.hpp"
+#include "Taumaturgia/Concepts/Healingable.hpp"
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
-#include "Taumaturgia/Strategies/Premade/HealStrategy.hpp"
+#include "Taumaturgia/Types/Name.hpp"
 
 namespace impl {
-constinit char healing_type_name[] = "Healing";
+inline constinit char healing_type_name[] = "Healing";
 
 template <typename T>
 struct Healing_ : T {
@@ -85,6 +85,3 @@ static_assert(Healingable<Healing_<Healing_Test>>);
 
 template <typename T>
 using Healing = std::conditional_t<Healingable<T>, T, impl::Healing_<T>>;
-
-template <typename T>
-struct HealStrategy_<impl::Healing_<T>> : HealStrategy_<T> {};  // forward eventualy implemented strategy

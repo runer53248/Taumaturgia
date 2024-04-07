@@ -1,12 +1,12 @@
 #pragma once
 #include <boost/mp11.hpp>
-#include "Taumaturgia/Types/Name.hpp"
+#include "Taumaturgia/Concepts/Restoringable.hpp"
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
-#include "Taumaturgia/Strategies/Premade/RestoreStrategy.hpp"
+#include "Taumaturgia/Types/Name.hpp"
 
 namespace impl {
-constinit char restoring_type_name[] = "Restoring";
+inline constinit char restoring_type_name[] = "Restoring";
 
 template <typename T>
 struct Restoring_ : T {
@@ -89,6 +89,3 @@ static_assert(Restoringable<Restoring_<Restoring_Test>>);
 
 template <typename T>
 using Restoring = std::conditional_t<Restoringable<T>, T, impl::Restoring_<T>>;
-
-template <typename T>
-struct RestoreStrategy_<impl::Restoring_<T>> : RestoreStrategy_<T> {};  // forward eventualy implemented strategy

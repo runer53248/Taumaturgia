@@ -7,14 +7,6 @@ struct Empty {};
 //  .  outer  .   .   .  inner  .
 // ...<  X  <...<...<...<  X  <...<Empty>>>>>>>
 
-#ifndef NO_PREMADE_PROPERTIES
-template <typename T>
-using Wearing_impl = impl::Wearing_<T>;
-#else
-template <typename T>
-using Wearing_impl = UserPropertyAdapter<WearContainer>::template type<T>;
-#endif
-
 int main() {
     auto most_inner_only_test = []<template <typename> typename T> {
         static_assert(std::is_same_v<

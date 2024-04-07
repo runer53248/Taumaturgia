@@ -1,4 +1,5 @@
 #pragma once
+#include "Taumaturgia/Properties/Properties.hpp"
 
 #ifndef NO_PREMADE_STRATEGIES
     #include "AliveStrategy.hpp"
@@ -9,6 +10,17 @@
     #include "Premade/HealStrategy.hpp"
     #include "Premade/RestoreStrategy.hpp"
     #include "Premade/WearStrategy.hpp"
+
+    template <typename T>
+    struct WearStrategy_<Wearing_impl<T>> : WearStrategy_<T> {};  // forward eventualy implemented strategy
+    template <typename T>
+    struct AttackStrategy_<Damaging_impl<T>> : AttackStrategy_<T> {};  // forward eventualy implemented strategy
+    template <typename T>
+    struct DefendStrategy_<Protecting_impl<T>> : DefendStrategy_<T> {};  // forward eventualy implemented strategy
+    template <typename T>
+    struct HealStrategy_<Healing_impl<T>> : HealStrategy_<T> {};  // forward eventualy implemented strategy
+    template <typename T>
+    struct RestoreStrategy_<Restoring_impl<T>> : RestoreStrategy_<T> {};  // forward eventualy implemented strategy
 #else
     #include "AliveStrategy.hpp"
     #include "GetStrategy.hpp"
@@ -60,4 +72,14 @@
         ActionStatus operator()(Healingable auto& obj, Object* owner, Object* target) const;
     };
 
+    template <typename T>
+    struct UserStrategy_<WearContainer, Wearing_impl<T>> : UserStrategy_<WearContainer, T> {};  // forward eventualy implemented strategy
+    template <typename T>
+    struct UserStrategy_<Damage, Damaging_impl<T>> : UserStrategy_<Damage, T> {};  // forward eventualy implemented strategy
+    template <typename T>
+    struct UserStrategy_<Protection, Protecting_impl<T>> : UserStrategy_<Protection, T> {};  // forward eventualy implemented strategy
+    template <typename T>
+    struct UserStrategy_<CureHealth, Healing_impl<T>> : UserStrategy_<CureHealth, T> {};  // forward eventualy implemented strategy
+    template <typename T>
+    struct UserStrategy_<EffectTypeContainer, Restoring_impl<T>> : UserStrategy_<EffectTypeContainer, T> {};  // forward eventualy implemented strategy
 #endif

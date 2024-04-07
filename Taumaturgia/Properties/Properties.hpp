@@ -8,6 +8,19 @@
     #include "Premade/Protecting.hpp"
     #include "Premade/Restoring.hpp"
     #include "Premade/Wearing.hpp"
+
+    template <typename T>
+    using Living_impl = impl::Living_<T>;
+    template <typename T> 
+    using Wearing_impl = impl::Wearing_<T>;
+    template <typename T>
+    using Damaging_impl = impl::Damaging_<T>;
+    template <typename T>
+    using Protecting_impl = impl::Protecting_<T>;
+    template <typename T>
+    using Healing_impl = impl::Healing_<T>;
+    template <typename T>
+    using Restoring_impl = impl::Restoring_<T>;
 #else
     #include "UserProperty.hpp"
 
@@ -19,7 +32,12 @@
     #include "Taumaturgia/Types/Protection.hpp"
 
     #include "Taumaturgia/Concepts/Namingable.hpp"
-    #include "Taumaturgia/Strategies/Strategies.hpp" // will also include all properties concepts
+    #include "Taumaturgia/Concepts/Damagingable.hpp"
+    #include "Taumaturgia/Concepts/Healingable.hpp"
+    #include "Taumaturgia/Concepts/Livingable.hpp"
+    #include "Taumaturgia/Concepts/Protectingable.hpp"
+    #include "Taumaturgia/Concepts/Restoringable.hpp"
+    #include "Taumaturgia/Concepts/Wearingable.hpp"
 
     template <typename TYPE>
     using Living = UserPropertyConceptAdapter<Health, Livingable<TYPE>>::template type<TYPE>;
@@ -36,29 +54,18 @@
     template <typename TYPE>
     using Naming = UserPropertyConceptAdapter<Name, Namingable<TYPE>>::template type<TYPE>;
 
-    #ifndef NO_PREMADE_STRATEGIES
-        template <typename T, typename... Args>
-        struct WearStrategy_<impl::UserProperty_<WearContainer, T, Args...>> : WearStrategy_<T> {};  // forward eventualy implemented strategy
-        template <typename T, typename... Args>
-        struct AttackStrategy_<impl::UserProperty_<Damage, T, Args...>> : AttackStrategy_<T> {};  // forward eventualy implemented strategy
-        template <typename T, typename... Args>
-        struct DefendStrategy_<impl::UserProperty_<Protection, T, Args...>> : DefendStrategy_<T> {};  // forward eventualy implemented strategy
-        template <typename T, typename... Args>
-        struct HealStrategy_<impl::UserProperty_<CureHealth, T, Args...>> : HealStrategy_<T> {};  // forward eventualy implemented strategy
-        template <typename T, typename... Args>
-        struct RestoreStrategy_<impl::UserProperty_<EffectTypeContainer, T, Args...>> : RestoreStrategy_<T> {};  // forward eventualy implemented strategy
-    #else
-        template <typename T, typename... Args>
-        struct UserStrategy_<WearContainer, impl::UserProperty_<WearContainer, T, Args...>> : UserStrategy_<WearContainer, T> {};  // forward eventualy implemented strategy
-        template <typename T, typename... Args>
-        struct UserStrategy_<Damage, impl::UserProperty_<Damage, T, Args...>> : UserStrategy_<Damage, T> {};  // forward eventualy implemented strategy
-        template <typename T, typename... Args>
-        struct UserStrategy_<Protection, impl::UserProperty_<Protection, T, Args...>> : UserStrategy_<Protection, T> {};  // forward eventualy implemented strategy
-        template <typename T, typename... Args>
-        struct UserStrategy_<CureHealth, impl::UserProperty_<CureHealth, T, Args...>> : UserStrategy_<CureHealth, T> {};  // forward eventualy implemented strategy
-        template <typename T, typename... Args>
-        struct UserStrategy_<EffectTypeContainer, impl::UserProperty_<EffectTypeContainer, T, Args...>> : UserStrategy_<EffectTypeContainer, T> {};  // forward eventualy implemented strategy
-    #endif
+    template <typename T>
+    using Living_impl = impl::UserProperty_<Health, T>;
+    template <typename T> 
+    using Wearing_impl = impl::UserProperty_<WearContainer, T>;
+    template <typename T>
+    using Damaging_impl = impl::UserProperty_<Damage, T>;
+    template <typename T>
+    using Protecting_impl = impl::UserProperty_<Protection, T>;
+    template <typename T>
+    using Healing_impl = impl::UserProperty_<CureHealth, T>;
+    template <typename T>
+    using Restoring_impl = impl::UserProperty_<EffectTypeContainer, T>;
 #endif
 
 #include "Helpers/taged_list.hpp"

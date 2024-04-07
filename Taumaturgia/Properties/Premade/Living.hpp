@@ -6,7 +6,7 @@
 #include "Taumaturgia/Strategies/AliveStrategy.hpp"
 
 namespace impl {
-constinit char living_type_name[] = "Living";
+inline constinit char living_type_name[] = "Living";
 
 template <typename T>
 struct Living_ : T {

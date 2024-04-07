@@ -5,14 +5,6 @@
 using helpers::is_property_improvement;
 using helpers::same_priority;
 
-#ifndef NO_PREMADE_PROPERTIES
-template <typename T>
-using Damaging_impl = impl::Damaging_<T>;
-#else
-template <typename T>
-using Damaging_impl = UserPropertyAdapter<Damage>::template type<T>;
-#endif
-
 int main() {
     static_assert(Property<Damaging>::value == Property<Damaging_impl>::value);
     static_assert(same_priority<Property<Damaging>, Property<Damaging_impl>>);

@@ -10,7 +10,7 @@
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
 
 namespace impl {
-constinit char user_type_name[] = "UserProperty";
+inline constinit char user_type_name[] = "UserProperty";
 
 template <typename TYPE, typename T, typename... Tags>
 struct UserProperty_ : T {

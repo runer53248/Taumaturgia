@@ -1,12 +1,12 @@
 #pragma once
 #include <boost/mp11.hpp>
-#include "Taumaturgia/Types/Name.hpp"
+#include "Taumaturgia/Concepts/Wearingable.hpp"
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
-#include "Taumaturgia/Strategies/Premade/WearStrategy.hpp"
+#include "Taumaturgia/Types/Name.hpp"
 
 namespace impl {
-constinit char wearing_type_name[] = "Wearing";
+inline constinit char wearing_type_name[] = "Wearing";
 
 template <typename T>
 struct Wearing_ : T {
@@ -85,6 +85,3 @@ static_assert(Wearingable<Wearing_<Wearing_Test>>);
 
 template <typename T>
 using Wearing = std::conditional_t<Wearingable<T>, T, impl::Wearing_<T>>;
-
-template <typename T>
-struct WearStrategy_<impl::Wearing_<T>> : WearStrategy_<T> {};  // forward eventualy implemented strategy

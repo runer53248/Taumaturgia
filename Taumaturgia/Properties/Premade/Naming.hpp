@@ -3,7 +3,7 @@
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 
 namespace impl {
-constinit char naming_type_name[] = "Naming";
+inline constinit char naming_type_name[] = "Naming";
 
 template <typename T>
 struct Naming_ : T {

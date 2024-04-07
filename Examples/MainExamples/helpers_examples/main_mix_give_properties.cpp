@@ -21,14 +21,6 @@ using helpers::create_ordered_property_list;
 using helpers::is_type_with_added_properties;
 using helpers::Scheme;
 
-#ifndef NO_PREMADE_PROPERTIES
-template <typename T>
-using Living_impl = impl::Living_<T>;
-#else
-template <typename T>
-using Living_impl = UserPropertyAdapter<Health>::template type<T>;
-#endif
-
 int main() {
     auto print = [](auto t) {
         using T = decltype(t);

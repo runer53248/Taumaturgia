@@ -3,14 +3,10 @@
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
 #ifndef NO_PREMADE_PROPERTIES
-template <typename T>
-using Damaging_impl = impl::Damaging_<T>;
 #else
 namespace impl {
 constinit char damaging_type_name[] = "Damaging";
 }
-template <typename T>
-using Damaging_impl = UserPropertyAdapter<Damage>::template type<T>;
 #endif
 
 template <typename T>
