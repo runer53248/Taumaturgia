@@ -1,6 +1,6 @@
 #pragma once
-#include "Taumaturgia/Concepts/Helpers/trait_accessable.hpp"
 #include "Taumaturgia/Traits/ArmorWearTraits.hpp"
+#include "Taumaturgia/Traits/Helpers/trait_accessable.hpp"
 #include "Taumaturgia/Types/WearContainer.hpp"
 
 template <typename T>

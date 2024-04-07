@@ -1,5 +1,5 @@
 #pragma once
-#include "Helpers/trait_accessable.hpp"
+#include "Taumaturgia/Traits/Helpers/trait_accessable.hpp"
 #include "Taumaturgia/Traits/UserTypeTraits.hpp"
 
 template <typename T, typename RESULT_TYPE>
