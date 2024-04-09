@@ -49,9 +49,10 @@ public:
         times.push_back(duration);
         std::cout << "last run duration: " << duration << '\n';
 
-        auto dur_aprox = std::accumulate(times.begin(), times.end(), begin_value);
-        dur_aprox /= static_cast<int>(repetition);
+        auto dur_sum= std::accumulate(times.begin(), times.end(), begin_value);
+        auto dur_aprox = dur_sum / static_cast<int>(repetition);
 
+        std::cout << "duration all: " << dur_sum << "\n";
         std::cout << "dur_aprox: " << dur_aprox << " (after repeat: " << repetition << " times)\n";
         return result;
     }
