@@ -52,7 +52,8 @@ static_assert(Namingable<Type>);
 struct Type {};
 
 template <typename T, typename TYPE>
-struct WithName : T {
+class WithName : public T {
+public:
     WithName() = default;
     explicit WithName(const TYPE& name)
         : name{name} {}

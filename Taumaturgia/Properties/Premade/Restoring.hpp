@@ -6,10 +6,11 @@
 #include "Taumaturgia/Types/Name.hpp"
 
 namespace impl {
-inline constinit char restoring_type_name[] = "Restoring";
+inline constinit const char restoring_type_name[] = "Restoring";
 
 template <typename T>
-struct Restoring_ : T {
+class Restoring_ : public T {
+public:
     using property_data = PropertyData<restoring_type_name, Restoring_, T>;
 
     Restoring_() = default;

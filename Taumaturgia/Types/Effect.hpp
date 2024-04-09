@@ -17,7 +17,8 @@
 //     EffectStatusModifier status{EffectStatusModifier::Suspended};
 // };
 
-struct Effect {
+class Effect {
+public:
     constexpr Effect() noexcept = default;
     constexpr Effect(EffectType attackEffect, Duration duration, State state) noexcept
         : effectType_{attackEffect}, duration_{duration}, state_{state} {}

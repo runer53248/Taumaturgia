@@ -3,10 +3,11 @@
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 
 namespace impl {
-inline constinit char naming_type_name[] = "Naming";
+inline constinit const char naming_type_name[] = "Naming";
 
 template <typename T>
-struct Naming_ : T {
+class Naming_ : public T {
+public:
     using property_data = PropertyData<naming_type_name, Naming_, T>;
 
     Naming_() = default;

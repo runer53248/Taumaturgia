@@ -3,7 +3,8 @@
 #include <optional>
 #include "Protection.hpp"
 
-struct WearContainer {
+class WearContainer {
+public:
     WearContainer() noexcept = default;
     explicit WearContainer(int baseValue) noexcept
         : globalArmor_{baseValue} {}

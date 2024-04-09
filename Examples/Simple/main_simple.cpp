@@ -11,7 +11,8 @@ struct Item {
 
 // MARK: Armor
 
-struct Armor {
+class Armor {
+public:
     Name name;
 
     Armor(std::string name, Protection protection)
@@ -33,7 +34,8 @@ struct Weapon_A {
 
 // MARK: Weapon_B
 
-struct Weapon_B {
+class Weapon_B {
+public:
     std::string name;
 
     Weapon_B(std::string name, Damage dmg)
@@ -48,7 +50,8 @@ private:
 
 // MARK: Weapon_C
 
-struct Weapon_C {
+class Weapon_C {
+public:
     std::string name;
 
     Weapon_C(const std::string& name, Damage dmg)
@@ -80,7 +83,8 @@ struct Player {
 
 // MARK: Player_B
 
-struct Player_B {
+class Player_B {
+public:
     WearContainer armorWear{10};
 
     Player_B(const std::string& name, Health hp)

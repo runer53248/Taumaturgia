@@ -2,63 +2,63 @@
 #include "Examples/PreetyPrint/preety_print.hpp"
 
 #ifdef WITH_ADD_PROPERTIES
-#include "Taumaturgia/Properties/Properties.hpp"
-#include "Taumaturgia/Strategies/DefaultStrategies.hpp"
+    #include "Taumaturgia/Properties/Properties.hpp"
+    #include "Taumaturgia/Strategies/DefaultStrategies.hpp"
 
-struct Type {};
+    struct Type {};
 
-using Weapon = add_properties<Type, Naming, Damaging>;
-using DefaultWeapon = add_properties<Type, Naming, Damaging>;
-using Player = add_properties<Type, Naming, Restoring, Wearing>;
+    using Weapon = add_properties<Type, Naming, Damaging>;
+    using DefaultWeapon = add_properties<Type, Naming, Damaging>;
+    using Player = add_properties<Type, Naming, Restoring, Wearing>;
 
-struct CustomType {
-    std::vector<DefaultWeapon> others{
-        DefaultWeapon{Name{"Light weapon"}, Damage{10}},
-        DefaultWeapon{Name{"Medium weapon"}, Damage{20}}};
-};
+    struct CustomType {
+        std::vector<DefaultWeapon> others{
+            DefaultWeapon{Name{"Light weapon"}, Damage{10}},
+            DefaultWeapon{Name{"Medium weapon"}, Damage{20}}};
+    };
 
-using CustomWeapon = add_properties<CustomType, Naming>;
+    using CustomWeapon = add_properties<CustomType, Naming>;
 
-template <>
-#ifndef NO_PREMADE_STRATEGIES
-struct AttackStrategy_<CustomWeapon> {
-#else
-struct UserStrategy_<Damage, CustomWeapon> {
-#endif
-    ActionStatus operator()(auto& obj, Object* owner, Object* target) const {
-        auto* suspect = Whom(owner, target);
-        ActionStatus status{ActionStatus::None};
+    template <>
+    #ifndef NO_PREMADE_STRATEGIES
+    struct AttackStrategy_<CustomWeapon> {
+    #else
+    struct UserStrategy_<Damage, CustomWeapon> {
+    #endif
+        ActionStatus operator()(auto& obj, Object* owner, Object* target) const {
+            auto* suspect = Whom(owner, target);
+            ActionStatus status{ActionStatus::None};
 
-        if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) {
-            status = default_attack_behavior(obj, suspect);
-        }
-
-        if constexpr (Damagingable<typename decltype(obj.others)::value_type>) {
-            for (auto& other : obj.others) {
-                status = default_attack_behavior(other, suspect);
-                std::cout << "\t\t " << other << "\n";
+            if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) {
+                status = default_attack_behavior(obj, suspect);
             }
+
+            if constexpr (Damagingable<typename decltype(obj.others)::value_type>) {
+                for (auto& other : obj.others) {
+                    status = default_attack_behavior(other, suspect);
+                    std::cout << "\t\t " << other << "\n";
+                }
+            }
+            return status;
         }
-        return status;
-    }
-};
+    };
 
 #else
-#include "Examples/Structs/CustomWeapon.hpp"
-#include "Examples/Structs/Player.hpp"
-#include "Examples/Structs/Weapon.hpp"
-#include "Taumaturgia/Properties/Properties.hpp"
-#include "Taumaturgia/Strategies/DefaultStrategies.hpp"
+    #include "Examples/Structs/CustomWeapon.hpp"
+    #include "Examples/Structs/Player.hpp"
+    #include "Examples/Structs/Weapon.hpp"
+    #include "Taumaturgia/Properties/Properties.hpp"
+    #include "Taumaturgia/Strategies/DefaultStrategies.hpp"
 #endif
 
-constinit auto max_health = 100;
+constinit const auto max_health = 100;
 
-constinit auto damage_1 = 10;
-constinit auto damage_2 = 20;
-constinit auto damage_3 = 32;
+constinit const auto damage_1 = 10;
+constinit const auto damage_2 = 20;
+constinit const auto damage_3 = 32;
 
-constinit auto effect_1 = Effect{EffectType::Stun};
-constinit auto effect_2 = Effect{EffectType::Freeze, Duration{1, DurationType::Round}};
+constinit const auto effect_1 = Effect{EffectType::Stun};
+constinit const auto effect_2 = Effect{EffectType::Freeze, Duration{1, DurationType::Round}};
 
 TEST(AttackStrategyTest, initial_player_state) {
     Object player{Living<Player>{Name{"Player"}, Health{max_health}}};

@@ -5,10 +5,11 @@
 #include "Taumaturgia/Types/Name.hpp"
 
 namespace impl {
-inline constinit char protecting_type_name[] = "Protecting";
+inline constinit const char protecting_type_name[] = "Protecting";
 
 template <typename T>
-struct Protecting_ : T {
+class Protecting_ : public T {
+public:
     using property_data = PropertyData<protecting_type_name, Protecting_, T>;
 
     Protecting_() = default;

@@ -9,7 +9,7 @@ constexpr static auto properties_counter = mp_size<order_list>::value;
 
 template <template <typename...> typename property>
     requires is_property<property>
-struct Property {
+class Property {
 private:
     constinit const static size_t index = []() {
         return mp_find<order_list, helpers::best_property_tag<property>>::value;

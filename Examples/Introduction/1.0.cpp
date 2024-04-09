@@ -35,7 +35,8 @@ static_assert(Namingable<Valid_type_3_2>);
 struct NoNameType {};
 
 template <typename T, typename TYPE>
-struct Valid_4 : T {
+class Valid_4 : public T {
+public:
     Valid_4() = default;
     explicit Valid_4(const TYPE& name)
         : name{name} {}

@@ -13,7 +13,7 @@ struct Element_n {
     Health hp{100};
 };
 
-struct Element_Dmg : Element_n {
+struct Element_Dmg : public Element_n {
     Damage dmg{1};
 };
 

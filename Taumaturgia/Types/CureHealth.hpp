@@ -10,7 +10,8 @@ enum class CureValueType {
     MAX_PERCENT
 };
 
-struct CureHealth {
+class CureHealth {
+public:
     constexpr CureHealth() noexcept = default;
     constexpr explicit CureHealth(int value) noexcept
         : value_{value} {}

@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
 
-struct Name {
+class Name {
+public:
     Name() = default;
     explicit Name(const std::string& value)
         : value_{value} {}

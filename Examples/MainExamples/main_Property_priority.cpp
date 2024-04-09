@@ -2,10 +2,10 @@
 #include "Examples/demangle_type_name.hpp"
 #include "Taumaturgia/Properties/Properties.hpp"
 
-constinit char PlainProperty_name[] = "PlainProperty";
+constinit const char PlainProperty_name[] = "PlainProperty";
 
 template <typename T>
-struct PlainProperty : T {
+struct PlainProperty : public T {
     using property_data = PropertyData<PlainProperty_name, PlainProperty, T>;
 };
 

@@ -4,7 +4,8 @@
 #include <set>
 #include "Enums/EffectType.hpp"
 
-struct EffectTypeContainer {
+class EffectTypeContainer {
+public:
     template <typename T>
     using container_type = std::set<T>;
 

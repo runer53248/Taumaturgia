@@ -6,17 +6,18 @@
 struct test_struct {};
 struct test_struct_2 {};
 
-constinit char a_type_name[] = "A";
+constinit const char a_type_name[] = "A";
 
 template <typename T>
-struct A : T {
+struct A : public T {
     using property_data = PropertyData<a_type_name, A, T>;
 };
 
-constinit char b_type_name[] = "B";
+constinit const char b_type_name[] = "B";
 
 template <typename T>
-struct B : T {
+class B : public T {
+public:
     using property_data = PropertyData<b_type_name, B, T>;
 };
 

@@ -1,8 +1,9 @@
 #pragma once
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 
-constinit char b_type_name[] = "B";
+constinit const char b_type_name[] = "B";
 template <typename T>
-struct B : T {
+class B : public T {
+public:
     using property_data = PropertyData<b_type_name, B, T>;
 };

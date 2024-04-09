@@ -7,10 +7,11 @@
 using namespace std::chrono_literals;
 using namespace std::chrono;
 
-constinit size_t repetition = 10'000;
+constinit const size_t repetition = 10'000;
 
 template <typename FUN>
-struct Benchmark {
+class Benchmark {
+public:
     Benchmark(FUN&& fun) noexcept
         : fun{std::move(fun)} {}
 
@@ -55,5 +56,6 @@ struct Benchmark {
         return result;
     }
 
+private:
     FUN fun;
 };

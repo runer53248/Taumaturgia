@@ -2,7 +2,8 @@
 #include "Effect.hpp"
 #include "Enums/DamageType.hpp"
 
-struct Damage {
+class Damage {
+public:
     constexpr Damage() noexcept = default;
     constexpr explicit Damage(int value) noexcept
         : value_{value} {}

@@ -15,7 +15,7 @@ struct Element_name_hp {
     Health hp{100};
 };
 
-struct Element_name_hp_dmg : Element_name_hp {
+struct Element_name_hp_dmg : public Element_name_hp {
     Damage dmg{1};
 };
 

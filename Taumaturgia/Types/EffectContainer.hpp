@@ -4,7 +4,8 @@
 #include <vector>
 #include "Effect.hpp"
 
-struct EffectContainer {
+class EffectContainer {
+public:
     template <typename T>
     using container_type = std::vector<T>;
 

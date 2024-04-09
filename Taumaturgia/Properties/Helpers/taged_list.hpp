@@ -7,7 +7,7 @@ struct list {};
 struct tag {};
 
 template <typename T>
-struct property_tag : T {};
+struct property_tag : public T {};
 
 template <template <typename...> typename T>
 concept is_inner_reduction = std::same_as<T<T<property_tag<T<T<tag>>>>>, property_tag<T<tag>>>;

@@ -8,10 +8,10 @@ struct Potion {
     Name name;
 };
 
-constinit Effect damage_effect{EffectType::Bleed};
-constinit auto armor_value{4};
-constinit auto armor_location{BodyLocation::Internal};
-constinit auto damage_value{10};
+constinit const Effect damage_effect{EffectType::Bleed};
+constinit const auto armor_value{4};
+constinit const auto armor_location{BodyLocation::Internal};
+constinit const auto damage_value{10};
 
 int main() {
     const Name spiked_shield_potion_name{"Spiked Shield Potion"};

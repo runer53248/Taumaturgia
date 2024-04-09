@@ -4,10 +4,11 @@
 
 namespace impl {
 
-constinit char a_type_name[] = "A";
+constinit const char a_type_name[] = "A";
 
 template <typename T>
-struct A_ : T {
+class A_ : public T {
+public:
     using property_data = PropertyData<a_type_name, A_, T>;
 };
 

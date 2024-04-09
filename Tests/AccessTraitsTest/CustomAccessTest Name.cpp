@@ -6,11 +6,11 @@
 
 using namespace testing;
 
-constinit auto default_float = 1.2f;
-constinit auto default_int = 5;
-constinit auto default_bool = true;
-constinit auto default_name_ = "TestName";
-constinit auto default_name_change_ = "TestName121234123556426354376585856858357858356883465";
+constinit const auto default_float = 1.2f;
+constinit const auto default_int = 5;
+constinit const auto default_bool = true;
+constinit const auto default_name_ = "TestName";
+constinit const auto default_name_change_ = "TestName121234123556426354376585856858357858356883465";
 
 class Name_Fixture : public Test {
 public:

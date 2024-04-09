@@ -3,7 +3,8 @@
 #include "Effect.hpp"
 #include "EffectContainer.hpp"
 
-struct Health {
+class Health {
+public:
     constexpr Health() noexcept = default;
     constexpr explicit Health(int value) noexcept
         : value_{std::min(value, MAX_VALUE)} {}

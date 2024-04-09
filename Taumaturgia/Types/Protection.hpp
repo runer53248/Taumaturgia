@@ -3,7 +3,8 @@
 #include <numeric>
 #include "ArmorClass.hpp"
 
-struct Protection {
+class Protection {
+public:
     Protection() noexcept = default;
     Protection(const ArmorClass& ac) noexcept
         : ac_{ac} {}

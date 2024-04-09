@@ -7,7 +7,8 @@
 //     Protection protection{};
 // };
 
-struct Armor {
+class Armor {
+public:
     Name name;
 
     Armor(std::string name, Protection protection)

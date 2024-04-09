@@ -6,10 +6,11 @@
 #include "Taumaturgia/Strategies/AliveStrategy.hpp"
 
 namespace impl {
-inline constinit char living_type_name[] = "Living";
+inline constinit const char living_type_name[] = "Living";
 
 template <typename T>
-struct Living_ : T {
+class Living_ : public T {
+public:
     using property_data = PropertyData<living_type_name, Living_, T>;
 
     Living_() = default;

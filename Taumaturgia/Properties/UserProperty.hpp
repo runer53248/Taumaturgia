@@ -10,10 +10,11 @@
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
 
 namespace impl {
-inline constinit char user_type_name[] = "UserProperty";
+inline constinit const char user_type_name[] = "UserProperty";
 
 template <typename TYPE, typename T, typename... Tags>
-struct UserProperty_ : T {
+class UserProperty_ : public T {
+public:
     template <typename TAG>
     using self = UserProperty_<TYPE, TAG, Tags...>;                        // make yourself one template argument type to satisfy PropertyData
     using property_data = PropertyData<user_type_name, self, T, Tags...>;  // ? should add TYPE into PropertyData?
@@ -212,4 +213,4 @@ struct UserPropertyConceptAdapter {
 
 // TODO: check is this needed?
 // template <typename TYPE, typename T>
-// struct UserStrategy_<TYPE, impl::UserProperty_<TYPE, T>> : UserStrategy_<TYPE, T> {};  // forward eventualy implemented strategy
+// struct UserStrategy_<TYPE, impl::UserProperty_<TYPE, T>> : public UserStrategy_<TYPE, T> {};  // forward eventualy implemented strategy

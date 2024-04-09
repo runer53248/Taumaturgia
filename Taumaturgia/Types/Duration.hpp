@@ -3,7 +3,8 @@
 #include <array>
 #include "Enums/DurationType.hpp"
 
-struct Duration {
+class Duration {
+public:
     constexpr Duration() noexcept = default;
     constexpr Duration(size_t value, DurationType type) noexcept
         : value_{value}, type_{type} {}

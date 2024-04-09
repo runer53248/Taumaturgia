@@ -5,12 +5,12 @@
 #ifndef NO_PREMADE_PROPERTIES
 #else
 namespace impl {
-constinit char damaging_type_name[] = "Damaging";
+constinit const char damaging_type_name[] = "Damaging";
 }
 #endif
 
 template <typename T>
-struct DamagingImproved_ : T {  // example of improving build-in property - may be used as replacement of impl::Damaging_
+struct DamagingImproved_ : public T {  // example of improving build-in property - may be used as replacement of impl::Damaging_
     using property_data = PropertyData<impl::damaging_type_name, DamagingImproved_, T>;
     using improvement_of = Damaging_impl<T>;
 
@@ -29,7 +29,7 @@ template <typename T>
 using UserProtecting_2 = UserProperty<Protection, T>;
 
 template <typename T>
-struct UserProtectingImproved_ : T {  // example of improving user property
+struct UserProtectingImproved_ : public T {  // example of improving user property
     using property_data = PropertyData<impl::user_type_name, UserProtectingImproved_, T>;
     using improvement_of = UserProtecting<T>;
 
@@ -39,7 +39,7 @@ template <typename T>
 using UserProtectingImproved = std::conditional_t<getType_or_custom_accessable<T, Protection>, T, UserProtectingImproved_<T>>;
 
 template <typename T>
-struct UserProtectingImproved_2_ : T {  // example of improving use property
+struct UserProtectingImproved_2_ : public T {  // example of improving use property
     using property_data = PropertyData<impl::user_type_name, UserProtectingImproved_2_, T>;
     using improvement_of = UserProtecting_2<T>;
 

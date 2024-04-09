@@ -7,7 +7,8 @@
 //     Damage dmg{};
 // };
 
-struct Weapon {
+class Weapon {
+public:
     Name name;
 
     Weapon() noexcept = default;

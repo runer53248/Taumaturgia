@@ -6,10 +6,10 @@
 
 using namespace testing;
 
-constinit auto default_name = "TestName";
-constinit auto default_float = 1.2f;
-constinit auto default_int = 5;
-constinit auto default_bool = true;
+constinit const auto default_name = "TestName";
+constinit const auto default_float = 1.2f;
+constinit const auto default_int = 5;
+constinit const auto default_bool = true;
 
 class RestoreEffects_Fixture : public Test {
 public:

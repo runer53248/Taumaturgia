@@ -4,7 +4,8 @@
 #include "EffectTypeContainer.hpp"
 #include "Enums/BodyLocation.hpp"
 
-struct ArmorClass {
+class ArmorClass {
+public:
     ArmorClass() noexcept = default;
     explicit ArmorClass(int value) noexcept
         : value_{value} {}

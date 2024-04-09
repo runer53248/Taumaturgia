@@ -6,10 +6,11 @@
 #include "Taumaturgia/Types/Name.hpp"
 
 namespace impl {
-inline constinit char damaging_type_name[] = "Damaging";
+inline constinit const char damaging_type_name[] = "Damaging";
 
 template <typename T>
-struct Damaging_ : T {
+class Damaging_ : public T {
+public:
     using property_data = PropertyData<damaging_type_name, Damaging_, T>;
 
     Damaging_() = default;

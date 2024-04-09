@@ -1,7 +1,8 @@
 #pragma once
 #include "Enums/EffectState.hpp"
 
-struct State {
+class State {
+public:
     constexpr State() noexcept = default;
     constexpr explicit State(EffectState state) noexcept
         : state_{state} {}
