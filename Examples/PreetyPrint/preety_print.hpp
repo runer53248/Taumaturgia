@@ -106,7 +106,7 @@ inline void print_person(const Object& person) {
 
 inline void print_object_properties(const Object& obj) {
     std::cout << "Name: " << obj.name() << '\n';
-    std::cout << " [can get] " << obj.can_get << '\n';
+    std::cout << " [can get] " << obj.hasProperty(Properties::Get) << '\n';
     std::cout << " [can alive] " << obj.hasProperty(Properties::Health) << '\n';
     std::cout << " [can attack] " << obj.hasProperty(Properties::Damage) << '\n';
     std::cout << " [can defend] " << obj.hasProperty(Properties::Protection) << '\n';

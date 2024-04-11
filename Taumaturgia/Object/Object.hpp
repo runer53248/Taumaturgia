@@ -50,23 +50,21 @@ private:
 #else
     std::unique_ptr<ObjectConcept> object_;
 #endif
-
-    ActionStatus doAction(Actions action, Object* owner, Object* target) const;
     const std::unordered_map<Properties, const bool> has;
 
+    ActionStatus doAction(Actions action, Object* owner, Object* target) const;
+    
 public:
-    const bool can_get{};
-
     template <Namingable T>
     Object(const T& obj)
         : object_{std::make_unique<ObjectModel<T>>(obj)},
-          can_get{is_get_strategy<T>},
           has{{Properties::Health, is_alive_strategy<T>},
               {Properties::CureHealth, is_heal_strategy<T>},
               {Properties::Protection, is_defend_strategy<T>},
               {Properties::Damage, is_attack_strategy<T>},
               {Properties::Restore, is_restore_strategy<T>},
-              {Properties::Wear, is_wear_strategy<T>}} {}
+              {Properties::Wear, is_wear_strategy<T>},
+              {Properties::Get, is_get_strategy<T>}} {}
 
     std::string name() const;
     std::optional<AliveStatus> alive() const;

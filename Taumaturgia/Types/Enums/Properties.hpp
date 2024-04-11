@@ -6,5 +6,6 @@ enum class Properties {
     Protection,
     Damage,
     Restore,
-    Wear
+    Wear,
+    Get
 };
