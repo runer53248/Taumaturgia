@@ -3,8 +3,8 @@
 #include <functional>
 #include <memory>
 #include <optional>
+#include "Enums/Actions.hpp"
 #include "Taumaturgia/Concepts/Namingable.hpp"
-#include "Taumaturgia/Enums/Actions.hpp"
 #include "Taumaturgia/Strategies/Strategies.hpp"
 
 #ifndef _MSC_VER
@@ -53,7 +53,7 @@ private:
     const std::unordered_map<Properties, const bool> has;
 
     ActionStatus doAction(Actions action, Object* owner, Object* target) const;
-    
+
 public:
     template <Namingable T>
     Object(const T& obj)

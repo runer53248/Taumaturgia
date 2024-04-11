@@ -1,5 +1,4 @@
 #pragma once
-#include "Taumaturgia/Enums/ActionStatus.hpp"
 #include "Taumaturgia/Object/Object.hpp"
 
 inline ActionStatus default_wear_behavior(Wearingable auto& obj, Object* target) {

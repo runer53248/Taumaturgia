@@ -1,5 +1,4 @@
 #pragma once
-#include "Taumaturgia/Enums/ActionStatus.hpp"
 #include "Taumaturgia/Object/Object.hpp"
 
 inline ActionStatus default_defend_behavior(Protectingable auto& obj, Object* target) {

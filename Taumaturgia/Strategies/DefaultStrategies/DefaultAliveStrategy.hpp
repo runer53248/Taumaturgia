@@ -1,6 +1,6 @@
 #pragma once
 #include <optional>
-#include "Taumaturgia/Enums/AliveStatus.hpp"
+#include "Taumaturgia/Strategies/Enums/AliveStatus.hpp"
 
 inline std::optional<AliveStatus> default_alive_behavior(Livingable auto& obj) {
     auto hp = traits::accessHealth::get(obj).value();

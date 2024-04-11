@@ -1,7 +1,7 @@
-#include "Taumaturgia/Enums/AliveStatus.hpp"
 #include "Taumaturgia/Object/Object.hpp"
 #include "Taumaturgia/Properties/Properties.hpp"
 #include "Taumaturgia/Strategies/DefaultStrategies/DefaultGetStrategy.hpp"
+#include "Taumaturgia/Strategies/Enums/AliveStatus.hpp"
 
 std::optional<AliveStatus> AliveStrategy_<Default>::operator()(Livingable auto&) const {
     return AliveStatus::Living;
