@@ -4,7 +4,7 @@
 #include "ArmorClass.hpp"
 #include "Damage.hpp"
 #include "Enums/EffectType.hpp"
-#include "Enums/Parameter.hpp"
+#include "Enums/Properties.hpp"
 #include "Health.hpp"
 #include "WearContainer.hpp"
 
@@ -27,17 +27,19 @@ using get_optional_variant_type = std::optional<get_variant_type>;
 using get_optional_variant_const_type = std::optional<get_variant_const_type>;
 
 template <typename T>
-concept GetOptVarianted =
+concept is_get_optional_variant=
     std::same_as<std::remove_cvref_t<T>, get_optional_variant_type> or
     std::same_as<std::remove_cvref_t<T>, get_optional_variant_const_type>;
 
-template <typename T, typename B>
-concept WrappedType =
-    std::same_as<std::remove_cvref_t<T>, std::reference_wrapper<B>> or
-    std::same_as<std::remove_cvref_t<T>, std::reference_wrapper<const B>>;
+template <typename T, typename TYPE>
+concept is_ref_type =
+    std::same_as<std::remove_cvref_t<T>, std::reference_wrapper<TYPE>> or
+    std::same_as<std::remove_cvref_t<T>, std::reference_wrapper<const TYPE>>;
+
+namespace impl {
 
 template <typename T>
-constexpr auto extract_to_opt_ref_wrapper(GetOptVarianted auto&& opt_variant) {
+constexpr decltype(auto) extract_to_opt_ref(is_get_optional_variant auto&& opt_variant) {
     return opt_variant.transform([](auto&& var_ref) {
         using type = std::conditional_t<
             std::is_same_v<std::remove_cvref_t<decltype(var_ref)>, get_variant_const_type>,
@@ -45,26 +47,46 @@ constexpr auto extract_to_opt_ref_wrapper(GetOptVarianted auto&& opt_variant) {
             T>;
         return std::get<std::reference_wrapper<type>>(std::move(var_ref));
     });
-}
+}    
 
-template <Parameter param>
-constexpr auto get_opt_ref_wrapper(GetOptVarianted auto&& opt_variant) {
-    if constexpr (param == Parameter::Health) {
-        return extract_to_opt_ref_wrapper<Health>(opt_variant);
-    }
-    if constexpr (param == Parameter::CureHealth) {
-        return extract_to_opt_ref_wrapper<CureHealth>(opt_variant);
-    }
-    if constexpr (param == Parameter::Damage) {
-        return extract_to_opt_ref_wrapper<Damage>(opt_variant);
-    }
-    if constexpr (param == Parameter::Protection) {
-        return extract_to_opt_ref_wrapper<Protection>(opt_variant);
-    }
-    if constexpr (param == Parameter::Restore) {
-        return extract_to_opt_ref_wrapper<EffectTypeContainer>(opt_variant);
-    }
-    if constexpr (param == Parameter::Wear) {
-        return extract_to_opt_ref_wrapper<WearContainer>(opt_variant);
-    }
+template <Properties P>
+struct properties_to_type;
+
+template <>
+struct properties_to_type<Properties::Health> {
+    using type = Health;
+};
+
+template <>
+struct properties_to_type<Properties::CureHealth> {
+    using type = CureHealth;
+};
+
+template <>
+struct properties_to_type<Properties::Damage> {
+    using type = Damage;
+};
+
+template <>
+struct properties_to_type<Properties::Protection> {
+    using type = Protection;
+};
+
+template <>
+struct properties_to_type<Properties::Restore> {
+    using type = EffectTypeContainer;
+};
+template <>
+struct properties_to_type<Properties::Wear> {
+    using type = WearContainer;
+};
+
+}  // namespace impl
+
+template <Properties P>
+using properties_to_type = impl::properties_to_type<P>::type;
+
+template <Properties param>
+constexpr decltype(auto) get_opt_ref(is_get_optional_variant auto&& opt_variant) {
+    return impl::extract_to_opt_ref<properties_to_type<param>>(opt_variant);
 }

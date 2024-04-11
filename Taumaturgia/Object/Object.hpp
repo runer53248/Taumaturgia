@@ -25,8 +25,8 @@ private:
         virtual constexpr std::string name() const = 0;
         virtual constexpr std::optional<AliveStatus> alive() const = 0;
         virtual constexpr ActionStatus action(Actions action, Object* owner, Object* target) const = 0;
-        virtual constexpr get_optional_variant_type get(Parameter param) = 0;
-        virtual constexpr get_optional_variant_const_type get(Parameter param) const = 0;
+        virtual constexpr get_optional_variant_type get(Properties param) = 0;
+        virtual constexpr get_optional_variant_const_type get(Properties param) const = 0;
     };
 
     template <Namingable T>
@@ -38,8 +38,8 @@ private:
         constexpr std::string name() const override;
         constexpr std::optional<AliveStatus> alive() const override;
         constexpr ActionStatus action(Actions action, Object* owner, Object* target) const override;
-        constexpr get_optional_variant_type get(Parameter param) override;
-        constexpr get_optional_variant_const_type get(Parameter param) const override;
+        constexpr get_optional_variant_type get(Properties param) override;
+        constexpr get_optional_variant_const_type get(Properties param) const override;
 
     private:
         T type_;
@@ -52,26 +52,21 @@ private:
 #endif
 
     ActionStatus doAction(Actions action, Object* owner, Object* target) const;
+    const std::unordered_map<Properties, const bool> has;
 
 public:
-    const bool can_alive{};
-    const bool can_attack{};
-    const bool can_defend{};
-    const bool can_heal{};
-    const bool can_restore{};
-    const bool can_wear{};
     const bool can_get{};
 
     template <Namingable T>
     Object(const T& obj)
         : object_{std::make_unique<ObjectModel<T>>(obj)},
-          can_alive{is_alive_strategy<T>},
-          can_attack{is_attack_strategy<T>},
-          can_defend{is_defend_strategy<T>},
-          can_heal{is_heal_strategy<T>},
-          can_restore{is_restore_strategy<T>},
-          can_wear{is_wear_strategy<T>},
-          can_get{is_get_strategy<T>} {}
+          can_get{is_get_strategy<T>},
+          has{{Properties::Health, is_alive_strategy<T>},
+              {Properties::CureHealth, is_heal_strategy<T>},
+              {Properties::Protection, is_defend_strategy<T>},
+              {Properties::Damage, is_attack_strategy<T>},
+              {Properties::Restore, is_restore_strategy<T>},
+              {Properties::Wear, is_wear_strategy<T>}} {}
 
     std::string name() const;
     std::optional<AliveStatus> alive() const;
@@ -82,33 +77,33 @@ public:
     ActionStatus restore(Object* owner, Object* target = nullptr) const;
 
     bool checkAction(Actions action) const;
-    bool checkGetParam(Parameter param) const;
+    bool hasProperty(Properties property) const;
 
-    template <Parameter param>
+    template <Properties param>
     friend decltype(auto) getOpt(is_object auto& object);
 
-    template <Parameter param>
+    template <Properties param>
     decltype(auto) getOpt() const;
 
-    template <Parameter param>
+    template <Properties param>
     decltype(auto) getOpt();
 };
 
-template <Parameter param>
+template <Properties param>
 decltype(auto) getOpt(is_object auto& object) {
-    if (object.checkGetParam(param)) {
-        return get_opt_ref_wrapper<param>(object.object_->get(param));
+    if (object.hasProperty(param)) {
+        return get_opt_ref<param>(object.object_->get(param));
     }
     using get_result_type = decltype(object.object_->get(param));
-    return get_opt_ref_wrapper<param>(get_result_type{});
+    return get_opt_ref<param>(get_result_type{});
 }
 
-template <Parameter param>
+template <Properties param>
 decltype(auto) Object::getOpt() const {
     return ::getOpt<param>(*this);
 }
 
-template <Parameter param>
+template <Properties param>
 decltype(auto) Object::getOpt() {
     return ::getOpt<param>(*this);
 }

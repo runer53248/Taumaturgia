@@ -3,7 +3,7 @@
 #include "Taumaturgia/Object/Object.hpp"
 
 inline ActionStatus default_defend_behavior(Protectingable auto& obj, Object* target) {
-    auto is_success = getOpt<Parameter::Wear>(*target).and_then([&](auto&& ref_wrap) {
+    auto is_success = getOpt<Properties::Wear>(*target).and_then([&](auto&& ref_wrap) {
         WearContainer& target_protection = ref_wrap;
         target_protection.wearProtection(traits::accessProtection::get(obj));
         return std::optional{true};

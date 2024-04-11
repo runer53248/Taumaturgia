@@ -77,7 +77,7 @@ constexpr ActionStatus action(Actions action, Namingable auto const& type, Args&
 }
 
 template <typename T>
-constexpr auto get_impl(T& type, Parameter param) {  // implement test for get
+constexpr auto get_impl(T& type, Properties param) {  // TODO: implement test for get
     using result_type = std::conditional_t<
         std::is_const_v<std::remove_reference_t<decltype(type)>>,
         get_optional_variant_const_type,
@@ -88,18 +88,18 @@ constexpr auto get_impl(T& type, Parameter param) {  // implement test for get
     } else {
         static constinit GetStrategy<T> getStrategy_{};
         switch (param) {
-        case Parameter::Protection:
-            return getStrategy_.template operator()<Parameter::Protection>(type);
-        case Parameter::Damage:
-            return getStrategy_.template operator()<Parameter::Damage>(type);
-        case Parameter::Health:
-            return getStrategy_.template operator()<Parameter::Health>(type);
-        case Parameter::CureHealth:
-            return getStrategy_.template operator()<Parameter::CureHealth>(type);
-        case Parameter::Restore:
-            return getStrategy_.template operator()<Parameter::Restore>(type);
-        case Parameter::Wear:
-            return getStrategy_.template operator()<Parameter::Wear>(type);
+        case Properties::Protection:
+            return getStrategy_.template operator()<Properties::Protection>(type);
+        case Properties::Damage:
+            return getStrategy_.template operator()<Properties::Damage>(type);
+        case Properties::Health:
+            return getStrategy_.template operator()<Properties::Health>(type);
+        case Properties::CureHealth:
+            return getStrategy_.template operator()<Properties::CureHealth>(type);
+        case Properties::Restore:
+            return getStrategy_.template operator()<Properties::Restore>(type);
+        case Properties::Wear:
+            return getStrategy_.template operator()<Properties::Wear>(type);
         default:
             return result_type{};
         };

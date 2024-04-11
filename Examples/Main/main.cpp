@@ -31,22 +31,17 @@ int main() {
     std::cout << "\n";
 
     attack(backpack, player, enemy);
-
     defend(backpack, player);
-
     wear(backpack, player);
-
     enemy_defend(backpack, enemy);
-
     restore(backpack, player);
-
     heal(backpack, player);
 
     std::cout << "//////////////////////////////\n\n";
 
     std::cout << "print living items from backpack:\n";
     for (auto item = backpack.begin(); item != backpack.end(); ++item) {
-        if (item->can_alive) {
+        if (item->hasProperty(Properties::Health)) {
             print_person(*item);
         }
     }

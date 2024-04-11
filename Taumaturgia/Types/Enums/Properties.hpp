@@ -1,6 +1,6 @@
 #pragma once
 
-enum class Parameter {
+enum class Properties {
     Health,
     CureHealth,
     Protection,

@@ -3,7 +3,7 @@
 #include "Taumaturgia/Object/Object.hpp"
 
 inline ActionStatus default_heal_behavior(Healingable auto& obj, Object* target) {
-    auto is_success = getOpt<Parameter::Health>(*target).and_then([&](auto&& ref_wrap) {
+    auto is_success = getOpt<Properties::Health>(*target).and_then([&](auto&& ref_wrap) {
         Health& target_hp = ref_wrap;
         traits::accessCureHealth::get(obj).apply(target_hp);
         return std::optional{true};

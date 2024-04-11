@@ -63,7 +63,7 @@ constinit const auto effect_2 = Effect{EffectType::Freeze, Duration{1, DurationT
 TEST(AttackStrategyTest, initial_player_state) {
     Object player{Living<Player>{Name{"Player"}, Health{max_health}}};
 
-    Health& hp = getOpt<Parameter::Health>(player).value();
+    Health& hp = getOpt<Properties::Health>(player).value();
     EXPECT_EQ(hp.value(), max_health);
     EXPECT_FALSE(hp.effects().isEffectType(effect_1));
     EXPECT_FALSE(hp.effects().isEffectType(effect_2));
@@ -75,7 +75,7 @@ TEST(AttackStrategyTest, Weapon_attack_effect) {
     Object weapon{Weapon{Name{"SWORD"}, Damage{damage_1, effect_1}}};
     Object player{Living<Player>{Name{"Player"}, Health{max_health}}};
 
-    Health& hp = getOpt<Parameter::Health>(player).value();
+    Health& hp = getOpt<Properties::Health>(player).value();
     EXPECT_EQ(hp.value(), max_health);
     EXPECT_FALSE(hp.effects().isEffectType(effect_1));
     EXPECT_FALSE(hp.effects().isEffectType(effect_2));
@@ -85,7 +85,7 @@ TEST(AttackStrategyTest, Weapon_attack_effect) {
     ActionStatus status = weapon.attack(&weapon, &player);
     std::cout << status << "\n\n";
 
-    hp = getOpt<Parameter::Health>(player).value();
+    hp = getOpt<Properties::Health>(player).value();
     auto expected_current_hp = max_health - damage_1;
     EXPECT_EQ(hp.value(), expected_current_hp);
     EXPECT_TRUE(hp.effects().isEffectType(effect_1));
@@ -105,7 +105,7 @@ TEST(AttackStrategyTest, CustomWeapon_subattack_effects) {
     print_object(weapon_1);
     ActionStatus status = weapon_1.attack(&weapon_1, &player);
     std::cout << status << "\n\n";
-    Health& hp = getOpt<Parameter::Health>(player).value();
+    Health& hp = getOpt<Properties::Health>(player).value();
     auto expected_current_hp = max_health - damage_1 - damage_2;
 
     EXPECT_EQ(hp.value(), expected_current_hp);
@@ -126,7 +126,7 @@ TEST(AttackStrategyTest, Damaging_CustomWeapon_subattack_effects) {
     print_object(weapon_2);
     auto status = weapon_2.attack(&weapon_2, &player);
     std::cout << status << "\n\n";
-    Health& hp = getOpt<Parameter::Health>(player).value();
+    Health& hp = getOpt<Properties::Health>(player).value();
     auto expected_current_hp = max_health - damage_1 - damage_2 - damage_3;
 
     EXPECT_EQ(hp.value(), expected_current_hp);

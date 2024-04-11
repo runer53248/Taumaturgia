@@ -4,7 +4,7 @@ std::string Object::name() const {
     return object_->name();
 }
 std::optional<AliveStatus> Object::alive() const {
-    if (not can_alive) {
+    if (not hasProperty(Properties::Health)) {
         return {};
     }
     return object_->alive();
@@ -33,41 +33,20 @@ ActionStatus Object::restore(Object* owner, Object* target) const {
     return doAction(Actions::Restore, owner, target);
 }
 
-bool Object::checkGetParam(Parameter param) const {
-    if (not can_get) {
+bool Object::checkAction(Actions action) const {
+    const std::unordered_map<Actions, const Properties> action_to_parameter{
+        {Actions::Heal, Properties::CureHealth},
+        {Actions::Defend, Properties::Protection},
+        {Actions::Attack, Properties::Damage},
+        {Actions::Restore, Properties::Restore},
+        {Actions::Wear, Properties::Wear}};
+
+    if (not action_to_parameter.contains(action)) {
         return false;
     }
-    switch (param) {
-    case Parameter::Health:
-        return can_alive;
-    case Parameter::CureHealth:
-        return can_heal;
-    case Parameter::Protection:
-        return can_defend;
-    case Parameter::Damage:
-        return can_attack;
-    case Parameter::Restore:
-        return can_restore;
-    case Parameter::Wear:
-        return can_wear;
-    default:
-        return false;
-    }
+    return hasProperty(action_to_parameter.at(action));
 }
 
-bool Object::checkAction(Actions action) const {
-    switch (action) {
-    case Actions::Heal:
-        return can_heal;
-    case Actions::Defend:
-        return can_defend;
-    case Actions::Attack:
-        return can_attack;
-    case Actions::Restore:
-        return can_restore;
-    case Actions::Wear:
-        return can_wear;
-    default:
-        return false;
-    }
+bool Object::hasProperty(Properties property) const {
+    return has.at(property);
 }

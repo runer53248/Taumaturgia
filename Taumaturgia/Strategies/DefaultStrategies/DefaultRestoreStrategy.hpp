@@ -3,7 +3,7 @@
 #include "Taumaturgia/Object/Object.hpp"
 
 inline ActionStatus default_restore_behavior(Restoringable auto& obj, Object* target) {
-    auto is_success = getOpt<Parameter::Health>(*target).and_then([&](auto&& ref_wrap) {
+    auto is_success = getOpt<Properties::Health>(*target).and_then([&](auto&& ref_wrap) {
         Health& hp_ref = ref_wrap;
 
         if (auto& target_effects = hp_ref.effects(); not target_effects.empty()) {

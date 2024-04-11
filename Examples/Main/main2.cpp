@@ -49,8 +49,8 @@ int main() {
 
     print_object(obj);
 
-    print_protection(getOpt<Parameter::Protection>(obj).value());
+    print_protection(getOpt<Properties::Protection>(obj).value());
     std::cout << '\n';
-    print_wear(getOpt<Parameter::Wear>(obj).value());
-    print_dmg(getOpt<Parameter::Damage>(obj).value());
+    print_wear(getOpt<Properties::Wear>(obj).value());
+    print_dmg(getOpt<Properties::Damage>(obj).value());
 }

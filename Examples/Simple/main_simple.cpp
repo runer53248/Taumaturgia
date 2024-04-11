@@ -170,13 +170,13 @@ int main() {
 
     auto print_info = [](auto& obj) {
         std::cout << obj.name() << " ";
-        getOpt<Parameter::Health, const Object>(obj)
+        getOpt<Properties::Health, const Object>(obj)
             .and_then(print_hp);
-        getOpt<Parameter::Protection>(obj)
+        getOpt<Properties::Protection>(obj)
             .and_then(print_protection);
-        getOpt<Parameter::Wear>(obj)
+        getOpt<Properties::Wear>(obj)
             .and_then(print_wear);
-        getOpt<Parameter::Restore>(obj)
+        getOpt<Properties::Restore>(obj)
             .and_then(print_restore);
         std::cout << '\n';
     };
@@ -214,9 +214,9 @@ int main() {
     std::cout << "\n";
 
     std::cout << "Paladin change shield: \n";
-    getOpt<Parameter::Wear>(paladin)
+    getOpt<Properties::Wear>(paladin)
         .and_then([&](WearContainer& wear) {
-            Protection& other_protection = getOpt<Parameter::Protection>(shield_2).value().get();  // we now that it exist so don't check optional here
+            Protection& other_protection = getOpt<Properties::Protection>(shield_2).value().get();  // we now that it exist so don't check optional here
 
             auto opt_protection = wear.wearProtection(other_protection);  // change protection slot
 
@@ -233,7 +233,7 @@ int main() {
     std::cout << "\n";
 
     std::cout << "Paladin remove all weared protection: \n";
-    getOpt<Parameter::Wear>(paladin)
+    getOpt<Properties::Wear>(paladin)
         .and_then([&](WearContainer& wear) {  // remove all armor
             for (auto location : wear.getWearedLocations()) {
                 auto opt_armor = wear.removeArmorAtLocation(location);

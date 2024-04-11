@@ -1,7 +1,7 @@
 #pragma once
 #include "Helpers/traits_helper.hpp"
 
-struct Damage;
+class Damage;
 
 namespace traits {
 

@@ -2,7 +2,7 @@
 #include <string>
 #include "Helpers/traits_helper.hpp"
 
-struct Name;
+class Name;
 
 namespace traits {
 

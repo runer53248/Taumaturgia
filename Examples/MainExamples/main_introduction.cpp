@@ -27,20 +27,23 @@ int main() {
     auto test = [](auto& type) {
         Object object{type};
         std::cout << "Name: " << object.name() << '\n';
-        std::cout << "Benchmark get hp directly.\n";
+        std::cout << "\n- Benchmark get hp by traits::accessHealth.\n";
         const auto& hp2 = Benchmark([&] {
-            Health& value = traits::accessHealth::get(type);
+            auto& value = traits::accessHealth::get(type);
             value.addHealth(1);
             return value;
         })();
         std::cout << "Health = " << hp2.value();
         std::cout << '\n';
 
-        std::cout << "Benchmark get hp from Object.\n";
+        std::cout << "\n- Benchmark get hp by Object::getOpt<Properties::Health>.\n";
         const auto& hp = Benchmark([&] {
-            Health& value = getOpt<Parameter::Health>(object).value().get();
-            value.addHealth(1);
-            return value;
+            if (auto opt_hp_ref = getOpt<Properties::Health>(object); opt_hp_ref) {
+                auto& value = opt_hp_ref.value().get();
+                value.addHealth(1);
+                return value;
+            }
+            throw std::logic_error("getOpt<Properties::Health> shouldn't fail.");
         })();
         std::cout << "Health = " << hp.value();
         std::cout << '\n';

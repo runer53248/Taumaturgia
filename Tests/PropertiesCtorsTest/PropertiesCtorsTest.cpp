@@ -11,17 +11,17 @@ Name default_name{"Default"};
 const Name const_default_name{"Default"};
 
 constinit const auto damage_value{10};
-constinit const Effect damage_effect{EffectType::Bleed};
+constexpr const Effect damage_effect{EffectType::Bleed};
 constinit const Damage default_damage{damage_value, damage_effect};
 constinit const Damage const_default_damage{damage_value, damage_effect};
 
 constinit const auto armor_value{4};
 constinit const auto armor_location{BodyLocation::Internal};
-constinit const auto protecting_effect_initializer = {EffectType::Sleep};
+constexpr const auto protecting_effect_initializer = {EffectType::Sleep};
 Protection default_protection{ArmorClass{armor_value, armor_location, protecting_effect_initializer}};
 const Protection const_default_protection{ArmorClass{armor_value, armor_location, protecting_effect_initializer}};
 
-constinit const auto restore_effect_initializer = {EffectType::Sleep, EffectType::Sleep};
+constexpr const auto restore_effect_initializer = {EffectType::Sleep, EffectType::Sleep};
 EffectTypeContainer default_restore{restore_effect_initializer};
 const EffectTypeContainer const_default_restore{restore_effect_initializer};
 

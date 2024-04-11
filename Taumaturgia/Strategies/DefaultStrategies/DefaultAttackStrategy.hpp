@@ -3,9 +3,9 @@
 #include "Taumaturgia/Object/Object.hpp"
 
 inline ActionStatus default_attack_behavior(Damagingable auto& obj, Object* target) {
-    auto opt_protection = getOpt<Parameter::Protection>(*target);
-    auto opt_wear = getOpt<Parameter::Wear>(*target);
-    auto opt_restore = getOpt<Parameter::Restore>(*target);
+    auto opt_protection = getOpt<Properties::Protection>(*target);
+    auto opt_wear = getOpt<Properties::Wear>(*target);
+    auto opt_restore = getOpt<Properties::Restore>(*target);
 
     auto opt_alive_status = target->alive();
     if (opt_alive_status) {
@@ -16,7 +16,7 @@ inline ActionStatus default_attack_behavior(Damagingable auto& obj, Object* targ
         return ActionStatus::Invalid;  // can't damage non alive target
     }
 
-    auto is_success = getOpt<Parameter::Health>(*target).and_then([&](auto&& ref_wrap) {
+    auto is_success = getOpt<Properties::Health>(*target).and_then([&](auto&& ref_wrap) {
         Health& target_hp_ref = ref_wrap;
 
         if (target_hp_ref.value() <= -100) {

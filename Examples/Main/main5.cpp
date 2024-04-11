@@ -63,7 +63,7 @@ int main() {
 
     // MARK: print Restore
 
-    getOpt<Parameter::Restore>(restore_potion)
+    getOpt<Properties::Restore>(restore_potion)
         .and_then(print_restore)
         .and_then(print_new_line);
     std::cout << '\n';
@@ -74,7 +74,7 @@ int main() {
 
     // MARK: print Health
 
-    getOpt<Parameter::Health>(player)
+    getOpt<Properties::Health>(player)
         .and_then([](Health& hp) {
             std::cout << "player hp = " << hp.value() << '\n';
             constexpr auto new_hp = 100;
@@ -83,9 +83,7 @@ int main() {
             return std::optional{hp};
         });
 
-    getOpt<Parameter::Health, const Object>(player)
-        .and_then([](const Health& hp) { return std::optional{hp}; });
-    getOpt<Parameter::Health, const Object>(player)
+    getOpt<Properties::Health, const Object>(player)
         .and_then([](auto hp_ref_wrap) {
             const Health& hp = hp_ref_wrap.get();
             std::cout << "player hp = " << hp.value() << '\n';
@@ -99,7 +97,7 @@ int main() {
 
     // MARK: print CureHealth
 
-    getOpt<Parameter::CureHealth>(potion)
+    getOpt<Properties::CureHealth>(potion)
         .and_then([](const CureHealth& cure) {
             std::cout << "potion heal = " << cure << '\n';
             return std::optional{cure};
