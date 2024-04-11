@@ -2,40 +2,40 @@
 #include "Taumaturgia/Types/Enums/Properties.hpp"
 #include "Taumaturgia/Strategies/GetStrategy.hpp"
 
-template <Properties PARAMETER>
+template <Properties PROPERTY>
 inline auto default_get_behavior(Gettingable auto& obj) {
     using result_type = std::conditional_t<
         std::is_const_v<std::remove_reference_t<decltype(obj)>>,
-        get_optional_variant_const_type,
-        get_optional_variant_type>;
+        optional_get_variant_const_type,
+        optional_get_variant_type>;
 
     using type = std::remove_reference_t<decltype(obj)>;
-    if constexpr (PARAMETER == Properties::Health) {
+    if constexpr (PROPERTY == Properties::Health) {
         if constexpr (Livingable<type>) {
             return result_type{
                 std::ref(traits::accessHealth::get(obj))};
         }
-    } else if constexpr (PARAMETER == Properties::CureHealth) {
+    } else if constexpr (PROPERTY == Properties::CureHealth) {
         if constexpr (Healingable<type>) {
             return result_type{
                 std::ref(traits::accessCureHealth::get(obj))};
         }
-    } else if constexpr (PARAMETER == Properties::Protection) {
+    } else if constexpr (PROPERTY == Properties::Protection) {
         if constexpr (Protectingable<type>) {
             return result_type{
                 std::ref(traits::accessProtection::get(obj))};
         }
-    } else if constexpr (PARAMETER == Properties::Damage) {
+    } else if constexpr (PROPERTY == Properties::Damage) {
         if constexpr (Damagingable<type>) {
             return result_type{
                 std::ref(traits::accessDamage::get(obj))};
         }
-    } else if constexpr (PARAMETER == Properties::Restore) {
+    } else if constexpr (PROPERTY == Properties::Restore) {
         if constexpr (Restoringable<type>) {
             return result_type{
                 std::ref(traits::accessRestoreEffects::get(obj))};
         }
-    } else if constexpr (PARAMETER == Properties::Wear) {
+    } else if constexpr (PROPERTY == Properties::Wear) {
         if constexpr (Wearingable<type>) {
             return result_type{
                 std::ref(traits::accessArmorWear::get(obj))};
@@ -44,7 +44,7 @@ inline auto default_get_behavior(Gettingable auto& obj) {
     return result_type{};
 }
 
-template <Properties PARAMETER>
+template <Properties PROPERTY>
 auto GetStrategy_<Default>::operator()(Gettingable auto& obj) const {
-    return default_get_behavior<PARAMETER>(obj);
+    return default_get_behavior<PROPERTY>(obj);
 }

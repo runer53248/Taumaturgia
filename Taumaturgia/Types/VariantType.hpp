@@ -23,13 +23,13 @@ using get_variant_const_type = std::variant<std::monostate,
                                             std::reference_wrapper<const EffectTypeContainer>,
                                             std::reference_wrapper<const WearContainer>>;
 
-using get_optional_variant_type = std::optional<get_variant_type>;
-using get_optional_variant_const_type = std::optional<get_variant_const_type>;
+using optional_get_variant_type = std::optional<get_variant_type>;
+using optional_get_variant_const_type = std::optional<get_variant_const_type>;
 
 template <typename T>
-concept is_get_optional_variant=
-    std::same_as<std::remove_cvref_t<T>, get_optional_variant_type> or
-    std::same_as<std::remove_cvref_t<T>, get_optional_variant_const_type>;
+concept is_optional_get_variant =
+    std::same_as<std::remove_cvref_t<T>, optional_get_variant_type> or
+    std::same_as<std::remove_cvref_t<T>, optional_get_variant_const_type>;
 
 template <typename T, typename TYPE>
 concept is_ref_type =
@@ -37,17 +37,6 @@ concept is_ref_type =
     std::same_as<std::remove_cvref_t<T>, std::reference_wrapper<const TYPE>>;
 
 namespace impl {
-
-template <typename T>
-constexpr decltype(auto) extract_to_opt_ref(is_get_optional_variant auto&& opt_variant) {
-    return opt_variant.transform([](auto&& var_ref) {
-        using type = std::conditional_t<
-            std::is_same_v<std::remove_cvref_t<decltype(var_ref)>, get_variant_const_type>,
-            const T,
-            T>;
-        return std::get<std::reference_wrapper<type>>(std::move(var_ref));
-    });
-}    
 
 template <Properties P>
 struct properties_to_type;
@@ -81,12 +70,27 @@ struct properties_to_type<Properties::Wear> {
     using type = WearContainer;
 };
 
+// TODO: check get type
+// requires T is holded by opt_variant
+template <typename TYPE>
+constexpr decltype(auto) extract_optional_type(is_optional_get_variant auto&& opt_variant) {
+    return opt_variant.transform([](auto&& var_ref) {
+        using type = std::conditional_t<
+            std::is_same_v<
+                std::remove_cvref_t<decltype(var_ref)>,
+                get_variant_const_type>,
+            const TYPE,
+            TYPE>;
+        return std::get<std::reference_wrapper<type>>(std::move(var_ref));
+    });
+}
+
 }  // namespace impl
 
-template <Properties P>
-using properties_to_type = impl::properties_to_type<P>::type;
+template <Properties PROPERTY>
+using properties_to_type = impl::properties_to_type<PROPERTY>::type;
 
-template <Properties param>
-constexpr decltype(auto) get_opt_ref(is_get_optional_variant auto&& opt_variant) {
-    return impl::extract_to_opt_ref<properties_to_type<param>>(opt_variant);
+template <Properties PROPERTY>
+constexpr decltype(auto) extract_optional_type(is_optional_get_variant auto&& opt_variant) {
+    return impl::extract_optional_type<properties_to_type<PROPERTY>>(opt_variant);
 }

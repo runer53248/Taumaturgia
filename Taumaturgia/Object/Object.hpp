@@ -25,8 +25,8 @@ private:
         virtual constexpr std::string name() const = 0;
         virtual constexpr std::optional<AliveStatus> alive() const = 0;
         virtual constexpr ActionStatus action(Actions action, Object* owner, Object* target) const = 0;
-        virtual constexpr get_optional_variant_type get(Properties param) = 0;
-        virtual constexpr get_optional_variant_const_type get(Properties param) const = 0;
+        virtual constexpr optional_get_variant_type get(Properties param) = 0;
+        virtual constexpr optional_get_variant_const_type get(Properties param) const = 0;
     };
 
     template <Namingable T>
@@ -38,8 +38,8 @@ private:
         constexpr std::string name() const override;
         constexpr std::optional<AliveStatus> alive() const override;
         constexpr ActionStatus action(Actions action, Object* owner, Object* target) const override;
-        constexpr get_optional_variant_type get(Properties param) override;
-        constexpr get_optional_variant_const_type get(Properties param) const override;
+        constexpr optional_get_variant_type get(Properties param) override;
+        constexpr optional_get_variant_const_type get(Properties param) const override;
 
     private:
         T type_;
@@ -90,10 +90,10 @@ public:
 template <Properties param>
 decltype(auto) getOpt(is_object auto& object) {
     if (object.hasProperty(param)) {
-        return get_opt_ref<param>(object.object_->get(param));
+        return extract_optional_type<param>(object.object_->get(param));
     }
     using get_result_type = decltype(object.object_->get(param));
-    return get_opt_ref<param>(get_result_type{});
+    return extract_optional_type<param>(get_result_type{});
 }
 
 template <Properties param>

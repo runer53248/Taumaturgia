@@ -21,13 +21,13 @@ constexpr ActionStatus Object::ObjectModel<T>::action(Actions action, Object* ow
 }
 
 template <Namingable T>
-constexpr auto Object::ObjectModel<T>::get(Properties param) -> get_optional_variant_type {
+constexpr auto Object::ObjectModel<T>::get(Properties param) -> optional_get_variant_type {
     static_assert(not std::is_const_v<std::remove_reference_t<decltype((type_))>>);
     return action_impl::get_impl(type_, param);
 }
 
 template <Namingable T>
-constexpr auto Object::ObjectModel<T>::get(Properties param) const -> get_optional_variant_const_type {
+constexpr auto Object::ObjectModel<T>::get(Properties param) const -> optional_get_variant_const_type {
     static_assert(std::is_const_v<std::remove_reference_t<decltype((type_))>>);
     return action_impl::get_impl(type_, param);
 }

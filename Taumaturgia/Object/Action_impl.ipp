@@ -80,8 +80,8 @@ template <typename T>
 constexpr auto get_impl(T& type, Properties param) {  // TODO: implement test for get
     using result_type = std::conditional_t<
         std::is_const_v<std::remove_reference_t<decltype(type)>>,
-        get_optional_variant_const_type,
-        get_optional_variant_type>;
+        optional_get_variant_const_type,
+        optional_get_variant_type>;
 
     if constexpr (not Gettingable<T>) {
         return result_type{};
