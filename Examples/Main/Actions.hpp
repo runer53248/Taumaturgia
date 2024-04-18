@@ -6,12 +6,13 @@
 
 void attack(auto& backpack, auto& player, auto& enemy) {
     std::cout << "Items I can attack with:  //////////////////////////////\n\n";
-    for (const auto& item : backpack) {
+    for (const Object& item : backpack) {
         if (not item.hasProperty(Properties::Damage)) {
             continue;
         }
         std::cout << player.name() << " attack " << enemy.name() << " with " << item.name() << ' ';
-        getOpt<Properties::Damage>(item)
+        // use getOpt template method of Object 
+        item.getOpt<Properties::Damage>()
             .and_then(print_dmg)
             .and_then(print_new_line);
 
@@ -41,7 +42,8 @@ void wear(auto& backpack, auto& player) {
         }
 
         std::cout << player.name() << " wear " << item.name();
-        getOpt<Properties::Wear>(item)
+        // use getOpt template method of auto type 
+        item.template getOpt<Properties::Wear>()
             .and_then(print_wear)
             .and_then(print_new_line);
         print_person(player);
