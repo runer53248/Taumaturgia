@@ -4,12 +4,15 @@
 #include <memory>
 #include <optional>
 #include "Enums/Actions.hpp"
+#include "Enums/ActionStatus.hpp"
 #include "Taumaturgia/Concepts/Namingable.hpp"
 #include "Taumaturgia/Strategies/Strategies.hpp"
 
 #ifndef _MSC_VER
 #include <experimental/propagate_const>
 #endif
+
+#include "Command.hpp"
 
 class Object;
 

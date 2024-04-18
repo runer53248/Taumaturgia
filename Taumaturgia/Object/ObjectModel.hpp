@@ -1,5 +1,60 @@
 #pragma once
-#include "Action_impl.ipp"
+#include "Enums/ActionStatus.hpp"
+#include <map>
+
+namespace action_impl {
+
+template <typename T>
+constexpr std::optional<AliveStatus> alive(const T& type) {
+    if constexpr (is_alive_strategy<T>) {
+        static constinit AliveStrategy<T> strategy_{};
+        return strategy_(type);
+    } else {
+        return {};
+    }
+}
+
+template <typename T>
+constexpr auto get_impl(T& type, Properties param) {  // TODO: implement test for get
+    using result_type = std::conditional_t<
+        std::is_const_v<std::remove_reference_t<decltype(type)>>,
+        optional_get_variant_const_type,
+        optional_get_variant_type>;
+
+    if constexpr (not Gettingable<T>) {
+        return result_type{};
+    } else {
+        static constinit GetStrategy<T> getStrategy_{};
+        switch (param) {
+        case Properties::Protection:
+            return getStrategy_.template operator()<Properties::Protection>(type);
+        case Properties::Damage:
+            return getStrategy_.template operator()<Properties::Damage>(type);
+        case Properties::Health:
+            return getStrategy_.template operator()<Properties::Health>(type);
+        case Properties::CureHealth:
+            return getStrategy_.template operator()<Properties::CureHealth>(type);
+        case Properties::Restore:
+            return getStrategy_.template operator()<Properties::Restore>(type);
+        case Properties::Wear:
+            return getStrategy_.template operator()<Properties::Wear>(type);
+        default:
+            return result_type{};
+        };
+    }
+}
+
+template <typename T>
+auto createCommands(T& type) {
+    return std::unordered_map<Actions, std::shared_ptr<CommandConcept>>{
+        {Actions::Attack, std::make_shared<CommandModel<T, AttackStrategy, is_attack_strategy<T>>>(&type)},
+        {Actions::Defend, std::make_shared<CommandModel<T, DefendStrategy, is_defend_strategy<T>>>(&type)},
+        {Actions::Heal, std::make_shared<CommandModel<T, HealStrategy, is_heal_strategy<T>>>(&type)},
+        {Actions::Restore, std::make_shared<CommandModel<T, RestoreStrategy, is_restore_strategy<T>>>(&type)},
+        {Actions::Wear, std::make_shared<CommandModel<T, WearStrategy, is_wear_strategy<T>>>(&type)}};
+}
+
+}  // namespace action_impl
 
 template <Namingable T>
 constexpr Object::ObjectModel<T>::ObjectModel(const T& type)
@@ -17,7 +72,12 @@ constexpr std::optional<AliveStatus> Object::ObjectModel<T>::alive() const {
 
 template <Namingable T>
 constexpr ActionStatus Object::ObjectModel<T>::action(Actions action, Object* owner, Object* target) const {
-    return action_impl::action(action, type_, owner, target);
+    static const auto commands_ = action_impl::createCommands(type_);
+
+    if (not commands_.contains(action)) {
+        return ActionStatus::None;
+    }
+    return commands_.at(action)->execute(owner, target);
 }
 
 template <Namingable T>
