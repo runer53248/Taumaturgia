@@ -47,11 +47,11 @@ constexpr auto get_impl(T& type, Properties param) {  // TODO: implement test fo
 template <typename T>
 auto createCommands(T& type) {
     return std::unordered_map<Actions, std::shared_ptr<CommandConcept>>{
-        {Actions::Attack, std::make_shared<CommandModel<T, AttackStrategy, is_attack_strategy<T>>>(&type)},
-        {Actions::Defend, std::make_shared<CommandModel<T, DefendStrategy, is_defend_strategy<T>>>(&type)},
-        {Actions::Heal, std::make_shared<CommandModel<T, HealStrategy, is_heal_strategy<T>>>(&type)},
-        {Actions::Restore, std::make_shared<CommandModel<T, RestoreStrategy, is_restore_strategy<T>>>(&type)},
-        {Actions::Wear, std::make_shared<CommandModel<T, WearStrategy, is_wear_strategy<T>>>(&type)}};
+        {Actions::Attack, std::make_shared<CommandModel<T, AttackStrategy>>(type)},
+        {Actions::Defend, std::make_shared<CommandModel<T, DefendStrategy>>(type)},
+        {Actions::Heal, std::make_shared<CommandModel<T, HealStrategy>>(type)},
+        {Actions::Restore, std::make_shared<CommandModel<T, RestoreStrategy>>(type)},
+        {Actions::Wear, std::make_shared<CommandModel<T, WearStrategy>>(type)}};
 }
 
 }  // namespace action_impl

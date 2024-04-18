@@ -8,25 +8,30 @@ public:
     virtual bool hasStrategy() const = 0;
 };
 
-template <typename T, template <typename> typename STRATEGY, bool CONCEPT>
+template <template <typename> typename STRATEGY, typename T>
+concept Strategable = requires(STRATEGY<T> strategy, T& type, Object* owner, Object* target) {
+    { strategy.operator()(type, owner, target) } -> std::same_as<ActionStatus>;
+};
+
+template <typename T, template <typename> typename STRATEGY>
 class CommandModel : public CommandConcept {
 public:
-    CommandModel(T* type)
+    CommandModel(T& type)
         : type_{type} {}
     ~CommandModel() override = default;
 
     ActionStatus execute(Object* owner, Object* target) override {
-        if constexpr (CONCEPT) {
+        if constexpr (Strategable<STRATEGY, T>) {
             static constinit STRATEGY<T> strategy{};
-            return strategy(*type_, owner, target);
+            return strategy(type_, owner, target);
         }
         return ActionStatus::None;
     }
 
     bool hasStrategy() const override {
-        return CONCEPT;
+        return Strategable<STRATEGY, T>;
     }
 
 private:
-    T* type_;
+    T& type_;
 };
