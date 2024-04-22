@@ -46,6 +46,7 @@ private:
 
     private:
         T type_;
+        std::unordered_map<Actions, std::shared_ptr<CommandConcept>> commands_;
     };
 
 #ifndef _MSC_VER

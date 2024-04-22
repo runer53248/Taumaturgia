@@ -58,7 +58,7 @@ auto createCommands(T& type) {
 
 template <Namingable T>
 constexpr Object::ObjectModel<T>::ObjectModel(const T& type)
-    : type_{type} {}
+    : type_{type}, commands_{action_impl::createCommands(type_)} {}
 
 template <Namingable T>
 constexpr std::string Object::ObjectModel<T>::name() const {
@@ -72,8 +72,6 @@ constexpr std::optional<AliveStatus> Object::ObjectModel<T>::alive() const {
 
 template <Namingable T>
 constexpr ActionStatus Object::ObjectModel<T>::action(Actions action, Object* owner, Object* target) const {
-    static const auto commands_ = action_impl::createCommands(type_);
-
     if (not commands_.contains(action)) {
         return ActionStatus::None;
     }
