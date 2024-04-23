@@ -27,7 +27,6 @@ public:
     auto end() const noexcept { return effectTypes_.end(); }
 
     bool contains(const EffectType& type) const noexcept { return effectTypes_.contains(type); }
-
     bool empty() const noexcept { return effectTypes_.empty(); }
 
     auto& effectTypes() & noexcept { return effectTypes_; }
@@ -39,12 +38,19 @@ public:
     void addEffectTypes(const EffectTypeContainer& types) { effectTypes_.insert(types.cbegin(), types.cend()); }
 
     void removeEffectType(const EffectType& type) { effectTypes_.erase(type); }
-    void removeEffectTypes(const EffectTypeContainer& types) {
-        container_type<EffectType> result;
-        std::set_difference(effectTypes_.begin(), effectTypes_.end(), types.effectTypes_.begin(), types.effectTypes_.end(), std::inserter(result, result.end()));
-        effectTypes_ = result;
-    }
+    void removeEffectTypes(const EffectTypeContainer& types);
 
 private:
     container_type<EffectType> effectTypes_{};
 };
+
+inline void EffectTypeContainer::removeEffectTypes(const EffectTypeContainer& types) {
+    container_type<EffectType> result;
+    std::set_difference(
+        effectTypes_.begin(),
+        effectTypes_.end(),
+        types.effectTypes_.begin(),
+        types.effectTypes_.end(),
+        std::inserter(result, result.end()));
+    effectTypes_ = result;
+}

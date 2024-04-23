@@ -24,34 +24,37 @@ public:
     auto& effects() const& noexcept { return effects_; }
     auto effects() const&& noexcept { return effects_; }
 
-    void addHealth(int value) {
-        if (value <= 0) {
-            return;
-        }
-        auto range = std::minmax(value, value_);
-
-        if (MAX_VALUE - range.second < range.first) {
-            value_ = MAX_VALUE;
-            return;
-        }
-        value_ += value;
-    }
-
-    void removeHealth(int value) {
-        if (value <= 0) {
-            return;
-        }
-        auto range = std::minmax(value, value_);
-
-        if (std::numeric_limits<int>::min() + range.second > range.first) {
-            value_ = std::numeric_limits<int>::min();
-            return;
-        }
-        value_ -= value;
-    }
+    void addHealth(int value);
+    void removeHealth(int value);
 
 private:
     int value_{};
     EffectContainer effects_{};
     static constexpr int MAX_VALUE = 200;
 };
+
+inline void Health::addHealth(int value) {
+    if (value <= 0) {
+        return;
+    }
+    auto range = std::minmax(value, value_);
+
+    if (MAX_VALUE - range.second < range.first) {
+        value_ = MAX_VALUE;
+        return;
+    }
+    value_ += value;
+}
+
+inline void Health::removeHealth(int value) {
+    if (value <= 0) {
+        return;
+    }
+    auto range = std::minmax(value, value_);
+
+    if (std::numeric_limits<int>::min() + range.second > range.first) {
+        value_ = std::numeric_limits<int>::min();
+        return;
+    }
+    value_ -= value;
+}
