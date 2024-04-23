@@ -73,11 +73,10 @@ int main() {
     static_assert(sizeof(Damaging<Scroll>) == sizeof(Damaging<Damaging<Scroll>>));
     static_assert(sizeof(Weapon) == sizeof(Damaging<Damaging<Weapon>>));
 
-    static_assert(Effect{EffectType::Slow} == Effect{EffectType::Slow, Duration{0, DurationType::Instant}, State{EffectState::Inactive}});
-    static_assert(Effect{EffectType::Slow} == EffectType::Slow);
-    static_assert(Effect{EffectType::Slow} == State{EffectState::Inactive});
-    static_assert(Effect{EffectType::Slow} == Duration{0, DurationType::Instant});
-    static_assert(Effect{EffectType::Slow} == EffectState::Inactive);
+    static_assert(Effect{EffectType::Slow} == Effect{EffectType::Slow, Duration{0, DurationType::Instant}, EffectState::Inactive});
+    static_assert(Effect{EffectType::Slow}.effectType() == EffectType::Slow);
+    static_assert(Effect{EffectType::Slow}.state() == EffectState::Inactive);
+    static_assert(Effect{EffectType::Slow}.duration() == Duration{0, DurationType::Instant});
 
     return 0;
 }

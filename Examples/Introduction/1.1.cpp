@@ -108,7 +108,7 @@ int main() {
     type5.getArmorWear().wearProtection(Protection{ArmorClass{4, BodyLocation::Arms, {EffectType::Burn}}});
     type5.getArmorWear().wearProtection(Protection{ArmorClass{5, BodyLocation::Legs, {EffectType::Burn, EffectType::Freeze}}});
 
-    type5.getDamage() = Damage{15, DamageType::Physical, Effect{EffectType::Poison, Duration{5, DurationType::Round}, State{EffectState::Inactive}}};
+    type5.getDamage() = Damage{15, DamageType::Physical, Effect{EffectType::Poison, Duration{5, DurationType::Round}, EffectState::Inactive}};
     type5.getProtection() = ArmorClass{8, BodyLocation::Body, {EffectType::Paralyze}};
     type5.getCureHealth() = CureHealth{15, {Effect{EffectType::Devour}, Effect{EffectType::Shock}}};
     type5.getRestoreEffects() = {EffectType::Burn, EffectType::Smite};

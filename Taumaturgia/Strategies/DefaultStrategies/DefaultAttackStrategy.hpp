@@ -24,7 +24,7 @@ inline ActionStatus default_attack_behavior(Damagingable auto& obj, Object* targ
 
         target_hp_ref.removeHealth(traits::accessDamage::get(obj).value());
 
-        if (auto attackEffect = traits::accessDamage::get(obj).effect(); attackEffect != EffectType::None) {  // attack have effect
+        if (const auto attackEffect = traits::accessDamage::get(obj).effect(); attackEffect.effectType() != EffectType::None) {  // attack have effect
 
             if (opt_protection.has_value()) {  // target have protection against effect
                 Protection& target_protection = opt_protection.value();

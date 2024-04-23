@@ -46,7 +46,7 @@ int main() {
                                                Effect{
                                                    EffectType::Stun,
                                                    Duration{3, DurationType::Round},
-                                                   State{EffectState::Active}}};
+                                                   EffectState::Active}};
     {
         Object gustav_obj{gustav};
 

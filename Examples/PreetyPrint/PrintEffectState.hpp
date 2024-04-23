@@ -10,8 +10,8 @@ constexpr const char* toString(EffectState state) noexcept {
         return "Active";
     case EffectState::Removed:
         return "Removed";
-    case EffectState::Ended:
-        return "Ended";
+    case EffectState::Finished:
+        return "Finished";
     default:
         return "Unknown";
     }

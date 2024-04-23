@@ -4,7 +4,6 @@
 #include "Duration.hpp"
 #include "Enums/EffectState.hpp"
 #include "Enums/EffectType.hpp"
-#include "State.hpp"
 
 // enum class EffectStatusModifier {
 //     Suspended,
@@ -20,72 +19,58 @@
 class Effect {
 public:
     constexpr Effect() noexcept = default;
-    constexpr Effect(EffectType attackEffect, Duration duration, State state) noexcept
+    constexpr Effect(EffectType attackEffect, Duration duration, EffectState state) noexcept
         : effectType_{attackEffect}, duration_{duration}, state_{state} {}
     constexpr Effect(EffectType attackEffect, DurationType durationType) noexcept
-        : Effect{attackEffect, Duration{1, durationType}, State{EffectState::Inactive}} {}
+        : Effect{attackEffect, Duration{1, durationType}, EffectState::Inactive} {}
     constexpr Effect(EffectType attackEffect, Duration duration) noexcept
-        : Effect{attackEffect, duration, State{EffectState::Inactive}} {}
-    constexpr Effect(EffectType attackEffect, State state) noexcept
+        : Effect{attackEffect, duration, EffectState::Inactive} {}
+    constexpr Effect(EffectType attackEffect, EffectState state) noexcept
         : effectType_{attackEffect}, duration_{Duration{1, DurationType::Round}}, state_{state} {}
     constexpr explicit Effect(EffectType attackEffect) noexcept
         : effectType_{attackEffect} {}
 
     constexpr auto operator<=>(const Effect& other) const noexcept = default;
     constexpr bool operator==(const Effect& other) const noexcept = default;
-    constexpr bool operator==(const EffectType& other) const noexcept {
-        return effectType_ == other;
-    }
-    constexpr bool operator==(const EffectState& other) const noexcept {
-        return state_ == State{other};
-    }
-    constexpr bool operator==(const State& other) const noexcept {
-        return state_ == other;
-    }
-    constexpr bool operator==(const Duration& other) const noexcept {
-        return duration_ == other;
-    }
+    
+    constexpr auto& effectType() & noexcept { return effectType_; }
+    constexpr auto effectType() && noexcept { return effectType_; }
+    constexpr auto effectType() const& noexcept { return effectType_; }
+    constexpr auto effectType() const&& noexcept { return effectType_; }
 
-    auto& effectType() & noexcept { return effectType_; }
-    auto effectType() && noexcept { return effectType_; }
-    auto effectType() const& noexcept { return effectType_; }
-    auto effectType() const&& noexcept { return effectType_; }
+    constexpr auto& state() & noexcept { return state_; }
+    constexpr auto state() && noexcept { return state_; }
+    constexpr auto state() const& noexcept { return state_; }
+    constexpr auto state() const&& noexcept { return state_; }
 
-    auto& state() & noexcept { return state_; }
-    auto state() && noexcept { return state_; }
-    auto state() const& noexcept { return state_; }
-    auto state() const&& noexcept { return state_; }
+    constexpr auto& duration() & noexcept { return duration_; }
+    constexpr auto duration() && noexcept { return duration_; }
+    constexpr auto duration() const& noexcept { return duration_; }
+    constexpr auto duration() const&& noexcept { return duration_; }
 
-    auto& duration() & noexcept { return duration_; }
-    auto duration() && noexcept { return duration_; }
-    auto duration() const& noexcept { return duration_; }
-    auto duration() const&& noexcept { return duration_; }
+    constexpr bool empty() const noexcept { return effectType_ == EffectType::None; }
+    constexpr bool isActive() const noexcept { return state_ == EffectState::Active; }
 
-    bool empty() const noexcept {
-        return effectType_ == EffectType::None;
-    }
-
-    bool isActive() const noexcept {
-        return state_.effectState() == EffectState::Active;
-    }
-
-    bool activate() noexcept {
-        if (state_.effectState() == EffectState::Inactive) {
-            state_.effectState() = EffectState::Active;
-            return true;
-        }
-        return false;
-    }
-
-    void timePass(Duration time = {}) noexcept {
-        if (duration_.timePass(time)) {
-            state_.end();
-        }
-    }
+    constexpr bool activate() noexcept;
+    void timePass(Duration time = {}) noexcept;
 
 private:
     EffectType effectType_{EffectType::None};
     Duration duration_{0, DurationType::Instant};
-    State state_{EffectState::Inactive};
+    EffectState state_{EffectState::Inactive};
     // std::vector<StatusModifier> statusMod_{};
 };
+
+inline constexpr bool Effect::activate() noexcept {
+    if (state_ == EffectState::Inactive) {
+        state_ = EffectState::Active;
+        return true;
+    }
+    return false;
+}
+
+inline void Effect::timePass(Duration time) noexcept {
+    if (duration_.timePass(time)) {
+        state_ = EffectState::Finished;
+    }
+}

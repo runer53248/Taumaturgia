@@ -4,5 +4,5 @@ enum class EffectState {
     Inactive,
     Active,
     Removed,
-    Ended
+    Finished
 };

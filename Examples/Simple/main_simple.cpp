@@ -129,7 +129,7 @@ int main() {
                Effect{
                    EffectType::Stun,
                    Duration{5, DurationType::Round},
-                   State{EffectState::Active}}}};
+                   EffectState::Active}}};
 
     Object paladin = Living<Restoring<Healing<Player>>>{
         Name{"Paladin"},
