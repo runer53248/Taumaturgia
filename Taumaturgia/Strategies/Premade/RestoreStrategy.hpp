@@ -1,31 +1,24 @@
 #pragma once
 #include <concepts>
 #include "Taumaturgia/Concepts/Restoringable.hpp"
-
-enum class ActionStatus;
+#include "Taumaturgia/Strategies/Concepts/Strategable.hpp"
 
 struct Default;
-class Object;
 
 template <typename T>
 struct RestoreStrategy_ {};
-
-template <template <typename> typename Strategy, typename UserType>
-concept RestoreStrategable = requires(Strategy<UserType> strategy, UserType& type, Object* owner, Object* target) {
-    { strategy.operator()(type, owner, target) } -> std::same_as<ActionStatus>;
-};
 
 template <typename T>
 using RestoreStrategy = std::conditional_t<
     Restoringable<T>,
     std::conditional_t<
-        RestoreStrategable<RestoreStrategy_, T>,
+        Strategable<RestoreStrategy_, T>,
         RestoreStrategy_<T>,
         RestoreStrategy_<Default> >,
     RestoreStrategy_<T> >;
 
 template <typename T>
-concept is_restore_strategy = RestoreStrategable<RestoreStrategy, T>;
+concept is_restore_strategy = Strategable<RestoreStrategy, T>;
 
 template <>
 struct RestoreStrategy_<Default> {

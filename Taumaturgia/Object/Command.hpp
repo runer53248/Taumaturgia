@@ -8,11 +8,6 @@ public:
     virtual bool hasStrategy() const = 0;
 };
 
-template <template <typename> typename STRATEGY, typename T>
-concept Strategable = requires(STRATEGY<T> strategy, T& type, Object* owner, Object* target) {
-    { strategy.operator()(type, owner, target) } -> std::same_as<ActionStatus>;
-};
-
 template <typename T, template <typename> typename STRATEGY>
 class CommandModel : public CommandConcept {
 public:

@@ -1,31 +1,24 @@
 #pragma once
 #include <concepts>
 #include "Taumaturgia/Concepts/Wearingable.hpp"
-
-enum class ActionStatus;
+#include "Taumaturgia/Strategies/Concepts/Strategable.hpp"
 
 struct Default;
-class Object;
 
 template <typename T>
 struct WearStrategy_ {};
-
-template <template <typename> typename Strategy, typename UserType>
-concept WearStrategable = requires(Strategy<UserType> strategy, UserType& type, Object* owner, Object* target) {
-    { strategy.operator()(type, owner, target) } -> std::same_as<ActionStatus>;
-};
 
 template <typename T>
 using WearStrategy = std::conditional_t<
     Wearingable<T>,
     std::conditional_t<
-        WearStrategable<WearStrategy_, T>,
+        Strategable<WearStrategy_, T>,
         WearStrategy_<T>,
         WearStrategy_<Default> >,
     WearStrategy_<T> >;
 
 template <typename T>
-concept is_wear_strategy = WearStrategable<WearStrategy, T>;
+concept is_wear_strategy = Strategable<WearStrategy, T>;
 
 template <>
 struct WearStrategy_<Default> {

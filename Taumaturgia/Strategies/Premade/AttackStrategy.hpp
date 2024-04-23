@@ -1,31 +1,24 @@
 #pragma once
 #include <concepts>
 #include "Taumaturgia/Concepts/Damagingable.hpp"
-
-enum class ActionStatus;
+#include "Taumaturgia/Strategies/Concepts/Strategable.hpp"
 
 struct Default;
-class Object;
 
 template <typename T>
 struct AttackStrategy_ {};
-
-template <template <typename> typename Strategy, typename UserType>
-concept AttackStrategable = requires(Strategy<UserType> strategy, UserType& type, Object* owner, Object* target) {
-    { strategy.operator()(type, owner, target) } -> std::same_as<ActionStatus>;
-};
 
 template <typename T>
 using AttackStrategy = std::conditional_t<
     Damagingable<T>,
     std::conditional_t<
-        AttackStrategable<AttackStrategy_, T>,
+        Strategable<AttackStrategy_, T>,
         AttackStrategy_<T>,
         AttackStrategy_<Default> >,
     AttackStrategy_<T> >;
 
 template <typename T>
-concept is_attack_strategy = AttackStrategable<AttackStrategy, T>;
+concept is_attack_strategy = Strategable<AttackStrategy, T>;
 
 template <>
 struct AttackStrategy_<Default> {
