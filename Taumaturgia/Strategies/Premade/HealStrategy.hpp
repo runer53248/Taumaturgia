@@ -1,21 +1,13 @@
 #pragma once
 #include <concepts>
 #include "Taumaturgia/Concepts/Healingable.hpp"
-#include "Taumaturgia/Strategies/Concepts/Strategable.hpp"
-
-struct Default;
+#include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
 
 template <typename T>
 struct HealStrategy_ {};
 
 template <typename T>
-using HealStrategy = std::conditional_t<
-    Healingable<T>,
-    std::conditional_t<
-        Strategable<HealStrategy_, T>,
-        HealStrategy_<T>,
-        HealStrategy_<Default> >,
-    HealStrategy_<T> >;
+using HealStrategy = StrategyConditional<HealStrategy_, T, Healingable<T>>;
 
 template <typename T>
 concept is_heal_strategy = Strategable<HealStrategy, T>;

@@ -1,21 +1,13 @@
 #pragma once
 #include <concepts>
 #include "Taumaturgia/Concepts/Wearingable.hpp"
-#include "Taumaturgia/Strategies/Concepts/Strategable.hpp"
-
-struct Default;
+#include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
 
 template <typename T>
 struct WearStrategy_ {};
 
 template <typename T>
-using WearStrategy = std::conditional_t<
-    Wearingable<T>,
-    std::conditional_t<
-        Strategable<WearStrategy_, T>,
-        WearStrategy_<T>,
-        WearStrategy_<Default> >,
-    WearStrategy_<T> >;
+using WearStrategy = StrategyConditional<WearStrategy_, T, Wearingable<T>>;
 
 template <typename T>
 concept is_wear_strategy = Strategable<WearStrategy, T>;

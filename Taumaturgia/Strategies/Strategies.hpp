@@ -28,7 +28,7 @@
     #include "UserStrategy.hpp"
 
     template <typename T>
-    using AttackStrategy = UserStrategyWithConcept<Damage, T, Damagingable<T>>;
+    using AttackStrategy = UserStrategy<Damage, T, Damagingable<T>>;
     template <typename T>
     concept is_attack_strategy = Strategable<AttackStrategy, T>;
     template <>
@@ -37,7 +37,7 @@
     };
 
     template <typename T>
-    using DefendStrategy = UserStrategyWithConcept<Protection, T, Protectingable<T>>;
+    using DefendStrategy = UserStrategy<Protection, T, Protectingable<T>>;
     template <typename T>
     concept is_defend_strategy = Strategable<DefendStrategy, T>;
     template <>
@@ -46,7 +46,7 @@
     };
 
     template <typename T>
-    using WearStrategy = UserStrategyWithConcept<WearContainer, T, Wearingable<T>>;
+    using WearStrategy = UserStrategy<WearContainer, T, Wearingable<T>>;
     template <typename T>
     concept is_wear_strategy = Strategable<WearStrategy, T>;
     template <>
@@ -55,7 +55,7 @@
     };
 
     template <typename T>
-    using RestoreStrategy = UserStrategyWithConcept<EffectTypeContainer, T, Restoringable<T>>;
+    using RestoreStrategy = UserStrategy<EffectTypeContainer, T, Restoringable<T>>;
     template <typename T>
     concept is_restore_strategy = Strategable<RestoreStrategy, T>;
     template <>
@@ -64,7 +64,7 @@
     };
 
     template <typename T>
-    using HealStrategy = UserStrategyWithConcept<CureHealth, T, Healingable<T>>;
+    using HealStrategy = UserStrategy<CureHealth, T, Healingable<T>>;
     template <typename T>
     concept is_heal_strategy = Strategable<HealStrategy, T>;
     template <>
