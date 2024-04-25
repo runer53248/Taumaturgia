@@ -82,7 +82,7 @@ TEST(AttackStrategyTest, Weapon_attack_effect) {
     print_hp(std::ref(hp));
     std::cout << "\n\n";
 
-    ActionStatus status = weapon.attack(&weapon, &player);
+    ActionStatus status = attack(weapon, &weapon, &player);
     std::cout << status << "\n\n";
 
     hp = getOpt<Properties::Health>(player).value();
@@ -103,7 +103,7 @@ TEST(AttackStrategyTest, CustomWeapon_subattack_effects) {
     Object player{Living<Player>{Name{"Player"}, Health{max_health}}};
 
     print_object(weapon_1);
-    ActionStatus status = weapon_1.attack(&weapon_1, &player);
+    ActionStatus status = attack(weapon_1, &weapon_1, &player);
     std::cout << status << "\n\n";
     Health& hp = getOpt<Properties::Health>(player).value();
     auto expected_current_hp = max_health - damage_1 - damage_2;
@@ -124,7 +124,7 @@ TEST(AttackStrategyTest, Damaging_CustomWeapon_subattack_effects) {
     Object player{Living<Player>{Name{"Player"}, Health{max_health}}};
 
     print_object(weapon_2);
-    auto status = weapon_2.attack(&weapon_2, &player);
+    auto status = attack(weapon_2, &weapon_2, &player);
     std::cout << status << "\n\n";
     Health& hp = getOpt<Properties::Health>(player).value();
     auto expected_current_hp = max_health - damage_1 - damage_2 - damage_3;

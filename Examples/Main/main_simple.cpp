@@ -17,13 +17,13 @@ int main() {
         Health{100}};
 
     // player wear helmet protecting from stun
-    Object{
-        Helmet{
-            Name{"VIKING_HELM"},
-            ArmorClass{2,
-                       BodyLocation::Head,
-                       {EffectType::Stun}}}}
-        .defend(&player);
+    defend(Object{
+               Helmet{
+                   Name{"VIKING_HELM"},
+                   ArmorClass{2,
+                              BodyLocation::Head,
+                              {EffectType::Stun}}}},
+           &player);
 
     print_person(player);
 
@@ -42,9 +42,9 @@ int main() {
                    Duration{1, DurationType::Round}}}});
 
     std::cout << "attack with " << stuning_log.name() << '\n';
-    stuning_log.attack(&player, &player);
+    attack(stuning_log, &player, &player);
     std::cout << "attack with " << freezing_log.name() << '\n';
-    freezing_log.attack(&player);
+    attack(freezing_log, &player);
 
     print_person(player);
     std::cout << '\n';

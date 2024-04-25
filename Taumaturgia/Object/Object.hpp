@@ -3,8 +3,8 @@
 #include <functional>
 #include <memory>
 #include <optional>
-#include "Enums/Actions.hpp"
 #include "Enums/ActionStatus.hpp"
+#include "Enums/Actions.hpp"
 #include "Taumaturgia/Concepts/Namingable.hpp"
 #include "Taumaturgia/Strategies/Strategies.hpp"
 
@@ -18,6 +18,18 @@ class Object;
 
 template <typename T>
 concept is_object = std::same_as<T, Object> or std::same_as<T, const Object>;
+
+template <Namingable T>
+auto propertiesExistanceMap() {
+    return std::unordered_map<Properties, const bool>{
+        {Properties::Health, is_alive_strategy<T>},
+        {Properties::CureHealth, is_heal_strategy<T>},
+        {Properties::Protection, is_defend_strategy<T>},
+        {Properties::Damage, is_attack_strategy<T>},
+        {Properties::Restore, is_restore_strategy<T>},
+        {Properties::Wear, is_wear_strategy<T>},
+        {Properties::Get, is_get_strategy<T>}};
+}
 
 class Object {
 private:
@@ -56,27 +68,16 @@ private:
 #endif
     const std::unordered_map<Properties, const bool> has;
 
-    ActionStatus doAction(Actions action, Object* owner, Object* target) const;
-
 public:
     template <Namingable T>
     Object(const T& obj)
         : object_{std::make_unique<ObjectModel<T>>(obj)},
-          has{{Properties::Health, is_alive_strategy<T>},
-              {Properties::CureHealth, is_heal_strategy<T>},
-              {Properties::Protection, is_defend_strategy<T>},
-              {Properties::Damage, is_attack_strategy<T>},
-              {Properties::Restore, is_restore_strategy<T>},
-              {Properties::Wear, is_wear_strategy<T>},
-              {Properties::Get, is_get_strategy<T>}} {}
+          has{propertiesExistanceMap<T>()} {}
+
+    ActionStatus doAction(Actions action, Object* owner, Object* target) const;
 
     std::string name() const;
     std::optional<AliveStatus> alive() const;
-    ActionStatus attack(Object* owner, Object* target = nullptr) const;
-    ActionStatus defend(Object* owner, Object* target = nullptr) const;
-    ActionStatus wear(Object* owner, Object* target = nullptr) const;
-    ActionStatus heal(Object* owner, Object* target = nullptr) const;
-    ActionStatus restore(Object* owner, Object* target = nullptr) const;
 
     bool checkAction(Actions action) const;
     bool hasProperty(Properties property) const;
@@ -90,6 +91,12 @@ public:
     template <Properties param>
     decltype(auto) getOpt();
 };
+
+ActionStatus attack(const Object& object, Object* owner, Object* target = nullptr);
+ActionStatus defend(const Object& object, Object* owner, Object* target = nullptr);
+ActionStatus wear(const Object& object, Object* owner, Object* target = nullptr);
+ActionStatus heal(const Object& object, Object* owner, Object* target = nullptr);
+ActionStatus restore(const Object& object, Object* owner, Object* target = nullptr);
 
 template <Properties param>
 decltype(auto) getOpt(is_object auto& object) {

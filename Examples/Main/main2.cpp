@@ -1,10 +1,10 @@
 #include <vector>
 #include "Actions.hpp"
-#include "Taumaturgia/Properties/Properties.hpp"
 #include "Print.hpp"
+#include "Taumaturgia/Properties/Properties.hpp"
 
-#include "Examples/Structs/Helmet.hpp"
 #include "Examples/Structs/Armor.hpp"
+#include "Examples/Structs/Helmet.hpp"
 
 struct Empty {};
 
@@ -33,19 +33,23 @@ int main() {
         CureHealth{15, {Effect{EffectType::Devour}, Effect{EffectType::Shock}}},
         EffectTypeContainer{EffectType::Sleep}};
 
-    Object{Helmet{
-               Name{"VIKING_HELM"},
-               ArmorClass{2,
-                          BodyLocation::Head}}}
-        .defend(&obj);
-    Object{Armor{
-               Name{"VIKING_Armor"},
-               ArmorClass{8,
-                          BodyLocation::Body,
-                          {EffectType::Freeze, EffectType::Stun}}}}
-        .defend(&obj);
+    defend(
+        Object{Helmet{
+            Name{"VIKING_HELM"},
+            ArmorClass{2,
+                       BodyLocation::Head}}},
+        &obj);
+    defend(
+        Object{Armor{
+            Name{"VIKING_Armor"},
+            ArmorClass{8,
+                       BodyLocation::Body,
+                       {EffectType::Freeze, EffectType::Stun}}}},
+        &obj);
 
-    obj.defend(&obj);
+    defend(
+        obj,
+        &obj);
 
     print_object(obj);
 

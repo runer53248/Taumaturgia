@@ -187,29 +187,29 @@ int main() {
     std::cout << "\n";
 
     std::cout << "Paladin wear armor:\n";
-    shield.defend(&paladin);
-    shield_2.defend(&paladin);
-    shield.defend(&paladin);
-    chaimail.defend(&paladin);
+    defend(shield, &paladin);
+    defend(shield_2, &paladin);
+    defend(shield, &paladin);
+    defend(chaimail, &paladin);
     print_info(paladin);
     std::cout << "\n";
 
     std::cout << "weapon attack both:\n";
-    weapon.attack(&weapon, &paladin);
-    weapon.attack(&weapon, &warior);
+    attack(weapon, &weapon, &paladin);
+    attack(weapon, &weapon, &warior);
     print_info(paladin);
     print_info(warior);
     std::cout << "\n";
 
     std::cout << "weapon 2 attack both:\n";
-    weapon_2.attack(&paladin);
-    weapon_2.attack(&warior);
+    attack(weapon_2, &paladin);
+    attack(weapon_2, &warior);
     print_info(paladin);
     print_info(warior);
     std::cout << "\n";
 
     std::cout << "Paladin restore from stun effect by potion use: \n";
-    potion.restore(nullptr, &paladin);  // no owner needed by now
+    restore(potion, nullptr, &paladin);  // no owner needed by now
     print_info(paladin);
     std::cout << "\n";
 

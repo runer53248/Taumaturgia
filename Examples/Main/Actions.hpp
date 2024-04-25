@@ -16,7 +16,7 @@ void attack(auto& backpack, auto& player, auto& enemy) {
             .and_then(print_dmg)
             .and_then(print_new_line);
 
-        auto status = item.attack(&player, &enemy);
+        auto status = attack(item, &player, &enemy);
         std::cout << " - attack" << status << ": ";
         print_person(enemy);
         std::cout << '\n';
@@ -33,7 +33,7 @@ void wear(auto& backpack, auto& player) {
         if (not item.hasProperty(Properties::Wear)) {
             continue;
         }
-        auto status = item.wear(&player /*, &player*/);
+        auto status = wear(item, &player /*, &player*/);
         std::cout << " - wearing " << status << ": ";  // when target dont have Wearingable property
         if (status != ActionStatus::Success) {
             std::cout << player.name() << " can't wear " << item.name() << ' ';
@@ -59,7 +59,7 @@ void defend(auto& backpack, auto& player) {
         if (not item.hasProperty(Properties::Protection)) {
             continue;
         }
-        auto status = item.defend(&player /*, &player*/);
+        auto status = defend(item, &player /*, &player*/);
         std::cout << " - defending " << status << ": ";  // when target dont have Wearingable property
         if (status != ActionStatus::Success) {
             std::cout << player.name() << " can't defend with " << item.name() << ' ';
@@ -86,7 +86,7 @@ void enemy_defend(auto& backpack, auto& enemy) {
         if (not item.hasProperty(Properties::Protection)) {
             continue;
         }
-        auto status = item.defend(&enemy /*, &player*/);
+        auto status = defend(item, &enemy /*, &player*/);
         std::cout << " - defending " << status << ": ";  // when target dont have Wearingable property
         if (status != ActionStatus::Success) {
             std::cout << enemy.name() << " can't defend with " << item.name() << ' ';
@@ -111,7 +111,7 @@ void restore(auto& backpack, auto& player) {
         if (not item.hasProperty(Properties::Restore) ) {
             continue;
         }
-        auto status = item.restore(&player, &player);
+        auto status = restore(item, &player, &player);
         std::cout << " - restore" << status << ": ";
 
         std::cout << player.name() << " restore self with " << item.name() << ' ';
@@ -132,7 +132,7 @@ void heal(auto& backpack, auto& player) {
         if (not item.hasProperty(Properties::CureHealth)) {
             continue;
         }
-        auto status = item.heal(&player, &player);
+        auto status = heal(item, &player, &player);
         std::cout << " - healing" << status << ": ";
 
         std::cout << player.name() << " heal self with " << item.name();

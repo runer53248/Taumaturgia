@@ -17,20 +17,20 @@ ActionStatus Object::doAction(Actions action, Object* owner, Object* target) con
     return object_->action(action, owner, target);
 }
 
-ActionStatus Object::attack(Object* owner, Object* target) const {
-    return doAction(Actions::Attack, owner, target);
+ActionStatus attack(const Object& object, Object* owner, Object* target) {
+    return object.doAction(Actions::Attack, owner, target);
 }
-ActionStatus Object::defend(Object* owner, Object* target) const {
-    return doAction(Actions::Defend, owner, target);
+ActionStatus defend(const Object& object, Object* owner, Object* target) {
+    return object.doAction(Actions::Defend, owner, target);
 }
-ActionStatus Object::wear(Object* owner, Object* target) const {
-    return doAction(Actions::Wear, owner, target);
+ActionStatus wear(const Object& object, Object* owner, Object* target) {
+    return object.doAction(Actions::Wear, owner, target);
 }
-ActionStatus Object::heal(Object* owner, Object* target) const {
-    return doAction(Actions::Heal, owner, target);
+ActionStatus heal(const Object& object, Object* owner, Object* target) {
+    return object.doAction(Actions::Heal, owner, target);
 }
-ActionStatus Object::restore(Object* owner, Object* target) const {
-    return doAction(Actions::Restore, owner, target);
+ActionStatus restore(const Object& object, Object* owner, Object* target) {
+    return object.doAction(Actions::Restore, owner, target);
 }
 
 bool Object::checkAction(Actions action) const {

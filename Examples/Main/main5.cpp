@@ -1,8 +1,8 @@
 #include <vector>
 #include "Actions.hpp"
 #include "FillBackpack.hpp"
-#include "Taumaturgia/Properties/UserProperty.hpp"
 #include "Print.hpp"
+#include "Taumaturgia/Properties/UserProperty.hpp"
 
 int main() {
     Object player(living_player{Name{"Knight"}, Health{100}});
@@ -16,7 +16,10 @@ int main() {
     print_person(enemy_2);
 
     std::cout << "\nenemy_2 attack player with Stunning " << log.name() << ":\n\n";
-    log.attack(&enemy_2, &player);
+    attack(
+        log,
+        &enemy_2,
+        &player);
 
     print_person(player);
     std::cout << '\n';
@@ -34,21 +37,24 @@ int main() {
 
     std::cout << "\nprint npc after healing:\n\n";
     using healing_potion = potion_1;
-    Object{healing_potion{Name{"HEALING_POTION"}, CureHealth{100}}}
-        .heal(&npc);
+    heal(
+        Object{healing_potion{Name{"HEALING_POTION"}, CureHealth{100}}},
+        &npc);
     print_person(npc);
     std::cout << '\n';
 
     std::cout << "\nprint npc after stun restoration:\n\n";
-    Object{restoring_potion{Name{"Stun restore potion"}, {EffectType::Stun, EffectType::Daze}}}
-        .restore(&npc);
+    restore(
+        Object{restoring_potion{Name{"Stun restore potion"}, {EffectType::Stun, EffectType::Daze}}},
+        &npc);
     print_person(npc);
     std::cout << '\n';
 
     print_person(enemy);
     std::cout << "\nprint devoured enemy after stun restoration:\n\n";
-    Object{restoring_potion{Name{"Stun restore potion"}, {EffectType::Stun, EffectType::Daze}}}
-        .restore(&enemy);
+    restore(
+        Object{restoring_potion{Name{"Stun restore potion"}, {EffectType::Stun, EffectType::Daze}}},
+        &enemy);
     print_person(enemy);
     std::cout << '\n';
 
