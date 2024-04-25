@@ -53,10 +53,10 @@ struct traits::CustomAccessType<TYPE, T> {
 };
 
 template <typename TYPE>
-void UserStrategy_<TYPE, Default>::operator()(getType_or_custom_accessable<TYPE> auto& obj) const {
+void UserStrategy_<TYPE, Default>::operator()(getType_or_custom_accessable<TYPE> auto& obj, [[maybe_unused]] Object* owner, [[maybe_unused]] Object* target) const {
     std::cout << "UserStrategy_ call ";
     decltype(auto) value = traits::accessType<TYPE>::get(obj);
-    std::cout << value << "\n";
+    std::cout << " = " << value << "\n";
     return;
 }
 
@@ -188,9 +188,10 @@ int main() {
 
         UserStrategy_<float, Default> userStrategy{};
 
-        userStrategy(type3);
-        UserStrategy_<int, Default>{}(type3);
-        userStrategy(std::as_const(type3));
-        UserStrategy_<int, Default>{}(std::as_const(type3));
+        userStrategy(type3, nullptr, nullptr);
+        userStrategy(std::as_const(type3), nullptr, nullptr);
+
+        UserStrategy_<int, Default>{}(type3, nullptr, nullptr);
+        UserStrategy_<int, Default>{}(std::as_const(type3), nullptr, nullptr);
     }
 }
