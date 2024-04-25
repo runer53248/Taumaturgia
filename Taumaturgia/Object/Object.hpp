@@ -54,13 +54,13 @@ private:
 #else
     std::unique_ptr<ObjectConcept> object_;
 #endif
-    const std::unordered_map<Properties, const bool> has;
+    const std::unordered_map<Properties, const bool> has_;
 
 public:
     template <Namingable T>
     Object(const T& obj)
         : object_{std::make_unique<ObjectModel<T>>(obj)},
-          has{propertiesExistanceMap<T>()} {}
+          has_{propertiesExistanceMap<T>()} {}
 
     ActionStatus doAction(Actions action, Object* owner, Object* target) const;
 

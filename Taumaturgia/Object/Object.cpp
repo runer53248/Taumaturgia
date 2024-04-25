@@ -48,5 +48,5 @@ bool Object::checkAction(Actions action) const {
 }
 
 bool Object::hasProperty(Properties property) const {
-    return has.at(property);
+    return has_.at(property);
 }
