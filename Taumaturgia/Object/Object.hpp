@@ -19,18 +19,6 @@ class Object;
 template <typename T>
 concept is_object = std::same_as<T, Object> or std::same_as<T, const Object>;
 
-template <Namingable T>
-auto propertiesExistanceMap() {
-    return std::unordered_map<Properties, const bool>{
-        {Properties::Health, is_alive_strategy<T>},
-        {Properties::CureHealth, is_heal_strategy<T>},
-        {Properties::Protection, is_defend_strategy<T>},
-        {Properties::Damage, is_attack_strategy<T>},
-        {Properties::Restore, is_restore_strategy<T>},
-        {Properties::Wear, is_wear_strategy<T>},
-        {Properties::Get, is_get_strategy<T>}};
-}
-
 class Object {
 private:
     class ObjectConcept {  // TODO: implement copy
