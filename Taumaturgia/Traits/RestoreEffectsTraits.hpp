@@ -1,14 +1,8 @@
 #pragma once
 #include "Helpers/traits_helper.hpp"
-
-class EffectTypeContainer;
+#include "Concepts/RestoreEffectsConcepts.hpp"
 
 namespace traits {
-
-CreateAccessableConcept(RestoreEffects, restoreEffects, EffectTypeContainer);
-CreateGetAccessableConcept(RestoreEffects, EffectTypeContainer);
-CreateCustomAccessableConcept(RestoreEffects, EffectTypeContainer);
-CreateUserTypeAccessableConcept(RestoreEffects, EffectTypeContainer);
 
 #ifdef ACCESS_TRAIT_MACRO
 CreateAccessTrait(RestoreEffects, restoreEffects, EffectTypeContainer);

@@ -1,14 +1,8 @@
 #pragma once
 #include "Helpers/traits_helper.hpp"
-
-class WearContainer;
+#include "Concepts/ArmorWearConcepts.hpp"
 
 namespace traits {
-
-CreateAccessableConcept(ArmorWear, armorWear, WearContainer);
-CreateGetAccessableConcept(ArmorWear, WearContainer);
-CreateCustomAccessableConcept(ArmorWear, WearContainer);
-CreateUserTypeAccessableConcept(ArmorWear, WearContainer);
 
 #ifdef ACCESS_TRAIT_MACRO
 CreateAccessTrait(ArmorWear, armorWear, WearContainer);

@@ -3,7 +3,7 @@
 #include <utility>  // for as_const
 #include "same_as_ref.hpp"
 
-#define CreateAccessableConcept_convertible(NAME, MEMBER, TYPE)    \
+#define CreateMemberAccessableConcept_convertible(NAME, MEMBER, TYPE)    \
     template <typename T>                                          \
     concept NAME##Accessable = requires(T x) {                     \
         x.MEMBER;                                                  \
@@ -34,7 +34,7 @@
         { std::as_const(x).template getType<BUILD_TYPE>() } -> std::convertible_to<const CONVERT_TYPE>; \
     };
 
-#define CreateAccessableConcept(NAME, MEMBER, TYPE) \
+#define CreateMemberAccessableConcept(NAME, MEMBER, TYPE) \
     template <typename T>                           \
     concept NAME##Accessable = requires(T x) {      \
         x.MEMBER;                                   \

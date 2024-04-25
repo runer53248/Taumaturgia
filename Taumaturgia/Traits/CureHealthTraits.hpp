@@ -1,14 +1,8 @@
 #pragma once
 #include "Helpers/traits_helper.hpp"
-
-class CureHealth;
+#include "Concepts/CureHealthConcepts.hpp"
 
 namespace traits {
-
-CreateAccessableConcept(CureHealth, cureHealth, CureHealth);
-CreateGetAccessableConcept(CureHealth, CureHealth);
-CreateCustomAccessableConcept(CureHealth, CureHealth);
-CreateUserTypeAccessableConcept(CureHealth, CureHealth);
 
 #ifdef ACCESS_TRAIT_MACRO
 CreateAccessTrait(CureHealth, cureHealth, CureHealth);

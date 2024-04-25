@@ -1,14 +1,8 @@
 #pragma once
 #include "Helpers/traits_helper.hpp"
-
-class Damage;
+#include "Concepts/DamageConcepts.hpp"
 
 namespace traits {
-
-CreateAccessableConcept(Damage, dmg, Damage);
-CreateGetAccessableConcept(Damage, Damage);
-CreateCustomAccessableConcept(Damage, Damage);
-CreateUserTypeAccessableConcept(Damage, Damage);
 
 #ifdef ACCESS_TRAIT_MACRO
 CreateAccessTrait(Damage, dmg, Damage);

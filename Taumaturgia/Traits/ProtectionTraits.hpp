@@ -1,14 +1,8 @@
 #pragma once
 #include "Helpers/traits_helper.hpp"
-
-class Protection;
+#include "Concepts/ProtectionConcepts.hpp"
 
 namespace traits {
-
-CreateAccessableConcept(Protection, protection, Protection);
-CreateGetAccessableConcept(Protection, Protection);
-CreateCustomAccessableConcept(Protection, Protection);
-CreateUserTypeAccessableConcept(Protection, Protection);
 
 #ifdef ACCESS_TRAIT_MACRO
 CreateAccessTrait(Protection, protection, Protection);

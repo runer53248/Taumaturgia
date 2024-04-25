@@ -1,15 +1,9 @@
 #pragma once
 #include <string>
 #include "Helpers/traits_helper.hpp"
-
-class Name;
+#include "Concepts/NameConcepts.hpp"
 
 namespace traits {
-
-CreateAccessableConcept_convertible(Name, name, std::string);
-CreateGetAccessableConcept_convertible(Name, std::string);
-CreateCustomAccessableConcept_convertible(Name, std::string);
-CreateUserTypeAccessableConcept_convertible(Name, Name, std::string);
 
 #ifdef ACCESS_TRAIT_MACRO
 CreateAccessTrait(Name, name, Name);
