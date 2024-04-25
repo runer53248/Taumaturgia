@@ -14,18 +14,18 @@ public:
 
 template <typename... Args>
     Naming_(const Name& name, Args&&... args)
-        : T{std::forward<Args>(args)...}, name{name} {}
+        : T{std::forward<Args>(args)...}, name_{name} {}
 
     auto& getName() & {
-        return name;
+        return name_;
     }
 
     const auto& getName() const& {
-        return name;
+        return name_;
     }
 
 private:
-    Name name{};
+    Name name_{};
 };
 
 namespace Test {

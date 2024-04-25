@@ -29,13 +29,13 @@ public:
         requires(not std::is_same_v<TYPE, Name>)
     UserProperty_(const Name& name, std::tuple<INFO...>&& type, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          type{std::make_from_tuple<TYPE>(std::move(type))} {}
+          type_{std::make_from_tuple<TYPE>(std::move(type))} {}
 
     template <typename... INFO, typename... Args>
         requires(not std::is_same_v<TYPE, Name>)
     UserProperty_(const Name& name, const std::tuple<INFO...>& type, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          type{std::make_from_tuple<TYPE>(type)} {}
+          type_{std::make_from_tuple<TYPE>(type)} {}
 
     template <typename... INFO, typename... Args>
         requires(not constructible_from_args<TYPE, INFO...>)
@@ -65,12 +65,12 @@ public:
     template <typename... Args>
     UserProperty_(const Name& name, TYPE&& type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
-        : T{name, std::forward<Args>(args)...}, type{std::move(type)} {}
+        : T{name, std::forward<Args>(args)...}, type_{std::move(type)} {}
 
     template <typename... Args>
     UserProperty_(const Name& name, const TYPE& type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
-        : T{name, std::forward<Args>(args)...}, type{type} {}
+        : T{name, std::forward<Args>(args)...}, type_{type} {}
 
     // MARK: Namingable variant C-tors
 
@@ -78,7 +78,7 @@ public:
         requires type_is_possible<TYPE, V...> /*and Namingable<T>*/
     UserProperty_(const Name& name, const std::variant<V...>& type, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          type{std::get_if<TYPE>(&type)
+          type_{std::get_if<TYPE>(&type)
                    ? std::get<TYPE>(type)
                    : TYPE{}} {}
 
@@ -92,12 +92,12 @@ public:
     template <typename... INFO, typename... Args>
     UserProperty_(std::tuple<INFO...>&& type, Args&&... args)
         : T{std::forward<Args>(args)...},
-          type{std::make_from_tuple<TYPE>(std::move(type))} {}
+          type_{std::make_from_tuple<TYPE>(std::move(type))} {}
 
     template <typename... INFO, typename... Args>
     UserProperty_(const std::tuple<INFO...>& type, Args&&... args)
         : T{std::forward<Args>(args)...},
-          type{std::make_from_tuple<TYPE>(type)} {}
+          type_{std::make_from_tuple<TYPE>(type)} {}
 
     template <typename... INFO, typename... Args>
         requires(not constructible_from_args<TYPE, INFO...>)
@@ -123,11 +123,11 @@ public:
 
     template <typename... Args>
     UserProperty_(TYPE&& type, Args&&... args)
-        : T{std::forward<Args>(args)...}, type{std::move(type)} {}
+        : T{std::forward<Args>(args)...}, type_{std::move(type)} {}
 
     template <typename... Args>
     UserProperty_(const TYPE& type, Args&&... args)
-        : T{std::forward<Args>(args)...}, type{type} {}
+        : T{std::forward<Args>(args)...}, type_{type} {}
 
     // MARK: variant C-tors
 
@@ -135,7 +135,7 @@ public:
         requires type_is_possible<TYPE, V...>
     UserProperty_(const std::variant<V...>& type, Args&&... args)
         : T{std::forward<Args>(args)...},
-          type{std::get_if<TYPE>(&type)
+          type_{std::get_if<TYPE>(&type)
                    ? std::get<TYPE>(type)
                    : TYPE{}} {}
 
@@ -178,15 +178,15 @@ public:
 
 protected:
     auto& getType() & {
-        return type;
+        return type_;
     }
 
     const auto& getType() const& {
-        return type;
+        return type_;
     }
 
 private:
-    TYPE type{};
+    TYPE type_{};
 };
 
 namespace Test {

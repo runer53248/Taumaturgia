@@ -18,13 +18,13 @@ public:
     template <typename... INFO, typename... Args>
     Damaging_(const Name& name, std::tuple<INFO...>&& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          dmg{std::make_from_tuple<Damage>(std::move(dmg))} {
+          dmg_{std::make_from_tuple<Damage>(std::move(dmg))} {
     }
 
     template <typename... INFO, typename... Args>
     Damaging_(const Name& name, const std::tuple<INFO...>& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          dmg{std::make_from_tuple<Damage>(dmg)} {
+          dmg_{std::make_from_tuple<Damage>(dmg)} {
     }
 
     template <typename... INFO, typename... Args>
@@ -48,17 +48,17 @@ public:
 
     template <typename... Args>
     Damaging_(const Name& name, Damage&& dmg, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, dmg{std::move(dmg)} {}
+        : T{name, std::forward<Args>(args)...}, dmg_{std::move(dmg)} {}
 
     template <typename... Args>
     Damaging_(const Name& name, const Damage& dmg, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, dmg{dmg} {}
+        : T{name, std::forward<Args>(args)...}, dmg_{dmg} {}
 
     template <typename... V, typename... Args>
         requires type_is_possible<Damage, V...>
     Damaging_(const Name& name, const std::variant<V...>& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          dmg{std::get_if<Damage>(&dmg)
+          dmg_{std::get_if<Damage>(&dmg)
                   ? std::get<Damage>(dmg)
                   : Damage{}} {}
 
@@ -68,15 +68,15 @@ public:
         : T{name, std::forward<Args>(args)...} {}
 
     auto& getDamage() & {
-        return dmg;
+        return dmg_;
     }
 
     const auto& getDamage() const& {
-        return dmg;
+        return dmg_;
     }
 
 private:
-    Damage dmg{};
+    Damage dmg_{};
 };
 
 namespace Test {

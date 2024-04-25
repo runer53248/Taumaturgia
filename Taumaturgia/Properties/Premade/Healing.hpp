@@ -18,12 +18,12 @@ public:
     template <typename... INFO, typename... Args>
     Healing_(const Name& name, std::tuple<INFO...>&& cureHealth, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          cureHealth{std::make_from_tuple<CureHealth>(std::move(cureHealth))} {}
+          cureHealth_{std::make_from_tuple<CureHealth>(std::move(cureHealth))} {}
 
     template <typename... INFO, typename... Args>
     Healing_(const Name& name, const std::tuple<INFO...>& cureHealth, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          cureHealth{std::make_from_tuple<CureHealth>(cureHealth)} {}
+          cureHealth_{std::make_from_tuple<CureHealth>(cureHealth)} {}
 
     template <typename... INFO, typename... Args>
         requires(not constructible_from_args<CureHealth, INFO...>)
@@ -46,17 +46,17 @@ public:
 
     template <typename... Args>
     Healing_(const Name& name, CureHealth&& cureHealth, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, cureHealth{std::move(cureHealth)} {}
+        : T{name, std::forward<Args>(args)...}, cureHealth_{std::move(cureHealth)} {}
 
     template <typename... Args>
     Healing_(const Name& name, const CureHealth& cureHealth, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, cureHealth{cureHealth} {}
+        : T{name, std::forward<Args>(args)...}, cureHealth_{cureHealth} {}
 
     template <typename... V, typename... Args>
         requires type_is_possible<CureHealth, V...>
     Healing_(const Name& name, const std::variant<V...>& cureHealth, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          cureHealth{std::get_if<CureHealth>(&cureHealth)
+          cureHealth_{std::get_if<CureHealth>(&cureHealth)
                          ? std::get<CureHealth>(cureHealth)
                          : CureHealth{}} {}
 
@@ -66,15 +66,15 @@ public:
         : T{name, std::forward<Args>(args)...} {}
 
     auto& getCureHealth() & {
-        return cureHealth;
+        return cureHealth_;
     }
 
     const auto& getCureHealth() const& {
-        return cureHealth;
+        return cureHealth_;
     }
 
 private:
-    CureHealth cureHealth{};
+    CureHealth cureHealth_{};
 };
 
 namespace Test {

@@ -18,12 +18,12 @@ public:
     template <typename... INFO, typename... Args>
     Restoring_(const Name& name, std::tuple<INFO...>&& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          restoreEffects{std::make_from_tuple<EffectTypeContainer>(std::move(restoreEffects))} {}
+          restoreEffects_{std::make_from_tuple<EffectTypeContainer>(std::move(restoreEffects))} {}
 
     template <typename... INFO, typename... Args>
     Restoring_(const Name& name, const std::tuple<INFO...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          restoreEffects{std::make_from_tuple<EffectTypeContainer>(restoreEffects)} {}
+          restoreEffects_{std::make_from_tuple<EffectTypeContainer>(restoreEffects)} {}
 
     template <typename... INFO, typename... Args>
         requires(not constructible_from_args<EffectTypeContainer, INFO...>)
@@ -46,21 +46,21 @@ public:
 
     template <typename... Args>
     Restoring_(const Name& name, EffectTypeContainer&& restoreEffects, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, restoreEffects{std::move(restoreEffects)} {}
+        : T{name, std::forward<Args>(args)...}, restoreEffects_{std::move(restoreEffects)} {}
 
     template <typename... Args>
     Restoring_(const Name& name, const EffectTypeContainer& restoreEffects, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, restoreEffects{restoreEffects} {}
+        : T{name, std::forward<Args>(args)...}, restoreEffects_{restoreEffects} {}
 
     template <typename... Args>
     Restoring_(const Name& name, std::initializer_list<EffectType> restoreEffects, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, restoreEffects{restoreEffects} {}
+        : T{name, std::forward<Args>(args)...}, restoreEffects_{restoreEffects} {}
 
     template <typename... V, typename... Args>
         requires type_is_possible<EffectTypeContainer, V...>
     Restoring_(const Name& name, const std::variant<V...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          restoreEffects{std::get_if<EffectTypeContainer>(&restoreEffects)
+          restoreEffects_{std::get_if<EffectTypeContainer>(&restoreEffects)
                              ? std::get<EffectTypeContainer>(restoreEffects)
                              : EffectTypeContainer{}} {}
 
@@ -70,15 +70,15 @@ public:
         : T{name, std::forward<Args>(args)...} {}
 
     auto& getRestoreEffects() & {
-        return restoreEffects;
+        return restoreEffects_;
     }
 
     const auto& getRestoreEffects() const& {
-        return restoreEffects;
+        return restoreEffects_;
     }
 
 private:
-    EffectTypeContainer restoreEffects{};
+    EffectTypeContainer restoreEffects_{};
 };
 
 namespace Test {

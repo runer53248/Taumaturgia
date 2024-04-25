@@ -17,12 +17,12 @@ public:
     template <typename... INFO, typename... Args>
     Protecting_(const Name& name, std::tuple<INFO...>&& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          protection{std::make_from_tuple<Protection>(std::move(protection))} {}
+          protection_{std::make_from_tuple<Protection>(std::move(protection))} {}
 
     template <typename... INFO, typename... Args>
     Protecting_(const Name& name, const std::tuple<INFO...>& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          protection{std::make_from_tuple<Protection>(protection)} {}
+          protection_{std::make_from_tuple<Protection>(protection)} {}
 
     template <typename... INFO, typename... Args>
         requires(not constructible_from_args<Protection, INFO...>)
@@ -45,17 +45,17 @@ public:
 
     template <typename... Args>
     Protecting_(const Name& name, Protection&& protection, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, protection{std::move(protection)} {}
+        : T{name, std::forward<Args>(args)...}, protection_{std::move(protection)} {}
 
     template <typename... Args>
     Protecting_(const Name& name, const Protection& protection, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, protection{protection} {}
+        : T{name, std::forward<Args>(args)...}, protection_{protection} {}
 
     template <typename... V, typename... Args>
         requires type_is_possible<Protection, V...>
     Protecting_(const Name& name, const std::variant<V...>& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          protection{std::get_if<Protection>(&protection)
+          protection_{std::get_if<Protection>(&protection)
                          ? std::get<Protection>(protection)
                          : Protection{}} {}
 
@@ -65,15 +65,15 @@ public:
         : T{name, std::forward<Args>(args)...} {}
 
     auto& getProtection() & {
-        return protection;
+        return protection_;
     }
 
     const auto& getProtection() const& {
-        return protection;
+        return protection_;
     }
 
 private:
-    Protection protection{};
+    Protection protection_{};
 };
 
 namespace Test {

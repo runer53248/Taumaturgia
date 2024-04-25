@@ -18,12 +18,12 @@ public:
     template <typename... INFO, typename... Args>
     Living_(const Name& name, std::tuple<INFO...>&& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          hp{std::make_from_tuple<Health>(std::move(hp))} {}
+          hp_{std::make_from_tuple<Health>(std::move(hp))} {}
 
     template <typename... INFO, typename... Args>
     Living_(const Name& name, const std::tuple<INFO...>& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          hp{std::make_from_tuple<Health>(hp)} {}
+          hp_{std::make_from_tuple<Health>(hp)} {}
 
     template <typename... INFO, typename... Args>
         requires(not constructible_from_args<Health, INFO...>)
@@ -46,17 +46,17 @@ public:
 
     template <typename... Args>
     Living_(const Name& name, Health&& hp, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, hp{std::move(hp)} {}
+        : T{name, std::forward<Args>(args)...}, hp_{std::move(hp)} {}
 
     template <typename... Args>
     Living_(const Name& name, const Health& hp, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, hp{hp} {}
+        : T{name, std::forward<Args>(args)...}, hp_{hp} {}
 
     template <typename... V, typename... Args>
         requires type_is_possible<Health, V...>
     Living_(const Name& name, const std::variant<V...>& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          hp{std::get_if<Health>(&hp)
+          hp_{std::get_if<Health>(&hp)
                  ? std::get<Health>(hp)
                  : Health{}} {}
 
@@ -66,15 +66,15 @@ public:
         : T{name, std::forward<Args>(args)...} {}
 
     auto& getHealth() & {
-        return hp;
+        return hp_;
     }
 
     const auto& getHealth() const& {
-        return hp;
+        return hp_;
     }
 
 private:
-    Health hp{};
+    Health hp_{};
 };
 
 namespace Test {

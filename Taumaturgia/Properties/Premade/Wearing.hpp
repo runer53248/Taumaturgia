@@ -18,12 +18,12 @@ public:
     template <typename... INFO, typename... Args>
     Wearing_(const Name& name, std::tuple<INFO...>&& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          armorWear{std::make_from_tuple<WearContainer>(std::move(armorWear))} {}
+          armorWear_{std::make_from_tuple<WearContainer>(std::move(armorWear))} {}
 
     template <typename... INFO, typename... Args>
     Wearing_(const Name& name, const std::tuple<INFO...>& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          armorWear{std::make_from_tuple<WearContainer>(armorWear)} {}
+          armorWear_{std::make_from_tuple<WearContainer>(armorWear)} {}
 
     template <typename... INFO, typename... Args>
         requires(not constructible_from_args<WearContainer, INFO...>)
@@ -46,17 +46,17 @@ public:
 
     template <typename... Args>
     Wearing_(const Name& name, WearContainer&& armorWear, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, armorWear{std::move(armorWear)} {}
+        : T{name, std::forward<Args>(args)...}, armorWear_{std::move(armorWear)} {}
 
     template <typename... Args>
     Wearing_(const Name& name, const WearContainer& armorWear, Args&&... args)
-        : T{name, std::forward<Args>(args)...}, armorWear{armorWear} {}
+        : T{name, std::forward<Args>(args)...}, armorWear_{armorWear} {}
 
     template <typename... V, typename... Args>
         requires type_is_possible<WearContainer, V...>
     Wearing_(const Name& name, const std::variant<V...>& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          armorWear{std::get_if<WearContainer>(&armorWear)
+          armorWear_{std::get_if<WearContainer>(&armorWear)
                         ? std::get<WearContainer>(armorWear)
                         : WearContainer{}} {}
 
@@ -66,15 +66,15 @@ public:
         : T{name, std::forward<Args>(args)...} {}
 
     auto& getArmorWear() & {
-        return armorWear;
+        return armorWear_;
     }
 
     const auto& getArmorWear() const& {
-        return armorWear;
+        return armorWear_;
     }
 
 private:
-    WearContainer armorWear{};
+    WearContainer armorWear_{};
 };
 
 namespace Test {
