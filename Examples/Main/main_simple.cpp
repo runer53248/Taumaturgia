@@ -49,14 +49,14 @@ int main() {
     print_person(player);
     std::cout << '\n';
 
-    auto weapon_2 = Weapon{Name{"Weapon"}, Damage{6}};
-    const auto weapon_3 = Weapon{Name{"Weapon"}, Damage{6}};
+    auto weapon_a = Weapon{Name{"Weapon"}, Damage{6}};
+    const auto weapon_b = Weapon{Name{"Weapon"}, Damage{6}};
 
-    decltype(auto) damage_2 = traits::accessDamage::get(weapon_2);  // reference
-    decltype(auto) damage_3 = traits::accessDamage::get(weapon_3);  // const reference
+    decltype(auto) damage_a = traits::accessDamage::get(weapon_a);  // reference
+    decltype(auto) damage_b = traits::accessDamage::get(weapon_b);  // const reference
 
-    static_assert(std::is_same_v<decltype(damage_2), Damage&>);
-    static_assert(std::is_same_v<decltype(damage_3), const Damage&>);
+    static_assert(std::is_same_v<decltype(damage_a), Damage&>);
+    static_assert(std::is_same_v<decltype(damage_b), const Damage&>);
 
     return 0;
 }
