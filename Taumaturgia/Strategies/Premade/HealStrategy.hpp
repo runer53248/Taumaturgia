@@ -10,7 +10,7 @@ template <typename T>
 using HealStrategy = StrategyConditional<HealStrategy_, T, Healingable<T>>;
 
 template <typename T>
-concept is_heal_strategy = Strategable<HealStrategy, T>;
+concept is_heal_strategy = Strategable<HealStrategy, T, ActionStatus, Object*, Object*>;
 
 template <>
 struct HealStrategy_<Default> {

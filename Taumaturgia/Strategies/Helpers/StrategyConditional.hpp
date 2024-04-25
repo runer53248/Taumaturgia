@@ -2,12 +2,14 @@
 #include "Taumaturgia/Strategies/Concepts/Strategable.hpp"
 
 struct Default;
+struct Object;
+enum class ActionStatus;
 
-template <template <typename> typename STRATEGY, typename T, bool CONCEPT>
+template <template <typename> typename STRATEGY, typename T, bool CONCEPT, typename RET = ActionStatus>
 using StrategyConditional = std::conditional_t<
     CONCEPT,
     std::conditional_t<
-        Strategable<STRATEGY, T>,
+        Strategable<STRATEGY, T, RET, Object*, Object*>,
         STRATEGY<T>,
         STRATEGY<Default> >,
     STRATEGY<T> >;

@@ -3,30 +3,24 @@
 #include <optional>
 #include "Taumaturgia/Concepts/Livingable.hpp"
 
-enum class AliveStatus : signed char;
+#include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
 
-struct Default;
-class Object;
+enum class AliveStatus : signed char;
 
 template <typename T>
 struct AliveStrategy_ {};
-
-template <template <typename> typename Strategy, typename UserType>
-concept AliveStrategable = requires(Strategy<UserType> strategy, UserType& type) {
-    { strategy.operator()(type) } -> std::same_as<std::optional<AliveStatus>>;
-};
 
 template <typename T>
 using AliveStrategy = std::conditional_t<
     Livingable<T>,
     std::conditional_t<
-        AliveStrategable<AliveStrategy_, T>,
+        Strategable<AliveStrategy_, T, std::optional<AliveStatus>>,
         AliveStrategy_<T>,
         AliveStrategy_<Default>>,
     AliveStrategy_<T>>;
 
 template <typename T>
-concept is_alive_strategy = AliveStrategable<AliveStrategy, T>;
+concept is_alive_strategy = Strategable<AliveStrategy, T, std::optional<AliveStatus>>;
 
 template <>
 struct AliveStrategy_<Default> {

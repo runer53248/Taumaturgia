@@ -16,7 +16,7 @@ public:
     ~CommandModel() override = default;
 
     ActionStatus execute(Object* owner, Object* target) override {
-        if constexpr (Strategable<STRATEGY, T>) {
+        if constexpr (Strategable<STRATEGY, T, ActionStatus, Object*, Object*>) {
             static constinit STRATEGY<T> strategy{};
             return strategy(type_, owner, target);
         }
@@ -24,7 +24,7 @@ public:
     }
 
     bool hasStrategy() const override {
-        return Strategable<STRATEGY, T>;
+        return Strategable<STRATEGY, T, ActionStatus, Object*, Object*>;
     }
 
 private:

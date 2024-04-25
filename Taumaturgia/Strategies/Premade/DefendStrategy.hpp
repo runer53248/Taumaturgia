@@ -10,7 +10,7 @@ template <typename T>
 using DefendStrategy = StrategyConditional<DefendStrategy_, T, Protectingable<T>>;
 
 template <typename T>
-concept is_defend_strategy = Strategable<DefendStrategy, T>;
+concept is_defend_strategy = Strategable<DefendStrategy, T, ActionStatus, Object*, Object*>;
 
 template <>
 struct DefendStrategy_<Default> {

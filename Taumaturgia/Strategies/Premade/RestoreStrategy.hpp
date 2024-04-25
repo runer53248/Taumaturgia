@@ -10,7 +10,7 @@ template <typename T>
 using RestoreStrategy = StrategyConditional<RestoreStrategy_, T, Restoringable<T>>;
 
 template <typename T>
-concept is_restore_strategy = Strategable<RestoreStrategy, T>;
+concept is_restore_strategy = Strategable<RestoreStrategy, T, ActionStatus, Object*, Object*>;
 
 template <>
 struct RestoreStrategy_<Default> {
