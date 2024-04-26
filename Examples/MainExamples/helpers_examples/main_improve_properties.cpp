@@ -56,8 +56,8 @@ int main() {
 
     struct Type {
     public:
-        Damage dmg;
-        Damage dmgs;
+        Damage dmg{10, DamageType::Divine};
+        Damage dmgs{20, DamageType::Magical};
 
         auto& getType() {
             return dmg;
@@ -68,26 +68,26 @@ int main() {
     std::cout << name<Damaging<Type>>() << '\n';
     std::cout << name<Damaging_impl<Type>>() << '\n'
               << '\n';
-    // [[maybe_unused]] auto a = Damaging_impl<Type>{}.dmg; // public dmg is shadowed by private one from Damaging_
+    // [[maybe_unused]] auto dmg_a = Damaging_impl<Type>{}.dmg; // public dmg is shadowed by private one from Damaging_
     std::cout << "Damaging_impl<Type>{}.dmg is shadowed \n";
 
-    [[maybe_unused]] auto b = Damaging_impl<Type>{}.dmgs;
-    std::cout << "Damaging_impl<Type>{}.dmgs = " << b << '\n';
+    auto dmg_b = Damaging_impl<Type>{}.dmgs;
+    std::cout << "Damaging_impl<Type>{}.dmgs = " << dmg_b << '\n';
     
 #ifndef NO_PREMADE_PROPERTIES
-    [[maybe_unused]] auto c = Damaging_impl<Type>{}.getType();  // Type::getType method call
-    std::cout << "Damaging_impl<Type>{}.getType() = " << c << '\n';
+    [[maybe_unused]] auto dmg_c = Damaging_impl<Type>{}.getType();  // Type::getType method call
+    std::cout << "Damaging_impl<Type>{}.getType() = " << dmg_c << '\n';
 #else
-    // [[maybe_unused]] auto c = Damaging_impl<Type>{}.getType(); // ! public getType is shadowed by protected one from UserProperty
+    // [[maybe_unused]] auto dmg_c = Damaging_impl<Type>{}.getType(); // ! public getType is shadowed by protected one from UserProperty
     std::cout << "Damaging_impl<Type>{}.getType() is shadowed " << '\n';
 #endif
 
     std::cout << "custom property may shadow members and methods of type that pass validation concept for property" << '\n';
-    [[maybe_unused]] auto d = UserDamaging<Type>{}.dmg;
-    [[maybe_unused]] auto e = UserDamaging<Type>{}.dmgs;
-    // [[maybe_unused]] auto f = UserDamaging<Type>{}.getType(); // ! public getType is shadowed by protected one from UserProperty
-    std::cout << "UserProperty<Damage, Type>{}.dmg = " << d << '\n';
-    std::cout << "UserProperty<Damage, Type>{}.dmgs = " << e << '\n';
+    auto dmg_d = UserDamaging<Type>{}.dmg;
+    auto dmg_e = UserDamaging<Type>{}.dmgs;
+    // [[maybe_unused]] auto dmg_f = UserDamaging<Type>{}.getType(); // ! public getType is shadowed by protected one from UserProperty
+    std::cout << "UserProperty<Damage, Type>{}.dmg = " << dmg_d << '\n';
+    std::cout << "UserProperty<Damage, Type>{}.dmgs = " << dmg_e << '\n';
     std::cout << "UserProperty<Damage, Type>{}.getType() shadowed \n";
     std::cout << name<UserDamaging<Type>>() << '\n'
               << '\n';
