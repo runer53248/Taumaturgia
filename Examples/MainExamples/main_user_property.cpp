@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Taumaturgia/Object/Enums/ActionStatus.hpp"
 #include "Taumaturgia/Properties/Helpers/taged_list.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
@@ -22,13 +23,19 @@ struct name_type2 {
 template <typename TYPE, typename T>
     requires std::is_base_of_v<impl::UserProperty_<TYPE, name_type2>, T>
 struct traits::CustomAccessType<TYPE, T> {
-    static decltype(auto) get(impl::UserProperty_<TYPE, name_type2>& el) {
-        std::cout << "get ";
+    static constexpr decltype(auto) get(impl::UserProperty_<TYPE, name_type2>& el) {
+        if consteval {
+        } else {
+            std::cout << "[get] ";
+        }
         return el.template getType<TYPE>();
     }
 
-    static decltype(auto) get(const impl::UserProperty_<TYPE, name_type2>& el) {
-        std::cout << "const get ";
+    static constexpr decltype(auto) get(const impl::UserProperty_<TYPE, name_type2>& el) {
+        if consteval {
+        } else {
+            std::cout << "[const get] ";
+        }
         return el.template getType<TYPE>();
     }
 };
@@ -41,23 +48,33 @@ struct name_type3 {
 template <typename TYPE, typename T>
     requires std::is_base_of_v<name_type3, T>
 struct traits::CustomAccessType<TYPE, T> {
-    static decltype(auto) get(getType_template_able<TYPE> auto& el) {
-        std::cout << "get2 ";
+    static constexpr decltype(auto) get(getType_template_able<TYPE> auto& el) {
+        if consteval {
+        } else {
+            std::cout << "[get2] ";
+        }
         return el.template getType<TYPE>();
     }
 
-    static decltype(auto) get(getType_template_able<TYPE> auto const& el) {
-        std::cout << "const get2 ";
+    static constexpr decltype(auto) get(getType_template_able<TYPE> auto const& el) {
+        if consteval {
+        } else {
+            std::cout << "[const get2] ";
+        }
         return el.template getType<TYPE>();
     }
 };
 
 template <typename TYPE>
-void UserStrategy_<TYPE, Default>::operator()(accessType_trait_able<TYPE> auto& obj, [[maybe_unused]] Object* owner, [[maybe_unused]] Object* target) const {
-    std::cout << "UserStrategy_ call ";
-    decltype(auto) value = traits::accessType<TYPE>::get(obj);
-    std::cout << " = " << value << "\n";
-    return;
+constexpr ActionStatus UserStrategy_<TYPE, Default>::operator()(accessType_trait_able<TYPE> auto& obj, [[maybe_unused]] Object* owner, [[maybe_unused]] Object* target) const {
+    if consteval {
+        traits::accessType<TYPE>::get(obj);
+    } else {
+        std::cout << "UserStrategy_ call ";
+        decltype(auto) value = traits::accessType<TYPE>::get(obj);
+        std::cout << " = " << value << "\n";
+    }
+    return ActionStatus::Success;
 }
 
 struct name_int_type {
@@ -72,6 +89,15 @@ struct name_int_float_type {
 };
 
 struct empty {};
+
+template <ActionStatus... STATUS>
+struct ActionStatus_Assertion {
+    ActionStatus_Assertion() {
+        // static_assert(STATUS == ActionStatus::Success);
+        static_assert(std::conjunction<std::bool_constant<(STATUS == ActionStatus::Success)>...>::value, "assertion fail");
+        std::cout << "assertion success\n";
+    }
+};
 
 int main() {
     using user_name_int_type = UserProperty<int, name_type1>;                  // just int
@@ -150,13 +176,14 @@ int main() {
         UserClass5_1 type1{Name{}, value_i_1, value_f_1};
         std::cout << "default traits::accessType \n";
         decltype(auto) x = traits::accessType<float>::get(std::as_const(type1));
-        decltype(auto) y = traits::accessType<float>::get(type1);
-        decltype(auto) x2 = traits::accessType<int>::get(std::as_const(type1));
-        decltype(auto) y2 = traits::accessType<int>::get(type1);
         std::cout << x << '\n';
+        decltype(auto) y = traits::accessType<float>::get(type1);
         std::cout << y << '\n';
+        decltype(auto) x2 = traits::accessType<int>::get(std::as_const(type1));
         std::cout << x2 << '\n';
-        std::cout << y2 << "\n\n";
+        decltype(auto) y2 = traits::accessType<int>::get(type1);
+        std::cout << y2 << '\n';
+        std::cout << '\n';
     }
 
     {
@@ -164,13 +191,14 @@ int main() {
         using UserClass5_2 = add_properties<name_type2, UserPropertyAdapter<int>::type, UserPropertyAdapter<float>::type>;
         UserClass5_2 type2{Name{}, value_i_2, value_f_2};
         decltype(auto) x = traits::accessType<float>::get(std::as_const(type2));
-        decltype(auto) y = traits::accessType<float>::get(type2);
-        decltype(auto) x2 = traits::accessType<int>::get(std::as_const(type2));
-        decltype(auto) y2 = traits::accessType<int>::get(type2);
         std::cout << x << '\n';
+        decltype(auto) y = traits::accessType<float>::get(type2);
         std::cout << y << '\n';
+        decltype(auto) x2 = traits::accessType<int>::get(std::as_const(type2));
         std::cout << x2 << '\n';
-        std::cout << y2 << "\n\n";
+        decltype(auto) y2 = traits::accessType<int>::get(type2);
+        std::cout << y2 << '\n';
+        std::cout << '\n';
     }
 
     {
@@ -178,13 +206,20 @@ int main() {
         using UserClass5_3 = add_properties<name_type3, UserPropertyAdapter<int>::type, UserPropertyAdapter<float>::type>;
         UserClass5_3 type3{Name{}, value_i_3, value_f_3};
         decltype(auto) x = traits::accessType<float>::get(std::as_const(type3));
-        decltype(auto) y = traits::accessType<float>::get(type3);
-        decltype(auto) x2 = traits::accessType<int>::get(std::as_const(type3));
-        decltype(auto) y2 = traits::accessType<int>::get(type3);
         std::cout << x << '\n';
+        decltype(auto) y = traits::accessType<float>::get(type3);
         std::cout << y << '\n';
+        decltype(auto) x2 = traits::accessType<int>::get(std::as_const(type3));
         std::cout << x2 << '\n';
-        std::cout << y2 << "\n\n";
+        decltype(auto) y2 = traits::accessType<int>::get(type3);
+        std::cout << y2 << '\n';
+        std::cout << '\n';
+    }
+
+    {
+        std::cout << "custom traits::accessType can be used both as consteval and normal\n";
+        using UserClass5_3 = add_properties<name_type3, UserPropertyAdapter<int>::type, UserPropertyAdapter<float>::type>;
+        UserClass5_3 type3{Name{}, value_i_3, value_f_3};
 
         UserStrategy_<float, Default> userStrategy{};
 
@@ -193,5 +228,26 @@ int main() {
 
         UserStrategy_<int, Default>{}(type3, nullptr, nullptr);
         UserStrategy_<int, Default>{}(std::as_const(type3), nullptr, nullptr);
+
+        std::cout << '\n';
+
+        std::cout << "assert that result of userStrategy is ActionStatus::Success\n";
+        ActionStatus_Assertion<
+            userStrategy(type3, nullptr, nullptr)>{};
+        ActionStatus_Assertion<
+            userStrategy(std::as_const(type3), nullptr, nullptr)>{};
+
+        ActionStatus_Assertion<
+            UserStrategy_<int, Default>{}(type3, nullptr, nullptr)>{};
+        ActionStatus_Assertion<
+            UserStrategy_<int, Default>{}(std::as_const(type3), nullptr, nullptr)>{};
+
+        std::cout << '\n';
+
+        ActionStatus_Assertion<
+            userStrategy(type3, nullptr, nullptr),
+            userStrategy(std::as_const(type3), nullptr, nullptr),
+            UserStrategy_<int, Default>{}(type3, nullptr, nullptr),
+            UserStrategy_<int, Default>{}(std::as_const(type3), nullptr, nullptr)>{};
     }
 }

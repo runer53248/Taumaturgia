@@ -1,7 +1,7 @@
 #pragma once
 #include <concepts>
-#include "Taumaturgia/Concepts/Typeable.hpp"
 #include "Taumaturgia/Strategies/Concepts/Strategable.hpp"
+#include "Taumaturgia/Traits/UserTypeTraits.hpp"
 
 struct Default;
 struct Object;
@@ -21,5 +21,5 @@ using UserStrategy = std::conditional_t<
 
 template <typename TYPE>
 struct UserStrategy_<TYPE, Default> {
-    void operator()(accessType_trait_able<TYPE> auto& obj, Object* owner, Object* target) const;
+    constexpr ActionStatus operator()(accessType_trait_able<TYPE> auto& obj, Object* owner, Object* target) const;
 };

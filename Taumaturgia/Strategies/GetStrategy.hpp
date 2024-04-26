@@ -1,13 +1,21 @@
 #pragma once
 #include <concepts>
-#include "Taumaturgia/Concepts/Gettingable.hpp"
 #include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
+#include "Taumaturgia/Traits/ArmorWearTraits.hpp"
+#include "Taumaturgia/Traits/CureHealthTraits.hpp"
+#include "Taumaturgia/Traits/DamageTraits.hpp"
+#include "Taumaturgia/Traits/HealthTraits.hpp"
+#include "Taumaturgia/Traits/ProtectionTraits.hpp"
+#include "Taumaturgia/Traits/RestoreEffectsTraits.hpp"
 #include "Taumaturgia/Types/VariantType.hpp"
 
 enum class Properties;
 
 template <typename T>
 struct GetStrategy_ {};
+
+template <typename T>
+concept Gettingable = Damagingable<T> or Healingable<T> or Livingable<T> or Protectingable<T> or Restoringable<T> or Wearingable<T>;
 
 template <typename T>
 using GetStrategy = std::conditional_t<

@@ -4,8 +4,6 @@
 #include <variant>
 #include "Helpers/PropertyData.hpp"
 #include "Helpers/constructible_from_args.hpp"
-// #include "Object/Concepts/Namingable.hpp"
-#include "Taumaturgia/Concepts/Typeable.hpp"
 #include "Taumaturgia/Types/Name.hpp"
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
 
@@ -147,7 +145,7 @@ public:
     // MARK: getType
 
     template <typename RETURN = TYPE, int DIG = 0>
-    decltype(auto) getType() & {
+    constexpr decltype(auto) getType() & {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             if constexpr (DIG) {
                 if constexpr (getType_template_able<T, RETURN>) {
@@ -162,7 +160,7 @@ public:
     }
 
     template <typename RETURN = TYPE, int DIG = 0>
-    decltype(auto) getType() const& {
+    constexpr decltype(auto) getType() const& {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             if constexpr (DIG) {
                 if constexpr (getType_template_able<T, RETURN>) {
@@ -177,11 +175,11 @@ public:
     }
 
 protected:
-    auto& getType() & {
+    constexpr auto& getType() & {
         return type_;
     }
 
-    const auto& getType() const& {
+    constexpr const auto& getType() const& {
         return type_;
     }
 
