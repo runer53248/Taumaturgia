@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Concepts/Namingable.hpp"
+#include "Taumaturgia/Traits/NameTraits.hpp"
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 
 namespace impl {

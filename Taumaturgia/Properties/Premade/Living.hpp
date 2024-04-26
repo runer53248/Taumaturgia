@@ -1,9 +1,10 @@
 #pragma once
 #include <boost/mp11.hpp>
-#include "Taumaturgia/Types/Name.hpp"
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
-#include "Taumaturgia/Strategies/AliveStrategy.hpp"
+#include "Taumaturgia/Traits/HealthTraits.hpp"
+#include "Taumaturgia/Types/Health.hpp"
+#include "Taumaturgia/Types/Name.hpp"
 
 namespace impl {
 inline constinit const char living_type_name[] = "Living";
@@ -57,8 +58,8 @@ public:
     Living_(const Name& name, const std::variant<V...>& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           hp_{std::get_if<Health>(&hp)
-                 ? std::get<Health>(hp)
-                 : Health{}} {}
+                  ? std::get<Health>(hp)
+                  : Health{}} {}
 
     template <typename... V, typename... Args>
         requires type_is_not_possible<Health, V...>

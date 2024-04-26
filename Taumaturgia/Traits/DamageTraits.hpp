@@ -1,6 +1,7 @@
 #pragma once
 #include "Helpers/traits_helper.hpp"
 #include "Concepts/DamageConcepts.hpp"
+#include "Helpers/trait_accessable.hpp"
 
 namespace traits {
 
@@ -32,3 +33,6 @@ struct accessDamage {
 #endif
 
 }  // namespace traits
+
+template <typename T>
+concept Damagingable = trait_accessable<T, traits::accessDamage, Damage>;

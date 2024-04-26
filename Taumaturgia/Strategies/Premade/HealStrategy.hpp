@@ -1,6 +1,6 @@
 #pragma once
 #include <concepts>
-#include "Taumaturgia/Concepts/Healingable.hpp"
+#include "Taumaturgia/Traits/CureHealthTraits.hpp"
 #include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
 
 template <typename T>

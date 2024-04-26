@@ -1,9 +1,10 @@
 #pragma once
 #include <boost/mp11.hpp>
-#include "Taumaturgia/Concepts/Wearingable.hpp"
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
+#include "Taumaturgia/Traits/ArmorWearTraits.hpp"
 #include "Taumaturgia/Types/Name.hpp"
+#include "Taumaturgia/Types/WearContainer.hpp"
 
 namespace impl {
 inline constinit const char wearing_type_name[] = "Wearing";
@@ -57,8 +58,8 @@ public:
     Wearing_(const Name& name, const std::variant<V...>& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           armorWear_{std::get_if<WearContainer>(&armorWear)
-                        ? std::get<WearContainer>(armorWear)
-                        : WearContainer{}} {}
+                         ? std::get<WearContainer>(armorWear)
+                         : WearContainer{}} {}
 
     template <typename... V, typename... Args>
         requires type_is_not_possible<WearContainer, V...>

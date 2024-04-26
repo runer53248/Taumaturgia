@@ -1,7 +1,7 @@
 #pragma once
 #include <concepts>
 #include <optional>
-#include "Taumaturgia/Concepts/Livingable.hpp"
+#include "Taumaturgia/Traits/HealthTraits.hpp"
 
 #include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
 

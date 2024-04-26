@@ -1,6 +1,7 @@
 #pragma once
 #include "Helpers/traits_helper.hpp"
 #include "Concepts/RestoreEffectsConcepts.hpp"
+#include "Helpers/trait_accessable.hpp"
 
 namespace traits {
 
@@ -32,3 +33,6 @@ struct accessRestoreEffects {
 #endif
 
 }  // namespace traits
+
+template <typename T>
+concept Restoringable = trait_accessable<T, traits::accessRestoreEffects, EffectTypeContainer>;

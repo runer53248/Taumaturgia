@@ -1,8 +1,9 @@
 #pragma once
 #include <boost/mp11.hpp>
-#include "Taumaturgia/Concepts/Healingable.hpp"
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
+#include "Taumaturgia/Traits/CureHealthTraits.hpp"
+#include "Taumaturgia/Types/CureHealth.hpp"
 #include "Taumaturgia/Types/Name.hpp"
 
 namespace impl {
@@ -57,8 +58,8 @@ public:
     Healing_(const Name& name, const std::variant<V...>& cureHealth, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           cureHealth_{std::get_if<CureHealth>(&cureHealth)
-                         ? std::get<CureHealth>(cureHealth)
-                         : CureHealth{}} {}
+                          ? std::get<CureHealth>(cureHealth)
+                          : CureHealth{}} {}
 
     template <typename... V, typename... Args>
         requires type_is_not_possible<CureHealth, V...>

@@ -1,6 +1,7 @@
 #pragma once
 #include "Helpers/traits_helper.hpp"
 #include "Concepts/CureHealthConcepts.hpp"
+#include "Helpers/trait_accessable.hpp"
 
 namespace traits {
 
@@ -32,3 +33,6 @@ struct accessCureHealth {
 #endif
 
 }  // namespace traits
+
+template <typename T>
+concept Healingable = trait_accessable<T, traits::accessCureHealth, CureHealth>;
