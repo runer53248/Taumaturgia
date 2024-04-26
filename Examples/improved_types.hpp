@@ -28,6 +28,8 @@ using UserProtecting = UserProperty<Protection, T>;
 template <typename T>
 using UserProtecting_2 = UserProperty<Protection, T>;
 
+// UserProtectingImproved_2 and UserProtectingImproved have same implemmentation
+
 template <typename T>
 struct UserProtectingImproved_ : public T {  // example of improving user property
     using property_data = PropertyData<impl::user_type_name, UserProtectingImproved_, T>;
@@ -36,7 +38,7 @@ struct UserProtectingImproved_ : public T {  // example of improving user proper
     UserProtectingImproved_() noexcept = default;
 };
 template <typename T>
-using UserProtectingImproved = std::conditional_t<getType_or_custom_accessable<T, Protection>, T, UserProtectingImproved_<T>>;
+using UserProtectingImproved = std::conditional_t<accessType_trait_able<T, Protection>, T, UserProtectingImproved_<T>>;
 
 template <typename T>
 struct UserProtectingImproved_2_ : public T {  // example of improving use property
@@ -46,4 +48,4 @@ struct UserProtectingImproved_2_ : public T {  // example of improving use prope
     UserProtectingImproved_2_() noexcept = default;
 };
 template <typename T>
-using UserProtectingImproved_2 = std::conditional_t<getType_or_custom_accessable<T, Protection>, T, UserProtectingImproved_2_<T>>;
+using UserProtectingImproved_2 = std::conditional_t<accessType_trait_able<T, Protection>, T, UserProtectingImproved_2_<T>>;

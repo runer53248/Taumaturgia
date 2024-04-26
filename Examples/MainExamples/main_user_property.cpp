@@ -41,19 +41,19 @@ struct name_type3 {
 template <typename TYPE, typename T>
     requires std::is_base_of_v<name_type3, T>
 struct traits::CustomAccessType<TYPE, T> {
-    static decltype(auto) get(getType_able<TYPE> auto& el) {
+    static decltype(auto) get(getType_template_able<TYPE> auto& el) {
         std::cout << "get2 ";
         return el.template getType<TYPE>();
     }
 
-    static decltype(auto) get(getType_able<TYPE> auto const& el) {
+    static decltype(auto) get(getType_template_able<TYPE> auto const& el) {
         std::cout << "const get2 ";
         return el.template getType<TYPE>();
     }
 };
 
 template <typename TYPE>
-void UserStrategy_<TYPE, Default>::operator()(getType_or_custom_accessable<TYPE> auto& obj, [[maybe_unused]] Object* owner, [[maybe_unused]] Object* target) const {
+void UserStrategy_<TYPE, Default>::operator()(accessType_trait_able<TYPE> auto& obj, [[maybe_unused]] Object* owner, [[maybe_unused]] Object* target) const {
     std::cout << "UserStrategy_ call ";
     decltype(auto) value = traits::accessType<TYPE>::get(obj);
     std::cout << " = " << value << "\n";

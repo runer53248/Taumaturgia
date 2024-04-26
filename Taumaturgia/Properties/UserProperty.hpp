@@ -150,13 +150,13 @@ public:
     decltype(auto) getType() & {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             if constexpr (DIG) {
-                if constexpr (getType_able<T, RETURN>) {
+                if constexpr (getType_template_able<T, RETURN>) {
                     return T::template getType<RETURN, DIG - 1>();
                 }
             }
             return getType();
         }
-        if constexpr (getType_able<T, RETURN>) {
+        if constexpr (getType_template_able<T, RETURN>) {
             return T::template getType<RETURN, DIG>();
         }
     }
@@ -165,13 +165,13 @@ public:
     decltype(auto) getType() const& {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             if constexpr (DIG) {
-                if constexpr (getType_able<T, RETURN>) {
+                if constexpr (getType_template_able<T, RETURN>) {
                     return T::template getType<RETURN, DIG - 1>();
                 }
             }
             return getType();
         }
-        if constexpr (getType_able<T, RETURN>) {
+        if constexpr (getType_template_able<T, RETURN>) {
             return T::template getType<RETURN, DIG>();
         }
     }
@@ -191,13 +191,13 @@ private:
 
 namespace Test {
 struct UserProperty_Test {};
-static_assert(getType_or_custom_accessable<UserProperty_<int, UserProperty_Test>, int>);
+static_assert(accessType_trait_able<UserProperty_<int, UserProperty_Test>, int>);
 }  // namespace Test
 
 }  // namespace impl
 
 template <typename TYPE, typename T, typename... Args>
-using UserProperty = std::conditional_t<getType_or_custom_accessable<T, TYPE>, T, impl::UserProperty_<TYPE, T, Args...>>;
+using UserProperty = std::conditional_t<accessType_trait_able<T, TYPE>, T, impl::UserProperty_<TYPE, T, Args...>>;
 
 template <typename TYPE, typename... Args>
 struct UserPropertyAdapter {

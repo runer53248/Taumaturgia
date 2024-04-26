@@ -21,5 +21,5 @@ using UserStrategy = std::conditional_t<
 
 template <typename TYPE>
 struct UserStrategy_<TYPE, Default> {
-    void operator()(getType_or_custom_accessable<TYPE> auto& obj, Object* owner, Object* target) const;
+    void operator()(accessType_trait_able<TYPE> auto& obj, Object* owner, Object* target) const;
 };
