@@ -1,6 +1,6 @@
 #pragma once
 #include <concepts>
-#include "Taumaturgia/Concepts/Wearingable.hpp"
+#include "Taumaturgia/Traits/ArmorWearTraits.hpp"
 #include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
 
 template <typename T>

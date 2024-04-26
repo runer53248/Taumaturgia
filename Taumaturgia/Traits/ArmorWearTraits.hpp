@@ -1,6 +1,7 @@
 #pragma once
 #include "Helpers/traits_helper.hpp"
 #include "Concepts/ArmorWearConcepts.hpp"
+#include "Helpers/trait_accessable.hpp"
 
 namespace traits {
 
@@ -32,3 +33,6 @@ struct accessArmorWear {
 #endif
 
 }  // namespace traits
+
+template <typename T>
+concept Wearingable = trait_accessable<T, traits::accessArmorWear, WearContainer>;

@@ -2,6 +2,7 @@
 #include <string>
 #include "Helpers/traits_helper.hpp"
 #include "Concepts/NameConcepts.hpp"
+#include "Helpers/trait_accessable.hpp"
 
 namespace traits {
 
@@ -33,3 +34,6 @@ struct accessName {
 #endif
 
 }  // namespace traits
+
+template <typename T>
+concept Namingable = trait_access_covertable<T, traits::accessName, std::string>;

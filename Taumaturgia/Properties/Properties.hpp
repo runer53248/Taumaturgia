@@ -24,20 +24,20 @@
 #else
     #include "UserProperty.hpp"
 
+    #include "Taumaturgia/Traits/NameTraits.hpp"
+    #include "Taumaturgia/Traits/HealthTraits.hpp"
+    #include "Taumaturgia/Traits/ArmorWearTraits.hpp"
+    #include "Taumaturgia/Traits/DamageTraits.hpp"
+    #include "Taumaturgia/Traits/CureHealthTraits.hpp"
+    #include "Taumaturgia/Traits/ProtectionTraits.hpp"
+    #include "Taumaturgia/Traits/RestoreEffectsTraits.hpp"
+
     #include "Taumaturgia/Types/Name.hpp"
     #include "Taumaturgia/Types/Health.hpp"
     #include "Taumaturgia/Types/WearContainer.hpp"
     #include "Taumaturgia/Types/Damage.hpp"
     #include "Taumaturgia/Types/CureHealth.hpp"
     #include "Taumaturgia/Types/Protection.hpp"
-
-    #include "Taumaturgia/Concepts/Namingable.hpp"
-    #include "Taumaturgia/Concepts/Damagingable.hpp"
-    #include "Taumaturgia/Concepts/Healingable.hpp"
-    #include "Taumaturgia/Concepts/Livingable.hpp"
-    #include "Taumaturgia/Concepts/Protectingable.hpp"
-    #include "Taumaturgia/Concepts/Restoringable.hpp"
-    #include "Taumaturgia/Concepts/Wearingable.hpp"
 
     template <typename TYPE>
     using Living = UserPropertyConceptAdapter<Health, Livingable<TYPE>>::template type<TYPE>;

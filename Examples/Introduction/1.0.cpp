@@ -1,4 +1,4 @@
-#include "Taumaturgia/Concepts/Namingable.hpp"
+#include "Taumaturgia/Traits/NameTraits.hpp"
 // Namingable concepts is valif for types that:
 /////////////////////////////////////////////////
 // * type that have public name member convertible to std::string or const std::string

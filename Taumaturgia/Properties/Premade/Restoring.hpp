@@ -1,8 +1,9 @@
 #pragma once
 #include <boost/mp11.hpp>
-#include "Taumaturgia/Concepts/Restoringable.hpp"
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
+#include "Taumaturgia/Traits/RestoreEffectsTraits.hpp"
+#include "Taumaturgia/Types/EffectTypeContainer.hpp"
 #include "Taumaturgia/Types/Name.hpp"
 
 namespace impl {
@@ -61,8 +62,8 @@ public:
     Restoring_(const Name& name, const std::variant<V...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           restoreEffects_{std::get_if<EffectTypeContainer>(&restoreEffects)
-                             ? std::get<EffectTypeContainer>(restoreEffects)
-                             : EffectTypeContainer{}} {}
+                              ? std::get<EffectTypeContainer>(restoreEffects)
+                              : EffectTypeContainer{}} {}
 
     template <typename... V, typename... Args>
         requires type_is_not_possible<EffectTypeContainer, V...>

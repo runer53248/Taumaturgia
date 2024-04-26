@@ -1,8 +1,9 @@
 #pragma once
-#include "Taumaturgia/Concepts/Protectingable.hpp"
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
+#include "Taumaturgia/Traits/ProtectionTraits.hpp"
 #include "Taumaturgia/Types/Name.hpp"
+#include "Taumaturgia/Types/Protection.hpp"
 
 namespace impl {
 inline constinit const char protecting_type_name[] = "Protecting";
@@ -56,8 +57,8 @@ public:
     Protecting_(const Name& name, const std::variant<V...>& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           protection_{std::get_if<Protection>(&protection)
-                         ? std::get<Protection>(protection)
-                         : Protection{}} {}
+                          ? std::get<Protection>(protection)
+                          : Protection{}} {}
 
     template <typename... V, typename... Args>
         requires type_is_not_possible<Protection, V...>
