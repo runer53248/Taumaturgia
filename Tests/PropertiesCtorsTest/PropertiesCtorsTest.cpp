@@ -25,16 +25,19 @@ constexpr const auto restore_effect_initializer = {EffectType::Sleep, EffectType
 EffectTypeContainer default_restore{restore_effect_initializer};
 const EffectTypeContainer const_default_restore{restore_effect_initializer};
 
-#ifndef NO_PREMADE_PROPERTIES
-
 // empty c-tor
 TEST(CtorTest, empty) {
     restoring_protecting_damaging_type type{};
 
     EXPECT_EQ(type.name, Name{});
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getRestoreEffects(), EffectTypeContainer{});
     EXPECT_EQ(type.getProtection(), Protection{});
     EXPECT_EQ(type.getDamage(), Damage{});
+#endif
+    EXPECT_EQ(traits::accessRestoreEffects::get(type), EffectTypeContainer{});
+    EXPECT_EQ(traits::accessProtection::get(type), Protection{});
+    EXPECT_EQ(traits::accessDamage::get(type), Damage{});
 }
 
 // empty c-tor
@@ -43,9 +46,14 @@ TEST(CtorTest, name) {
         default_name};
 
     EXPECT_EQ(type.name, default_name);
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getRestoreEffects(), EffectTypeContainer{});
     EXPECT_EQ(type.getProtection(), Protection{});
     EXPECT_EQ(type.getDamage(), Damage{});
+#endif
+    EXPECT_EQ(traits::accessRestoreEffects::get(type), EffectTypeContainer{});
+    EXPECT_EQ(traits::accessProtection::get(type), Protection{});
+    EXPECT_EQ(traits::accessDamage::get(type), Damage{});
 }
 
 TEST(CtorTest, all_arguments) {
@@ -56,9 +64,14 @@ TEST(CtorTest, all_arguments) {
         default_damage};
 
     EXPECT_EQ(type.name, default_name);
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getRestoreEffects(), default_restore);
     EXPECT_EQ(type.getProtection(), default_protection);
     EXPECT_EQ(type.getDamage(), default_damage);
+#endif
+    EXPECT_EQ(traits::accessRestoreEffects::get(type), default_restore);
+    EXPECT_EQ(traits::accessProtection::get(type), default_protection);
+    EXPECT_EQ(traits::accessDamage::get(type), default_damage);
 }
 
 TEST(CtorTest, all_const_arguments) {
@@ -69,9 +82,14 @@ TEST(CtorTest, all_const_arguments) {
         const_default_damage};
 
     EXPECT_EQ(type.name, const_default_name);
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getRestoreEffects(), const_default_restore);
     EXPECT_EQ(type.getProtection(), const_default_protection);
     EXPECT_EQ(type.getDamage(), const_default_damage);
+#endif
+    EXPECT_EQ(traits::accessRestoreEffects::get(type), const_default_restore);
+    EXPECT_EQ(traits::accessProtection::get(type), const_default_protection);
+    EXPECT_EQ(traits::accessDamage::get(type), const_default_damage);
 }
 
 TEST(CtorTest, arguments_are_initializer_list) {
@@ -82,9 +100,14 @@ TEST(CtorTest, arguments_are_initializer_list) {
         Damage{damage_value, damage_effect}};                                    // damaging
 
     EXPECT_EQ(type.name, default_name);
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getRestoreEffects(), default_restore);
     EXPECT_EQ(type.getProtection(), default_protection);
     EXPECT_EQ(type.getDamage(), default_damage);
+#endif
+    EXPECT_EQ(traits::accessRestoreEffects::get(type), default_restore);
+    EXPECT_EQ(traits::accessProtection::get(type), default_protection);
+    EXPECT_EQ(traits::accessDamage::get(type), default_damage);
 }
 
 TEST(CtorTest, arguments_are_tuples_rvalues) {
@@ -95,9 +118,14 @@ TEST(CtorTest, arguments_are_tuples_rvalues) {
         std::tuple(damage_value, damage_effect)};                                // damaging
 
     EXPECT_EQ(type.name, default_name);
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getRestoreEffects(), default_restore);
     EXPECT_EQ(type.getProtection(), default_protection);
     EXPECT_EQ(type.getDamage(), default_damage);
+#endif
+    EXPECT_EQ(traits::accessRestoreEffects::get(type), default_restore);
+    EXPECT_EQ(traits::accessProtection::get(type), default_protection);
+    EXPECT_EQ(traits::accessDamage::get(type), default_damage);
 }
 
 TEST(CtorTest, arguments_are_tuples_lvalues) {
@@ -112,9 +140,14 @@ TEST(CtorTest, arguments_are_tuples_lvalues) {
         damaging_tuple};   // damaging
 
     EXPECT_EQ(type.name, default_name);
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getRestoreEffects(), default_restore);
     EXPECT_EQ(type.getProtection(), default_protection);
     EXPECT_EQ(type.getDamage(), default_damage);
+#endif
+    EXPECT_EQ(traits::accessRestoreEffects::get(type), default_restore);
+    EXPECT_EQ(traits::accessProtection::get(type), default_protection);
+    EXPECT_EQ(traits::accessDamage::get(type), default_damage);
 }
 
 TEST(CtorTest, last_arguments_is_lvalues) {
@@ -125,7 +158,10 @@ TEST(CtorTest, last_arguments_is_lvalues) {
         default_damage};  // damaging
 
     EXPECT_EQ(type.name, default_name);
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getDamage(), default_damage);
+#endif
+    EXPECT_EQ(traits::accessDamage::get(type), default_damage);
 }
 
 TEST(CtorTest, last_arguments_is_rvalue) {
@@ -136,7 +172,10 @@ TEST(CtorTest, last_arguments_is_rvalue) {
         Damage{damage_value, damage_effect}};  // damaging
 
     EXPECT_EQ(type.name, default_name);
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getDamage(), default_damage);
+#endif
+    EXPECT_EQ(traits::accessDamage::get(type), default_damage);
 }
 
 TEST(CtorTest, last_arguments_is_tuple_lvalue) {
@@ -149,7 +188,10 @@ TEST(CtorTest, last_arguments_is_tuple_lvalue) {
         damaging_tuple};  // damaging
 
     EXPECT_EQ(type.name, default_name);
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getDamage(), default_damage);
+#endif
+    EXPECT_EQ(traits::accessDamage::get(type), default_damage);
 }
 
 TEST(CtorTest, last_arguments_is_tuple_rvalue) {
@@ -160,7 +202,10 @@ TEST(CtorTest, last_arguments_is_tuple_rvalue) {
         std::tuple{damage_value, damage_effect}};  // damaging
 
     EXPECT_EQ(type.name, default_name);
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getDamage(), default_damage);
+#endif
+    EXPECT_EQ(traits::accessDamage::get(type), default_damage);
 }
 
 TEST(CtorTest, first_argument) {
@@ -169,8 +214,13 @@ TEST(CtorTest, first_argument) {
         default_restore};
 
     EXPECT_EQ(type.name, default_name);
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getRestoreEffects(), default_restore);
+#endif
+    EXPECT_EQ(traits::accessRestoreEffects::get(type), default_restore);
 }
+
+#ifndef NO_PREMADE_PROPERTIES
 
 TEST(CtorTest, incorrect_argument_tuple_rvalue) {
     try {
@@ -217,6 +267,8 @@ TEST(CtorTest, incorrect_argument_tuple_lvalue_move) {
     }
 }
 
+#endif
+
 using container = std::variant<std::monostate, Damage, Protection, EffectTypeContainer>;
 
 TEST(CtorTest, arguments_variant_rvalue) {
@@ -225,10 +277,14 @@ TEST(CtorTest, arguments_variant_rvalue) {
         container{default_restore},     // restoring
         container{default_protection},  // protecting
         container{default_damage}};     // damaging
-
+#ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getRestoreEffects(), default_restore);
     EXPECT_EQ(type.getProtection(), default_protection);
     EXPECT_EQ(type.getDamage(), default_damage);
+#endif
+    EXPECT_EQ(traits::accessRestoreEffects::get(type), default_restore);
+    EXPECT_EQ(traits::accessProtection::get(type), default_protection);
+    EXPECT_EQ(traits::accessDamage::get(type), default_damage);
 }
 
 TEST(CtorTest, arguments_wrong_variant_rvalue) {
@@ -238,10 +294,14 @@ TEST(CtorTest, arguments_wrong_variant_rvalue) {
             container{default_damage},   // restoring
             container{default_damage},   // protecting
             container{default_damage}};  // damaging
-
+#ifndef NO_PREMADE_PROPERTIES
         EXPECT_EQ(type.getRestoreEffects(), EffectTypeContainer{});
         EXPECT_EQ(type.getProtection(), Protection{});
         EXPECT_EQ(type.getDamage(), default_damage);
+#endif
+        EXPECT_EQ(traits::accessRestoreEffects::get(type), EffectTypeContainer{});
+        EXPECT_EQ(traits::accessProtection::get(type), Protection{});
+        EXPECT_EQ(traits::accessDamage::get(type), default_damage);
 
         // FAIL();
     } catch (const std::exception& err) {
@@ -259,10 +319,14 @@ TEST(CtorTest, arguments_wrong_variant_lvalue) {
             damage_variant,   // restoring
             damage_variant,   // protecting
             damage_variant};  // damaging
-
+#ifndef NO_PREMADE_PROPERTIES
         EXPECT_EQ(type.getRestoreEffects(), EffectTypeContainer{});
         EXPECT_EQ(type.getProtection(), Protection{});
         EXPECT_EQ(type.getDamage(), default_damage);
+#endif
+        EXPECT_EQ(traits::accessRestoreEffects::get(type), EffectTypeContainer{});
+        EXPECT_EQ(traits::accessProtection::get(type), Protection{});
+        EXPECT_EQ(traits::accessDamage::get(type), default_damage);
 
         // FAIL();
     } catch (const std::exception& err) {
@@ -280,10 +344,14 @@ TEST(CtorTest, arguments_wrong_limited_variant_rvalue) {
             limited_container{default_damage},   // restoring
             limited_container{default_damage},   // protecting
             limited_container{default_damage}};  // damaging
-
+#ifndef NO_PREMADE_PROPERTIES
         EXPECT_EQ(type.getRestoreEffects(), EffectTypeContainer{});
         EXPECT_EQ(type.getProtection(), Protection{});
         EXPECT_EQ(type.getDamage(), default_damage);
+#endif
+        EXPECT_EQ(traits::accessRestoreEffects::get(type), EffectTypeContainer{});
+        EXPECT_EQ(traits::accessProtection::get(type), Protection{});
+        EXPECT_EQ(traits::accessDamage::get(type), default_damage);
 
         // FAIL();
     } catch (const std::exception& err) {
@@ -291,5 +359,3 @@ TEST(CtorTest, arguments_wrong_limited_variant_rvalue) {
         FAIL();
     }
 }
-
-#endif
