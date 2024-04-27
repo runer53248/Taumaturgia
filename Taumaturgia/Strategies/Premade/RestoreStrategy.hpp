@@ -14,5 +14,5 @@ concept is_restore_strategy = Strategable<RestoreStrategy, T, ActionStatus, Obje
 
 template <>
 struct RestoreStrategy_<Default> {
-    ActionStatus operator()(Restoringable auto& obj, Object* owner, Object* target) const;
+    constexpr ActionStatus operator()(Restoringable auto& obj, Object* owner, Object* target) const;
 };

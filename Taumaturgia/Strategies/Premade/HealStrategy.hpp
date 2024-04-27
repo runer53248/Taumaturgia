@@ -14,5 +14,5 @@ concept is_heal_strategy = Strategable<HealStrategy, T, ActionStatus, Object*, O
 
 template <>
 struct HealStrategy_<Default> {
-    ActionStatus operator()(Healingable auto& obj, Object* owner, Object* target) const;
+    constexpr ActionStatus operator()(Healingable auto& obj, Object* owner, Object* target) const;
 };

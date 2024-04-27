@@ -34,5 +34,5 @@ concept is_get_strategy = Strategable_template<GetStrategy_, T, optional_get_var
 template <>
 struct GetStrategy_<Default> {
     template <Properties P>
-    auto operator()(Gettingable auto& obj) const;  // for const and non-const calls
+    constexpr auto operator()(Gettingable auto& obj) const;  // for const and non-const calls
 };

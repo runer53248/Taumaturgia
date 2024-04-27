@@ -2,7 +2,7 @@
 #include "Taumaturgia/Strategies/Concepts/Strategable.hpp"
 
 struct Default;
-struct Object;
+class Object;
 enum class ActionStatus;
 
 template <template <typename> typename STRATEGY, typename T, bool CONCEPT, typename RET = ActionStatus>

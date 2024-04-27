@@ -1,7 +1,7 @@
 #pragma once
 #include "Taumaturgia/Object/Object.hpp"
 
-inline ActionStatus default_attack_behavior(Damagingable auto& obj, Object* target) {
+inline constexpr ActionStatus default_attack_behavior(Damagingable auto& obj, Object* target) {
     auto opt_protection = getOpt<Properties::Protection>(*target);
     auto opt_wear = getOpt<Properties::Wear>(*target);
     auto opt_restore = getOpt<Properties::Restore>(*target);
@@ -57,12 +57,12 @@ inline ActionStatus default_attack_behavior(Damagingable auto& obj, Object* targ
 }
 
 #ifndef NO_PREMADE_STRATEGIES
-ActionStatus AttackStrategy_<Default>::operator()(Damagingable auto& obj, Object* owner, Object* target) const {
+constexpr ActionStatus AttackStrategy_<Default>::operator()(Damagingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     return default_attack_behavior(obj, suspect);
 }
 #else
-ActionStatus UserStrategy_<Damage, Default>::operator()(Damagingable auto& obj, Object* owner, Object* target) const {
+constexpr ActionStatus UserStrategy_<Damage, Default>::operator()(Damagingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     return default_attack_behavior(obj, suspect);
 }

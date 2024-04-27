@@ -3,11 +3,11 @@
 #include <utility>  // for as_const
 #include "same_as_ref.hpp"
 
-#define CreateMemberAccessableConcept_convertible(NAME, MEMBER, TYPE)    \
-    template <typename T>                                          \
-    concept NAME##Accessable = requires(T x) {                     \
-        x.MEMBER;                                                  \
-        requires std::is_convertible_v<decltype(T::MEMBER), TYPE>; \
+#define CreateMemberAccessableConcept_convertible(NAME, MEMBER, TYPE) \
+    template <typename T>                                             \
+    concept NAME##Accessable = requires(T x) {                        \
+        x.MEMBER;                                                     \
+        requires std::is_convertible_v<decltype(T::MEMBER), TYPE>;    \
     };
 
 #define CreateGetAccessableConcept_convertible(NAME, TYPE)                   \
@@ -35,10 +35,10 @@
     };
 
 #define CreateMemberAccessableConcept(NAME, MEMBER, TYPE) \
-    template <typename T>                           \
-    concept NAME##Accessable = requires(T x) {      \
-        x.MEMBER;                                   \
-        std::is_same_v<decltype(T::MEMBER), TYPE>;  \
+    template <typename T>                                 \
+    concept NAME##Accessable = requires(T x) {            \
+        x.MEMBER;                                         \
+        std::is_same_v<decltype(T::MEMBER), TYPE>;        \
     };
 
 #define CreateGetAccessableConcept(NAME, TYPE)                           \
@@ -68,24 +68,24 @@
 #ifdef ACCESS_TRAIT_MACRO
 #define CreateAccessTrait(NAME, MEMBER, TYPE)                                           \
     struct access##NAME {                                                               \
-        static auto& get(NAME##Accessable auto& el) noexcept {                          \
+        static constexpr auto& get(NAME##Accessable auto& el) noexcept {                \
             return el.MEMBER;                                                           \
         }                                                                               \
                                                                                         \
         template <Get##NAME##Accessable T>                                              \
             requires(not(Custom##NAME##Accessable<T> or UserType##NAME##Accessable<T>)) \
-        static decltype(auto) get(T& el) noexcept {                                     \
+        static constexpr decltype(auto) get(T& el) noexcept {                           \
             return el.get##NAME();                                                      \
         }                                                                               \
                                                                                         \
         template <Custom##NAME##Accessable T>                                           \
             requires(not UserType##NAME##Accessable<T>)                                 \
-        static decltype(auto) get(T& el) noexcept {                                     \
+        static constexpr decltype(auto) get(T& el) noexcept {                           \
             return CustomAccess##NAME<std::remove_cvref_t<T>>::get(el);                 \
         }                                                                               \
                                                                                         \
         template <UserType##NAME##Accessable T>                                         \
-        static decltype(auto) get(T& el) noexcept {                                     \
+        static constexpr decltype(auto) get(T& el) noexcept {                           \
             return el.template getType<TYPE>();                                         \
         }                                                                               \
     };

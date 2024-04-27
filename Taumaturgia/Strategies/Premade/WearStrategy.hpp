@@ -14,5 +14,5 @@ concept is_wear_strategy = Strategable<WearStrategy, T, ActionStatus, Object*, O
 
 template <>
 struct WearStrategy_<Default> {
-    ActionStatus operator()(Wearingable auto& obj, Object* owner, Object* target) const;
+    constexpr ActionStatus operator()(Wearingable auto& obj, Object* owner, Object* target) const;
 };

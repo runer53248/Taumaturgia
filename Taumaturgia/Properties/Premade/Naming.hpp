@@ -16,11 +16,11 @@ template <typename... Args>
     Naming_(const Name& name, Args&&... args)
         : T{std::forward<Args>(args)...}, name_{name} {}
 
-    auto& getName() & {
+    constexpr auto& getName() & {
         return name_;
     }
 
-    const auto& getName() const& {
+    constexpr const auto& getName() const& {
         return name_;
     }
 

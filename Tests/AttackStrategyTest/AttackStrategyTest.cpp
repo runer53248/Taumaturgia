@@ -25,7 +25,7 @@
     #else
     struct UserStrategy_<Damage, CustomWeapon> {
     #endif
-        ActionStatus operator()(auto& obj, Object* owner, Object* target) const {
+        constexpr ActionStatus operator()(auto& obj, Object* owner, Object* target) const {
             auto* suspect = Whom(owner, target);
             ActionStatus status{ActionStatus::None};
 

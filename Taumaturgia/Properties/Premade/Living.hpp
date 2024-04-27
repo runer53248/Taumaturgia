@@ -66,11 +66,11 @@ public:
     Living_(const Name& name, [[maybe_unused]] const std::variant<V...>& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
-    auto& getHealth() & {
+    constexpr auto& getHealth() & {
         return hp_;
     }
 
-    const auto& getHealth() const& {
+    constexpr const auto& getHealth() const& {
         return hp_;
     }
 

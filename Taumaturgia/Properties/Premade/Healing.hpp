@@ -66,11 +66,11 @@ public:
     Healing_(const Name& name, [[maybe_unused]] const std::variant<V...>& cureHealth, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
-    auto& getCureHealth() & {
+    constexpr auto& getCureHealth() & {
         return cureHealth_;
     }
 
-    const auto& getCureHealth() const& {
+    constexpr const auto& getCureHealth() const& {
         return cureHealth_;
     }
 

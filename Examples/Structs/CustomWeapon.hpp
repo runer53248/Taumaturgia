@@ -19,7 +19,7 @@ struct AttackStrategy_<T> {
 struct UserStrategy_<Damage, T> {
 #endif
 
-    // ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const {  // when get Damagingable property
+    // constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const {  // when get Damagingable property
     //     auto* suspect = Whom(owner, target);
     //     ActionStatus base_status = default_attack_behavior(obj, suspect);
 
@@ -30,7 +30,7 @@ struct UserStrategy_<Damage, T> {
     //     return base_status;
     // }
 
-    ActionStatus operator()(auto& obj, Object* owner, Object* target) const {  // CustomWeapon is not Damagingable by default
+    constexpr ActionStatus operator()(auto& obj, Object* owner, Object* target) const {  // CustomWeapon is not Damagingable by default
         auto* suspect = Whom(owner, target);
         ActionStatus status{ActionStatus::None};
 

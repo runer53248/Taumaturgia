@@ -1,7 +1,7 @@
 #pragma once
 #include "Taumaturgia/Object/Object.hpp"
 
-inline ActionStatus default_wear_behavior(Wearingable auto& obj, Object* target) {
+inline constexpr ActionStatus default_wear_behavior(Wearingable auto& obj, Object* target) {
     auto result = getOpt<Properties::Wear>(*target).and_then([&](auto&& ref_wrap) {
         WearContainer& target_wear = ref_wrap;
         auto& armorWear = traits::accessArmorWear::get(obj);
@@ -22,12 +22,12 @@ inline ActionStatus default_wear_behavior(Wearingable auto& obj, Object* target)
 }
 
 #ifndef NO_PREMADE_STRATEGIES
-ActionStatus WearStrategy_<Default>::operator()(Wearingable auto& obj, Object* owner, Object* target) const {
+constexpr ActionStatus WearStrategy_<Default>::operator()(Wearingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     return default_wear_behavior(obj, suspect);
 }
 #else
-ActionStatus UserStrategy_<WearContainer, Default>::operator()(Wearingable auto& obj, Object* owner, Object* target) const {
+constexpr ActionStatus UserStrategy_<WearContainer, Default>::operator()(Wearingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     return default_wear_behavior(obj, suspect);
 }

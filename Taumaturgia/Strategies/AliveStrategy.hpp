@@ -24,5 +24,5 @@ concept is_alive_strategy = Strategable<AliveStrategy, T, std::optional<AliveSta
 
 template <>
 struct AliveStrategy_<Default> {
-    std::optional<AliveStatus> operator()(Livingable auto& obj) const;
+    constexpr std::optional<AliveStatus> operator()(Livingable auto& obj) const;
 };

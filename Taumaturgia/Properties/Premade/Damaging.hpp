@@ -68,11 +68,11 @@ public:
     Damaging_(const Name& name, [[maybe_unused]] const std::variant<V...>& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
-    auto& getDamage() & {
+    constexpr auto& getDamage() & {
         return dmg_;
     }
 
-    const auto& getDamage() const& {
+    constexpr const auto& getDamage() const& {
         return dmg_;
     }
 

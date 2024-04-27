@@ -14,5 +14,5 @@ concept is_defend_strategy = Strategable<DefendStrategy, T, ActionStatus, Object
 
 template <>
 struct DefendStrategy_<Default> {
-    ActionStatus operator()(Protectingable auto& obj, Object* owner, Object* target) const;
+    constexpr ActionStatus operator()(Protectingable auto& obj, Object* owner, Object* target) const;
 };

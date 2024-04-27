@@ -65,11 +65,11 @@ public:
     Protecting_(const Name& name, [[maybe_unused]] const std::variant<V...>& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
-    auto& getProtection() & {
+    constexpr auto& getProtection() & {
         return protection_;
     }
 
-    const auto& getProtection() const& {
+    constexpr const auto& getProtection() const& {
         return protection_;
     }
 

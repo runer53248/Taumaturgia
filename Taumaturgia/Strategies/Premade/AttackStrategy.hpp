@@ -14,5 +14,5 @@ concept is_attack_strategy = Strategable<AttackStrategy, T, ActionStatus, Object
 
 template <>
 struct AttackStrategy_<Default> {
-    ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const;
+    constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const;
 };

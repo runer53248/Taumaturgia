@@ -3,7 +3,7 @@
 #include "Taumaturgia/Strategies/GetStrategy.hpp"
 
 template <Properties PROPERTY>
-inline auto default_get_behavior(Gettingable auto& obj) {
+inline constexpr auto default_get_behavior(Gettingable auto& obj) {
     using result_type = std::conditional_t<
         std::is_const_v<std::remove_reference_t<decltype(obj)>>,
         optional_get_variant_const_type,
@@ -45,6 +45,6 @@ inline auto default_get_behavior(Gettingable auto& obj) {
 }
 
 template <Properties PROPERTY>
-auto GetStrategy_<Default>::operator()(Gettingable auto& obj) const {
+constexpr auto GetStrategy_<Default>::operator()(Gettingable auto& obj) const {
     return default_get_behavior<PROPERTY>(obj);
 }

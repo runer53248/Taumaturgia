@@ -4,7 +4,7 @@
 #include "Taumaturgia/Traits/UserTypeTraits.hpp"
 
 struct Default;
-struct Object;
+class Object;
 enum class ActionStatus;
 
 template <typename TYPE, typename T>
