@@ -69,7 +69,7 @@ private:
 template <typename T>
     requires std::is_base_of_v<Weapon_C, T>
 struct traits::CustomAccessDamage<T> {
-    static decltype(auto) get(auto& el) {
+    static constexpr decltype(auto) get(auto& el) {
         return el.Dmg();
     }
 };
@@ -106,7 +106,7 @@ private:
 template <typename T>
     requires std::is_base_of_v<Player_B, T>
 struct traits::CustomAccessName<T> {
-    static decltype(auto) get(auto& el) {
+    static constexpr decltype(auto) get(auto& el) {
         return el.Name();
     }
 };

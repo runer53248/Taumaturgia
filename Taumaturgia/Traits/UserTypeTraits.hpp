@@ -41,7 +41,7 @@ struct accessType {
 
     template <GetTypeAccessable<TYPE> T>
         requires(not(CustomTypeAccessable<T, TYPE> or GetTypeTemplateAccessable<T, TYPE>))
-    static decltype(auto) get(T& el) noexcept {
+    static constexpr decltype(auto) get(T& el) noexcept {
         return el.getType();
     }
 

@@ -1,9 +1,8 @@
 #pragma once
 #include <concepts>
 #include <optional>
-#include "Taumaturgia/Traits/HealthTraits.hpp"
-
 #include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
+#include "Taumaturgia/Traits/HealthTraits.hpp"
 
 enum class AliveStatus : signed char;
 

@@ -86,7 +86,7 @@ struct Valid_5 {
 template <typename T>
     requires std::is_base_of_v<Valid_5, T>
 struct traits::CustomAccessName<T> {
-    static decltype(auto) get(auto& el) {
+    static constexpr decltype(auto) get(auto& el) {
         return el.name();
     }
 };
