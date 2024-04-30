@@ -17,7 +17,7 @@ struct traits::CustomAccessName {
     MOCK_METHOD(Name&, get_, (TestType & el));
     MOCK_METHOD(const Name&, get_, (const TestType& el));
 
-    static decltype(auto) get(auto& el) {
+    static constexpr decltype(auto) get(auto& el) {
         if (mock) {
             return mock->get_(el);
         }

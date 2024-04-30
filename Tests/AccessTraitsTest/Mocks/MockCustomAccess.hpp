@@ -4,7 +4,7 @@
     template <typename T>                                                      \
     struct traits::CustomAccess##Name {                                        \
         inline static traits::CustomAccess##Name<T>* mock = nullptr;           \
-        static decltype(auto) get(auto& el) {                                  \
+        static constexpr decltype(auto) get(auto& el) {                                  \
             if (mock) {                                                        \
                 return mock->get_(el);                                         \
             }                                                                  \

@@ -16,7 +16,7 @@ struct traits::CustomAccessRestoreEffects {
     MOCK_METHOD(EffectTypeContainer&, get_, (TestType & el));
     MOCK_METHOD(const EffectTypeContainer&, get_, (const TestType& el));
 
-    static decltype(auto) get(auto& el) {
+    static constexpr decltype(auto) get(auto& el) {
         if (mock) {
             return mock->get_(el);
         }

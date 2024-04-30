@@ -17,7 +17,7 @@ struct traits::CustomAccessHealth {
     MOCK_METHOD(Health&, get_, (TestType & el));
     MOCK_METHOD(const Health&, get_, (const TestType& el));
 
-    static decltype(auto) get(auto& el) {
+    static constexpr decltype(auto) get(auto& el) {
         if (mock) {
             return mock->get_(el);
         }

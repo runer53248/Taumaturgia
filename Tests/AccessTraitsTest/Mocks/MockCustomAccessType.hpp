@@ -10,7 +10,7 @@ struct traits::CustomAccessType {
     MOCK_METHOD(TYPE&, get_, (T & el));
     MOCK_METHOD(const TYPE&, get_, (const T& el));
 
-    static decltype(auto) get(auto& el) {
+    static constexpr decltype(auto) get(auto& el) {
         return mock->get_(el);
     }
 };
