@@ -78,12 +78,22 @@ private:
     CureHealth cureHealth_{};
 };
 
-namespace Test {
+}  // namespace impl
+
+#ifdef WITH_ADD_PROPERTIES
+#include "Taumaturgia/Traits/UserTypeTraits.hpp"
+template <typename T>
+struct traits::CustomAccessType<CureHealth, T> {
+    static constexpr decltype(auto) get(GetCureHealthAccessable auto& el) {
+        return el.getCureHealth();
+    }
+};
+#endif
+
+namespace impl::Test {
 struct Healing_Test {};
 static_assert(Healingable<Healing_<Healing_Test>>);
-}  // namespace Test
-
-}  // namespace impl
+}  // namespace impl::Test
 
 template <typename T>
 using Healing = std::conditional_t<Healingable<T>, T, impl::Healing_<T>>;

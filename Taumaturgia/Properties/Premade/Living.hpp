@@ -78,12 +78,22 @@ private:
     Health hp_{};
 };
 
-namespace Test {
+}  // namespace impl
+
+#ifdef WITH_ADD_PROPERTIES
+#include "Taumaturgia/Traits/UserTypeTraits.hpp"
+template <typename T>
+struct traits::CustomAccessType<Health, T> {
+    static constexpr decltype(auto) get(GetHealthAccessable auto& el) {
+        return el.getHealth();
+    }
+};
+#endif
+
+namespace impl::Test {
 struct Living_Test {};
 static_assert(Livingable<Living_<Living_Test>>);
-}  // namespace Test
-
-}  // namespace impl
+}  // namespace impl::Test
 
 template <typename T>
 using Living = std::conditional_t<Livingable<T>, T, impl::Living_<T>>;

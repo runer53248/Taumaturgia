@@ -1,6 +1,6 @@
 #pragma once
-#include "Taumaturgia/Traits/NameTraits.hpp"
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
+#include "Taumaturgia/Traits/NameTraits.hpp"
 
 namespace impl {
 inline constinit const char naming_type_name[] = "Naming";
@@ -12,7 +12,7 @@ public:
 
     Naming_() = default;
 
-template <typename... Args>
+    template <typename... Args>
     Naming_(const Name& name, Args&&... args)
         : T{std::forward<Args>(args)...}, name_{name} {}
 
@@ -28,12 +28,22 @@ private:
     Name name_{};
 };
 
-namespace Test {
+}  // namespace impl
+
+#ifdef WITH_ADD_PROPERTIES
+#include "Taumaturgia/Traits/UserTypeTraits.hpp"
+template <typename T>
+struct traits::CustomAccessType<Name, T> {
+    static constexpr decltype(auto) get(GetNameAccessable auto& el) {
+        return el.getName();
+    }
+};
+#endif
+
+namespace impl::Test {
 struct Naming_Test {};
 static_assert(Namingable<Naming_<Naming_Test>>);
-}  // namespace Test
-
-}  // namespace impl
+}  // namespace impl::Test
 
 template <typename T>
 using Naming = std::conditional_t<Namingable<T>, T, impl::Naming_<T>>;

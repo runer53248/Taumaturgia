@@ -82,12 +82,22 @@ private:
     EffectTypeContainer restoreEffects_{};
 };
 
-namespace Test {
+}  // namespace impl
+
+#ifdef WITH_ADD_PROPERTIES
+#include "Taumaturgia/Traits/UserTypeTraits.hpp"
+template <typename T>
+struct traits::CustomAccessType<EffectTypeContainer, T> {
+    static constexpr decltype(auto) get(GetRestoreEffectsAccessable auto& el) {
+        return el.getRestoreEffects();
+    }
+};
+#endif
+
+namespace impl::Test {
 struct Restoring_Test {};
 static_assert(Restoringable<Restoring_<Restoring_Test>>);
-}  // namespace Test
-
-}  // namespace impl
+}  // namespace impl::Test
 
 template <typename T>
 using Restoring = std::conditional_t<Restoringable<T>, T, impl::Restoring_<T>>;
