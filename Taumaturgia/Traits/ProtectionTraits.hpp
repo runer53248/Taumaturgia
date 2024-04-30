@@ -3,6 +3,16 @@
 #include "Concepts/ProtectionConcepts.hpp"
 #include "Helpers/trait_accessable.hpp"
 
+#ifdef WITH_ADD_PROPERTIES
+
+#include "UserTypeTraits.hpp"
+template <typename T>
+concept Protectingable = accessType_trait_able<T, Protection>;
+
+using Protectingable_trait = traits::accessType<Protection>;
+
+#else
+
 namespace traits {
 
 #ifdef ACCESS_TRAIT_MACRO
@@ -36,3 +46,7 @@ struct accessProtection {
 
 template <typename T>
 concept Protectingable = trait_accessable<T, traits::accessProtection, Protection>;
+
+using Protectingable_trait = traits::accessProtection;
+
+#endif

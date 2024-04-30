@@ -66,14 +66,14 @@ TEST_F(Health_Fixture, Access_by_trait_accessHealth_with_CustomAccessHealth) {
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_hp));
 #endif
 
-    decltype(auto) hp = traits::accessHealth::get((*type));
-    decltype(auto) hp_const = traits::accessHealth::get(std::as_const((*type)));
+    decltype(auto) hp = Livingable_trait::get((*type));
+    decltype(auto) hp_const = Livingable_trait::get(std::as_const((*type)));
 
     EXPECT_EQ(hp, default_hp);
     EXPECT_EQ(hp_const, default_hp);
 
     hp = default_hp_change;
-    hp = traits::accessHealth::get((*type));
+    hp = Livingable_trait::get((*type));
 
     EXPECT_EQ(hp, default_hp_change);
 }

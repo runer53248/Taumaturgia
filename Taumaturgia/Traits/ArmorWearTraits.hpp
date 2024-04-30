@@ -3,6 +3,16 @@
 #include "Concepts/ArmorWearConcepts.hpp"
 #include "Helpers/trait_accessable.hpp"
 
+#ifdef WITH_ADD_PROPERTIES
+
+#include "UserTypeTraits.hpp"
+template <typename T>
+concept Wearingable = accessType_trait_able<T, WearContainer>;
+
+using Wearingable_trait = traits::accessType<WearContainer>;
+
+#else
+
 namespace traits {
 
 #ifdef ACCESS_TRAIT_MACRO
@@ -36,3 +46,7 @@ struct accessArmorWear {
 
 template <typename T>
 concept Wearingable = trait_accessable<T, traits::accessArmorWear, WearContainer>;
+
+using Wearingable_trait = traits::accessArmorWear;
+
+#endif

@@ -3,6 +3,16 @@
 #include "Concepts/RestoreEffectsConcepts.hpp"
 #include "Helpers/trait_accessable.hpp"
 
+#ifdef WITH_ADD_PROPERTIES
+
+#include "UserTypeTraits.hpp"
+template <typename T>
+concept Restoringable = accessType_trait_able<T, EffectTypeContainer>;
+
+using Restoringable_trait = traits::accessType<EffectTypeContainer>;
+
+#else
+
 namespace traits {
 
 #ifdef ACCESS_TRAIT_MACRO
@@ -36,3 +46,7 @@ struct accessRestoreEffects {
 
 template <typename T>
 concept Restoringable = trait_accessable<T, traits::accessRestoreEffects, EffectTypeContainer>;
+
+using Restoringable_trait = traits::accessRestoreEffects;
+
+#endif

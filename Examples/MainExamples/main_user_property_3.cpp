@@ -11,7 +11,7 @@ struct MyType {
 };
 
 using Type_basic = UserProperty<Damage, MyType>;
-static_assert(traits::GetTypeAccessable<Type_basic, Damage>);
+static_assert(traits::GetTypeTemplateAccessable<Type_basic, Damage>);
 
 using Type_no_nest = UserProperty<Damage, UserProperty<Damage, UserProperty<Damage, MyType>>>;                              // UserProperty don't allow nesting - getType_or_custom_accessable concept check disallow it
 using Type_unlimited_nest = impl::UserProperty_<Damage, impl::UserProperty_<Damage, impl::UserProperty_<Damage, MyType>>>;  // impl::UserProperty_ allow unlimited nesting
@@ -63,7 +63,7 @@ int main() {
     std::cout << "Type_nest_unlimited_two        = " << name<Type_nest_unlimited_two>() << '\n';
 
     std::cout << "Type_no_nest" << '\n';
-    std::cout << ((type_no.getType<Damage>() == traits::accessDamage::get(type_no)) and  //
+    std::cout << ((type_no.getType<Damage>() == Damagingable_trait::get(type_no)) and  //
                   (type_no.getType<Damage>() == traits::accessType<Damage>::get(type_no)))
               << '\n';
     std::cout << type_no.getType<Damage>() << '\n';
@@ -74,7 +74,7 @@ int main() {
     std::cout << '\n';
 
     std::cout << "Type_unlimited_nest" << '\n';
-    std::cout << ((type_u.getType<Damage>() == traits::accessDamage::get(type_u)) and  //
+    std::cout << ((type_u.getType<Damage>() == Damagingable_trait::get(type_u)) and  //
                   (type_u.getType<Damage>() == traits::accessType<Damage>::get(type_u)))
               << '\n';
     std::cout << type_u.getType<Damage>() << '\n';
@@ -85,7 +85,7 @@ int main() {
     std::cout << '\n';
 
     std::cout << "Type_nest_unlimited_one" << '\n';
-    std::cout << ((type2.getType<Damage>() == traits::accessDamage::get(type2)) and  //
+    std::cout << ((type2.getType<Damage>() == Damagingable_trait::get(type2)) and  //
                   (type2.getType<Damage>() == traits::accessType<Damage>::get(type2)))
               << '\n';
     std::cout << type2.getType<Damage>() << '\n';
@@ -96,7 +96,7 @@ int main() {
     std::cout << '\n';
 
     std::cout << "Type_nest_unlimited_two" << '\n';
-    std::cout << ((type3.getType<Damage>() == traits::accessDamage::get(type3)) and  //
+    std::cout << ((type3.getType<Damage>() == Damagingable_trait::get(type3)) and  //
                   (type3.getType<Damage>() == traits::accessType<Damage>::get(type3)))
               << '\n';
     std::cout << type3.getType<Damage>() << '\n';

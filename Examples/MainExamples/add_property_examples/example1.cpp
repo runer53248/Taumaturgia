@@ -103,9 +103,9 @@ int main() {
 
     auto fill_type = [](auto&& type) {
         traits::accessName::get(type) = default_name;
-        traits::accessHealth::get(type) = default_health;
-        traits::accessDamage::get(type) = default_damage;
-        traits::accessProtection::get(type) = default_protection;
+        Livingable_trait::get(type) = default_health;
+        Damagingable_trait::get(type) = default_damage;
+        Protectingable_trait::get(type) = default_protection;
     };
 
     fill_type(type1);

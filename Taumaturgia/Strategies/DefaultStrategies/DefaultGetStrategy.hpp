@@ -13,32 +13,32 @@ inline constexpr auto default_get_behavior(Gettingable auto& obj) {
     if constexpr (PROPERTY == Properties::Health) {
         if constexpr (Livingable<type>) {
             return result_type{
-                std::ref(traits::accessHealth::get(obj))};
+                std::ref(Livingable_trait::get(obj))};
         }
     } else if constexpr (PROPERTY == Properties::CureHealth) {
         if constexpr (Healingable<type>) {
             return result_type{
-                std::ref(traits::accessCureHealth::get(obj))};
+                std::ref(Healingable_trait::get(obj))};
         }
     } else if constexpr (PROPERTY == Properties::Protection) {
         if constexpr (Protectingable<type>) {
             return result_type{
-                std::ref(traits::accessProtection::get(obj))};
+                std::ref(Protectingable_trait::get(obj))};
         }
     } else if constexpr (PROPERTY == Properties::Damage) {
         if constexpr (Damagingable<type>) {
             return result_type{
-                std::ref(traits::accessDamage::get(obj))};
+                std::ref(Damagingable_trait::get(obj))};
         }
     } else if constexpr (PROPERTY == Properties::Restore) {
         if constexpr (Restoringable<type>) {
             return result_type{
-                std::ref(traits::accessRestoreEffects::get(obj))};
+                std::ref(Restoringable_trait::get(obj))};
         }
     } else if constexpr (PROPERTY == Properties::Wear) {
         if constexpr (Wearingable<type>) {
             return result_type{
-                std::ref(traits::accessArmorWear::get(obj))};
+                std::ref(Wearingable_trait::get(obj))};
         }
     }
     return result_type{};

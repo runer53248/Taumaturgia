@@ -2,6 +2,11 @@
 #include "Taumaturgia/Types/Name.hpp"
 #include "Taumaturgia/Types/Protection.hpp"
 
+#ifdef WITH_ADD_PROPERTIES
+#include "EmptyType.hpp"
+using Armor = add_properties<Type, Naming, Protecting>;
+#else
+
 // struct Armor {
 //     Name name;
 //     Protection protection{};
@@ -25,3 +30,5 @@ public:
 private:
     Protection protection;
 };
+
+#endif

@@ -7,23 +7,13 @@ struct Living_type {
     Health hp;
 };
 
+#include "Examples/structs.hpp"
+
 #ifdef WITH_ADD_PROPERTIES
     // use add_properties for creating type with properties
     #include "Examples/Structs/CustomWeapon.hpp"
 
-    struct Type {};
-
     using ArmorSet = add_properties<Type, Naming, Wearing>;
-
-    using NoNameWeapon = add_properties<Type, Damaging>;
-    using Weapon = add_properties<Type, Naming, Damaging>;
-    using Player = add_properties<Type, Naming, Wearing, Restoring>;
-    using Enemy = add_properties<Type, Naming>;
-    using Scroll = add_properties<Type, Naming>;
-    using Potion = add_properties<Type, Naming>;
-    using Armor = add_properties<Type, Naming, Protecting>;
-    using Helmet = add_properties<Type, Naming, Protecting>;
-    using Npc = add_properties<Type, Living>;
 
     using living_weapon = add_properties<Weapon, Living>;
     using living_player = add_properties<Player, Living>;
@@ -57,9 +47,6 @@ struct Living_type {
 
     using player_type = add_properties<Player, Living>;
 #else
-    // use old method of creating type with properties
-    #include "Examples/structs.hpp"
-
     struct Empty {};
 
     using ArmorSet = Wearing<Naming<Empty>>;

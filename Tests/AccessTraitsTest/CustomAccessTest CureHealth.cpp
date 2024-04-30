@@ -69,8 +69,8 @@ TEST_F(CureHealth_Fixture, Access_by_trait_accessCureHealth_with_CustomAccessCur
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_cureHp));
 #endif
 
-    decltype(auto) cureHp = traits::accessCureHealth::get((*type));
-    decltype(auto) cureHp_const = traits::accessCureHealth::get(std::as_const((*type)));
+    decltype(auto) cureHp = Healingable_trait::get((*type));
+    decltype(auto) cureHp_const = Healingable_trait::get(std::as_const((*type)));
 
     static_assert(not std::is_const_v<std::remove_reference_t<decltype(cureHp)>>);
     static_assert(std::is_const_v<std::remove_reference_t<decltype(cureHp_const)>>);
@@ -79,7 +79,7 @@ TEST_F(CureHealth_Fixture, Access_by_trait_accessCureHealth_with_CustomAccessCur
     EXPECT_EQ(cureHp_const, default_cureHp);
 
     cureHp = default_cureHp_change;
-    cureHp = traits::accessCureHealth::get((*type));
+    cureHp = Healingable_trait::get((*type));
 
     EXPECT_EQ(cureHp, default_cureHp_change);
 }

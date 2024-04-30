@@ -47,10 +47,10 @@ int main() {
     std::cout << '\n';
 
     auto fill_and_print_type = [](auto& el) {
-        traits::accessHealth::get(el) = Health{500};
-        traits::accessArmorWear::get(el) = {};
-        traits::accessProtection::get(el) = Protection{15, BodyLocation::Arms};
-        traits::accessRestoreEffects::get(el) = {EffectType::Burn};
+        Livingable_trait::get(el) = Health{500};
+        Wearingable_trait::get(el) = {};
+        Protectingable_trait::get(el) = Protection{15, BodyLocation::Arms};
+        Restoringable_trait::get(el) = {EffectType::Burn};
         print_object(Object{el});
     };
 

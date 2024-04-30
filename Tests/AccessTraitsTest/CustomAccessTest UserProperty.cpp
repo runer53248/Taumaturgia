@@ -46,15 +46,15 @@ TEST_F(UserProperty_Fixture, Access_by_trait_accessType_with_CustomAccessType) {
     decltype(auto) name = traits::accessType<Name>::get((*type));
     decltype(auto) name_const = traits::accessType<Name>::get(std::as_const((*type)));
 
-    static_assert(traits::GetTypeAccessable<decltype((*type)), Name>);
+    static_assert(traits::GetTypeTemplateAccessable<decltype((*type)), Name>);
     static_assert(traits::CustomTypeAccessable<decltype((*type)), Name>);
 
-    static_assert(traits::GetTypeAccessable<decltype(std::as_const((*type))), Name>);
+    static_assert(traits::GetTypeTemplateAccessable<decltype(std::as_const((*type))), Name>);
     static_assert(traits::CustomTypeAccessable<decltype(std::as_const((*type))), Name>);
 
-    static_assert(traits::GetTypeAccessable<decltype((*c_type)), Name>);
+    static_assert(traits::GetTypeTemplateAccessable<decltype((*c_type)), Name>);
     static_assert(traits::CustomTypeAccessable<decltype((*c_type)), Name>);
-    static_assert(traits::GetTypeAccessable<decltype(std::as_const((*c_type))), Name>);
+    static_assert(traits::GetTypeTemplateAccessable<decltype(std::as_const((*c_type))), Name>);
     static_assert(traits::CustomTypeAccessable<decltype(std::as_const((*c_type))), Name>);
 
     EXPECT_EQ(name, Name{default_name});

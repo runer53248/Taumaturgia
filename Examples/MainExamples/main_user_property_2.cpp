@@ -47,7 +47,7 @@ int main() {
     decltype(auto) d = type.getDamage();
 #else
     decltype(auto) s = traits::accessName::get(type);
-    decltype(auto) d = traits::accessDamage::get(type);
+    decltype(auto) d = Damagingable_trait::get(type);
 #endif
     decltype(auto) i = type.getType<int>();
     decltype(auto) i2 = std::as_const(type).getType<int>();
