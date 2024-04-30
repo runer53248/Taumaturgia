@@ -46,7 +46,7 @@ int main() {
     decltype(auto) s = type.getName();
     decltype(auto) d = type.getDamage();
 #else
-    decltype(auto) s = traits::accessName::get(type);
+    decltype(auto) s = Namingable_trait::get(type);
     decltype(auto) d = Damagingable_trait::get(type);
 #endif
     decltype(auto) i = type.getType<int>();

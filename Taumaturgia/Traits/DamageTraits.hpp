@@ -44,9 +44,9 @@ struct accessDamage {
 
 }  // namespace traits
 
-template <typename T>
-concept Damagingable = trait_accessable<T, traits::accessDamage, Damage>;
-
 using Damagingable_trait = traits::accessDamage;
+
+template <typename T>
+concept Damagingable = trait_accessable<T, Damagingable_trait, Damage>;
 
 #endif

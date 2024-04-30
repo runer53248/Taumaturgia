@@ -55,11 +55,11 @@ int main() {
     };
 
     y_type Y{};
-    traits::accessName::get(Y) = Name{"y_type Y"};
+    Namingable_trait::get(Y) = Name{"y_type Y"};
     fill_and_print_type(Y);
 
     z_type Z{};
-    traits::accessName::get(Z) = Name{"z_type Z"};
+    Namingable_trait::get(Z) = Name{"z_type Z"};
     fill_and_print_type(Z);
 
     static_assert(sizeof(Y) == sizeof(Z));

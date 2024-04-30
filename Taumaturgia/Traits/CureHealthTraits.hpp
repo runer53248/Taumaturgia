@@ -44,9 +44,9 @@ struct accessCureHealth {
 
 }  // namespace traits
 
-template <typename T>
-concept Healingable = trait_accessable<T, traits::accessCureHealth, CureHealth>;
-
 using Healingable_trait = traits::accessCureHealth;
+
+template <typename T>
+concept Healingable = trait_accessable<T, Healingable_trait, CureHealth>;
 
 #endif

@@ -44,9 +44,9 @@ struct accessRestoreEffects {
 
 }  // namespace traits
 
-template <typename T>
-concept Restoringable = trait_accessable<T, traits::accessRestoreEffects, EffectTypeContainer>;
-
 using Restoringable_trait = traits::accessRestoreEffects;
+
+template <typename T>
+concept Restoringable = trait_accessable<T, Restoringable_trait, EffectTypeContainer>;
 
 #endif

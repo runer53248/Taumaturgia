@@ -38,7 +38,7 @@ int main() {
         /*dmg*/ Damage{}};  // can be ommited - type inside Weapon type
 #endif
 
-    traits::accessName::get(gustav) = Name{"Franco The Inteligent Sword"};
+    Namingable_trait::get(gustav) = Name{"Franco The Inteligent Sword"};
     Livingable_trait::get(gustav) = Health{75};  // universal access version
     Healingable_trait::get(gustav) = CureHealth{30};
     Damagingable_trait::get(gustav) = Damage{100,

@@ -62,7 +62,7 @@ constexpr Object::ObjectModel<T>::ObjectModel(const T& type)
 
 template <Namingable T>
 constexpr std::string Object::ObjectModel<T>::name() const {
-    return traits::accessName::get(type_);
+    return Namingable_trait::get(type_);
 }
 
 template <Namingable T>

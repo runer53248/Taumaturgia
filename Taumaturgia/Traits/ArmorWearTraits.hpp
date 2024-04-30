@@ -44,9 +44,9 @@ struct accessArmorWear {
 
 }  // namespace traits
 
-template <typename T>
-concept Wearingable = trait_accessable<T, traits::accessArmorWear, WearContainer>;
-
 using Wearingable_trait = traits::accessArmorWear;
+
+template <typename T>
+concept Wearingable = trait_accessable<T, Wearingable_trait, WearContainer>;
 
 #endif

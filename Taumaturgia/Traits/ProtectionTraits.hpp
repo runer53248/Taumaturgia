@@ -44,9 +44,9 @@ struct accessProtection {
 
 }  // namespace traits
 
-template <typename T>
-concept Protectingable = trait_accessable<T, traits::accessProtection, Protection>;
-
 using Protectingable_trait = traits::accessProtection;
+
+template <typename T>
+concept Protectingable = trait_accessable<T, Protectingable_trait, Protection>;
 
 #endif

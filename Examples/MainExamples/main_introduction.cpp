@@ -27,7 +27,7 @@ int main() {
     auto test = [](auto& type) {
         Object object{type};
         std::cout << "Name: " << object.name() << '\n';
-        std::cout << "\n- Benchmark get hp by traits::accessHealth.\n";
+        std::cout << "\n- Benchmark get hp by Livingable_trait.\n";
         const auto& hp2 = Benchmark([&] {
             auto& value = Livingable_trait::get(type);
             value.addHealth(1);

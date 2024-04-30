@@ -35,5 +35,7 @@ struct accessName {
 
 }  // namespace traits
 
+using Namingable_trait = traits::accessName;
+
 template <typename T>
-concept Namingable = trait_access_covertable<T, traits::accessName, std::string>;
+concept Namingable = trait_access_covertable<T, Namingable_trait, std::string>;
