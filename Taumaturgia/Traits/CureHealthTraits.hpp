@@ -3,6 +3,16 @@
 #include "Concepts/CureHealthConcepts.hpp"
 #include "Helpers/trait_accessable.hpp"
 
+#ifdef WITH_ADD_PROPERTIES
+
+#include "UserTypeTraits.hpp"
+template <typename T>
+concept Healingable = accessType_trait_able<T, CureHealth>;
+
+using Healingable_trait = traits::accessType<CureHealth>;
+
+#else
+
 namespace traits {
 
 #ifdef ACCESS_TRAIT_MACRO
@@ -36,3 +46,7 @@ struct accessCureHealth {
 
 template <typename T>
 concept Healingable = trait_accessable<T, traits::accessCureHealth, CureHealth>;
+
+using Healingable_trait = traits::accessCureHealth;
+
+#endif

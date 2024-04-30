@@ -3,6 +3,16 @@
 #include "Concepts/HealthConcepts.hpp"
 #include "Helpers/trait_accessable.hpp"
 
+#ifdef WITH_ADD_PROPERTIES
+
+#include "UserTypeTraits.hpp"
+template <typename T>
+concept Livingable = accessType_trait_able<T, Health>;
+
+using Livingable_trait = traits::accessType<Health>;
+
+#else
+
 namespace traits {
 
 #ifdef ACCESS_TRAIT_MACRO
@@ -36,3 +46,7 @@ struct accessHealth {
 
 template <typename T>
 concept Livingable = trait_accessable<T, traits::accessHealth, Health>;
+
+using Livingable_trait = traits::accessHealth;
+
+#endif

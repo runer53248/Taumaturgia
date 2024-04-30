@@ -3,6 +3,16 @@
 #include "Concepts/DamageConcepts.hpp"
 #include "Helpers/trait_accessable.hpp"
 
+#ifdef WITH_ADD_PROPERTIES
+
+#include "UserTypeTraits.hpp"
+template <typename T>
+concept Damagingable = accessType_trait_able<T, Damage>;
+
+using Damagingable_trait = traits::accessType<Damage>;
+
+#else
+
 namespace traits {
 
 #ifdef ACCESS_TRAIT_MACRO
@@ -36,3 +46,7 @@ struct accessDamage {
 
 template <typename T>
 concept Damagingable = trait_accessable<T, traits::accessDamage, Damage>;
+
+using Damagingable_trait = traits::accessDamage;
+
+#endif
