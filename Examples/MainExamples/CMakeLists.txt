@@ -40,3 +40,7 @@ add_executable(${PROJECT_NAME}-main_user_property3-aware
 target_compile_definitions(${PROJECT_NAME}-main_user_property3-aware 
     PUBLIC USER_PROPERTY_SELF_AWARE
 )
+
+add_executable(${PROJECT_NAME}-main_constexpr_traits
+main_constexpr_traits.cpp
+)

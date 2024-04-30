@@ -88,43 +88,43 @@ public:
     // MARK: tuple C-tors
 
     template <typename... INFO, typename... Args>
-    UserProperty_(std::tuple<INFO...>&& type, Args&&... args)
+    constexpr UserProperty_(std::tuple<INFO...>&& type, Args&&... args)
         : T{std::forward<Args>(args)...},
           type_{std::make_from_tuple<TYPE>(std::move(type))} {}
 
     template <typename... INFO, typename... Args>
-    UserProperty_(const std::tuple<INFO...>& type, Args&&... args)
+    constexpr UserProperty_(const std::tuple<INFO...>& type, Args&&... args)
         : T{std::forward<Args>(args)...},
           type_{std::make_from_tuple<TYPE>(type)} {}
 
     template <typename... INFO, typename... Args>
         requires(not constructible_from_args<TYPE, INFO...>)
-    UserProperty_(std::tuple<INFO...>&&, Args&&...) {
+    constexpr UserProperty_(std::tuple<INFO...>&&, Args&&...) {
         throw std::logic_error("Can't create TYPE from given tuple.");
     }
 
     template <typename... INFO, typename... Args>
         requires(not constructible_from_args<TYPE, INFO...>)
-    UserProperty_(const std::tuple<INFO...>&, Args&&...) {
+    constexpr UserProperty_(const std::tuple<INFO...>&, Args&&...) {
         throw std::logic_error("Can't create TYPE from given tuple.");
     }
 
     // MARK: default and ignore C-tors
 
-    UserProperty_() = default;
+    constexpr UserProperty_() = default;
 
     template <typename... Args>
-    UserProperty_([[maybe_unused]] decltype(std::ignore) type, Args&&... args)
+    constexpr UserProperty_([[maybe_unused]] decltype(std::ignore) type, Args&&... args)
         : T{std::forward<Args>(args)...} {}
 
     // MARK: type C-tors
 
     template <typename... Args>
-    UserProperty_(TYPE&& type, Args&&... args)
+    constexpr UserProperty_(TYPE&& type, Args&&... args)
         : T{std::forward<Args>(args)...}, type_{std::move(type)} {}
 
     template <typename... Args>
-    UserProperty_(const TYPE& type, Args&&... args)
+    constexpr UserProperty_(const TYPE& type, Args&&... args)
         : T{std::forward<Args>(args)...}, type_{type} {}
 
     // MARK: variant C-tors
@@ -144,7 +144,7 @@ public:
 
     // MARK: getType
 
-    template <typename RETURN = TYPE, int DIG = 0>
+    template <typename RETURN = TYPE, size_t DIG = 0>
     constexpr decltype(auto) getType() & {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             if constexpr (DIG) {
@@ -159,7 +159,7 @@ public:
         }
     }
 
-    template <typename RETURN = TYPE, int DIG = 0>
+    template <typename RETURN = TYPE, size_t DIG = 0>
     constexpr decltype(auto) getType() const& {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             if constexpr (DIG) {
