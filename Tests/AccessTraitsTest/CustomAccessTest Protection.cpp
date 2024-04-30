@@ -66,14 +66,14 @@ TEST_F(Protection_Fixture, Access_by_trait_accessProtection_with_CustomAccessPro
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_protection));
 #endif
 
-    decltype(auto) protection = traits::accessProtection::get((*type));
-    decltype(auto) protection_const = traits::accessProtection::get(std::as_const((*type)));
+    decltype(auto) protection = Protectingable_trait::get((*type));
+    decltype(auto) protection_const = Protectingable_trait::get(std::as_const((*type)));
 
     EXPECT_EQ(protection, default_protection);
     EXPECT_EQ(protection_const, default_protection);
 
     protection = default_protection_change;
-    protection = traits::accessProtection::get((*type));
+    protection = Protectingable_trait::get((*type));
 
     EXPECT_EQ(protection, default_protection_change);
 }

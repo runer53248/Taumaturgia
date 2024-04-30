@@ -12,10 +12,10 @@ int main() {
 
     auto armorSet = ArmorSet{Name{"Body of Lidia"}};
 
-    traits::accessArmorWear::get(armorSet).wearProtection(Protection{
+    Wearingable_trait::get(armorSet).wearProtection(Protection{
         ArmorClass{5, BodyLocation::Legs, {EffectType::Burn, EffectType::Freeze}}
     });
-    traits::accessArmorWear::get(armorSet).wearProtection(Protection{
+    Wearingable_trait::get(armorSet).wearProtection(Protection{
         ArmorClass{3, BodyLocation::Arms, {EffectType::Burn, EffectType::Freeze}}
     });
 

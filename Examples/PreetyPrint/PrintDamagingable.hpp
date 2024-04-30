@@ -7,7 +7,7 @@
 #include "PrintEffectType.hpp"
 
 constexpr auto& operator<<(std::ostream& out, const Damagingable auto& obj) {
-    const auto dmg = traits::accessDamage::get(obj);
+    const auto dmg = Damagingable_trait::get(obj);
     const auto name = traits::accessName::get(obj);
     out << " for " << dmg.value() << " dmg"
         << " with " << name

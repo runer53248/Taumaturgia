@@ -21,7 +21,7 @@ int main() {
 #ifndef NO_PREMADE_PROPERTIES
     myType.getHealth() = Health{4};
 #else
-    traits::accessHealth::get(myType) = Health{4};
+    Livingable_trait::get(myType) = Health{4};
 #endif
 
     auto test = [](auto& type) {
@@ -29,7 +29,7 @@ int main() {
         std::cout << "Name: " << object.name() << '\n';
         std::cout << "\n- Benchmark get hp by traits::accessHealth.\n";
         const auto& hp2 = Benchmark([&] {
-            auto& value = traits::accessHealth::get(type);
+            auto& value = Livingable_trait::get(type);
             value.addHealth(1);
             return value;
         })();

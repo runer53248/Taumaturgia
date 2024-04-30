@@ -52,8 +52,8 @@ int main() {
     auto weapon_a = Weapon{Name{"Weapon"}, Damage{6}};
     const auto weapon_b = Weapon{Name{"Weapon"}, Damage{6}};
 
-    decltype(auto) damage_a = traits::accessDamage::get(weapon_a);  // reference
-    decltype(auto) damage_b = traits::accessDamage::get(weapon_b);  // const reference
+    decltype(auto) damage_a = Damagingable_trait::get(weapon_a);  // reference
+    decltype(auto) damage_b = Damagingable_trait::get(weapon_b);  // const reference
 
     static_assert(std::is_same_v<decltype(damage_a), Damage&>);
     static_assert(std::is_same_v<decltype(damage_b), const Damage&>);

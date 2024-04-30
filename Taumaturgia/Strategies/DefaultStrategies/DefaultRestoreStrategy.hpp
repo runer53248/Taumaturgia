@@ -6,7 +6,7 @@ inline ActionStatus default_restore_behavior(Restoringable auto& obj, Object* ta
         Health& hp_ref = ref_wrap;
 
         if (auto& target_effects = hp_ref.effects(); not target_effects.empty()) {
-            for (const auto& restoreEffect : traits::accessRestoreEffects::get(obj)) {
+            for (const auto& restoreEffect : Restoringable_trait::get(obj)) {
                 target_effects.removeEffectType(restoreEffect);
             }
         }
