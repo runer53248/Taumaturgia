@@ -23,7 +23,7 @@ constexpr ActionStatus HealStrategy_<Default>::operator()(Healingable auto& obj,
     return default_heal_behavior(obj, suspect);
 }
 #else
-constexpr ActionStatus UserStrategy_<CureHealth, Default>::operator()(Healingable auto& obj, Object* owner, Object* target) const {
+constexpr ActionStatus UserStrategy_<CureHealth, Default, ActionStatus>::operator()(Healingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     return default_heal_behavior(obj, suspect);
 }

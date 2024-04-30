@@ -12,6 +12,12 @@ inline constexpr std::optional<AliveStatus> default_alive_behavior(Livingable au
     return AliveStatus::Death;
 }
 
+#ifndef NO_PREMADE_STRATEGIES
 constexpr std::optional<AliveStatus> AliveStrategy_<Default>::operator()(Livingable auto& obj) const {
     return default_alive_behavior(obj);
 }
+#else
+constexpr std::optional<AliveStatus> UserStrategy_<Health, Default, std::optional<AliveStatus>>::operator()(Livingable auto& obj) const {
+    return default_alive_behavior(obj);
+}
+#endif

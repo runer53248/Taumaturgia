@@ -16,7 +16,7 @@ template <std::convertible_to<CustomWeapon> T>
 #ifndef NO_PREMADE_STRATEGIES
 struct AttackStrategy_<T> {
 #else
-struct UserStrategy_<Damage, T> {
+struct UserStrategy_<Damage, T, ActionStatus> {
 #endif
 
     // constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const {  // when get Damagingable property

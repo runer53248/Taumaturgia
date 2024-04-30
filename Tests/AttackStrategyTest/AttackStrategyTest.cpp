@@ -23,7 +23,7 @@
     #ifndef NO_PREMADE_STRATEGIES
     struct AttackStrategy_<CustomWeapon> {
     #else
-    struct UserStrategy_<Damage, CustomWeapon> {
+    struct UserStrategy_<Damage, CustomWeapon, ActionStatus> {
     #endif
         constexpr ActionStatus operator()(auto& obj, Object* owner, Object* target) const {
             auto* suspect = Whom(owner, target);

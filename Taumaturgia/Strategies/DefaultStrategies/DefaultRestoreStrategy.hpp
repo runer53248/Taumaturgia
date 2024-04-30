@@ -28,7 +28,7 @@ constexpr ActionStatus RestoreStrategy_<Default>::operator()(Restoringable auto&
     return default_restore_behavior(obj, suspect);
 }
 #else
-constexpr ActionStatus UserStrategy_<EffectTypeContainer, Default>::operator()(Restoringable auto& obj, Object* owner, Object* target) const {
+constexpr ActionStatus UserStrategy_<EffectTypeContainer, Default, ActionStatus>::operator()(Restoringable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     return default_restore_behavior(obj, suspect);
 }

@@ -23,7 +23,7 @@ constexpr ActionStatus DefendStrategy_<Default>::operator()(Protectingable auto&
     return default_defend_behavior(obj, suspect);
 }
 #else
-constexpr ActionStatus UserStrategy_<Protection, Default>::operator()(Protectingable auto& obj, Object* owner, Object* target) const {
+constexpr ActionStatus UserStrategy_<Protection, Default, ActionStatus>::operator()(Protectingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     return default_defend_behavior(obj, suspect);
 }

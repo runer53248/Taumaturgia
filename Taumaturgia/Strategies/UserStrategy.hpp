@@ -1,25 +1,26 @@
 #pragma once
 #include <concepts>
-#include "Taumaturgia/Strategies/Concepts/Strategable.hpp"
+#include <optional>
+#include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
 #include "Taumaturgia/Traits/UserTypeTraits.hpp"
+
+template <typename TYPE, typename T, typename RET>
+struct UserStrategy_{};
+
+template <typename TYPE, typename T, bool CONCEPT, typename RET, typename... Args>
+using UserStrategy = TypeStrategyConditional<UserStrategy_, TYPE, T, CONCEPT, RET, Args...>;
 
 struct Default;
 class Object;
 enum class ActionStatus;
-
-template <typename TYPE, typename T>
-struct UserStrategy_ {};
-
-template <typename TYPE, typename T, bool CONCEPT>
-using UserStrategy = std::conditional_t<
-    CONCEPT,
-    std::conditional_t<
-        TypeStrategable<UserStrategy_, TYPE, T, ActionStatus, Object*, Object*>,
-        UserStrategy_<TYPE, T>,
-        UserStrategy_<TYPE, Default> >,
-    UserStrategy_<TYPE, T> >;
+enum class AliveStatus : signed char;
 
 template <typename TYPE>
-struct UserStrategy_<TYPE, Default> {
+struct UserStrategy_<TYPE, Default, ActionStatus> {
     constexpr ActionStatus operator()(accessType_trait_able<TYPE> auto& obj, Object* owner, Object* target) const;
+};
+
+template <typename TYPE>
+struct UserStrategy_<TYPE, Default, std::optional<AliveStatus>> {
+    constexpr std::optional<AliveStatus> operator()(accessType_trait_able<TYPE> auto& obj) const;
 };

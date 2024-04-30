@@ -27,7 +27,7 @@ constexpr ActionStatus WearStrategy_<Default>::operator()(Wearingable auto& obj,
     return default_wear_behavior(obj, suspect);
 }
 #else
-constexpr ActionStatus UserStrategy_<WearContainer, Default>::operator()(Wearingable auto& obj, Object* owner, Object* target) const {
+constexpr ActionStatus UserStrategy_<WearContainer, Default, ActionStatus>::operator()(Wearingable auto& obj, Object* owner, Object* target) const {
     auto* suspect = Whom(owner, target);
     return default_wear_behavior(obj, suspect);
 }

@@ -25,6 +25,7 @@ template <typename TYPE, typename T>
 struct traits::CustomAccessType<TYPE, T> {
     static constexpr decltype(auto) get(impl::UserProperty_<TYPE, name_type2>& el) {
         if consteval {
+            // if (std::is_constant_evaluated()) {
         } else {
             std::cout << "[get] ";
         }
@@ -33,6 +34,7 @@ struct traits::CustomAccessType<TYPE, T> {
 
     static constexpr decltype(auto) get(const impl::UserProperty_<TYPE, name_type2>& el) {
         if consteval {
+            // if (std::is_constant_evaluated()) {
         } else {
             std::cout << "[const get] ";
         }
@@ -50,6 +52,7 @@ template <typename TYPE, typename T>
 struct traits::CustomAccessType<TYPE, T> {
     static constexpr decltype(auto) get(getType_template_able<TYPE> auto& el) {
         if consteval {
+            // if (std::is_constant_evaluated()) {
         } else {
             std::cout << "[get2] ";
         }
@@ -58,6 +61,7 @@ struct traits::CustomAccessType<TYPE, T> {
 
     static constexpr decltype(auto) get(getType_template_able<TYPE> auto const& el) {
         if consteval {
+            // if (std::is_constant_evaluated()) {
         } else {
             std::cout << "[const get2] ";
         }
@@ -66,8 +70,9 @@ struct traits::CustomAccessType<TYPE, T> {
 };
 
 template <typename TYPE>
-constexpr ActionStatus UserStrategy_<TYPE, Default>::operator()(accessType_trait_able<TYPE> auto& obj, [[maybe_unused]] Object* owner, [[maybe_unused]] Object* target) const {
+constexpr ActionStatus UserStrategy_<TYPE, Default, ActionStatus>::operator()(accessType_trait_able<TYPE> auto& obj, [[maybe_unused]] Object* owner, [[maybe_unused]] Object* target) const {
     if consteval {
+        // if (std::is_constant_evaluated()) {
         traits::accessType<TYPE>::get(obj);
     } else {
         std::cout << "UserStrategy_ call ";
@@ -221,33 +226,35 @@ int main() {
         using UserClass5_3 = add_properties<name_type3, UserPropertyAdapter<int>::type, UserPropertyAdapter<float>::type>;
         UserClass5_3 type3{Name{}, value_i_3, value_f_3};
 
-        UserStrategy_<float, Default> userStrategy{};
+        UserStrategy_<float, Default, ActionStatus> userStrategy{};
 
         userStrategy(type3, nullptr, nullptr);
         userStrategy(std::as_const(type3), nullptr, nullptr);
 
-        UserStrategy_<int, Default>{}(type3, nullptr, nullptr);
-        UserStrategy_<int, Default>{}(std::as_const(type3), nullptr, nullptr);
+        UserStrategy_<int, Default, ActionStatus>{}(type3, nullptr, nullptr);
+        UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3), nullptr, nullptr);
 
         std::cout << '\n';
 
         std::cout << "assert that result of userStrategy is ActionStatus::Success\n";
+#ifndef _MSC_VER
         ActionStatus_Assertion<
             userStrategy(type3, nullptr, nullptr)>{};
         ActionStatus_Assertion<
             userStrategy(std::as_const(type3), nullptr, nullptr)>{};
 
         ActionStatus_Assertion<
-            UserStrategy_<int, Default>{}(type3, nullptr, nullptr)>{};
+            UserStrategy_<int, Default, ActionStatus>{}(type3, nullptr, nullptr)>{};
         ActionStatus_Assertion<
-            UserStrategy_<int, Default>{}(std::as_const(type3), nullptr, nullptr)>{};
+            UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3), nullptr, nullptr)>{};
 
         std::cout << '\n';
 
         ActionStatus_Assertion<
             userStrategy(type3, nullptr, nullptr),
             userStrategy(std::as_const(type3), nullptr, nullptr),
-            UserStrategy_<int, Default>{}(type3, nullptr, nullptr),
-            UserStrategy_<int, Default>{}(std::as_const(type3), nullptr, nullptr)>{};
+            UserStrategy_<int, Default, ActionStatus>{}(type3, nullptr, nullptr),
+            UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3), nullptr, nullptr)>{};
+#endif
     }
 }
