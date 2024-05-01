@@ -14,8 +14,3 @@ using HealStrategy = StrategyConditional<HealStrategy_, T, Healingable<T>, Actio
 
 template <typename T>
 concept is_heal_strategy = Strategable<HealStrategy, T, ActionStatus, Object*, Object*>;
-
-template <>
-struct HealStrategy_<Default> {
-    constexpr ActionStatus operator()(Healingable auto& obj, Object* owner, Object* target) const;
-};

@@ -14,8 +14,3 @@ using AliveStrategy = StrategyConditional<AliveStrategy_, T, Livingable<T>, std:
 
 template <typename T>
 concept is_alive_strategy = Strategable<AliveStrategy, T, std::optional<AliveStatus>>;
-
-template <>
-struct AliveStrategy_<Default> {
-    constexpr std::optional<AliveStatus> operator()(Livingable auto& obj) const;
-};

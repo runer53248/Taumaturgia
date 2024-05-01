@@ -17,14 +17,14 @@ inline constexpr ActionStatus default_defend_behavior(Protectingable auto& obj, 
     return ActionStatus::Fail;
 }
 
+template <>
 #ifndef NO_PREMADE_STRATEGIES
-constexpr ActionStatus DefendStrategy_<Default>::operator()(Protectingable auto& obj, Object* owner, Object* target) const {
-    auto* suspect = Whom(owner, target);
-    return default_defend_behavior(obj, suspect);
-}
+struct DefendStrategy_<Default> {
 #else
-constexpr ActionStatus UserStrategy_<Protection, Default, ActionStatus>::operator()(Protectingable auto& obj, Object* owner, Object* target) const {
-    auto* suspect = Whom(owner, target);
-    return default_defend_behavior(obj, suspect);
-}
+struct UserStrategy_<Protection, Default, ActionStatus> {
 #endif
+    constexpr ActionStatus operator()(Protectingable auto& obj, Object* owner, Object* target) const {
+        auto* suspect = Whom(owner, target);
+        return default_defend_behavior(obj, suspect);
+    }
+};

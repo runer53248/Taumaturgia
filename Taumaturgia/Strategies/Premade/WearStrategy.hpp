@@ -14,8 +14,3 @@ using WearStrategy = StrategyConditional<WearStrategy_, T, Wearingable<T>, Actio
 
 template <typename T>
 concept is_wear_strategy = Strategable<WearStrategy, T, ActionStatus, Object*, Object*>;
-
-template <>
-struct WearStrategy_<Default> {
-    constexpr ActionStatus operator()(Wearingable auto& obj, Object* owner, Object* target) const;
-};

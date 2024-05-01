@@ -70,17 +70,19 @@ struct traits::CustomAccessType<TYPE, T> {
 };
 
 template <typename TYPE>
-constexpr ActionStatus UserStrategy_<TYPE, Default, ActionStatus>::operator()(accessType_trait_able<TYPE> auto& obj, [[maybe_unused]] Object* owner, [[maybe_unused]] Object* target) const {
-    if consteval {
-        // if (std::is_constant_evaluated()) {
-        traits::accessType<TYPE>::get(obj);
-    } else {
-        std::cout << "UserStrategy_ call ";
-        decltype(auto) value = traits::accessType<TYPE>::get(obj);
-        std::cout << " = " << value << "\n";
+struct UserStrategy_<TYPE, Default, ActionStatus> {
+    constexpr ActionStatus operator()(accessType_trait_able<TYPE> auto& obj) const {
+        if consteval {
+            // if (std::is_constant_evaluated()) {
+            traits::accessType<TYPE>::get(obj);
+        } else {
+            std::cout << "UserStrategy_ call ";
+            decltype(auto) value = traits::accessType<TYPE>::get(obj);
+            std::cout << " = " << value << "\n";
+        }
+        return ActionStatus::Success;
     }
-    return ActionStatus::Success;
-}
+};
 
 struct name_int_type {
     std::string name{};
@@ -228,33 +230,33 @@ int main() {
 
         UserStrategy_<float, Default, ActionStatus> userStrategy{};
 
-        userStrategy(type3, nullptr, nullptr);
-        userStrategy(std::as_const(type3), nullptr, nullptr);
+        userStrategy(type3);
+        userStrategy(std::as_const(type3));
 
-        UserStrategy_<int, Default, ActionStatus>{}(type3, nullptr, nullptr);
-        UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3), nullptr, nullptr);
+        UserStrategy_<int, Default, ActionStatus>{}(type3);
+        UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3));
 
         std::cout << '\n';
 
         std::cout << "assert that result of userStrategy is ActionStatus::Success\n";
 #ifndef _MSC_VER
         ActionStatus_Assertion<
-            userStrategy(type3, nullptr, nullptr)>{};
+            userStrategy(type3)>{};
         ActionStatus_Assertion<
-            userStrategy(std::as_const(type3), nullptr, nullptr)>{};
+            userStrategy(std::as_const(type3))>{};
 
         ActionStatus_Assertion<
-            UserStrategy_<int, Default, ActionStatus>{}(type3, nullptr, nullptr)>{};
+            UserStrategy_<int, Default, ActionStatus>{}(type3)>{};
         ActionStatus_Assertion<
-            UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3), nullptr, nullptr)>{};
+            UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3))>{};
 
         std::cout << '\n';
 
         ActionStatus_Assertion<
-            userStrategy(type3, nullptr, nullptr),
-            userStrategy(std::as_const(type3), nullptr, nullptr),
-            UserStrategy_<int, Default, ActionStatus>{}(type3, nullptr, nullptr),
-            UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3), nullptr, nullptr)>{};
+            userStrategy(type3),
+            userStrategy(std::as_const(type3)),
+            UserStrategy_<int, Default, ActionStatus>{}(type3),
+            UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3))>{};
 #endif
     }
 }

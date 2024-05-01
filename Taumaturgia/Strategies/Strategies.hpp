@@ -13,6 +13,10 @@
 
 #else
 
+    class Object;
+    enum class ActionStatus;
+    enum class AliveStatus : signed char;
+
     #include "GetStrategy.hpp"
     #include "UserStrategy.hpp"
     
@@ -20,55 +24,31 @@
     using AliveStrategy = UserStrategy<Health, T, Livingable<T>, std::optional<AliveStatus>>;
     template <typename T>
     concept is_alive_strategy = Strategable<AliveStrategy, T, std::optional<AliveStatus>>;
-    template <>
-    struct UserStrategy_<Health, Default, std::optional<AliveStatus>> {
-        constexpr std::optional<AliveStatus> operator()(Livingable auto& obj) const;
-    };
 
     template <typename T>
     using AttackStrategy = UserStrategy<Damage, T, Damagingable<T>, ActionStatus, Object*, Object*>;
     template <typename T>
     concept is_attack_strategy = Strategable<AttackStrategy, T, ActionStatus, Object*, Object*>;
-    template <>
-    struct UserStrategy_<Damage, Default, ActionStatus> {
-        constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const;
-    };
 
     template <typename T>
     using DefendStrategy = UserStrategy<Protection, T, Protectingable<T>, ActionStatus, Object*, Object*>;
     template <typename T>
     concept is_defend_strategy = Strategable<DefendStrategy, T, ActionStatus, Object*, Object*>;
-    template <>
-    struct UserStrategy_<Protection, Default, ActionStatus> {
-        constexpr ActionStatus operator()(Protectingable auto& obj, Object* owner, Object* target) const;
-    };
 
     template <typename T>
     using WearStrategy = UserStrategy<WearContainer, T, Wearingable<T>, ActionStatus, Object*, Object*>;
     template <typename T>
     concept is_wear_strategy = Strategable<WearStrategy, T, ActionStatus, Object*, Object*>;
-    template <>
-    struct UserStrategy_<WearContainer, Default, ActionStatus> {
-        constexpr ActionStatus operator()(Wearingable auto& obj, Object* owner, Object* target) const;
-    };
 
     template <typename T>
     using RestoreStrategy = UserStrategy<EffectTypeContainer, T, Restoringable<T>, ActionStatus, Object*, Object*>;
     template <typename T>
     concept is_restore_strategy = Strategable<RestoreStrategy, T, ActionStatus, Object*, Object*>;
-    template <>
-    struct UserStrategy_<EffectTypeContainer, Default, ActionStatus> {
-        constexpr ActionStatus operator()(Restoringable auto& obj, Object* owner, Object* target) const;
-    };
 
     template <typename T>
     using HealStrategy = UserStrategy<CureHealth, T, Healingable<T>, ActionStatus, Object*, Object*>;
     template <typename T>
     concept is_heal_strategy = Strategable<HealStrategy, T, ActionStatus, Object*, Object*>;
-    template <>
-    struct UserStrategy_<CureHealth, Default, ActionStatus> {
-        constexpr ActionStatus operator()(Healingable auto& obj, Object* owner, Object* target) const;
-    };
 
 #endif
 

@@ -22,14 +22,14 @@ inline constexpr ActionStatus default_restore_behavior(Restoringable auto& obj, 
     return ActionStatus::Fail;
 }
 
+template <>
 #ifndef NO_PREMADE_STRATEGIES
-constexpr ActionStatus RestoreStrategy_<Default>::operator()(Restoringable auto& obj, Object* owner, Object* target) const {
-    auto* suspect = Whom(owner, target);
-    return default_restore_behavior(obj, suspect);
-}
+struct RestoreStrategy_<Default> {
 #else
-constexpr ActionStatus UserStrategy_<EffectTypeContainer, Default, ActionStatus>::operator()(Restoringable auto& obj, Object* owner, Object* target) const {
-    auto* suspect = Whom(owner, target);
-    return default_restore_behavior(obj, suspect);
-}
+struct UserStrategy_<EffectTypeContainer, Default, ActionStatus> {
 #endif
+    constexpr ActionStatus operator()(Restoringable auto& obj, Object* owner, Object* target) const {
+        auto* suspect = Whom(owner, target);
+        return default_restore_behavior(obj, suspect);
+    }
+};

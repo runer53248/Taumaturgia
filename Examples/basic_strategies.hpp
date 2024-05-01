@@ -4,41 +4,55 @@
 #include "Taumaturgia/Strategies/Enums/AliveStatus.hpp"
 
 #ifndef NO_PREMADE_STRATEGIES
-constexpr std::optional<AliveStatus> AliveStrategy_<Default>::operator()(Livingable auto&) const {
-    return AliveStatus::Living;
-}
-constexpr ActionStatus AttackStrategy_<Default>::operator()(Damagingable auto&, Object*, Object*) const {
-    return ActionStatus::Success;
-}
-constexpr ActionStatus DefendStrategy_<Default>::operator()(Protectingable auto&, Object*, Object*) const {
-    return ActionStatus::Success;
-}
-constexpr ActionStatus WearStrategy_<Default>::operator()(Wearingable auto&, Object*, Object*) const {
-    return ActionStatus::Success;
-}
-constexpr ActionStatus RestoreStrategy_<Default>::operator()(Restoringable auto&, Object*, Object*) const {
-    return ActionStatus::Success;
-}
-constexpr ActionStatus HealStrategy_<Default>::operator()(Healingable auto&, Object*, Object*) const {
-    return ActionStatus::Success;
-}
+template <>
+struct AliveStrategy_<Default> {
+    constexpr std::optional<AliveStatus> operator()(Livingable auto&) const {
+        return AliveStatus::Living;
+    }
+};
+template <>
+struct AttackStrategy_<Default> {
+    constexpr ActionStatus operator()(Damagingable auto&, Object*, Object*) const {
+        return ActionStatus::Success;
+    }
+};
+template <>
+struct DefendStrategy_<Default> {
+    constexpr ActionStatus operator()(Protectingable auto&, Object*, Object*) const {
+        return ActionStatus::Success;
+    }
+};
+template <>
+struct WearStrategy_<Default> {
+    constexpr ActionStatus operator()(Wearingable auto&, Object*, Object*) const {
+        return ActionStatus::Success;
+    }
+};
+template <>
+struct RestoreStrategy_<Default> {
+    constexpr ActionStatus operator()(Restoringable auto&, Object*, Object*) const {
+        return ActionStatus::Success;
+    }
+};
+template <>
+struct HealStrategy_<Default> {
+    constexpr ActionStatus operator()(Healingable auto&, Object*, Object*) const {
+        return ActionStatus::Success;
+    }
+};
 #else
-constexpr std::optional<AliveStatus> UserStrategy_<Health, Default, std::optional<AliveStatus>>::operator()(Livingable auto&) const {
-    return AliveStatus::Living;
-}
-constexpr ActionStatus UserStrategy_<Damage, Default, ActionStatus>::operator()(Damagingable auto&, Object*, Object*) const {
-    return ActionStatus::Success;
-}
-constexpr ActionStatus UserStrategy_<Protection, Default, ActionStatus>::operator()(Protectingable auto&, Object*, Object*) const {
-    return ActionStatus::Success;
-}
-constexpr ActionStatus UserStrategy_<WearContainer, Default, ActionStatus>::operator()(Wearingable auto&, Object*, Object*) const {
-    return ActionStatus::Success;
-}
-constexpr ActionStatus UserStrategy_<EffectTypeContainer, Default, ActionStatus>::operator()(Restoringable auto&, Object*, Object*) const {
-    return ActionStatus::Success;
-}
-constexpr ActionStatus UserStrategy_<CureHealth, Default, ActionStatus>::operator()(Healingable auto&, Object*, Object*) const {
-    return ActionStatus::Success;
-}
+
+template <typename T>
+struct UserStrategy_<T, Default, std::optional<AliveStatus> > {
+    constexpr std::optional<AliveStatus> operator()(Livingable auto&) const {
+        return AliveStatus::Living;
+    }
+};
+template <typename T>
+struct UserStrategy_<T, Default, ActionStatus> {
+    constexpr ActionStatus operator()(Damagingable auto&, Object*, Object*) const {
+        return ActionStatus::Success;
+    }
+};
+
 #endif

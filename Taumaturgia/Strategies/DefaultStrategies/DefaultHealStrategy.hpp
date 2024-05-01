@@ -17,14 +17,14 @@ inline constexpr ActionStatus default_heal_behavior(Healingable auto& obj, Objec
     return ActionStatus::Fail;
 }
 
+template <>
 #ifndef NO_PREMADE_STRATEGIES
-constexpr ActionStatus HealStrategy_<Default>::operator()(Healingable auto& obj, Object* owner, Object* target) const {
-    auto* suspect = Whom(owner, target);
-    return default_heal_behavior(obj, suspect);
-}
+struct HealStrategy_<Default> {
 #else
-constexpr ActionStatus UserStrategy_<CureHealth, Default, ActionStatus>::operator()(Healingable auto& obj, Object* owner, Object* target) const {
-    auto* suspect = Whom(owner, target);
-    return default_heal_behavior(obj, suspect);
-}
+struct UserStrategy_<CureHealth, Default, ActionStatus> {
 #endif
+    constexpr ActionStatus operator()(Healingable auto& obj, Object* owner, Object* target) const {
+        auto* suspect = Whom(owner, target);
+        return default_heal_behavior(obj, suspect);
+    }
+};

@@ -21,14 +21,14 @@ inline constexpr ActionStatus default_wear_behavior(Wearingable auto& obj, Objec
     return result.value_or(ActionStatus::Fail);
 }
 
+template <>
 #ifndef NO_PREMADE_STRATEGIES
-constexpr ActionStatus WearStrategy_<Default>::operator()(Wearingable auto& obj, Object* owner, Object* target) const {
-    auto* suspect = Whom(owner, target);
-    return default_wear_behavior(obj, suspect);
-}
+struct WearStrategy_<Default> {
 #else
-constexpr ActionStatus UserStrategy_<WearContainer, Default, ActionStatus>::operator()(Wearingable auto& obj, Object* owner, Object* target) const {
-    auto* suspect = Whom(owner, target);
-    return default_wear_behavior(obj, suspect);
-}
+struct UserStrategy_<WearContainer, Default, ActionStatus> {
 #endif
+    constexpr ActionStatus operator()(Wearingable auto& obj, Object* owner, Object* target) const {
+        auto* suspect = Whom(owner, target);
+        return default_wear_behavior(obj, suspect);
+    }
+};

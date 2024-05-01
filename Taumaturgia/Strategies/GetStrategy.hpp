@@ -30,9 +30,3 @@ using GetStrategy = std::conditional_t<
 template <typename T>
 concept is_get_strategy = Strategable_template<GetStrategy_, T, optional_get_variant_type, Properties>  //
                           and Strategable_template<GetStrategy_, const T, optional_get_variant_const_type, Properties>;
-
-template <>
-struct GetStrategy_<Default> {
-    template <Properties P>
-    constexpr auto operator()(Gettingable auto& obj) const;  // for const and non-const calls
-};

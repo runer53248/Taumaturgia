@@ -56,14 +56,14 @@ inline constexpr ActionStatus default_attack_behavior(Damagingable auto& obj, Ob
     return is_success.value_or(ActionStatus::Fail);
 }
 
+template <>
 #ifndef NO_PREMADE_STRATEGIES
-constexpr ActionStatus AttackStrategy_<Default>::operator()(Damagingable auto& obj, Object* owner, Object* target) const {
-    auto* suspect = Whom(owner, target);
-    return default_attack_behavior(obj, suspect);
-}
+struct AttackStrategy_<Default> {
 #else
-constexpr ActionStatus UserStrategy_<Damage, Default, ActionStatus>::operator()(Damagingable auto& obj, Object* owner, Object* target) const {
-    auto* suspect = Whom(owner, target);
-    return default_attack_behavior(obj, suspect);
-}
+struct UserStrategy_<Damage, Default, ActionStatus> {
 #endif
+    constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const {
+        auto* suspect = Whom(owner, target);
+        return default_attack_behavior(obj, suspect);
+    }
+};

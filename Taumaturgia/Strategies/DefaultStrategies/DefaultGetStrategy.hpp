@@ -1,6 +1,6 @@
 #pragma once
-#include "Taumaturgia/Types/Enums/Properties.hpp"
 #include "Taumaturgia/Strategies/GetStrategy.hpp"
+#include "Taumaturgia/Types/Enums/Properties.hpp"
 
 template <Properties PROPERTY>
 inline constexpr auto default_get_behavior(Gettingable auto& obj) {
@@ -44,7 +44,10 @@ inline constexpr auto default_get_behavior(Gettingable auto& obj) {
     return result_type{};
 }
 
-template <Properties PROPERTY>
-constexpr auto GetStrategy_<Default>::operator()(Gettingable auto& obj) const {
-    return default_get_behavior<PROPERTY>(obj);
-}
+template <>
+struct GetStrategy_<Default> {
+    template <Properties PROPERTY>
+    constexpr auto operator()(Gettingable auto& obj) const {
+        return default_get_behavior<PROPERTY>(obj);
+    }
+};

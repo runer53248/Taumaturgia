@@ -14,8 +14,3 @@ using DefendStrategy = StrategyConditional<DefendStrategy_, T, Protectingable<T>
 
 template <typename T>
 concept is_defend_strategy = Strategable<DefendStrategy, T, ActionStatus, Object*, Object*>;
-
-template <>
-struct DefendStrategy_<Default> {
-    constexpr ActionStatus operator()(Protectingable auto& obj, Object* owner, Object* target) const;
-};
