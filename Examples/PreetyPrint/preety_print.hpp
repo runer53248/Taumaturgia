@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Taumaturgia/Object/Object.hpp"
 #include "preety_print_types.hpp"
+#include "Redirect.hpp"
 
 [[maybe_unused]] struct {
     template <typename T>

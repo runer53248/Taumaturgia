@@ -15,3 +15,4 @@
 #include "PrintName.hpp"
 #include "PrintProtection.hpp"
 #include "PrintWearContainer.hpp"
+#include "Redirect.hpp"

@@ -1,10 +1,12 @@
 #include <vector>
 #include "Actions.hpp"
 #include "FillBackpack.hpp"
-#include "Taumaturgia/Properties/UserProperty.hpp"
 #include "Print.hpp"
+#include "Taumaturgia/Properties/UserProperty.hpp"
 
-int main() {
+int main(int, [[maybe_unused]] char* argv[]) {
+    // Redirect redirect{argv[0]};
+
     std::vector<Object> backpack;
     fillBackpack(backpack);
 
@@ -13,11 +15,9 @@ int main() {
     auto armorSet = ArmorSet{Name{"Body of Lidia"}};
 
     Wearingable_trait::get(armorSet).wearProtection(Protection{
-        ArmorClass{5, BodyLocation::Legs, {EffectType::Burn, EffectType::Freeze}}
-    });
+        ArmorClass{5, BodyLocation::Legs, {EffectType::Burn, EffectType::Freeze}}});
     Wearingable_trait::get(armorSet).wearProtection(Protection{
-        ArmorClass{3, BodyLocation::Arms, {EffectType::Burn, EffectType::Freeze}}
-    });
+        ArmorClass{3, BodyLocation::Arms, {EffectType::Burn, EffectType::Freeze}}});
 
     backpack.push_back(armorSet);
 
