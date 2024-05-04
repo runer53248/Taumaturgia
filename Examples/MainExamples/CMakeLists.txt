@@ -1,46 +1,46 @@
 add_subdirectory(add_property_examples)
 add_subdirectory(helpers_examples)
 
-add_executable(${PROJECT_NAME}-constructors
+add_executable(constructors_${addons}
     main_constructors.cpp
 )
 
-add_executable(${PROJECT_NAME}-main_ignore_and_tuple
+add_executable(main_ignore_and_tuple_${addons}
     main_ignore_and_tuple.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(${PROJECT_NAME}-main_plain_properties
+add_executable(main_plain_properties_${addons}
     main_plain_properties.cpp
 )
 
-add_executable(${PROJECT_NAME}-main_Property_priority
+add_executable(main_Property_priority_${addons}
     main_Property_priority.cpp
 )
 
-add_executable(${PROJECT_NAME}-main_introduction
+add_executable(main_introduction_${addons}
     main_introduction.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(${PROJECT_NAME}-main_user_property
+add_executable(main_user_property_${addons}
     main_user_property.cpp
 )
 
-add_executable(${PROJECT_NAME}-main_user_property2
+add_executable(main_user_property2_${addons}
     main_user_property_2.cpp
 )
 
-add_executable(${PROJECT_NAME}-main_user_property3
+add_executable(main_user_property3_${addons}
     main_user_property_3.cpp
 )
-add_executable(${PROJECT_NAME}-main_user_property3-aware
+add_executable(main_user_property3-aware_${addons}
     main_user_property_3.cpp
 )
-target_compile_definitions(${PROJECT_NAME}-main_user_property3-aware 
+target_compile_definitions(main_user_property3-aware_${addons}
     PUBLIC USER_PROPERTY_SELF_AWARE
 )
 
-add_executable(${PROJECT_NAME}-main_constexpr_traits
+add_executable(main_constexpr_traits_${addons}
 main_constexpr_traits.cpp
 )

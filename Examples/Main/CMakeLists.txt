@@ -1,138 +1,138 @@
-add_executable(${PROJECT_NAME}-1
+add_executable(1_${addons}
     main.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(${PROJECT_NAME}-2
+add_executable(2_${addons}
     main.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(${PROJECT_NAME}-3
+add_executable(3_${addons}
     main.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(${PROJECT_NAME}-4
+add_executable(4_${addons}
     main.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
-target_compile_definitions(${PROJECT_NAME}-1 PUBLIC)
-target_compile_definitions(${PROJECT_NAME}-2 PUBLIC WITH_ADD_PROPERTIES)
-target_compile_definitions(${PROJECT_NAME}-3 PUBLIC NO_PREMADE_PROPERTIES)
-target_compile_definitions(${PROJECT_NAME}-4 PUBLIC WITH_ADD_PROPERTIES NO_PREMADE_PROPERTIES)
+target_compile_definitions(1_${addons} PUBLIC)
+target_compile_definitions(2_${addons} PUBLIC WITH_ADD_PROPERTIES)
+target_compile_definitions(3_${addons} PUBLIC NO_PREMADE_PROPERTIES)
+target_compile_definitions(4_${addons} PUBLIC WITH_ADD_PROPERTIES NO_PREMADE_PROPERTIES)
 
-add_executable(${PROJECT_NAME}-1-simple
+add_executable(1-simple_${addons}
     main_simple.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(${PROJECT_NAME}-2-simple
+add_executable(2-simple_${addons}
     main_simple.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(${PROJECT_NAME}-3-simple
+add_executable(3-simple_${addons}
     main_simple.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(${PROJECT_NAME}-4-simple
+add_executable(4-simple_${addons}
     main_simple.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-target_compile_definitions(${PROJECT_NAME}-1-simple PUBLIC)
-target_compile_definitions(${PROJECT_NAME}-2-simple PUBLIC WITH_ADD_PROPERTIES)
-target_compile_definitions(${PROJECT_NAME}-3-simple PUBLIC NO_PREMADE_PROPERTIES)
-target_compile_definitions(${PROJECT_NAME}-4-simple PUBLIC WITH_ADD_PROPERTIES NO_PREMADE_PROPERTIES)
+target_compile_definitions(1-simple_${addons} PUBLIC)
+target_compile_definitions(2-simple_${addons} PUBLIC WITH_ADD_PROPERTIES)
+target_compile_definitions(3-simple_${addons} PUBLIC NO_PREMADE_PROPERTIES)
+target_compile_definitions(4-simple_${addons} PUBLIC WITH_ADD_PROPERTIES NO_PREMADE_PROPERTIES)
 
-add_executable(${PROJECT_NAME}-1-part main_part.cpp)
-add_executable(${PROJECT_NAME}-2-part main_part.cpp)
-add_executable(${PROJECT_NAME}-3-part main_part.cpp)
-add_executable(${PROJECT_NAME}-4-part main_part.cpp)
+add_executable(1-part_${addons} main_part.cpp)
+add_executable(2-part_${addons} main_part.cpp)
+add_executable(3-part_${addons} main_part.cpp)
+add_executable(4-part_${addons} main_part.cpp)
 
-target_compile_definitions(${PROJECT_NAME}-1-part PUBLIC)
-target_compile_definitions(${PROJECT_NAME}-2-part PUBLIC WITH_ADD_PROPERTIES)
-target_compile_definitions(${PROJECT_NAME}-3-part PUBLIC NO_PREMADE_PROPERTIES)
-target_compile_definitions(${PROJECT_NAME}-4-part PUBLIC WITH_ADD_PROPERTIES NO_PREMADE_PROPERTIES)
+target_compile_definitions(1-part_${addons} PUBLIC)
+target_compile_definitions(2-part_${addons} PUBLIC WITH_ADD_PROPERTIES)
+target_compile_definitions(3-part_${addons} PUBLIC NO_PREMADE_PROPERTIES)
+target_compile_definitions(4-part_${addons} PUBLIC WITH_ADD_PROPERTIES NO_PREMADE_PROPERTIES)
 
-add_executable(main2
+add_executable(main2_${addons}
     main2.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(main3-1
+add_executable(main3-1_${addons}
     main3.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(main3-2
+add_executable(main3-2_${addons}
     main3.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(main3-3
+add_executable(main3-3_${addons}
     main3.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(main3-4
+add_executable(main3-4_${addons}
     main3.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-target_compile_definitions(main3-1 PUBLIC)
-target_compile_definitions(main3-2 PUBLIC WITH_ADD_PROPERTIES)
-target_compile_definitions(main3-3 PUBLIC NO_PREMADE_PROPERTIES)
-target_compile_definitions(main3-4 PUBLIC WITH_ADD_PROPERTIES NO_PREMADE_PROPERTIES)
+target_compile_definitions(main3-1_${addons} PUBLIC)
+target_compile_definitions(main3-2_${addons} PUBLIC WITH_ADD_PROPERTIES)
+target_compile_definitions(main3-3_${addons} PUBLIC NO_PREMADE_PROPERTIES)
+target_compile_definitions(main3-4_${addons} PUBLIC WITH_ADD_PROPERTIES NO_PREMADE_PROPERTIES)
 
-add_executable(main4-1
+add_executable(main4-1_${addons}
     main4.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(main4-2
+add_executable(main4-2_${addons}
     main4.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(main4-3
+add_executable(main4-3_${addons}
     main4.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(main4-4
+add_executable(main4-4_${addons}
     main4.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-target_compile_definitions(main4-1 PUBLIC)
-target_compile_definitions(main4-2 PUBLIC WITH_ADD_PROPERTIES)
-target_compile_definitions(main4-3 PUBLIC NO_PREMADE_PROPERTIES)
-target_compile_definitions(main4-4 PUBLIC WITH_ADD_PROPERTIES NO_PREMADE_PROPERTIES)
+target_compile_definitions(main4-1_${addons} PUBLIC)
+target_compile_definitions(main4-2_${addons} PUBLIC WITH_ADD_PROPERTIES)
+target_compile_definitions(main4-3_${addons} PUBLIC NO_PREMADE_PROPERTIES)
+target_compile_definitions(main4-4_${addons} PUBLIC WITH_ADD_PROPERTIES NO_PREMADE_PROPERTIES)
 
-add_executable(main5-1
+add_executable(main5-1_${addons}
     main5.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(main5-2
+add_executable(main5-2_${addons}
     main5.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(main5-3
+add_executable(main5-3_${addons}
     main5.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-add_executable(main5-4
+add_executable(main5-4_${addons}
     main5.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 
-target_compile_definitions(main5-1 PUBLIC)
-target_compile_definitions(main5-2 PUBLIC WITH_ADD_PROPERTIES)
-target_compile_definitions(main5-3 PUBLIC NO_PREMADE_PROPERTIES)
-target_compile_definitions(main5-4 PUBLIC WITH_ADD_PROPERTIES NO_PREMADE_PROPERTIES)
+target_compile_definitions(main5-1_${addons} PUBLIC)
+target_compile_definitions(main5-2_${addons} PUBLIC WITH_ADD_PROPERTIES)
+target_compile_definitions(main5-3_${addons} PUBLIC NO_PREMADE_PROPERTIES)
+target_compile_definitions(main5-4_${addons} PUBLIC WITH_ADD_PROPERTIES NO_PREMADE_PROPERTIES)

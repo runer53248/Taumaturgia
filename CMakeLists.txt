@@ -4,6 +4,11 @@ project(Taumaturgia)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+message("Your C++ compiler supports these C++ features:")
+foreach(i ${CMAKE_CXX_COMPILE_FEATURES})
+  message("${i}")
+endforeach()
+
 find_package(Boost)
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
@@ -18,7 +23,8 @@ add_compile_options(
     -Wconversion
     -pedantic
     -Werror
-
+    # -Wshadow
+    
     -Wno-missing-braces
     # -fsanitize=undefined
 )
@@ -26,17 +32,28 @@ add_compile_options(
 # link_libraries(-lubsan)
 
 add_compile_definitions(
-  ACCESS_TRAIT_MACRO
-
-  # NO_PREMADE_PROPERTIES
-  NO_PREMADE_STRATEGIES
+  # ACCESS_TRAIT_MACRO
 )
+
+set(no_premade_properties true)
+set(no_premade_strategies true)
+
+if(no_premade_properties)
+  add_compile_definitions(NO_PREMADE_PROPERTIES)
+  set(NO_PREMADE_PROPERTIES "nP")
+endif()
+
+if(no_premade_strategies)
+  add_compile_definitions(NO_PREMADE_STRATEGIES)
+  set(NO_PREMADE_STRATEGIES "nS")
+endif()
+
+set(addons ${NO_PREMADE_PROPERTIES}${NO_PREMADE_STRATEGIES})
 
 include_directories(${PROJECT_SOURCE_DIR})
 
-find_package(GTest REQUIRED)
-
 add_subdirectory(Examples)
 
+find_package(GTest REQUIRED)
 enable_testing()
 add_subdirectory(Tests)
