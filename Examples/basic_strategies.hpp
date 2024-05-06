@@ -50,7 +50,7 @@ struct UserStrategy_<T, Default, std::optional<AliveStatus> > {
 };
 template <typename T>
 struct UserStrategy_<T, Default, ActionStatus> {
-    constexpr ActionStatus operator()(Damagingable auto&, Object*, Object*) const {
+    constexpr ActionStatus operator()(auto&, Object*, Object*) const {
         return ActionStatus::Success;
     }
 };

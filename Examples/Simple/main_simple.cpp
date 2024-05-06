@@ -41,8 +41,8 @@ public:
     Weapon_B(std::string name, Damage dmg)
         : name{name}, dmg{dmg} {}
 
-    auto& getDmg() { return dmg; }
-    const auto& getDmg() const { return dmg; }
+    auto& getDamage() { return dmg; }
+    const auto& getDamage() const { return dmg; }
 
 private:
     Damage dmg;
