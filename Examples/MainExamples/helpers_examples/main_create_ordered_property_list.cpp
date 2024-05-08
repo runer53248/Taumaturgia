@@ -106,18 +106,18 @@ int main() {
     std::cout << name<type_y2>() << '\n'
               << '\n';
 
-#ifndef NO_PREMADE_PROPERTIES
-    // UserProperty created properties with same encapsulated type aren't equivelent to build-in ones
-    static_assert(Property<UserProtecting>::value != Property<Protecting>::value);
-    static_assert(Property<UserDamaging>::value != Property<Damaging>::value);
-    static_assert(not same_priority<Property<UserProtecting>, Property<Protecting>>);
-    static_assert(not same_priority<Property<UserDamaging>, Property<Damaging>>);
-#else
+#ifdef NO_PREMADE_PROPERTIES
     // UserProperty created properties with same encapsulated type are equivelent to created by UserPropertyConceptAdapter
     static_assert(Property<UserProtecting>::value == Property<Protecting>::value);
     static_assert(Property<UserDamaging>::value == Property<Damaging>::value);
     static_assert(same_priority<Property<UserProtecting>, Property<Protecting>>);
     static_assert(same_priority<Property<UserDamaging>, Property<Damaging>>);
+#else
+    // UserProperty created properties with same encapsulated type aren't equivelent to build-in ones
+    static_assert(Property<UserProtecting>::value != Property<Protecting>::value);
+    static_assert(Property<UserDamaging>::value != Property<Damaging>::value);
+    static_assert(not same_priority<Property<UserProtecting>, Property<Protecting>>);
+    static_assert(not same_priority<Property<UserDamaging>, Property<Damaging>>);    
 #endif
 
     using type_x = create_ordered_property_list<UserProtecting, UserDamaging, Protecting, Damaging>;  // end with Protecting, Damaging

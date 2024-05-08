@@ -35,10 +35,10 @@ int main() {
               << '\n';
 
     // UserProperty may have same priority value but are not considered same by same_priority struct
-#ifndef NO_PREMADE_PROPERTIES
-    static_assert(Property<UserProtecting>::value == Property<UserDamaging>::value);  // same priority value
-#else
+#ifdef NO_PREMADE_PROPERTIES
     static_assert(Property<UserProtecting>::value != Property<UserDamaging>::value);  // not same priority value
+#else
+    static_assert(Property<UserProtecting>::value == Property<UserDamaging>::value);  // same priority value
 #endif
     static_assert(Property<UserProtecting>::value == Property<UserProtecting_2>::value);  // same priority value
     static_assert(Property<UserProtecting>::value == Property<UserProtecting>::value);    // same priority value
@@ -46,11 +46,11 @@ int main() {
 #ifdef USER_PROPERTY_SELF_AWARE
     static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting_2>>);  // same_priority value - self type awarness
 #else
-#ifndef NO_PREMADE_PROPERTIES
-    static_assert(not same_priority<Property<UserProtecting>, Property<UserProtecting_2>>);  // not same_priority value - different type even if similiar
-#else
-    static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting_2>>);  // same_priority value
-#endif
+    #ifdef NO_PREMADE_PROPERTIES
+        static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting_2>>);  // same_priority value
+    #else
+        static_assert(not same_priority<Property<UserProtecting>, Property<UserProtecting_2>>);  // not same_priority value - different type even if similiar
+    #endif
 #endif
     static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting>>);  // same type have same_priority value
 
@@ -74,12 +74,12 @@ int main() {
     auto dmg_b = Damaging_impl<Type>{}.dmgs;
     std::cout << "Damaging_impl<Type>{}.dmgs = " << dmg_b << '\n';
     
-#ifndef NO_PREMADE_PROPERTIES
-    [[maybe_unused]] auto dmg_c = Damaging_impl<Type>{}.getType();  // Type::getType method call
-    std::cout << "Damaging_impl<Type>{}.getType() = " << dmg_c << '\n';
-#else
+#ifdef NO_PREMADE_PROPERTIES
     // [[maybe_unused]] auto dmg_c = Damaging_impl<Type>{}.getType(); // ! public getType is shadowed by protected one from UserProperty
     std::cout << "Damaging_impl<Type>{}.getType() is shadowed " << '\n';
+#else
+    [[maybe_unused]] auto dmg_c = Damaging_impl<Type>{}.getType();  // Type::getType method call
+    std::cout << "Damaging_impl<Type>{}.getType() = " << dmg_c << '\n';
 #endif
 
     std::cout << "custom property may shadow members and methods of type that pass validation concept for property" << '\n';

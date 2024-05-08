@@ -3,7 +3,20 @@
 #include "Taumaturgia/Strategies/DefaultStrategies/DefaultGetStrategy.hpp"
 #include "Taumaturgia/Strategies/Enums/AliveStatus.hpp"
 
-#ifndef NO_PREMADE_STRATEGIES
+#ifdef NO_PREMADE_STRATEGIES
+template <typename T>
+struct UserStrategy_<T, Default, std::optional<AliveStatus> > {
+    constexpr std::optional<AliveStatus> operator()(Livingable auto&) const {
+        return AliveStatus::Living;
+    }
+};
+template <typename T>
+struct UserStrategy_<T, Default, ActionStatus> {
+    constexpr ActionStatus operator()(auto&, Object*, Object*) const {
+        return ActionStatus::Success;
+    }
+};
+#else
 template <>
 struct AliveStrategy_<Default> {
     constexpr std::optional<AliveStatus> operator()(Livingable auto&) const {
@@ -40,19 +53,4 @@ struct HealStrategy_<Default> {
         return ActionStatus::Success;
     }
 };
-#else
-
-template <typename T>
-struct UserStrategy_<T, Default, std::optional<AliveStatus> > {
-    constexpr std::optional<AliveStatus> operator()(Livingable auto&) const {
-        return AliveStatus::Living;
-    }
-};
-template <typename T>
-struct UserStrategy_<T, Default, ActionStatus> {
-    constexpr ActionStatus operator()(auto&, Object*, Object*) const {
-        return ActionStatus::Success;
-    }
-};
-
 #endif

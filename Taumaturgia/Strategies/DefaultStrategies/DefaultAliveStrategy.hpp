@@ -13,10 +13,10 @@ inline constexpr std::optional<AliveStatus> default_alive_behavior(Livingable au
 }
 
 template <>
-#ifndef NO_PREMADE_STRATEGIES
-struct AliveStrategy_<Default> {
-#else
+#ifdef NO_PREMADE_STRATEGIES
 struct UserStrategy_<Health, Default, std::optional<AliveStatus> > {
+#else
+struct AliveStrategy_<Default> {
 #endif
     constexpr std::optional<AliveStatus> operator()(Livingable auto& obj) const {
         return default_alive_behavior(obj);

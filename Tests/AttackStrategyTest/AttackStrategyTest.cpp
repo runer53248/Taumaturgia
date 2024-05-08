@@ -20,10 +20,10 @@
     using CustomWeapon = add_properties<CustomType, Naming>;
 
     template <>
-    #ifndef NO_PREMADE_STRATEGIES
-    struct AttackStrategy_<CustomWeapon> {
-    #else
+    #ifdef NO_PREMADE_STRATEGIES
     struct UserStrategy_<Damage, CustomWeapon, ActionStatus> {
+    #else
+    struct AttackStrategy_<CustomWeapon> {
     #endif
         constexpr ActionStatus operator()(auto& obj, Object* owner, Object* target) const {
             auto* suspect = Whom(owner, target);

@@ -42,12 +42,12 @@ int main() {
 
     t5 type{Name{"Rat"}, Damage{5}, 24, true};
 
-#ifndef NO_PREMADE_PROPERTIES
-    decltype(auto) s = type.getName();
-    decltype(auto) d = type.getDamage();
-#else
+#ifdef NO_PREMADE_PROPERTIES
     decltype(auto) s = Namingable_trait::get(type);
     decltype(auto) d = Damagingable_trait::get(type);
+#else    
+    decltype(auto) s = type.getName();
+    decltype(auto) d = type.getDamage();
 #endif
     decltype(auto) i = type.getType<int>();
     decltype(auto) i2 = std::as_const(type).getType<int>();

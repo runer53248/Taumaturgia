@@ -23,10 +23,10 @@ inline constexpr ActionStatus default_restore_behavior(Restoringable auto& obj, 
 }
 
 template <>
-#ifndef NO_PREMADE_STRATEGIES
-struct RestoreStrategy_<Default> {
-#else
+#ifdef NO_PREMADE_STRATEGIES
 struct UserStrategy_<EffectTypeContainer, Default, ActionStatus> {
+#else
+struct RestoreStrategy_<Default> {
 #endif
     constexpr ActionStatus operator()(Restoringable auto& obj, Object* owner, Object* target) const {
         auto* suspect = Whom(owner, target);

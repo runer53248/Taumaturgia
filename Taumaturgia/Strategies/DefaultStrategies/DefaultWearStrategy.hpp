@@ -22,10 +22,10 @@ inline constexpr ActionStatus default_wear_behavior(Wearingable auto& obj, Objec
 }
 
 template <>
-#ifndef NO_PREMADE_STRATEGIES
-struct WearStrategy_<Default> {
-#else
+#ifdef NO_PREMADE_STRATEGIES
 struct UserStrategy_<WearContainer, Default, ActionStatus> {
+#else
+struct WearStrategy_<Default> {
 #endif
     constexpr ActionStatus operator()(Wearingable auto& obj, Object* owner, Object* target) const {
         auto* suspect = Whom(owner, target);

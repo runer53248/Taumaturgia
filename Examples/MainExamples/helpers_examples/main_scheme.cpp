@@ -67,16 +67,16 @@ int main() {
     using test_type_bad = Damaging<Living<Naming<test_struct>>>;   // duplicate of test_type_bad
     using test_type2_bad = Naming<Damaging<Living<test_struct>>>;  // duplicate of test_type2_bad
     //TODO: check differences of list_t in example
-#ifndef NO_PREMADE_PROPERTIES
-    static_assert(std::is_same_v<Scheme<test_type_bad>::list_t,
-                                 Scheme<test_type2_bad>::list_t>);  // !
+#ifdef NO_PREMADE_PROPERTIES
+    static_assert(not std::is_same_v<Scheme<test_type_bad>::list_t,
+                                     Scheme<test_type2_bad>::list_t>);  // !
     std::cout << "Scheme::list_t of bad types:\n";
     std::cout << name<Scheme<test_type_bad>::list_t>() << '\n';
     std::cout << name<Scheme<test_type2_bad>::list_t>() << '\n';
     std::cout << '\n';
 #else
-    static_assert(not std::is_same_v<Scheme<test_type_bad>::list_t,
-                                     Scheme<test_type2_bad>::list_t>);  // !
+    static_assert(std::is_same_v<Scheme<test_type_bad>::list_t,
+                                 Scheme<test_type2_bad>::list_t>);  // !
     std::cout << "Scheme::list_t of bad types:\n";
     std::cout << name<Scheme<test_type_bad>::list_t>() << '\n';
     std::cout << name<Scheme<test_type2_bad>::list_t>() << '\n';

@@ -60,22 +60,20 @@ struct traits::CustomAccessType<Damage, T> {
         return el.getDamage();
     }
 };
-#endif
 
-#ifndef WITH_ADD_PROPERTIES
-// MARK: CustomAccessDamage<Weapon_C>
+// MARK: CustomAccessType<Damage, Weapon_C>
 template <typename T>
     requires std::is_base_of_v<Weapon_C, T>
-struct traits::CustomAccessDamage<T> {
+struct traits::CustomAccessType<Damage, T> {
     static constexpr decltype(auto) get(auto& el) {
         return el.Dmg();
     }
 };
 #else
-// MARK: CustomAccessType<Damage, Weapon_C>
+// MARK: CustomAccessDamage<Weapon_C>
 template <typename T>
     requires std::is_base_of_v<Weapon_C, T>
-struct traits::CustomAccessType<Damage, T> {
+struct traits::CustomAccessDamage<T> {
     static constexpr decltype(auto) get(auto& el) {
         return el.Dmg();
     }
@@ -88,20 +86,20 @@ inline constexpr ActionStatus attack_impl_x(Damagingable auto& obj, Object* owne
     return {};
 }
 
-#ifndef NO_PREMADE_STRATEGIES
-// MARK: AttackStrategy_<Weapon_D>
-// to override AttackStrategy_<Default>
+#ifdef NO_PREMADE_STRATEGIES
+// MARK: UserStrategy_<Damage, Weapon_D, ...>
+// override UserStrategy_<T, Default, ActionStatus>
 template <>
-struct AttackStrategy_<Weapon_D> {
+struct UserStrategy_<Damage, Weapon_D, ActionStatus> {
     constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) const {
         return attack_impl_x(obj, owner, nullptr);
     }
 };
 #else
-// MARK: UserStrategy_<Damage, Weapon_D, ...> 
-// override UserStrategy_<T, Default, ActionStatus>
+// MARK: AttackStrategy_<Weapon_D>
+// to override AttackStrategy_<Default>
 template <>
-struct UserStrategy_<Damage, Weapon_D, ActionStatus> {
+struct AttackStrategy_<Weapon_D> {
     constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) const {
         return attack_impl_x(obj, owner, nullptr);
     }
@@ -114,18 +112,18 @@ inline constexpr ActionStatus attack_impl(Damagingable auto& obj, Object* owner,
     return {};
 }
 
-#ifndef NO_PREMADE_STRATEGIES
-// MARK: AttackStrategy_<Damagingable>
+#ifdef NO_PREMADE_STRATEGIES
+// MARK: UserStrategy_<Damage, Damagingable>
 template <Damagingable T>
-struct AttackStrategy_<T> {
+struct UserStrategy_<Damage, T, ActionStatus> {
     constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) const {
         return attack_impl(obj, owner, nullptr);
     }
 };
 #else
-// MARK: UserStrategy_<Damage, Damagingable>
+// MARK: AttackStrategy_<Damagingable>
 template <Damagingable T>
-struct UserStrategy_<Damage, T, ActionStatus> {
+struct AttackStrategy_<T> {
     constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) const {
         return attack_impl(obj, owner, nullptr);
     }

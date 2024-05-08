@@ -1,18 +1,7 @@
 #pragma once
 #include "Taumaturgia/Properties/Properties.hpp"
 
-#ifndef NO_PREMADE_STRATEGIES
-
-    #include "GetStrategy.hpp"
-    #include "Premade/AliveStrategy.hpp"
-    #include "Premade/AttackStrategy.hpp"
-    #include "Premade/DefendStrategy.hpp"
-    #include "Premade/HealStrategy.hpp"
-    #include "Premade/RestoreStrategy.hpp"
-    #include "Premade/WearStrategy.hpp"
-
-#else
-
+#ifdef NO_PREMADE_STRATEGIES
     class Object;
     enum class ActionStatus;
     enum class AliveStatus : signed char;
@@ -50,22 +39,19 @@
     template <typename T>
     concept is_heal_strategy = Strategable<HealStrategy, T, ActionStatus, Object*, Object*>;
 
+#else
+
+    #include "GetStrategy.hpp"
+    #include "Premade/AliveStrategy.hpp"
+    #include "Premade/AttackStrategy.hpp"
+    #include "Premade/DefendStrategy.hpp"
+    #include "Premade/HealStrategy.hpp"
+    #include "Premade/RestoreStrategy.hpp"
+    #include "Premade/WearStrategy.hpp"
+
 #endif
 
-#ifndef NO_PREMADE_STRATEGIES
-
-    template <typename T>
-    struct WearStrategy_<Wearing_impl<T>> : public WearStrategy_<T> {};  // forward eventualy implemented strategy
-    template <typename T>
-    struct AttackStrategy_<Damaging_impl<T>> : public AttackStrategy_<T> {};  // forward eventualy implemented strategy
-    template <typename T>
-    struct DefendStrategy_<Protecting_impl<T>> : public DefendStrategy_<T> {};  // forward eventualy implemented strategy
-    template <typename T>
-    struct HealStrategy_<Healing_impl<T>> : public HealStrategy_<T> {};  // forward eventualy implemented strategy
-    template <typename T>
-    struct RestoreStrategy_<Restoring_impl<T>> : public RestoreStrategy_<T> {};  // forward eventualy implemented strategy
-
-#else
+#ifdef NO_PREMADE_STRATEGIES
 
     template <typename T>
     struct UserStrategy_<Health, Healing_impl<T>, std::optional<AliveStatus>> : public UserStrategy_<Health, T, std::optional<AliveStatus>> {};  // forward eventualy implemented strategy
@@ -79,6 +65,19 @@
     struct UserStrategy_<CureHealth, Healing_impl<T>, ActionStatus> : public UserStrategy_<CureHealth, T, ActionStatus> {};  // forward eventualy implemented strategy
     template <typename T>
     struct UserStrategy_<EffectTypeContainer, Restoring_impl<T>, ActionStatus> : public UserStrategy_<EffectTypeContainer, T, ActionStatus> {};  // forward eventualy implemented strategy
+
+#else
+
+    template <typename T>
+    struct WearStrategy_<Wearing_impl<T>> : public WearStrategy_<T> {};  // forward eventualy implemented strategy
+    template <typename T>
+    struct AttackStrategy_<Damaging_impl<T>> : public AttackStrategy_<T> {};  // forward eventualy implemented strategy
+    template <typename T>
+    struct DefendStrategy_<Protecting_impl<T>> : public DefendStrategy_<T> {};  // forward eventualy implemented strategy
+    template <typename T>
+    struct HealStrategy_<Healing_impl<T>> : public HealStrategy_<T> {};  // forward eventualy implemented strategy
+    template <typename T>
+    struct RestoreStrategy_<Restoring_impl<T>> : public RestoreStrategy_<T> {};  // forward eventualy implemented strategy
     
 #endif
 

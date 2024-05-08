@@ -18,10 +18,10 @@ inline constexpr ActionStatus default_heal_behavior(Healingable auto& obj, Objec
 }
 
 template <>
-#ifndef NO_PREMADE_STRATEGIES
-struct HealStrategy_<Default> {
-#else
+#ifdef NO_PREMADE_STRATEGIES
 struct UserStrategy_<CureHealth, Default, ActionStatus> {
+#else
+struct HealStrategy_<Default> {
 #endif
     constexpr ActionStatus operator()(Healingable auto& obj, Object* owner, Object* target) const {
         auto* suspect = Whom(owner, target);

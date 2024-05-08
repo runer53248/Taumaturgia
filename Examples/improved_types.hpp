@@ -2,8 +2,7 @@
 #include "Taumaturgia/Properties/Properties.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
-#ifndef NO_PREMADE_PROPERTIES
-#else
+#ifdef NO_PREMADE_PROPERTIES
 namespace impl {
 constinit const char damaging_type_name[] = "Damaging";
 }

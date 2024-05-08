@@ -18,10 +18,10 @@ int main() {
     BaseType baseType{};
 
     LivingType myType{};
-#ifndef NO_PREMADE_PROPERTIES
-    myType.getHealth() = Health{4};
-#else
+#ifdef NO_PREMADE_PROPERTIES
     Livingable_trait::get(myType) = Health{4};
+#else
+    myType.getHealth() = Health{4};
 #endif
 
     auto test = [](auto& type) {

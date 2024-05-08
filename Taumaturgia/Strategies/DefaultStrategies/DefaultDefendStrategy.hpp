@@ -18,10 +18,10 @@ inline constexpr ActionStatus default_defend_behavior(Protectingable auto& obj, 
 }
 
 template <>
-#ifndef NO_PREMADE_STRATEGIES
-struct DefendStrategy_<Default> {
-#else
+#ifdef NO_PREMADE_STRATEGIES
 struct UserStrategy_<Protection, Default, ActionStatus> {
+#else
+struct DefendStrategy_<Default> {
 #endif
     constexpr ActionStatus operator()(Protectingable auto& obj, Object* owner, Object* target) const {
         auto* suspect = Whom(owner, target);

@@ -57,10 +57,10 @@ inline constexpr ActionStatus default_attack_behavior(Damagingable auto& obj, Ob
 }
 
 template <>
-#ifndef NO_PREMADE_STRATEGIES
-struct AttackStrategy_<Default> {
-#else
+#ifdef NO_PREMADE_STRATEGIES
 struct UserStrategy_<Damage, Default, ActionStatus> {
+#else
+struct AttackStrategy_<Default> {
 #endif
     constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const {
         auto* suspect = Whom(owner, target);

@@ -5,14 +5,8 @@
 
 struct base {};
 
-#ifndef WITH_ADD_PROPERTIES
-    using CureHealthType = UserProperty<
-        int,
-        UserProperty<CureValueType,
-                    UserProperty<EffectContainer,
-                                base>>>;
-#else
-    template <typename T>
+#ifdef WITH_ADD_PROPERTIES
+template <typename T>
     using int_property = UserPropertyAdapter<int>::type<T>;
     template <typename T>
     using CureValueType_property = UserPropertyAdapter<CureValueType>::type<T>;
@@ -24,6 +18,13 @@ struct base {};
         int_property,
         CureValueType_property,
         EffectContainer_property>;
+#else
+    using CureHealthType = UserProperty<
+        int,
+        UserProperty<CureValueType,
+                    UserProperty<EffectContainer,
+                                base>>>;
+
 #endif
 
 int main() {
