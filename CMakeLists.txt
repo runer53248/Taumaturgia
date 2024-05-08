@@ -35,6 +35,8 @@ add_compile_definitions(
   # ACCESS_TRAIT_MACRO
 )
 
+add_subdirectory(Examples/Simple_1)
+
 set(no_premade_properties true)
 set(no_premade_strategies true)
 
