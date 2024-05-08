@@ -58,9 +58,9 @@
         { CustomAccess##NAME<T>::get(std::as_const(x)) } -> same_as_ref<const TYPE>; \
     };
 
-#define CreateUserTypeAccessableConcept(NAME, TYPE)                               \
+#define CreateGetTypeTemplateAccessableConcept(NAME, TYPE)                               \
     template <typename T>                                                         \
-    concept UserType##NAME##Accessable = requires(std::remove_cvref_t<T> x) {     \
+    concept GetTypeTemplate##NAME##Accessable = requires(std::remove_cvref_t<T> x) {     \
         { x.template getType<TYPE>() } -> same_as_ref<TYPE>;                      \
         { std::as_const(x).template getType<TYPE>() } -> same_as_ref<const TYPE>; \
     };
@@ -73,18 +73,18 @@
         }                                                                               \
                                                                                         \
         template <Get##NAME##Accessable T>                                              \
-            requires(not(Custom##NAME##Accessable<T> or UserType##NAME##Accessable<T>)) \
+            requires(not(Custom##NAME##Accessable<T> or GetTypeTemplate##NAME##Accessable<T>)) \
         static constexpr decltype(auto) get(T& el) noexcept {                           \
             return el.get##NAME();                                                      \
         }                                                                               \
                                                                                         \
         template <Custom##NAME##Accessable T>                                           \
-            requires(not UserType##NAME##Accessable<T>)                                 \
+            requires(not GetTypeTemplate##NAME##Accessable<T>)                                 \
         static constexpr decltype(auto) get(T& el) noexcept {                           \
             return CustomAccess##NAME<std::remove_cvref_t<T>>::get(el);                 \
         }                                                                               \
                                                                                         \
-        template <UserType##NAME##Accessable T>                                         \
+        template <GetTypeTemplate##NAME##Accessable T>                                         \
         static constexpr decltype(auto) get(T& el) noexcept {                           \
             return el.template getType<TYPE>();                                         \
         }                                                                               \

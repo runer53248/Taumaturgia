@@ -1,4 +1,5 @@
 #pragma once
+#include "../Helpers/traits_helper.hpp"
 
 class Protection;
 
@@ -8,7 +9,7 @@ namespace traits {
 CreateMemberAccessableConcept(Protection, protection, Protection);
 CreateGetAccessableConcept(Protection, Protection);
 CreateCustomAccessableConcept(Protection, Protection);
-CreateUserTypeAccessableConcept(Protection, Protection);
+CreateGetTypeTemplateAccessableConcept(Protection, Protection);
 #else
 template <typename T>
 concept ProtectionAccessable = requires(T x) {
@@ -32,7 +33,7 @@ concept CustomProtectionAccessable = requires(std::remove_cvref_t<T> x) {
 };
 
 template <typename T>
-concept UserTypeProtectionAccessable = requires(std::remove_cvref_t<T> x) {
+concept GetTypeTemplateProtectionAccessable = requires(std::remove_cvref_t<T> x) {
     { x.template getType<Protection>() } -> same_as_ref<Protection>;
     { std::as_const(x).template getType<Protection>() } -> same_as_ref<const Protection>;
 };

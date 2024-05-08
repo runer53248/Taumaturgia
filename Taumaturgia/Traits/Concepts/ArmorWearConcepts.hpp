@@ -1,4 +1,5 @@
 #pragma once
+#include "../Helpers/traits_helper.hpp"
 
 class WearContainer;
 
@@ -8,7 +9,7 @@ namespace traits {
 CreateMemberAccessableConcept(ArmorWear, armorWear, WearContainer);
 CreateGetAccessableConcept(ArmorWear, WearContainer);
 CreateCustomAccessableConcept(ArmorWear, WearContainer);
-CreateUserTypeAccessableConcept(ArmorWear, WearContainer);
+CreateGetTypeTemplateAccessableConcept(ArmorWear, WearContainer);
 #else
 template <typename T>
 concept ArmorWearAccessable = requires(T x) {
@@ -32,7 +33,7 @@ concept CustomArmorWearAccessable = requires(std::remove_cvref_t<T> x) {
 };
 
 template <typename T>
-concept UserTypeArmorWearAccessable = requires(std::remove_cvref_t<T> x) {
+concept GetTypeTemplateArmorWearAccessable = requires(std::remove_cvref_t<T> x) {
     { x.template getType<WearContainer>() } -> same_as_ref<WearContainer>;
     { std::as_const(x).template getType<WearContainer>() } -> same_as_ref<const WearContainer>;
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include "../Helpers/traits_helper.hpp"
 
 class Name;
 
@@ -8,7 +9,7 @@ namespace traits {
 CreateMemberAccessableConcept_convertible(Name, name, std::string);
 CreateGetAccessableConcept_convertible(Name, std::string);
 CreateCustomAccessableConcept_convertible(Name, std::string);
-CreateUserTypeAccessableConcept_convertible(Name, Name, std::string);
+CreateGetTypeTemplateAccessableConcept(Name, Name, std::string);
 #else
 template <typename T>
 concept NameAccessable = requires(T x) {
@@ -32,7 +33,7 @@ concept CustomNameAccessable = requires(std::remove_cvref_t<T> x) {
 };
 
 template <typename T>
-concept UserTypeNameAccessable = requires(std::remove_cvref_t<T> x) {
+concept GetTypeTemplateNameAccessable = requires(std::remove_cvref_t<T> x) {
     { x.template getType<Name>() } -> std::convertible_to<std::string>;
     { std::as_const(x).template getType<Name>() } -> std::convertible_to<const std::string>;
 };

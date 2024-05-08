@@ -1,4 +1,5 @@
 #pragma once
+#include "../Helpers/traits_helper.hpp"
 
 class Health;
 
@@ -8,7 +9,7 @@ namespace traits {
 CreateMemberAccessableConcept(Health, hp, Health);
 CreateGetAccessableConcept(Health, Health);
 CreateCustomAccessableConcept(Health, Health);
-CreateUserTypeAccessableConcept(Health, Health);
+CreateGetTypeTemplateAccessableConcept(Health, Health);
 #else
 template <typename T>
 concept HealthAccessable = requires(T x) {
@@ -32,7 +33,7 @@ concept CustomHealthAccessable = requires(std::remove_cvref_t<T> x) {
 };
 
 template <typename T>
-concept UserTypeHealthAccessable = requires(std::remove_cvref_t<T> x) {
+concept GetTypeTemplateHealthAccessable = requires(std::remove_cvref_t<T> x) {
     { x.template getType<Health>() } -> same_as_ref<Health>;
     { std::as_const(x).template getType<Health>() } -> same_as_ref<const Health>;
 };

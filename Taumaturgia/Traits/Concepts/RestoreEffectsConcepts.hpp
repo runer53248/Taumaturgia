@@ -1,4 +1,5 @@
 #pragma once
+#include "../Helpers/traits_helper.hpp"
 
 class EffectTypeContainer;
 
@@ -8,7 +9,7 @@ namespace traits {
 CreateMemberAccessableConcept(RestoreEffects, restoreEffects, EffectTypeContainer);
 CreateGetAccessableConcept(RestoreEffects, EffectTypeContainer);
 CreateCustomAccessableConcept(RestoreEffects, EffectTypeContainer);
-CreateUserTypeAccessableConcept(RestoreEffects, EffectTypeContainer);
+CreateGetTypeTemplateAccessableConcept(RestoreEffects, EffectTypeContainer);
 #else
 template <typename T>
 concept RestoreEffectsAccessable = requires(T x) {
@@ -32,7 +33,7 @@ concept CustomRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
 };
 
 template <typename T>
-concept UserTypeRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
+concept GetTypeTemplateRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
     { x.template getType<EffectTypeContainer>() } -> same_as_ref<EffectTypeContainer>;
     { std::as_const(x).template getType<EffectTypeContainer>() } -> same_as_ref<const EffectTypeContainer>;
 };
