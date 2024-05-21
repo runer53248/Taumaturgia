@@ -5,8 +5,8 @@
 #include <optional>
 #include "Enums/ActionStatus.hpp"
 #include "Enums/Actions.hpp"
-#include "Taumaturgia/Traits/NameTraits.hpp"
 #include "Taumaturgia/Strategies/Strategies.hpp"
+#include "Taumaturgia/Traits/NameTraits.hpp"
 
 #ifndef _MSC_VER
 #include <experimental/propagate_const>
@@ -71,13 +71,13 @@ public:
     bool hasProperty(Properties property) const;
 
     template <Properties param>
-    friend decltype(auto) getOpt(is_object auto& object);
-
-    template <Properties param>
-    decltype(auto) getOpt() const;
-
-    template <Properties param>
-    decltype(auto) getOpt();
+    decltype(auto) getOpt(this auto& self) {
+        if (self.hasProperty(param)) {
+            return extract_optional_type<param>(self.object_->get(param));
+        }
+        using get_result_type = decltype(self.object_->get(param));
+        return extract_optional_type<param>(get_result_type{});
+    }
 };
 
 ActionStatus attack(const Object& object, Object* owner, Object* target = nullptr);
@@ -88,21 +88,7 @@ ActionStatus restore(const Object& object, Object* owner, Object* target = nullp
 
 template <Properties param>
 decltype(auto) getOpt(is_object auto& object) {
-    if (object.hasProperty(param)) {
-        return extract_optional_type<param>(object.object_->get(param));
-    }
-    using get_result_type = decltype(object.object_->get(param));
-    return extract_optional_type<param>(get_result_type{});
-}
-
-template <Properties param>
-decltype(auto) Object::getOpt() const {
-    return ::getOpt<param>(*this);
-}
-
-template <Properties param>
-decltype(auto) Object::getOpt() {
-    return ::getOpt<param>(*this);
+    return object.template getOpt<param>();
 }
 
 #include "ObjectModel.hpp"
