@@ -152,7 +152,7 @@ public:
                     return T::template getType<RETURN, DIG - 1>();
                 }
             }
-            return getType();
+            return (type_);
         }
         if constexpr (getType_template_able<T, RETURN>) {
             return T::template getType<RETURN, DIG>();
@@ -167,20 +167,11 @@ public:
                     return T::template getType<RETURN, DIG - 1>();
                 }
             }
-            return getType();
+            return (type_);
         }
         if constexpr (getType_template_able<T, RETURN>) {
             return T::template getType<RETURN, DIG>();
         }
-    }
-
-protected:
-    constexpr auto& getType() & {
-        return type_;
-    }
-
-    constexpr const auto& getType() const& {
-        return type_;
     }
 
 private:
