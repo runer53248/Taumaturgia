@@ -16,12 +16,8 @@ public:
     Naming_(const Name& name, Args&&... args)
         : T{std::forward<Args>(args)...}, name_{name} {}
 
-    constexpr auto& getName() & {
-        return name_;
-    }
-
-    constexpr const auto& getName() const& {
-        return name_;
+    constexpr auto& getName(this auto& self) {
+        return self.name_;
     }
 
 private:

@@ -70,12 +70,8 @@ public:
     Restoring_(const Name& name, [[maybe_unused]] const std::variant<V...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
-    constexpr auto& getRestoreEffects() & {
-        return restoreEffects_;
-    }
-
-    constexpr const auto& getRestoreEffects() const& {
-        return restoreEffects_;
+    constexpr auto& getRestoreEffects(this auto& self) {
+        return self.restoreEffects_;
     }
 
 private:

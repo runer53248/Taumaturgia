@@ -66,12 +66,8 @@ public:
     Wearing_(const Name& name, [[maybe_unused]] const std::variant<V...>& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
-    constexpr auto& getArmorWear() & {
-        return armorWear_;
-    }
-
-    constexpr const auto& getArmorWear() const& {
-        return armorWear_;
+    constexpr auto& getArmorWear(this auto& self) {
+        return self.armorWear_;
     }
 
 private:

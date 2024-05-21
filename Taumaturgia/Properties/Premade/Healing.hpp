@@ -66,12 +66,8 @@ public:
     Healing_(const Name& name, [[maybe_unused]] const std::variant<V...>& cureHealth, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
-    constexpr auto& getCureHealth() & {
-        return cureHealth_;
-    }
-
-    constexpr const auto& getCureHealth() const& {
-        return cureHealth_;
+    constexpr auto& getCureHealth(this auto& self) {
+        return self.cureHealth_;
     }
 
 private:
