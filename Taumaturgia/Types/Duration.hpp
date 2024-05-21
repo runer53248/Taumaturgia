@@ -12,14 +12,13 @@ public:
     constexpr auto operator<=>(const Duration& other) const noexcept = default;
 
     auto& value() & noexcept { return value_; }
-    auto value() && noexcept { return value_; }
-    auto value() const& noexcept { return value_; }
-    auto value() const&& noexcept { return value_; }
+    template <typename Self>
+    auto value(this Self&& self) noexcept { return std::forward<Self>(self).value_; }
+
 
     auto& type() & noexcept { return type_; }
-    auto type() && noexcept { return type_; }
-    auto type() const& noexcept { return type_; }
-    auto type() const&& noexcept { return type_; }
+    template <typename Self>
+    auto type(this Self&& self) noexcept { return std::forward<Self>(self).type_; }
 
     // return true if duration ended
     bool timePass(Duration timedelta) noexcept;

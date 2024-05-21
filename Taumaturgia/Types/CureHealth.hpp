@@ -30,9 +30,9 @@ public:
     constexpr auto valueType() const& noexcept { return value_type_; }
 
     auto& effects() & noexcept { return effects_; }
-    auto effects() && noexcept { return effects_; }
     auto& effects() const& noexcept { return effects_; }
-    auto effects() const&& noexcept { return effects_; }
+    template <typename Self>
+    auto effects(this Self&& self) noexcept { return std::forward<Self>(self).effects_; }
 
     void applyOn(Health& health) const noexcept;
 

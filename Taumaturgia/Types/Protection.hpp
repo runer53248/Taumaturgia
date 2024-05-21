@@ -19,10 +19,8 @@ public:
     decltype(auto) armorClass() const noexcept { return ac_.armorClass(); }
     decltype(auto) location() const noexcept { return ac_.location(); }
 
-    decltype(auto) protectEffects() & noexcept { return ac_.protectEffects(); }
-    decltype(auto) protectEffects() && noexcept { return ac_.protectEffects(); }
-    decltype(auto) protectEffects() const& noexcept { return ac_.protectEffects(); }
-    decltype(auto) protectEffects() const&& noexcept { return ac_.protectEffects(); }
+    template <typename Self>
+    decltype(auto) protectEffects(this Self&& self) noexcept { return std::forward<Self>(self).ac_.protectEffects(); }
 
 private:
     ArmorClass ac_{};

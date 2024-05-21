@@ -30,9 +30,9 @@ public:
     bool empty() const noexcept { return effectTypes_.empty(); }
 
     auto& effectTypes() & noexcept { return effectTypes_; }
-    auto effectTypes() && noexcept { return effectTypes_; }
     auto& effectTypes() const& noexcept { return effectTypes_; }
-    auto effectTypes() const&& noexcept { return effectTypes_; }
+    template <typename Self>
+    auto effectTypes(this Self&& self) noexcept { return std::forward<Self>(self).effectTypes_; }
 
     void addEffectType(const EffectType& type) { effectTypes_.insert(type); }
     void addEffectTypes(const EffectTypeContainer& types) { effectTypes_.insert(types.cbegin(), types.cend()); }

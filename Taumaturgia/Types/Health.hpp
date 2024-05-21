@@ -20,9 +20,9 @@ public:
     constexpr auto maxValue() const noexcept { return MAX_VALUE; }
 
     auto& effects() & noexcept { return effects_; }
-    auto effects() && noexcept { return effects_; }
     auto& effects() const& noexcept { return effects_; }
-    auto effects() const&& noexcept { return effects_; }
+    template <typename Self>
+    auto effects(this Self&& self) noexcept { return std::forward<Self>(self).effects_; }
 
     void addHealth(int value);
     void removeHealth(int value);

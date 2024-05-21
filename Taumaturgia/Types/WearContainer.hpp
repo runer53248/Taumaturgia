@@ -16,8 +16,10 @@ public:
 
     std::vector<BodyLocation> getWearedLocations() const;
 
-    const auto& armorAtLocation(BodyLocation location) const& noexcept { return protections_.at(static_cast<size_t>(location)); }
-    auto& armorAtLocation(BodyLocation location) & noexcept { return protections_.at(static_cast<size_t>(location)); }
+    template <typename Self>
+    auto& armorAtLocation(this Self& self, BodyLocation location) noexcept { 
+        return std::forward<Self>(self).protections_.at(static_cast<size_t>(location)); 
+    }
 
     // return Protection removed from same location if existed
     std::optional<Protection> wearProtection(const Protection& ac) &;

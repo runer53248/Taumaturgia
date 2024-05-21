@@ -17,10 +17,11 @@ public:
 
     auto armorClass() const noexcept { return value_; }
     auto location() const noexcept { return location_; }
+
     auto& protectEffects() & noexcept { return protectEffects_; }
-    auto protectEffects() && noexcept { return protectEffects_; }
     auto& protectEffects() const& noexcept { return protectEffects_; }
-    auto protectEffects() const&& noexcept { return protectEffects_; }
+    template <typename Self>
+    auto protectEffects(this Self&& self) noexcept { return std::forward<Self>(self).protectEffects_; }
 
 private:
     int value_{};

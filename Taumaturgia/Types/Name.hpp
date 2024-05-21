@@ -9,8 +9,8 @@ public:
 
     friend constexpr auto operator<=>(const Name& lhs, const Name& rhs) noexcept = default;
 
-    constexpr operator std::string() noexcept { return value_; }
-    constexpr operator std::string() const noexcept { return value_; }
+    template <typename Self>
+    constexpr operator std::string(this Self&& self) noexcept { return std::forward<Self>(self).value_; }
 
 private:
     std::string value_{};

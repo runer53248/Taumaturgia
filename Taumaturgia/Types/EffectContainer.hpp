@@ -27,9 +27,9 @@ public:
     bool empty() const noexcept { return effects_.empty(); }
 
     auto& effects() & noexcept { return effects_; }
-    auto effects() && noexcept { return effects_; }  // don't return reference from temporary objects
     auto& effects() const& noexcept { return effects_; }
-    auto effects() const&& noexcept { return effects_; }
+    template <typename Self>
+    auto effects(this Self&& self) noexcept { return std::forward<Self>(self).effects_; }  // don't return reference from temporary objects
 
     bool isEffectType(const Effect& effect) const noexcept;
 

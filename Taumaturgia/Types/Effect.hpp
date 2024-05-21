@@ -34,19 +34,16 @@ public:
     constexpr bool operator==(const Effect& other) const noexcept = default;
     
     constexpr auto& effectType() & noexcept { return effectType_; }
-    constexpr auto effectType() && noexcept { return effectType_; }
-    constexpr auto effectType() const& noexcept { return effectType_; }
-    constexpr auto effectType() const&& noexcept { return effectType_; }
+    template <typename Self>
+    constexpr auto effectType(this Self&& self) noexcept { return std::forward<Self>(self).effectType_; }
 
     constexpr auto& state() & noexcept { return state_; }
-    constexpr auto state() && noexcept { return state_; }
-    constexpr auto state() const& noexcept { return state_; }
-    constexpr auto state() const&& noexcept { return state_; }
+    template <typename Self>
+    constexpr auto state(this Self&& self) noexcept { return std::forward<Self>(self).state_; }
 
     constexpr auto& duration() & noexcept { return duration_; }
-    constexpr auto duration() && noexcept { return duration_; }
-    constexpr auto duration() const& noexcept { return duration_; }
-    constexpr auto duration() const&& noexcept { return duration_; }
+    template <typename Self>
+    constexpr auto duration(this Self&& self) noexcept { return std::forward<Self>(self).duration_; }
 
     constexpr bool empty() const noexcept { return effectType_ == EffectType::None; }
     constexpr bool isActive() const noexcept { return state_ == EffectState::Active; }

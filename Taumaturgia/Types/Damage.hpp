@@ -17,16 +17,14 @@ public:
     constexpr auto operator<=>(const Damage& rhs) const noexcept = default;
 
     auto& value() & noexcept { return value_; }
-    auto value() && noexcept { return value_; }
-    auto value() const& noexcept { return value_; }
-    auto value() const&& noexcept { return value_; }
+    template <typename Self>
+    constexpr auto value(this Self&& self) noexcept { return std::forward<Self>(self).value_; }
 
     auto type() const noexcept { return type_; }
 
     auto& effect() & noexcept { return effect_; }
-    auto effect() && noexcept { return effect_; }
-    auto effect() const& noexcept { return effect_; }
-    auto effect() const&& noexcept { return effect_; }
+    template <typename Self>
+    constexpr auto effect(this Self&& self) noexcept { return std::forward<Self>(self).effect_; }
 
 private:
     int value_{};
