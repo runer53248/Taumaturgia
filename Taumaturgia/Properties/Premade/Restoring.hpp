@@ -58,7 +58,7 @@ public:
         : T{name, std::forward<Args>(args)...}, restoreEffects_{restoreEffects} {}
 
     template <typename... V, typename... Args>
-        requires type_is_possible<EffectTypeContainer, V...>
+        requires contains_type<EffectTypeContainer, V...>
     Restoring_(const Name& name, const std::variant<V...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           restoreEffects_{std::get_if<EffectTypeContainer>(&restoreEffects)
@@ -66,7 +66,7 @@ public:
                               : EffectTypeContainer{}} {}
 
     template <typename... V, typename... Args>
-        requires type_is_not_possible<EffectTypeContainer, V...>
+        requires not_contains_type<EffectTypeContainer, V...>
     Restoring_(const Name& name, [[maybe_unused]] const std::variant<V...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 

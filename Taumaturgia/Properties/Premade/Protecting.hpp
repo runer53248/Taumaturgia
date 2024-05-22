@@ -53,7 +53,7 @@ public:
         : T{name, std::forward<Args>(args)...}, protection_{protection} {}
 
     template <typename... V, typename... Args>
-        requires type_is_possible<Protection, V...>
+        requires contains_type<Protection, V...>
     Protecting_(const Name& name, const std::variant<V...>& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           protection_{std::get_if<Protection>(&protection)
@@ -61,7 +61,7 @@ public:
                           : Protection{}} {}
 
     template <typename... V, typename... Args>
-        requires type_is_not_possible<Protection, V...>
+        requires not_contains_type<Protection, V...>
     Protecting_(const Name& name, [[maybe_unused]] const std::variant<V...>& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 

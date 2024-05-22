@@ -56,7 +56,7 @@ public:
         : T{name, std::forward<Args>(args)...}, dmg_{dmg} {}
 
     template <typename... V, typename... Args>
-        requires type_is_possible<Damage, V...>
+        requires contains_type<Damage, V...>
     Damaging_(const Name& name, const std::variant<V...>& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           dmg_{std::get_if<Damage>(&dmg)
@@ -64,7 +64,7 @@ public:
                    : Damage{}} {}
 
     template <typename... V, typename... Args>
-        requires type_is_not_possible<Damage, V...>
+        requires not_contains_type<Damage, V...>
     Damaging_(const Name& name, [[maybe_unused]] const std::variant<V...>& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 

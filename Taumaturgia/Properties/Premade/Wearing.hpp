@@ -54,7 +54,7 @@ public:
         : T{name, std::forward<Args>(args)...}, armorWear_{armorWear} {}
 
     template <typename... V, typename... Args>
-        requires type_is_possible<WearContainer, V...>
+        requires contains_type<WearContainer, V...>
     Wearing_(const Name& name, const std::variant<V...>& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           armorWear_{std::get_if<WearContainer>(&armorWear)
@@ -62,7 +62,7 @@ public:
                          : WearContainer{}} {}
 
     template <typename... V, typename... Args>
-        requires type_is_not_possible<WearContainer, V...>
+        requires not_contains_type<WearContainer, V...>
     Wearing_(const Name& name, [[maybe_unused]] const std::variant<V...>& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 

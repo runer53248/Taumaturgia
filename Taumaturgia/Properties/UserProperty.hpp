@@ -4,8 +4,8 @@
 #include <variant>
 #include "Helpers/PropertyData.hpp"
 #include "Helpers/constructible_from_args.hpp"
-#include "Taumaturgia/Types/Name.hpp"
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
+#include "Taumaturgia/Types/Name.hpp"
 
 namespace impl {
 inline constinit const char user_type_name[] = "UserProperty";
@@ -73,15 +73,15 @@ public:
     // MARK: Namingable variant C-tors
 
     template <typename... V, typename... Args>
-        requires type_is_possible<TYPE, V...> /*and Namingable<T>*/
+        requires contains_type<TYPE, V...> /*and Namingable<T>*/
     UserProperty_(const Name& name, const std::variant<V...>& type, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           type_{std::get_if<TYPE>(&type)
-                   ? std::get<TYPE>(type)
-                   : TYPE{}} {}
+                    ? std::get<TYPE>(type)
+                    : TYPE{}} {}
 
     template <typename... V, typename... Args>
-        requires type_is_not_possible<TYPE, V...> /*and Namingable<T>*/
+        requires not_contains_type<TYPE, V...> /*and Namingable<T>*/
     UserProperty_(const Name& name, [[maybe_unused]] const std::variant<V...>& type, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
@@ -130,15 +130,15 @@ public:
     // MARK: variant C-tors
 
     template <typename... V, typename... Args>
-        requires type_is_possible<TYPE, V...>
+        requires contains_type<TYPE, V...>
     UserProperty_(const std::variant<V...>& type, Args&&... args)
         : T{std::forward<Args>(args)...},
           type_{std::get_if<TYPE>(&type)
-                   ? std::get<TYPE>(type)
-                   : TYPE{}} {}
+                    ? std::get<TYPE>(type)
+                    : TYPE{}} {}
 
     template <typename... V, typename... Args>
-        requires type_is_not_possible<TYPE, V...>
+        requires not_contains_type<TYPE, V...>
     UserProperty_([[maybe_unused]] const std::variant<V...>& type, Args&&... args)
         : T{std::forward<Args>(args)...} {}
 
@@ -153,10 +153,10 @@ public:
                 }
             }
             return (type_);
-        }
-        if constexpr (getType_template_able<T, RETURN>) {
+        } else if constexpr (getType_template_able<T, RETURN>) {
             return T::template getType<RETURN, DIG>();
         }
+        std::unreachable();
     }
 
     template <typename RETURN = TYPE, size_t DIG = 0>
@@ -168,10 +168,10 @@ public:
                 }
             }
             return (type_);
-        }
-        if constexpr (getType_template_able<T, RETURN>) {
+        } else if constexpr (getType_template_able<T, RETURN>) {
             return T::template getType<RETURN, DIG>();
         }
+        std::unreachable();
     }
 
 private:

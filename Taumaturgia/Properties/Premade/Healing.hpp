@@ -54,7 +54,7 @@ public:
         : T{name, std::forward<Args>(args)...}, cureHealth_{cureHealth} {}
 
     template <typename... V, typename... Args>
-        requires type_is_possible<CureHealth, V...>
+        requires contains_type<CureHealth, V...>
     Healing_(const Name& name, const std::variant<V...>& cureHealth, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           cureHealth_{std::get_if<CureHealth>(&cureHealth)
@@ -62,7 +62,7 @@ public:
                           : CureHealth{}} {}
 
     template <typename... V, typename... Args>
-        requires type_is_not_possible<CureHealth, V...>
+        requires not_contains_type<CureHealth, V...>
     Healing_(const Name& name, [[maybe_unused]] const std::variant<V...>& cureHealth, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
