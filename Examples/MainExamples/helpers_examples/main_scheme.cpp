@@ -22,7 +22,7 @@ public:
 };
 
 using WearingIndex = typename Wearing<test_struct>::property_data::property_type;
-static_assert(WearingIndex::value == mp_find<order_list, Wearing<tag>>::value + 1);
+static_assert(WearingIndex::value == boost::mp11::mp_find<order_list, Wearing<tag>>::value + 1);
 
 using helpers::Scheme;
 

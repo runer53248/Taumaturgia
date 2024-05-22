@@ -4,9 +4,6 @@
 #include <numeric>
 #include <vector>
 
-using namespace std::chrono_literals;
-using namespace std::chrono;
-
 constinit const size_t repetition = 10'000;
 
 template <typename FUN>
@@ -17,6 +14,9 @@ public:
 
     template <typename... Args>
     auto operator()(Args&&... args) {
+        using namespace std::chrono_literals;
+        using namespace std::chrono;
+
         using time_type = nanoseconds;
         auto begin_value = time_type{0};
         std::vector<time_type> times;

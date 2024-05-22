@@ -2,7 +2,6 @@
 #include "PropertyData.hpp"
 
 #include <boost/mp11.hpp>
-using namespace boost::mp11;
 
 namespace helpers {
 
@@ -13,15 +12,15 @@ struct build_into_impl;
 template <typename Base, typename L>
 struct build_into_impl {
 private:
-    using first = mp_first<L>;
-    using rest = mp_rest<L>;
+    using first = boost::mp11::mp_first<L>;
+    using rest = boost::mp11::mp_rest<L>;
 
 public:
     using type = first::template type<typename build_into_impl<Base, rest>::type>;
 };
 
 template <typename Base, typename L>
-    requires mp_empty<L>::value
+    requires boost::mp11::mp_empty<L>::value
 struct build_into_impl<Base, L> {
     using type = Base;
 };
@@ -80,12 +79,12 @@ concept same_priority = is_same_priority<A, B>::value;
 
 template <typename... PROPERTY_LISTS>
 using append_and_order_property_lists =
-    mp_sort<
-        mp_unique_if<  //
-            mp_append<
+    boost::mp11::mp_sort<
+        boost::mp11::mp_unique_if<  //
+            boost::mp11::mp_append<
                 PROPERTY_LISTS...>,
             is_same_priority>,
-        mp_less>;
+        boost::mp11::mp_less>;
 
 template <template <typename...> typename... properties>
     requires(is_property<properties> and ...)

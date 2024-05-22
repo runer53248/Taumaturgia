@@ -26,8 +26,8 @@ public:
 template <typename T, template <typename...> typename... properties>
 concept have_properties =
     (is_property<properties> and ...) and
-    mp_and<
-        mp_to_bool<
-            mp_count_if<
+    boost::mp11::mp_and<
+        boost::mp11::mp_to_bool<
+            boost::mp11::mp_count_if<
                 typename helpers::Scheme<T>::list_t,
                 helpers::equivalent_properties_predicate<properties>::template type>>...>::value;

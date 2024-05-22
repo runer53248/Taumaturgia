@@ -2,17 +2,17 @@
 #include <numeric>
 #include "property_helpers.hpp"
 
-static_assert(std::is_same_v<mp_clear<order_list>, taged_list<>>);  // order_list is taged_list
-static_assert(mp_size<order_list>::value);                          // order_list is not empty
+static_assert(std::is_same_v<boost::mp11::mp_clear<order_list>, taged_list<>>);  // order_list is taged_list
+static_assert(boost::mp11::mp_size<order_list>::value);                          // order_list is not empty
 
-constexpr static auto properties_counter = mp_size<order_list>::value;
+constexpr static auto properties_counter = boost::mp11::mp_size<order_list>::value;
 
 template <template <typename...> typename property>
     requires is_property<property>
 class Property {
 private:
     constinit const static size_t index = []() {
-        return mp_find<order_list, helpers::best_property_tag<property>>::value;
+        return boost::mp11::mp_find<order_list, helpers::best_property_tag<property>>::value;
     }();
 
 public:
