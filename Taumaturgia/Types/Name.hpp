@@ -7,7 +7,7 @@ public:
     explicit Name(const std::string& value)
         : value_{value} {}
 
-    friend constexpr auto operator<=>(const Name& lhs, const Name& rhs) noexcept = default;
+    constexpr auto operator<=>(const Name& other) const noexcept = default;
 
     template <typename Self>
     constexpr operator std::string(this Self&& self) noexcept { return std::forward<Self>(self).value_; }

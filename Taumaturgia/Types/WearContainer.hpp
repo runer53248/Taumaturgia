@@ -9,7 +9,7 @@ public:
     explicit WearContainer(int baseValue) noexcept
         : globalArmor_{baseValue} {}
 
-    friend std::strong_ordering operator<=>(const WearContainer& lhs, const WearContainer& rhs) noexcept = default;
+    std::strong_ordering operator<=>(const WearContainer& other) const noexcept = default;
 
     auto value() const& noexcept { return globalArmor_; }
     const auto& protectEffects() const& noexcept { return globalProtectEffects_; }

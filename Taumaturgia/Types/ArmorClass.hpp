@@ -13,7 +13,7 @@ public:
         : ArmorClass(value, location, {}) {}
     ArmorClass(int value, BodyLocation location, std::initializer_list<EffectType> protectEffects) noexcept;
 
-    auto operator<=>(const ArmorClass& other) const noexcept = default;
+    std::strong_ordering operator<=>(const ArmorClass& other) const noexcept = default;
 
     auto armorClass() const noexcept { return value_; }
     auto location() const noexcept { return location_; }
