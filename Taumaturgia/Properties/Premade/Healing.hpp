@@ -1,5 +1,6 @@
 #pragma once
 #include <boost/mp11.hpp>
+#include <variant>
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Traits/CureHealthTraits.hpp"

@@ -1,4 +1,5 @@
 #pragma once
+#include <variant>
 #include "Taumaturgia/Properties/Helpers/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Traits/ProtectionTraits.hpp"

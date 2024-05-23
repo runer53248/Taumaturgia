@@ -35,22 +35,30 @@ concept is_property_improvement = is_property<property> and requires {
 };
 
 namespace impl {
-template <template <typename...> typename property, bool = helpers::is_property_improvement<property>>
-struct best_property_tag_impl;
-
-template <template <typename...> typename property>
-struct best_property_tag_impl<property, true> {
-    using type = property<tag>::improvement_of;
+template <typename property>
+concept improvement_cascade = requires() {
+    typename property::improvement_of;
 };
 
-template <template <typename...> typename property>
-struct best_property_tag_impl<property, false> {
-    using type = property<tag>;
+template <typename property>
+concept not_improvement_cascade = not improvement_cascade<property>;
+
+template <typename property>
+struct most_improved_helper;
+
+template <improvement_cascade property>
+struct most_improved_helper<property> {
+    using type = most_improved_helper<typename property::improvement_of>::type;
+};
+
+template <not_improvement_cascade property>
+struct most_improved_helper<property> {
+    using type = property;
 };
 }  // namespace impl
 
 template <template <typename...> typename property>
-using best_property_tag = impl::best_property_tag_impl<property>::type;
+using best_property_tag = impl::most_improved_helper<property<tag>>::type;
 
 template <typename A, typename B>
 struct is_same_priority {
