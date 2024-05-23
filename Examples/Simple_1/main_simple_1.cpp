@@ -14,7 +14,7 @@ class Weapon_B {
 public:
     std::string name;
 
-    Weapon_B(std::string name, Damage dmg)
+    Weapon_B(const std::string& name, Damage dmg)
         : name{name}, dmg{dmg} {}
 
     auto& getDamage() { return dmg; }
