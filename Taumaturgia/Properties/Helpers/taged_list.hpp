@@ -17,6 +17,11 @@ concept is_property = requires {
     typename T<tag>::property_data;
 };
 
+template <typename T>
+concept is_concrete_property = requires {
+    typename T::property_data;
+};
+
 template <template <typename...> typename T>
 concept is_property_with_inner_reduction = is_property<T> and is_inner_reduction<T>;
 

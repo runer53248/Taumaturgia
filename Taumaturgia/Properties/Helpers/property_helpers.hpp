@@ -32,7 +32,7 @@ using build_into_t = impl::build_into_impl<Base, L>::type;
 template <template <typename...> typename property>
 concept is_property_improvement = is_property<property> and requires {
     typename property<tag>::improvement_of;
-};
+} and is_concrete_property<typename property<tag>::improvement_of>;
 
 namespace impl {
 template <typename property>
