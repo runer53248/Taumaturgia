@@ -36,22 +36,22 @@ concept is_property_improvement = is_property<property> and requires {
 
 namespace impl {
 template <typename property>
-concept improvement_cascade = requires() {
+concept improvement = requires {
     typename property::improvement_of;
-};
+} and not std::same_as<property, typename property::improvement_of>; // ignore when improvement_of == self
 
 template <typename property>
-concept not_improvement_cascade = not improvement_cascade<property>;
+concept not_improvement = not improvement<property>;
 
 template <typename property>
 struct most_improved_helper;
 
-template <improvement_cascade property>
+template <improvement property>
 struct most_improved_helper<property> {
     using type = most_improved_helper<typename property::improvement_of>::type;
 };
 
-template <not_improvement_cascade property>
+template <not_improvement property>
 struct most_improved_helper<property> {
     using type = property;
 };
