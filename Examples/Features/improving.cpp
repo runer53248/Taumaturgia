@@ -158,6 +158,19 @@ using helpers::same_priority;
 
 struct Empty {};
 
+static_assert(same_priority<
+                Property<Living>,
+                Property<Living_1_Improved>>);
+static_assert(same_priority<
+                Property<Living_1_Improved>,
+                Property<Living_2_Improved>>);
+static_assert(same_priority<
+                Property<Living_2_Improved>,
+                Property<Improved_Living_3_Improved>>);
+static_assert(same_priority<
+                Property<Improved_Living_3_Improved>,
+                Property<Improved_Living_4_Improved>>);
+
 int main() {
     static_assert(Property<Living>::value == Property<Living_impl>::value);
     static_assert(same_priority<Property<Living>, Property<Living_impl>>);
@@ -165,8 +178,6 @@ int main() {
     auto print = []<template <typename...> typename property>() {
         std::cout << name<Property<property>>() << " priority = " << Property<property>::value << " | improved = " << is_property_improvement<property> << '\n';
     };
-
-    // static_assert(same_priority<Property<Improved_Living_3_Improved>, Property<LivingImproved_2_>>);
 
     std::cout << "properties can be improved" << '\n';
     print.operator()<Living>();
