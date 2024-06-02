@@ -29,16 +29,33 @@ struct build_into_impl<Base, L> {
 template <typename Base, typename L>
 using build_into_t = impl::build_into_impl<Base, L>::type;
 
+// template <template <typename...> typename property>
+// concept have_improvement_of = requires {
+//     typename property<tag>::improvement_of;
+// };
+
 template <template <typename...> typename property>
-concept is_property_improvement = is_property<property> and requires {
-    typename property<tag>::improvement_of;
-} and is_concrete_property<typename property<tag>::improvement_of>;
+concept have_improvement_of_property = is_concrete_property<typename property<tag>::improvement_of>;  // improvement_of have property_data;
+
+template <template <typename...> typename property>
+concept is_property_improvement = is_property<property>                                                         // have property_data
+                                  //   and have_improvement_of<property>                                             //
+                                  and have_improvement_of_property<property>                                    //
+                                  and not std::same_as<property<tag>, typename property<tag>::improvement_of>;  // property != improvement_of
+
+template <template <typename...> typename property>
+concept is_property_improvement_possibly_self = is_property<property>                        // have property_data
+                                                //   and have_improvement_of<property>            //
+                                                and have_improvement_of_property<property>;  //
 
 namespace impl {
 template <typename property>
+concept self_improvement = std::same_as<property, typename property::improvement_of>;
+
+template <typename property>
 concept improvement = requires {
     typename property::improvement_of;
-} and not std::same_as<property, typename property::improvement_of>; // ignore when improvement_of == self
+} and not self_improvement<property>;  // property != improvement_of
 
 template <typename property>
 concept not_improvement = not improvement<property>;
@@ -62,10 +79,7 @@ using best_property_tag = impl::most_improved_helper<property<tag>>::type;
 
 template <typename A, typename B>
 struct is_same_priority {
-    template <typename T>
-    using best_property_tag = best_property_tag<T::template type>;
-
-    constinit const static auto value = []() -> bool {
+    static constinit const bool value = []() {
         if constexpr (std::is_same_v<A, B>) {
             return true;
         }
@@ -73,10 +87,10 @@ struct is_same_priority {
             return (A::value == B::value);
         }
         // same_priority true if any improved unordered Property improvement_of same as other
-        if constexpr (is_property_improvement<A::template type> or is_property_improvement<B::template type>) {
+        if constexpr (is_property_improvement_possibly_self<A::template type> or is_property_improvement_possibly_self<B::template type>) {
             return (std::is_same_v<
-                    best_property_tag<A>,
-                    best_property_tag<B>>);
+                    best_property_tag<A::template type>,
+                    best_property_tag<B::template type>>);
         }
         return false;
     }();

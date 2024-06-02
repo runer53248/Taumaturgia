@@ -16,9 +16,7 @@ public:
     template <typename TAG>
     using self = UserProperty_<TYPE, TAG, Tags...>;                        // make yourself one template argument type to satisfy PropertyData
     using property_data = PropertyData<user_type_name, self, T, Tags...>;  // ? should add TYPE into PropertyData?
-#ifdef USER_PROPERTY_SELF_AWARE
-    using improvement_of = self<T>;  // will act like same type if TYPE and Tags are same
-#endif
+    using improvement_of = self<T>;                                        // will act like same type if TYPE and Tags are same
     // using hold_type = TYPE;  // unused
 
     // MARK: Namingable tuple C-tors
@@ -153,10 +151,10 @@ public:
                 }
             }
             return (type_);
-        } else if constexpr (getType_template_able<T, RETURN>) {
+        }
+        if constexpr (getType_template_able<T, RETURN>) {
             return T::template getType<RETURN, DIG>();
         }
-        std::unreachable();
     }
 
     template <typename RETURN = TYPE, size_t DIG = 0>
@@ -168,10 +166,10 @@ public:
                 }
             }
             return (type_);
-        } else if constexpr (getType_template_able<T, RETURN>) {
+        }
+        if constexpr (getType_template_able<T, RETURN>) {
             return T::template getType<RETURN, DIG>();
         }
-        std::unreachable();
     }
 
 private:
@@ -202,4 +200,4 @@ struct UserPropertyConceptAdapter {
 
 // TODO: check is this needed?
 // template <typename TYPE, typename T>
-// struct UserStrategy_<TYPE, impl::UserProperty_<TYPE, T>> : public UserStrategy_<TYPE, T> {};  // forward eventualy implemented strategy
+// struct UserStrategy_<TYPE, impl::UserProperty_<TYPE, T>, ActionStatus> : public UserStrategy_<TYPE, T, ActionStatus> {};  // forward eventualy implemented strategy

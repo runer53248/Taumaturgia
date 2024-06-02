@@ -24,9 +24,3 @@ add_executable(main_have_properties_${addons}
 add_executable(main_improve_properties_${addons}
     main_improve_properties.cpp
 )
-add_executable(main_improve_properties-aware_${addons}
-    main_improve_properties.cpp
-)
-target_compile_definitions(main_improve_properties-aware_${addons}
-    PUBLIC USER_PROPERTY_SELF_AWARE
-)

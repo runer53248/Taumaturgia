@@ -34,12 +34,6 @@ add_executable(main_user_property2_${addons}
 add_executable(main_user_property3_${addons}
     main_user_property_3.cpp
 )
-add_executable(main_user_property3-aware_${addons}
-    main_user_property_3.cpp
-)
-target_compile_definitions(main_user_property3-aware_${addons}
-    PUBLIC USER_PROPERTY_SELF_AWARE
-)
 
 add_executable(main_constexpr_traits_${addons}
 main_constexpr_traits.cpp
