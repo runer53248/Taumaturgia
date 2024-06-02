@@ -11,12 +11,12 @@ template <template <typename...> typename property>
     requires is_property<property>
 class Property {
 private:
-    constinit const static size_t index = []() {
+    static constinit const size_t index = []() {
         return boost::mp11::mp_find<order_list, helpers::best_property_tag<property>>::value;
     }();
 
 public:
-    static constexpr auto value = (properties_counter > index) ? index + 1 : std::numeric_limits<size_t>::max();  // index of property starting from 1 (or max if not found)
+    static constexpr size_t value = (properties_counter > index) ? index + 1 : std::numeric_limits<size_t>::max();  // index of property starting from 1 (or max if not found)
     template <typename T>
     using type = property<T>;
 };
