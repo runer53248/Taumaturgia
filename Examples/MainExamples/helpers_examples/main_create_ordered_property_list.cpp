@@ -106,22 +106,13 @@ int main() {
     std::cout << name<type_y2>() << '\n'
               << '\n';
 
-#ifdef NO_PREMADE_PROPERTIES
-    // UserProperty created properties with same encapsulated type are equivelent to created by UserPropertyConceptAdapter
-    static_assert(Property<UserProtecting>::value == Property<Protecting>::value);
-    static_assert(Property<UserDamaging>::value == Property<Damaging>::value);
-    static_assert(same_priority<Property<UserProtecting>, Property<Protecting>>);
-    static_assert(same_priority<Property<UserDamaging>, Property<Damaging>>);
-#else
-    // UserProperty created properties with same encapsulated type aren't equivelent to build-in ones
-    static_assert(Property<UserProtecting>::value != Property<Protecting>::value);
-    static_assert(Property<UserDamaging>::value != Property<Damaging>::value);
-    static_assert(not same_priority<Property<UserProtecting>, Property<Protecting>>);
-    static_assert(not same_priority<Property<UserDamaging>, Property<Damaging>>);    
-#endif
+    static_assert(Property<Protecting_impl>::value == Property<Protecting>::value);
+    static_assert(same_priority<Property<Protecting_impl>, Property<Protecting>>);
+    static_assert(Property<Damaging_impl>::value == Property<Damaging>::value);
+    static_assert(same_priority<Property<Damaging_impl>, Property<Damaging>>);
 
-    using type_x = create_ordered_property_list<UserProtecting, UserDamaging, Protecting, Damaging>;  // end with Protecting, Damaging
-    using type_y = create_ordered_property_list<UserDamaging, UserProtecting, Damaging, Protecting>;  // end with Damaging, Protecting
+    using type_x = create_ordered_property_list<Protecting_impl, Damaging_impl, Protecting, Damaging>;  // end with Protecting, Damaging
+    using type_y = create_ordered_property_list<Damaging_impl, Protecting_impl, Damaging, Protecting>;  // end with Damaging, Protecting
     std::cout << "9) user created properties with same encapsulated type don't count as build-in ones (ie. not have its index)" << '\n';
     std::cout << name<type_x>() << '\n';
     std::cout << name<type_y>() << '\n'

@@ -1,58 +1,52 @@
-#include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Examples/improved_types.hpp"
+
+#include "Examples/PreetyPrint/preety_print.hpp"
 
 using helpers::is_property_improvement;
 using helpers::same_priority;
 
 int main() {
-    static_assert(Property<Damaging>::value == Property<Damaging_impl>::value);
-    static_assert(same_priority<Property<Damaging>, Property<Damaging_impl>>);
-
     // improvements of build-in properties
     static_assert(Property<Damaging>::value == Property<DamagingImproved>::value);
     static_assert(same_priority<Property<Damaging>, Property<DamagingImproved>>);
     static_assert(same_priority<Property<Damaging_impl>, Property<DamagingImproved>>);
+
+    auto printPriority = []<template <typename...> typename T>(std::string const& text) {
+        std::cout << text << '\n';
+        std::cout << " priority = " << Property<T>::value << " | improved = " << is_property_improvement<T> << '\n';
+    };
+
     std::cout << "build-in properties can be improved" << '\n';
-    std::cout << "Damaging priority = " << Property<Damaging>::value << " | improved = " << is_property_improvement<Damaging> << '\n';
-    std::cout << "Damaging_impl priority = " << Property<Damaging_impl>::value << " | improved = " << is_property_improvement<Damaging_impl> << '\n';
-    std::cout << "DamagingImproved priority = " << Property<DamagingImproved>::value << " | improved = " << is_property_improvement<DamagingImproved> << '\n';
-    std::cout << "DamagingImproved_ priority = " << Property<DamagingImproved_>::value << " | improved = " << is_property_improvement<DamagingImproved_> << '\n'
-              << '\n';
+    printPriority.operator()<Damaging>("Damaging");
+    printPriority.operator()<Damaging_impl>("Damaging_impl");
+    printPriority.operator()<DamagingImproved>("DamagingImproved");
+    std::cout << '\n';
 
     // improvements of user properties
-    static_assert(Property<UserProtectingImproved>::value == Property<UserProtecting>::value);
-    static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtecting>>);            // ? same_priority value
-    static_assert(same_priority<Property<UserProtecting>, Property<UserProtectingImproved>>);            // ? same_priority value
-    static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtectingImproved>>);    // ? same_priority value
-    static_assert(same_priority<Property<UserProtectingImproved>, Property<UserProtectingImproved_2>>);  // ? same_priority value
+    static_assert(Property<Protecting>::value == Property<UserProtectingImproved>::value);
+    static_assert(same_priority<Property<Protecting>, Property<UserProtectingImproved>>);
+    static_assert(same_priority<Property<Protecting_impl>, Property<UserProtectingImproved>>);
+    static_assert(same_priority<Property<Protecting>, Property<UserProtectingImproved_2>>);
+    static_assert(same_priority<Property<Protecting_impl>, Property<UserProtectingImproved_2>>);
+
     std::cout << "user properties can be improved" << '\n';
-    std::cout << "UserProtecting priority = " << Property<UserProtecting>::value << " | improved = " << is_property_improvement<UserProtecting> << '\n';
-    std::cout << "UserProtectingImproved priority = " << Property<UserProtectingImproved>::value << " | improved = " << is_property_improvement<UserProtectingImproved> << '\n';
-    std::cout << "UserProtectingImproved_ priority = " << Property<UserProtectingImproved_>::value << " | improved = " << is_property_improvement<UserProtectingImproved_> << '\n';
-    std::cout << "UserProtectingImproved_2 priority = " << Property<UserProtectingImproved_2>::value << " | improved = " << is_property_improvement<UserProtectingImproved_2> << '\n';
-    std::cout << "UserProtectingImproved_2_ priority = " << Property<UserProtectingImproved_2_>::value << " | improved = " << is_property_improvement<UserProtectingImproved_2_> << '\n'
-              << '\n';
+    printPriority.operator()<Protecting>("Protecting");
+    printPriority.operator()<Protecting_impl>("Protecting_impl");
+    printPriority.operator()<UserProtectingImproved>("UserProtectingImproved");
+    printPriority.operator()<UserProtectingImproved_2>("UserProtectingImproved_2");
+    std::cout << '\n';
 
     // UserProperty may have same priority value but are not considered same by same_priority struct
-#ifdef NO_PREMADE_PROPERTIES
-    static_assert(Property<UserProtecting>::value != Property<UserDamaging>::value);  // not same priority value
-#else
-    static_assert(Property<UserProtecting>::value == Property<UserDamaging>::value);  // same priority value
-#endif
-    static_assert(Property<UserProtecting>::value == Property<UserProtecting_2>::value);  // same priority value
-    static_assert(Property<UserProtecting>::value == Property<UserProtecting>::value);    // same priority value
-    static_assert(not same_priority<Property<UserProtecting>, Property<UserDamaging>>);   // not same_priority value - different types
-#ifdef USER_PROPERTY_SELF_AWARE
-    static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting_2>>);  // same_priority value - self type awarness
-#else
-    #ifdef NO_PREMADE_PROPERTIES
-        static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting_2>>);  // same_priority value
-    #else
-        static_assert(not same_priority<Property<UserProtecting>, Property<UserProtecting_2>>);  // not same_priority value - different type even if similiar
-    #endif
-#endif
-    static_assert(same_priority<Property<UserProtecting>, Property<UserProtecting>>);  // same type have same_priority value
+    static_assert(Property<Protecting_impl>::value != Property<Damaging_impl>::value);  // not same priority value
+
+    static_assert(Property<Protecting_impl>::value == Property<Protecting>::value);  // same priority value
+    static_assert(not same_priority<
+                  Property<Protecting_impl>,
+                  Property<Damaging_impl>>);  // not same_priority value - different types
+    static_assert(same_priority<
+                  Property<Protecting>,
+                  Property<Protecting_impl>>);  // same type have same_priority value
 
     struct Type {
     public:
@@ -73,22 +67,22 @@ int main() {
 
     auto dmg_b = Damaging_impl<Type>{}.dmgs;
     std::cout << "Damaging_impl<Type>{}.dmgs = " << dmg_b << '\n';
-    
+
 #ifdef NO_PREMADE_PROPERTIES
     // [[maybe_unused]] auto dmg_c = Damaging_impl<Type>{}.getType(); // ! public getType is shadowed by protected one from UserProperty
-    std::cout << "Damaging_impl<Type>{}.getType() is shadowed " << '\n';
+    std::cout << "Damaging_impl<Type>{}.getType() is shadowed\n";
 #else
     [[maybe_unused]] auto dmg_c = Damaging_impl<Type>{}.getType();  // Type::getType method call
     std::cout << "Damaging_impl<Type>{}.getType() = " << dmg_c << '\n';
 #endif
 
-    std::cout << "custom property may shadow members and methods of type that pass validation concept for property" << '\n';
-    auto dmg_d = UserDamaging<Type>{}.dmg;
-    auto dmg_e = UserDamaging<Type>{}.dmgs;
-    // [[maybe_unused]] auto dmg_f = UserDamaging<Type>{}.getType(); // ! public getType is shadowed by protected one from UserProperty
-    std::cout << "UserProperty<Damage, Type>{}.dmg = " << dmg_d << '\n';
-    std::cout << "UserProperty<Damage, Type>{}.dmgs = " << dmg_e << '\n';
-    std::cout << "UserProperty<Damage, Type>{}.getType() shadowed \n";
-    std::cout << name<UserDamaging<Type>>() << '\n'
+    std::cout << "custom property may shadow members and methods\n of type that pass validation concept for property\n";
+    auto dmg_d = Damaging_impl<Type>{}.dmg;
+    auto dmg_e = Damaging_impl<Type>{}.dmgs;
+    // [[maybe_unused]] auto dmg_f = Damaging_impl<Type>{}.getType(); // ! public getType is shadowed by protected one from UserProperty
+    std::cout << "Damaging_impl<Type>{}.dmg = " << dmg_d << '\n';
+    std::cout << "Damaging_impl<Type>{}.dmgs = " << dmg_e << '\n';
+    std::cout << "Damaging_impl<Type>{}.getType() shadowed \n";
+    std::cout << name<Damaging_impl<Type>>() << '\n'
               << '\n';
 }

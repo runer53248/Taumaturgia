@@ -18,33 +18,30 @@ struct DamagingImproved_ : public T {  // example of improving build-in property
     Damage dmg;
 };
 template <typename T>  // example of improving build-in property - may be used as replacement of Damaging
-using DamagingImproved = std::conditional_t<Damagingable<T>, T, DamagingImproved_<T>>;
-
-template <typename T>
-using UserDamaging = UserProperty<Damage, T>;
-template <typename T>
-using UserProtecting = UserProperty<Protection, T>;
-template <typename T>
-using UserProtecting_2 = UserProperty<Protection, T>;
-
-// UserProtectingImproved_2 and UserProtectingImproved have same implemmentation
+using DamagingImproved = std::conditional_t<Damagingable<T>,
+                                            T,
+                                            DamagingImproved_<T>>;
 
 template <typename T>
 struct UserProtectingImproved_ : public T {  // example of improving user property
     using property_data = PropertyData<impl::user_type_name, UserProtectingImproved_, T>;
-    using improvement_of = UserProtecting<T>;
+    using improvement_of = Protecting_impl<T>;
 
     UserProtectingImproved_() noexcept = default;
 };
 template <typename T>
-using UserProtectingImproved = std::conditional_t<accessType_trait_able<T, Protection>, T, UserProtectingImproved_<T>>;
+using UserProtectingImproved = std::conditional_t<accessType_trait_able<T, Protection>,
+                                                  T,
+                                                  UserProtectingImproved_<T>>;
 
 template <typename T>
 struct UserProtectingImproved_2_ : public T {  // example of improving use property
     using property_data = PropertyData<impl::user_type_name, UserProtectingImproved_2_, T>;
-    using improvement_of = UserProtecting_2<T>;
+    using improvement_of = Protecting_impl<T>;
 
     UserProtectingImproved_2_() noexcept = default;
 };
 template <typename T>
-using UserProtectingImproved_2 = std::conditional_t<accessType_trait_able<T, Protection>, T, UserProtectingImproved_2_<T>>;
+using UserProtectingImproved_2 = std::conditional_t<accessType_trait_able<T, Protection>,
+                                                    T,
+                                                    UserProtectingImproved_2_<T>>;
