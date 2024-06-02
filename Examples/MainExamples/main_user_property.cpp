@@ -97,11 +97,10 @@ struct name_int_float_type {
 
 struct empty {};
 
-template <ActionStatus... STATUS>
+template <ActionStatus REQUIRED_STATUS, ActionStatus... STATUS>
 struct ActionStatus_Assertion {
     ActionStatus_Assertion() {
-        // static_assert(STATUS == ActionStatus::Success);
-        static_assert(std::conjunction<std::bool_constant<(STATUS == ActionStatus::Success)>...>::value, "assertion fail");
+        static_assert(std::conjunction<std::bool_constant<(STATUS == REQUIRED_STATUS)>...>::value, "assertion fail");
         std::cout << "assertion success\n";
     }
 };
@@ -240,23 +239,23 @@ int main() {
 
         std::cout << "assert that result of userStrategy is ActionStatus::Success\n";
 #ifndef _MSC_VER
-        ActionStatus_Assertion<
-            userStrategy(type3)>{};
-        ActionStatus_Assertion<
-            userStrategy(std::as_const(type3))>{};
+        ActionStatus_Assertion<ActionStatus::Success,
+                               userStrategy(type3)>{};
+        ActionStatus_Assertion<ActionStatus::Success,
+                               userStrategy(std::as_const(type3))>{};
 
-        ActionStatus_Assertion<
-            UserStrategy_<int, Default, ActionStatus>{}(type3)>{};
-        ActionStatus_Assertion<
-            UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3))>{};
+        ActionStatus_Assertion<ActionStatus::Success,
+                               UserStrategy_<int, Default, ActionStatus>{}(type3)>{};
+        ActionStatus_Assertion<ActionStatus::Success,
+                               UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3))>{};
 
         std::cout << '\n';
 
-        ActionStatus_Assertion<
-            userStrategy(type3),
-            userStrategy(std::as_const(type3)),
-            UserStrategy_<int, Default, ActionStatus>{}(type3),
-            UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3))>{};
+        ActionStatus_Assertion<ActionStatus::Success,
+                               userStrategy(type3),
+                               userStrategy(std::as_const(type3)),
+                               UserStrategy_<int, Default, ActionStatus>{}(type3),
+                               UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3))>{};
 #endif
     }
 }
