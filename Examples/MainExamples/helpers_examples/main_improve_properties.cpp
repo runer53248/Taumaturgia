@@ -4,13 +4,13 @@
 #include "Examples/PreetyPrint/preety_print.hpp"
 
 using helpers::is_property_improvement;
-using helpers::same_priority;
+using helpers::is_same_priority;
 
 int main() {
     // improvements of build-in properties
     static_assert(Property<Damaging>::value == Property<DamagingImproved>::value);
-    static_assert(same_priority<Property<Damaging>, Property<DamagingImproved>>);
-    static_assert(same_priority<Property<Damaging_impl>, Property<DamagingImproved>>);
+    static_assert(is_same_priority<Property<Damaging>, Property<DamagingImproved>>);
+    static_assert(is_same_priority<Property<Damaging_impl>, Property<DamagingImproved>>);
 
     auto printPriority = []<template <typename...> typename T>(std::string const& text) {
         std::cout << text << '\n';
@@ -25,10 +25,10 @@ int main() {
 
     // improvements of user properties
     static_assert(Property<Protecting>::value == Property<UserProtectingImproved>::value);
-    static_assert(same_priority<Property<Protecting>, Property<UserProtectingImproved>>);
-    static_assert(same_priority<Property<Protecting_impl>, Property<UserProtectingImproved>>);
-    static_assert(same_priority<Property<Protecting>, Property<UserProtectingImproved_2>>);
-    static_assert(same_priority<Property<Protecting_impl>, Property<UserProtectingImproved_2>>);
+    static_assert(is_same_priority<Property<Protecting>, Property<UserProtectingImproved>>);
+    static_assert(is_same_priority<Property<Protecting_impl>, Property<UserProtectingImproved>>);
+    static_assert(is_same_priority<Property<Protecting>, Property<UserProtectingImproved_2>>);
+    static_assert(is_same_priority<Property<Protecting_impl>, Property<UserProtectingImproved_2>>);
 
     std::cout << "user properties can be improved" << '\n';
     printPriority.operator()<Protecting>("Protecting");
@@ -41,10 +41,10 @@ int main() {
     static_assert(Property<Protecting_impl>::value != Property<Damaging_impl>::value);  // not same priority value
 
     static_assert(Property<Protecting_impl>::value == Property<Protecting>::value);  // same priority value
-    static_assert(not same_priority<
+    static_assert(not is_same_priority<
                   Property<Protecting_impl>,
                   Property<Damaging_impl>>);  // not same_priority value - different types
-    static_assert(same_priority<
+    static_assert(is_same_priority<
                   Property<Protecting>,
                   Property<Protecting_impl>>);  // same type have same_priority value
 

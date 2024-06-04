@@ -49,15 +49,15 @@ static_assert(Property<Naming>::value < Property<UserPropertyAdapter<type_1>::ty
 static_assert(Property<UserPropertyAdapter<type_1>::type>::value == Property<UserPropertyAdapter<type_2>::type>::value);
 static_assert(Property<UserPropertyAdapter<type_1>::type>::value == Property<UserPropertyAdapter<type_3>::type>::value);
 
-using helpers::same_priority;
+using helpers::is_same_priority;
 
-static_assert(not same_priority<
+static_assert(not is_same_priority<
               Property<UserPropertyAdapter<type_1>::type>,
               Property<UserPropertyAdapter<type_2>::type>>);
-static_assert(not same_priority<
+static_assert(not is_same_priority<
               Property<UserPropertyAdapter<type_1>::type>,
               Property<UserPropertyAdapter<type_3>::type>>);
-static_assert(not same_priority<
+static_assert(not is_same_priority<
               Property<UserPropertyAdapter<type_2>::type>,
               Property<UserPropertyAdapter<type_3>::type>>);
 

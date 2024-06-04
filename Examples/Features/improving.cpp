@@ -154,26 +154,26 @@ using Improved = std::conditional_t<Livingable<T>, T, impl::Improved_<T>>;
 #include "Examples/demangle_type_name.hpp"
 
 using helpers::is_property_improvement;
-using helpers::same_priority;
+using helpers::is_same_priority;
 
 struct Empty {};
 
-static_assert(same_priority<
+static_assert(is_same_priority<
                 Property<Living>,
                 Property<Living_1_Improved>>);
-static_assert(same_priority<
+static_assert(is_same_priority<
                 Property<Living_1_Improved>,
                 Property<Living_2_Improved>>);
-static_assert(same_priority<
+static_assert(is_same_priority<
                 Property<Living_2_Improved>,
                 Property<Improved_Living_3_Improved>>);
-static_assert(same_priority<
+static_assert(is_same_priority<
                 Property<Improved_Living_3_Improved>,
                 Property<Improved_Living_4_Improved>>);
 
 int main() {
     static_assert(Property<Living>::value == Property<Living_impl>::value);
-    static_assert(same_priority<Property<Living>, Property<Living_impl>>);
+    static_assert(is_same_priority<Property<Living>, Property<Living_impl>>);
 
     auto print = []<template <typename...> typename property>() {
         std::cout << name<Property<property>>() << " priority = " << Property<property>::value << " | improved = " << is_property_improvement<property> << '\n';

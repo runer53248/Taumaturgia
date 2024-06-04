@@ -5,7 +5,7 @@
 #include "Examples/property_B.hpp"
 
 using helpers::create_ordered_property_list;
-using helpers::same_priority;
+using helpers::is_same_priority;
 
 int main() {
     std::cout << "A. 'create_ordered_property_list' examples:" << '\n'
@@ -107,9 +107,9 @@ int main() {
               << '\n';
 
     static_assert(Property<Protecting_impl>::value == Property<Protecting>::value);
-    static_assert(same_priority<Property<Protecting_impl>, Property<Protecting>>);
+    static_assert(is_same_priority<Property<Protecting_impl>, Property<Protecting>>);
     static_assert(Property<Damaging_impl>::value == Property<Damaging>::value);
-    static_assert(same_priority<Property<Damaging_impl>, Property<Damaging>>);
+    static_assert(is_same_priority<Property<Damaging_impl>, Property<Damaging>>);
 
     using type_x = create_ordered_property_list<Protecting_impl, Damaging_impl, Protecting, Damaging>;  // end with Protecting, Damaging
     using type_y = create_ordered_property_list<Damaging_impl, Protecting_impl, Damaging, Protecting>;  // end with Damaging, Protecting
