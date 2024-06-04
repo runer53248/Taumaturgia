@@ -12,7 +12,7 @@ template <template <typename...> typename property>
 class Property {
 private:
     static constinit const size_t index = []() {
-        return boost::mp11::mp_find<order_list, helpers::best_property_tag<property>>::value;
+        return boost::mp11::mp_find<order_list, helpers::most_improved<property>>::value;
     }();
 
 public:

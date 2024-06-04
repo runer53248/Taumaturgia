@@ -1,5 +1,5 @@
 #pragma once
-#include "best_property_tag.hpp"
+#include "most_improved.hpp"
 
 namespace helpers {
 
@@ -26,8 +26,8 @@ struct same_priority {
         // same_priority true if any improved unordered Property improvement_of same as other
         if constexpr (is_property_improvement_possibly_self<A::template type> or is_property_improvement_possibly_self<B::template type>) {
             return (std::is_same_v<
-                    best_property_tag<A::template type>,
-                    best_property_tag<B::template type>>);
+                    most_improved<A::template type>,
+                    most_improved<B::template type>>);
         }
         return false;
     }();
