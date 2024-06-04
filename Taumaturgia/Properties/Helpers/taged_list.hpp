@@ -7,24 +7,22 @@ struct list {};
 struct tag {};
 
 template <typename T>
-struct property_tag : public T {};
+struct empty_property : public T {};
 
 template <template <typename...> typename T>
-concept is_inner_reduction = std::same_as<T<T<property_tag<T<T<tag>>>>>, property_tag<T<tag>>>;
-
-template <template <typename...> typename T>
-concept is_property = requires {
-    typename T<tag>::property_data;
-};
+concept have_inner_reduction_feature = std::same_as<T<T<empty_property<T<T<tag>>>>>, empty_property<T<tag>>>;
 
 template <typename T>
-concept is_concrete_property = requires {
+concept have_property = requires {
     typename T::property_data;
 };
 
 template <template <typename...> typename T>
-concept is_property_with_inner_reduction = is_property<T> and is_inner_reduction<T>;
+concept is_property = have_property<T<tag>>;
 
-template <template <typename...> typename... properties>
-    requires(is_property_with_inner_reduction<properties> and ...)
-using taged_list = list<properties<tag>...>;
+template <template <typename...> typename T>
+concept is_proper_property = is_property<T> and have_inner_reduction_feature<T>;
+
+template <template <typename...> typename... T>
+    requires(is_proper_property<T> and ...)
+using taged_list = list<T<tag>...>;

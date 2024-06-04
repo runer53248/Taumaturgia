@@ -35,7 +35,7 @@ using build_into_t = impl::build_into_impl<Base, L>::type;
 // };
 
 template <template <typename...> typename property>
-concept have_improvement_of_property = is_concrete_property<typename property<tag>::improvement_of>;  // improvement_of have property_data;
+concept have_improvement_of_property = have_property<typename property<tag>::improvement_of>;  // improvement_of have property_data;
 
 template <template <typename...> typename property>
 concept is_property_improvement = is_property<property>                                                         // have property_data
@@ -114,22 +114,17 @@ using create_ordered_property_list = append_and_order_property_lists<
     list<Property<properties>...>>;
 
 template <typename T>
-concept is_type_with_added_properties = requires {
-    typename T::property_data;
-};
-
-template <typename T>
 struct Scheme;
 
 template <typename T>
-    requires(not is_type_with_added_properties<T>)
+    requires(not have_property<T>)
 struct Scheme<T> {
     using base = T;
     using list_t = list<>;
 };
 
 template <typename T>
-    requires(is_type_with_added_properties<T>)
+    requires(have_property<T>)
 struct Scheme<T> {
     using base = Scheme<typename T::property_data::base_type>::base;  // most inner base type
     using list_helper = Scheme<typename T::property_data::base_type>::list_t;
@@ -143,7 +138,7 @@ template <typename T, template <typename...> typename... properties>
     requires(is_property<properties> and ...)
 struct add_properties_impl {
     using type = std::conditional_t<
-        is_type_with_added_properties<T>,
+        have_property<T>,
         build_into_t<
             typename Scheme<T>::base,
             append_and_order_property_lists<
