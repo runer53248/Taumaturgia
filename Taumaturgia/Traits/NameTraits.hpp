@@ -3,7 +3,7 @@
 #include "Concepts/NameConcepts.hpp"
 #include "Helpers/trait_accessable.hpp"
 
-#include "accessName.hpp"
+#include "Structs/accessName.hpp"
 
 using Namingable_trait = traits::accessName;
 template <typename T>

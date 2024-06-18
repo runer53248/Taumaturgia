@@ -2,7 +2,7 @@
 #include "Concepts/TypeConcepts.hpp"
 #include "Helpers/trait_accessable.hpp"
 
-#include "accessType.hpp"
+#include "Structs/accessType.hpp"
 
 template <typename T, typename RESULT_TYPE>
 concept accessType_trait_able = trait_accessable<T, traits::accessType<RESULT_TYPE>, RESULT_TYPE>;
