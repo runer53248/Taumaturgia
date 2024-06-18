@@ -45,9 +45,13 @@ int main() {
 #ifdef NO_PREMADE_PROPERTIES
     decltype(auto) s = Namingable_trait::get(type);
     decltype(auto) d = Damagingable_trait::get(type);
-#else    
-    decltype(auto) s = type.getName();
-    decltype(auto) d = type.getDamage();
+    [[maybe_unused]] decltype(auto) s2 = type.getType<Name>();
+    [[maybe_unused]] decltype(auto) d2 = type.getType<Damage>();
+#else
+    decltype(auto) s = Namingable_trait::get(type);
+    decltype(auto) d = Damagingable_trait::get(type);
+    [[maybe_unused]] decltype(auto) s2 = type.getName();
+    [[maybe_unused]] decltype(auto) d2 = type.getDamage();
 #endif
     decltype(auto) i = type.getType<int>();
     decltype(auto) i2 = std::as_const(type).getType<int>();
