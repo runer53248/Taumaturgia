@@ -1,7 +1,5 @@
 #pragma once
 #include <iostream>
-#include "Taumaturgia/Traits/DamageTraits.hpp"
-#include "Taumaturgia/Traits/NameTraits.hpp"
 #include "PrintDamageType.hpp"
 #include "PrintDuration.hpp"
 #include "PrintEffectType.hpp"

@@ -1,6 +1,5 @@
 #include "Taumaturgia/Properties/Helpers/taged_list.hpp"
-#include "Taumaturgia/Traits/HealthTraits.hpp"
-#include "Taumaturgia/Traits/NameTraits.hpp"
+#include "Taumaturgia/Traits/Traits.hpp"
 
 #ifdef NO_PREMADE_PROPERTIES
 #include "Taumaturgia/Properties/UserProperty.hpp"

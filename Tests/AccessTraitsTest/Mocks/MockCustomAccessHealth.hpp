@@ -1,7 +1,7 @@
 #pragma once
 #include <gmock/gmock.h>
 #include "MockCustomAccess.hpp"
-#include "Taumaturgia/Traits/HealthTraits.hpp"
+#include "Taumaturgia/Traits/Traits.hpp"
 
 #ifdef CUSTOM_ACCESS_MOCK_MACRO
 StartCustomAccessMock(Health);

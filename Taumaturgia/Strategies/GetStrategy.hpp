@@ -1,12 +1,7 @@
 #pragma once
 #include <concepts>
 #include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
-#include "Taumaturgia/Traits/ArmorWearTraits.hpp"
-#include "Taumaturgia/Traits/CureHealthTraits.hpp"
-#include "Taumaturgia/Traits/DamageTraits.hpp"
-#include "Taumaturgia/Traits/HealthTraits.hpp"
-#include "Taumaturgia/Traits/ProtectionTraits.hpp"
-#include "Taumaturgia/Traits/RestoreEffectsTraits.hpp"
+#include "Taumaturgia/Traits/Traits.hpp"
 #include "Taumaturgia/Types/VariantType.hpp"
 
 enum class Properties;

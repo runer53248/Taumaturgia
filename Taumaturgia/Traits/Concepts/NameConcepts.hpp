@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include "../Helpers/traits_helper.hpp"
 
 class Name;

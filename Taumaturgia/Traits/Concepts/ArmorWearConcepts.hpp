@@ -1,5 +1,5 @@
 #pragma once
-#include "../Helpers/traits_helper.hpp"
+#include "Taumaturgia/Traits/Helpers/traits_helper.hpp"
 
 class WearContainer;
 

@@ -1,4 +1,6 @@
 #pragma once
+#include "Taumaturgia/Traits/Traits.hpp"
+
 #include "PrintActionStatus.hpp"
 #include "PrintAliveStatus.hpp"
 #include "PrintBodyLocation.hpp"

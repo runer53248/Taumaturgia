@@ -1,7 +1,7 @@
 #include <vector>
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Taumaturgia/Properties/Properties.hpp"
-#include "Taumaturgia/Strategies/DefaultStrategies.hpp"
+#include "Taumaturgia/Strategies/Defaults/DefaultStrategies.hpp"
 
 // MARK: Item
 

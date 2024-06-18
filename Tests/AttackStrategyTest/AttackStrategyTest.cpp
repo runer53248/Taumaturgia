@@ -3,7 +3,7 @@
 
 #ifdef WITH_ADD_PROPERTIES
     #include "Taumaturgia/Properties/Properties.hpp"
-    #include "Taumaturgia/Strategies/DefaultStrategies.hpp"
+    #include "Taumaturgia/Strategies/Defaults/DefaultStrategies.hpp"
 
     struct Type {};
 
@@ -48,7 +48,7 @@
     #include "Examples/Structs/Player.hpp"
     #include "Examples/Structs/Weapon.hpp"
     #include "Taumaturgia/Properties/Properties.hpp"
-    #include "Taumaturgia/Strategies/DefaultStrategies.hpp"
+    #include "Taumaturgia/Strategies/Defaults/DefaultStrategies.hpp"
 #endif
 
 constinit const auto max_health = 100;

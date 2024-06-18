@@ -1,7 +1,8 @@
 #pragma once
 #include <gmock/gmock.h>
 #include "MockCustomAccess.hpp"
-#include "Taumaturgia/Traits/RestoreEffectsTraits.hpp"
+#include "Taumaturgia/Traits/Traits.hpp"
+
 #ifdef CUSTOM_ACCESS_MOCK_MACRO
 StartCustomAccessMock(RestoreEffects);
 MOCK_METHOD(EffectTypeContainer&, get_, (TestType & el));

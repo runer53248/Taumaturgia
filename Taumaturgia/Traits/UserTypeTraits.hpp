@@ -1,10 +1,8 @@
 #pragma once
-// #include <utility>  // for as_const
-// #include "Helpers/same_as_ref.hpp"
 #include "Concepts/TypeConcepts.hpp"
 #include "Helpers/trait_accessable.hpp"
 
-#include "Structs/accessType.hpp"
+#include "accessType.hpp"
 
 template <typename T, typename RESULT_TYPE>
 concept accessType_trait_able = trait_accessable<T, traits::accessType<RESULT_TYPE>, RESULT_TYPE>;
