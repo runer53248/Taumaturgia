@@ -14,7 +14,7 @@ using append_and_order_property_lists =
         boost::mp11::mp_unique_if<  //
             boost::mp11::mp_append<
                 PROPERTY_LISTS...>,
-            same_priority>,
+            impl::same_priority>,
         boost::mp11::mp_less>;
 
 template <template <typename...> typename... properties>
