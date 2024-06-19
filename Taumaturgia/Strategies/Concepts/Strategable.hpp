@@ -7,7 +7,7 @@ concept Strategable = requires(Strategy<T> strategy, T& type, Args... args) {
 };
 
 template <template <typename> typename Strategy, typename T, typename RET, typename TEMP>
-concept Strategable_template = requires(Strategy<T> strategy, T& type) {
+concept Strategable_template = requires(Strategy<std::remove_const_t<T>> strategy, T& type) {
     { strategy.template operator()<TEMP{}>(type) } -> std::same_as<RET>;
 };
 

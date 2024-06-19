@@ -24,7 +24,7 @@ constexpr auto get_impl(T& type, Properties param) {  // TODO: implement test fo
     if constexpr (not Gettingable<T>) {
         return result_type{};
     } else {
-        static constinit GetStrategy<T> getStrategy_{};
+        static constinit GetStrategy<std::remove_const_t<T>> getStrategy_{};
         switch (param) {
         case Properties::Protection:
             return getStrategy_.template operator()<Properties::Protection>(type);

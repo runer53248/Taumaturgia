@@ -1,13 +1,13 @@
 #pragma once
 #include "Usage/Properties.hpp"
 
-#include "Taumaturgia/Strategies/GetStrategy.hpp"  //
-
 #ifdef NO_PREMADE_STRATEGIES
 #include "Usage/User/UserStrategies.hpp"
 #else
 #include "Usage/Premade/PremadeStrategies.hpp"
 #endif
+
+#include "Taumaturgia/Strategies/GetStrategy.hpp"  //
 
 template <Namingable T>
 auto propertiesExistanceMap() {
@@ -18,5 +18,5 @@ auto propertiesExistanceMap() {
         {Properties::Damage, is_attack_strategy<T>},
         {Properties::Restore, is_restore_strategy<T>},
         {Properties::Wear, is_wear_strategy<T>},
-        {Properties::Get, is_get_strategy<T>}};
+        {Properties::Get, is_custom_get_strategy<T>}};
 }
