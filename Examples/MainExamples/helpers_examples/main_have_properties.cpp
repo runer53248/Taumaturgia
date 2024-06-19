@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Examples/demangle_type_name.hpp"
 #include "Taumaturgia/Properties/Helpers/have_properties.hpp"
-#include "Taumaturgia/Properties/Properties.hpp"
+#include "Usage/Properties.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
 struct Type {

@@ -1,7 +1,7 @@
 #pragma once
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
-#include "Taumaturgia/Traits/Traits.hpp"
+#include "Usage/Traits.hpp"
 
 #include "Taumaturgia/Types/Name.hpp"
 #include "Taumaturgia/Types/Health.hpp"

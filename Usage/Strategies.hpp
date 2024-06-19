@@ -1,12 +1,12 @@
 #pragma once
-#include "Taumaturgia/Properties/Properties.hpp"
+#include "Usage/Properties.hpp"
 
-#include "GetStrategy.hpp"  //
+#include "Taumaturgia/Strategies/GetStrategy.hpp"  //
 
 #ifdef NO_PREMADE_STRATEGIES
-#include "Taumaturgia/User/UserStrategies.hpp"
+#include "Usage/User/UserStrategies.hpp"
 #else
-#include "Premade/PremadeStrategies.hpp"
+#include "Usage/Premade/PremadeStrategies.hpp"
 #endif
 
 template <Namingable T>

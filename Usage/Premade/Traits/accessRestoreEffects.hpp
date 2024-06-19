@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Traits/Concepts/RestoreEffectsConcepts.hpp"
+#include "Usage/Concepts/RestoreEffectsConcepts.hpp"
 
 namespace traits {
 

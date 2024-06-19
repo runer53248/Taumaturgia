@@ -5,7 +5,7 @@
 #include <optional>
 #include "Enums/ActionStatus.hpp"
 #include "Enums/Actions.hpp"
-#include "Taumaturgia/Strategies/Strategies.hpp"
+#include "Usage/Strategies.hpp"
 #include "Taumaturgia/Traits/NameTraits.hpp"
 
 #ifndef _MSC_VER

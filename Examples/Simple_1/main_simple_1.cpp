@@ -1,7 +1,7 @@
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/basic_strategies.hpp"
 #include "Examples/demangle_type_name.hpp"
-#include "Taumaturgia/Properties/Properties.hpp"
+#include "Usage/Properties.hpp"
 
 // MARK: Weapon_A
 struct Weapon_A {

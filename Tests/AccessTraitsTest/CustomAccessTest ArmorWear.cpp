@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Taumaturgia/Strategies/Defaults/DefaultStrategies.hpp"
+#include "Usage/DefaultStrategies.hpp"
 #include "TestType.hpp"
 
 #include "Mocks/MockCustomAccessArmorWear.hpp"

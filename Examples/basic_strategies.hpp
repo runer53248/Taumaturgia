@@ -1,5 +1,5 @@
 #include "Taumaturgia/Object/Object.hpp"
-#include "Taumaturgia/Properties/Properties.hpp"
+#include "Usage/Properties.hpp"
 #include "Taumaturgia/Strategies/Defaults/DefaultGetStrategy.hpp"
 #include "Taumaturgia/Strategies/Enums/AliveStatus.hpp"
 

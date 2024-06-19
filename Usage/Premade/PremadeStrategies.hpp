@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Traits/Traits.hpp"
+#include "Usage/Traits.hpp"
 
 #include "Strategies/AliveStrategy.hpp"
 #include "Strategies/AttackStrategy.hpp"

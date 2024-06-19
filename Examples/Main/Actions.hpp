@@ -1,6 +1,6 @@
 #pragma once
 #include "Examples/PreetyPrint/preety_print.hpp"
-#include "Taumaturgia/Strategies/Defaults/DefaultStrategies.hpp"
+#include "Usage/DefaultStrategies.hpp"
 
 // MARK: attack
 

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Taumaturgia/Properties/Properties.hpp"
+#include "Usage/Properties.hpp"
 #include "Examples/demangle_type_name.hpp"
 
 struct Type {

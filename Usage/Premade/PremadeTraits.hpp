@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Premade/Traits/accessArmorWear.hpp"
-#include "Premade/Traits/accessCureHealth.hpp"
-#include "Premade/Traits/accessDamage.hpp"
-#include "Premade/Traits/accessHealth.hpp"
-#include "Premade/Traits/accessProtection.hpp"
-#include "Premade/Traits/accessRestoreEffects.hpp"
+#include "Traits/accessArmorWear.hpp"
+#include "Traits/accessCureHealth.hpp"
+#include "Traits/accessDamage.hpp"
+#include "Traits/accessHealth.hpp"
+#include "Traits/accessProtection.hpp"
+#include "Traits/accessRestoreEffects.hpp"
 
 using Wearingable_trait = traits::accessArmorWear;
 template <typename T>

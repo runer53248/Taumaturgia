@@ -1,6 +1,6 @@
 #include <vector>
 #include "Taumaturgia/Object/Object.hpp"
-#include "Taumaturgia/Properties/Properties.hpp"
+#include "Usage/Properties.hpp"
 
 struct Scroll {
     Name name;

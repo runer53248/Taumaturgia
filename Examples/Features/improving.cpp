@@ -1,7 +1,8 @@
 #include "Taumaturgia/Properties/Helpers/taged_list.hpp"
-#include "Taumaturgia/Traits/Traits.hpp"
+#include "Usage/Traits.hpp"
 
 #ifdef NO_PREMADE_PROPERTIES
+
 #include "Taumaturgia/Properties/UserProperty.hpp"
 #include "Taumaturgia/Types/Health.hpp"
 #include "Taumaturgia/Types/Name.hpp"
@@ -12,20 +13,21 @@ using Living = UserPropertyConceptAdapter<Health, Livingable<TYPE>>::template ty
 template <typename TYPE>
 using Naming = UserPropertyConceptAdapter<Name, Namingable<TYPE>>::template type<TYPE>;
 
-template <typename TYPE>
-using Integering = UserPropertyAdapter<int>::template type<TYPE>;
-
 template <typename T>
 using Living_impl = impl::UserProperty_<Health, T>;
+
 #else
-#include "Taumaturgia/Properties/Premade/Living.hpp"
-#include "Taumaturgia/Properties/Premade/Naming.hpp"
+
+#include "Usage/Premade/Properties/Living.hpp"
+#include "Usage/Premade/Properties/Naming.hpp"
 
 template <typename T>
 using Living_impl = impl::Living_<T>;
+
 #endif
 
 #include "Taumaturgia/Properties/UserProperty.hpp"
+
 template <typename TYPE>
 using Integering = UserPropertyAdapter<int>::template type<TYPE>;
 
@@ -158,17 +160,17 @@ using helpers::is_same_priority;
 struct Empty {};
 
 static_assert(is_same_priority<
-                Property<Living>,
-                Property<Living_1_Improved>>);
+              Property<Living>,
+              Property<Living_1_Improved>>);
 static_assert(is_same_priority<
-                Property<Living_1_Improved>,
-                Property<Living_2_Improved>>);
+              Property<Living_1_Improved>,
+              Property<Living_2_Improved>>);
 static_assert(is_same_priority<
-                Property<Living_2_Improved>,
-                Property<Improved_Living_3_Improved>>);
+              Property<Living_2_Improved>,
+              Property<Improved_Living_3_Improved>>);
 static_assert(is_same_priority<
-                Property<Improved_Living_3_Improved>,
-                Property<Improved_Living_4_Improved>>);
+              Property<Improved_Living_3_Improved>,
+              Property<Improved_Living_4_Improved>>);
 
 int main() {
     static_assert(Property<Living>::value == Property<Living_impl>::value);

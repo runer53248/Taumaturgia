@@ -58,7 +58,7 @@ static_assert(Namingable<Valid_4<NoNameType, Name>>);
 /////////////////////////////////////////////////
 // * type resulted after gived Naming Properties
 
-#include "Premade/Properties/Naming.hpp"
+#include "Usage/Premade/Properties/Naming.hpp"
 
 using named_NoNameType = Naming<NoNameType>;
 using named_Valid_type_1 = Naming<Valid_type_1>;

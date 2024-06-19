@@ -1,7 +1,7 @@
 #include <vector>
 #include "Actions.hpp"
 #include "Print.hpp"
-#include "Taumaturgia/Properties/Properties.hpp"
+#include "Usage/Properties.hpp"
 
 #include "Examples/Structs/Armor.hpp"
 #include "Examples/Structs/Helmet.hpp"

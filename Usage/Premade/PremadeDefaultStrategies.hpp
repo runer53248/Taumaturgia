@@ -8,7 +8,6 @@ struct AliveStrategy_<Default> {
 };
 
 template <>
-#ifdef NO_PREMADE_STRATEGIES
 struct AttackStrategy_<Default> {
     constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const {
         auto* suspect = Whom(owner, target);

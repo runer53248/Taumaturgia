@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Traits/Concepts/ProtectionConcepts.hpp"
+#include "Usage/Concepts/ProtectionConcepts.hpp"
 
 namespace traits {
 

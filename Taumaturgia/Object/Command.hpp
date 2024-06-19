@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Strategies/Strategies.hpp"
+#include "Usage/Strategies.hpp"
 
 class CommandConcept {
 public:

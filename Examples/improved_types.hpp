@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Properties/Properties.hpp"
+#include "Usage/Properties.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
 #ifdef NO_PREMADE_PROPERTIES

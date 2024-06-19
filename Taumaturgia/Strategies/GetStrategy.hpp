@@ -1,7 +1,7 @@
 #pragma once
 #include <concepts>
 #include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
-#include "Taumaturgia/Traits/Traits.hpp"
+#include "Usage/Traits.hpp"
 #include "Taumaturgia/Types/VariantType.hpp"
 
 enum class Properties;
