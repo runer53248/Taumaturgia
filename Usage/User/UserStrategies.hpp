@@ -19,6 +19,19 @@ using RestoreStrategy = UserStrategy<EffectTypeContainer, T, Restoringable<T>, A
 template <typename T>
 using HealStrategy = UserStrategy<CureHealth, T, Healingable<T>, ActionStatus, Object*, Object*>;
 
+template <typename T>
+concept is_custom_alive_strategy = is_custom_type_strategy<Health, T, std::optional<AliveStatus>>;
+template <typename T>
+concept is_custom_attack_strategy = is_custom_type_strategy<Damage, T, ActionStatus, Object*, Object*>;
+template <typename T>
+concept is_custom_heal_strategy = is_custom_type_strategy<CureHealth, T, ActionStatus, Object*, Object*>;
+template <typename T>
+concept is_custom_defend_strategy = is_custom_type_strategy<Protection, T, ActionStatus, Object*, Object*>;
+template <typename T>
+concept is_custom_restore_strategy = is_custom_type_strategy<EffectTypeContainer, T, ActionStatus, Object*, Object*>;
+template <typename T>
+concept is_custom_wear_strategy = is_custom_type_strategy<WearContainer, T, ActionStatus, Object*, Object*>;
+
 // forward eventualy implemented strategy
 template <typename T>
 struct UserStrategy_<Health, Healing_impl<T>, std::optional<AliveStatus>> : public UserStrategy_<Health, T, std::optional<AliveStatus>> {};

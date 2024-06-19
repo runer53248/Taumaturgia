@@ -1,4 +1,5 @@
 #pragma once
+#include "Taumaturgia/Traits/Helpers/trait_accessable.hpp"
 #include "Taumaturgia/Traits/UserTypeTraits.hpp"
 
 using Wearingable_trait = traits::accessType<WearContainer>;

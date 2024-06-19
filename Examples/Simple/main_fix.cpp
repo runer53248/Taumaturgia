@@ -9,11 +9,7 @@
 struct Item {
     std::string name;
     Health hp;
-};
-
-struct Tile {
-    std::string name;
-    Health hp;
+    Damage dmg{3};
 };
 
 template <>
@@ -24,8 +20,23 @@ struct GetStrategy_<Item> {
             std::cout << 'x';
             return default_get_behavior<Properties::Health>(obj);
         } else {
+            std::cout << 'y';
             return default_get_behavior<PROPERTY>(obj);
         }
+    }
+};
+
+struct Tile {
+    std::string name;
+    Health hp;
+    Damage dmg{3};
+};
+
+template <>
+struct UserStrategy_<Health, Tile, std::optional<AliveStatus>> {
+    constexpr std::optional<AliveStatus> operator()(Livingable auto&) const {
+        std::cout << "[D]";
+        return AliveStatus::Death;
     }
 };
 
@@ -34,9 +45,11 @@ static_assert(std::is_same_v<Item, Item_2>);
 
 static_assert(Gettingable<Item>);
 static_assert(is_custom_get_strategy<Item>);
+static_assert(not is_custom_type_strategy<Health, Item, std::optional<AliveStatus>>);
 
 static_assert(Gettingable<Tile>);
 static_assert(not is_custom_get_strategy<Tile>);
+static_assert(is_custom_type_strategy<Health, Tile, std::optional<AliveStatus>>);
 
 // MARK: main
 
@@ -57,8 +70,10 @@ int main() {
     std::cout << '\n';
 
     print_object_properties(item);
+    print_customized_properties(item);
     print_object(item);
 
     print_object_properties(tile);
+    print_customized_properties(tile);
     print_object(tile);
 }

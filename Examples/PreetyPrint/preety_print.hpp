@@ -117,6 +117,19 @@ inline void print_object_properties(const Object& obj) {
     std::cout << '\n';
 };
 
+inline void print_customized_properties(const auto& type) {
+    const auto map = propertiesCustomizationMap<std::remove_cvref_t<decltype(type)>>();
+
+    std::cout << " [custom get] " << map.at(Properties::Get) << '\n';
+    std::cout << " [custom alive] " << map.at(Properties::Health) << '\n';
+    std::cout << " [custom attack] " << map.at(Properties::Damage) << '\n';
+    std::cout << " [custom defend] " << map.at(Properties::Protection) << '\n';
+    std::cout << " [custom heal] " << map.at(Properties::CureHealth) << '\n';
+    std::cout << " [custom restore] " << map.at(Properties::Restore) << '\n';
+    std::cout << " [custom wear] " << map.at(Properties::Wear) << '\n';
+    std::cout << '\n';
+};
+
 inline void print_object(const Object& obj) {
     std::cout << "Name: " << obj.name();
     print_liveable(obj);

@@ -1,4 +1,5 @@
 #pragma once
+#include "Taumaturgia/Traits/Helpers/trait_accessable.hpp"
 
 #include "Traits/accessArmorWear.hpp"
 #include "Traits/accessCureHealth.hpp"
