@@ -1,4 +1,5 @@
 #pragma once
+#include <unordered_map>
 #include "Usage/Properties.hpp"
 
 #ifdef NO_PREMADE_STRATEGIES
