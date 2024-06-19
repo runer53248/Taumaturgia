@@ -26,30 +26,35 @@ struct GetStrategy_<Item> {
     }
 };
 
+static_assert(std::is_same_v<Item, Living<Naming<Item>>>);
+
+static_assert(Gettingable<Item>);
+static_assert(is_custom_get_strategy<Item>);
+static_assert(not is_custom_alive_strategy<Item>);
+
+// MARK: Tile
+
 struct Tile {
     std::string name;
     Health hp;
     Damage dmg{3};
 };
-
 template <>
+#ifdef NO_PREMADE_STRATEGIES
 struct UserStrategy_<Health, Tile, std::optional<AliveStatus>> {
+#else
+struct AliveStrategy_<Tile> {
+#endif
     constexpr std::optional<AliveStatus> operator()(Livingable auto&) const {
         std::cout << "[D]";
         return AliveStatus::Death;
     }
 };
 
-using Item_2 = Living<Naming<Item>>;
-static_assert(std::is_same_v<Item, Item_2>);
-
-static_assert(Gettingable<Item>);
-static_assert(is_custom_get_strategy<Item>);
-static_assert(not is_custom_type_strategy<Health, Item, std::optional<AliveStatus>>);
 
 static_assert(Gettingable<Tile>);
 static_assert(not is_custom_get_strategy<Tile>);
-static_assert(is_custom_type_strategy<Health, Tile, std::optional<AliveStatus>>);
+static_assert(is_custom_alive_strategy<Tile>);
 
 // MARK: main
 
