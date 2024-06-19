@@ -9,7 +9,7 @@ template <typename T>
 struct AttackStrategy_ {};
 
 template <typename T>
-using AttackStrategy = StrategyConditional<AttackStrategy_, T, Damagingable<T>, ActionStatus, Object*, Object*>;
+concept is_custom_attack_strategy = Strategable<AttackStrategy_, T, ActionStatus, Object*, Object*>;
 
 template <typename T>
-concept is_attack_strategy = Strategable<AttackStrategy, T, ActionStatus, Object*, Object*>;
+using AttackStrategy = StrategyConditional<AttackStrategy_, T, Damagingable<T>, is_custom_attack_strategy<T>>;

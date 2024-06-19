@@ -1,17 +1,20 @@
 #pragma once
 #include <concepts>
 
-template <template <typename> typename Strategy, typename T, typename RET, typename... Args>
-concept Strategable = requires(Strategy<T> strategy, T& type, Args... args) {
-    { strategy.operator()(type, args...) } -> std::same_as<RET>;
-};
+// template <typename RET, typename T, typename... Args>
+// struct invoke_scheme {
+//     using return_type = RET;
+//     using type = T;
+//     using args_types = list<T, Args...>;
+// };
 
-template <template <typename> typename Strategy, typename T, typename RET, typename TEMP>
-concept Strategable_template = requires(Strategy<std::remove_const_t<T>> strategy, T& type) {
-    { strategy.template operator()<TEMP{}>(type) } -> std::same_as<RET>;
+template <template <typename> typename Strategy, typename T, typename RET, typename... Args>
+concept Strategable = std::is_invocable_r_v<RET, Strategy<std::remove_const_t<T>>, T&, Args...>;
+
+template <template <typename> typename Strategy, typename T, typename RET, typename TA, typename... Args>
+concept Strategable_template = requires(Strategy<std::remove_const_t<T>> strategy, T& type, Args... args) {
+    { strategy.template operator()<TA{}>(type, args...) } -> std::same_as<RET>;
 };
 
 template <template <typename, typename, typename> typename Strategy, typename TYPE, typename T, typename RET, typename... Args>
-concept TypeStrategable = requires(Strategy<TYPE, T, RET> strategy, T& type, Args... args) {
-    { strategy.operator()(type, args...) } -> std::same_as<RET>;
-};
+concept TypeStrategable = std::is_invocable_r_v<RET, Strategy<TYPE, std::remove_const_t<T>, RET>, T&, Args...>;

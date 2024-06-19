@@ -9,7 +9,7 @@ template <typename T>
 struct WearStrategy_ {};
 
 template <typename T>
-using WearStrategy = StrategyConditional<WearStrategy_, T, Wearingable<T>, ActionStatus, Object*, Object*>;
+concept is_custom_wear_strategy = Strategable<WearStrategy_, T, ActionStatus, Object*, Object*>;
 
 template <typename T>
-concept is_wear_strategy = Strategable<WearStrategy, T, ActionStatus, Object*, Object*>;
+using WearStrategy = StrategyConditional<WearStrategy_, T, Wearingable<T>, is_custom_wear_strategy<T>>;

@@ -9,6 +9,19 @@
 
 #include "Taumaturgia/Strategies/GetStrategy.hpp"  //
 
+template <typename T>
+concept is_alive_strategy = Strategable<AliveStrategy, T, std::optional<AliveStatus>>;
+template <typename T>
+concept is_attack_strategy = Strategable<AttackStrategy, T, ActionStatus, Object*, Object*>;
+template <typename T>
+concept is_defend_strategy = Strategable<DefendStrategy, T, ActionStatus, Object*, Object*>;
+template <typename T>
+concept is_wear_strategy = Strategable<WearStrategy, T, ActionStatus, Object*, Object*>;
+template <typename T>
+concept is_restore_strategy = Strategable<RestoreStrategy, T, ActionStatus, Object*, Object*>;
+template <typename T>
+concept is_heal_strategy = Strategable<HealStrategy, T, ActionStatus, Object*, Object*>;
+
 template <Namingable T>
 auto propertiesExistanceMap() {
     return std::unordered_map<Properties, const bool>{
