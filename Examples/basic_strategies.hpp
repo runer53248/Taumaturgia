@@ -1,7 +1,7 @@
 #include "Taumaturgia/Object/Object.hpp"
 #include "Usage/Properties.hpp"
 #include "Taumaturgia/Strategies/Defaults/DefaultGetStrategy.hpp"
-#include "Taumaturgia/Strategies/Enums/AliveStatus.hpp"
+#include "Usage/Enums/AliveStatus.hpp"
 
 #ifdef NO_PREMADE_STRATEGIES
 

@@ -1,12 +1,13 @@
 #pragma once
 #include "Taumaturgia/Strategies/Helpers/Whom.hpp"
-#include "Usage/Strategies.hpp"
+#include "Strategies.hpp"
 
-#include "Taumaturgia/Strategies/Defaults/Behaviors/default_behaviors.hpp"
-#include "Taumaturgia/Strategies/Defaults/DefaultGetStrategy.hpp"  //
+#include "default_behaviors.hpp"
 
 #ifdef NO_PREMADE_STRATEGIES
-#include "Usage/User/UserDefaultStrategies.hpp"
+#include "User/UserDefaultStrategies.hpp"
 #else
-#include "Usage/Premade/PremadeDefaultStrategies.hpp"
+#include "Premade/PremadeDefaultStrategies.hpp"
 #endif
+
+#include "Taumaturgia/Strategies/Defaults/DefaultGetStrategy.hpp"  //

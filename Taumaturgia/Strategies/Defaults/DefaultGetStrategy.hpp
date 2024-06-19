@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviors/default_get_behavior.hpp"
+#include "default_get_behavior.hpp"
 
 template <>
 struct GetStrategy_<Default> {

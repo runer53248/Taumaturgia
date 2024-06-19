@@ -1,6 +1,6 @@
 #pragma once
 #include <optional>
-#include "Taumaturgia/Strategies/Enums/AliveStatus.hpp"
+#include "Usage/Enums/AliveStatus.hpp"
 
 inline constexpr std::optional<AliveStatus> default_alive_behavior(Livingable auto& obj) {
     auto hp = Livingable_trait::get(obj).value();

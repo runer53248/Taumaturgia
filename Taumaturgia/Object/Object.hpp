@@ -4,7 +4,7 @@
 #include <memory>
 #include <optional>
 #include "Enums/ActionStatus.hpp"
-#include "Enums/Actions.hpp"
+#include "Usage/Enums/Actions.hpp"
 #include "Usage/Strategies.hpp"
 #include "Taumaturgia/Traits/NameTraits.hpp"
 
