@@ -19,24 +19,18 @@ concept DamageAccessable = requires(T x) {
 
 template <typename T>
 concept GetDamageAccessable = requires(std::remove_cvref_t<T> x) {
-    { x.getDamage() } -> same_as_ref<Damage>;
-    { std::as_const(x).getDamage() } -> same_as_ref<const Damage>;
+    { x.getDamage() } -> std::same_as<Damage&>;
+    { std::as_const(x).getDamage() } -> std::same_as<const Damage&>;
 };
 
 template <typename T>
 struct CustomAccessDamage;
 
 template <typename T>
-concept CustomDamageAccessable = requires(std::remove_cvref_t<T> x) {
-    { CustomAccessDamage<T>::get(x) } -> same_as_ref<Damage>;
-    { CustomAccessDamage<T>::get(std::as_const(x)) } -> same_as_ref<const Damage>;
-};
+concept CustomDamageAccessable = helpers::custom_trait_accessable<T, CustomAccessDamage, Damage>;
 
 template <typename T>
-concept GetTypeTemplateDamageAccessable = requires(std::remove_cvref_t<T> x) {
-    { x.template getType<Damage>() } -> same_as_ref<Damage>;
-    { std::as_const(x).template getType<Damage>() } -> same_as_ref<const Damage>;
-};
+concept GetTypeTemplateDamageAccessable = helpers::get_type_template_accessable<T, Damage>;
 #endif
 
 }  // namespace traits

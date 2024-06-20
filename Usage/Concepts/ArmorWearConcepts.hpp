@@ -19,24 +19,18 @@ concept ArmorWearAccessable = requires(T x) {
 
 template <typename T>
 concept GetArmorWearAccessable = requires(std::remove_cvref_t<T> x) {
-    { x.getArmorWear() } -> same_as_ref<WearContainer>;
-    { std::as_const(x).getArmorWear() } -> same_as_ref<const WearContainer>;
+    { x.getArmorWear() } -> std::same_as<WearContainer&>;
+    { std::as_const(x).getArmorWear() } -> std::same_as<const WearContainer&>;
 };
 
 template <typename T>
 struct CustomAccessArmorWear;
 
 template <typename T>
-concept CustomArmorWearAccessable = requires(std::remove_cvref_t<T> x) {
-    { CustomAccessArmorWear<T>::get(x) } -> same_as_ref<WearContainer>;
-    { CustomAccessArmorWear<T>::get(std::as_const(x)) } -> same_as_ref<const WearContainer>;
-};
+concept CustomArmorWearAccessable = helpers::custom_trait_accessable<T, CustomAccessArmorWear, WearContainer>;
 
 template <typename T>
-concept GetTypeTemplateArmorWearAccessable = requires(std::remove_cvref_t<T> x) {
-    { x.template getType<WearContainer>() } -> same_as_ref<WearContainer>;
-    { std::as_const(x).template getType<WearContainer>() } -> same_as_ref<const WearContainer>;
-};
+concept GetTypeTemplateArmorWearAccessable = helpers::get_type_template_accessable<T, WearContainer>;
 #endif
 
 }  // namespace traits

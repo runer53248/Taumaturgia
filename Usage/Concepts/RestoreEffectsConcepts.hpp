@@ -19,24 +19,18 @@ concept RestoreEffectsAccessable = requires(T x) {
 
 template <typename T>
 concept GetRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
-    { x.getRestoreEffects() } -> same_as_ref<EffectTypeContainer>;
-    { std::as_const(x).getRestoreEffects() } -> same_as_ref<const EffectTypeContainer>;
+    { x.getRestoreEffects() } -> std::same_as<EffectTypeContainer&>;
+    { std::as_const(x).getRestoreEffects() } -> std::same_as<const EffectTypeContainer&>;
 };
 
 template <typename T>
 struct CustomAccessRestoreEffects;
 
 template <typename T>
-concept CustomRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
-    { CustomAccessRestoreEffects<T>::get(x) } -> same_as_ref<EffectTypeContainer>;
-    { CustomAccessRestoreEffects<T>::get(std::as_const(x)) } -> same_as_ref<const EffectTypeContainer>;
-};
+concept CustomRestoreEffectsAccessable = helpers::custom_trait_accessable<T, CustomAccessRestoreEffects, EffectTypeContainer>;
 
 template <typename T>
-concept GetTypeTemplateRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
-    { x.template getType<EffectTypeContainer>() } -> same_as_ref<EffectTypeContainer>;
-    { std::as_const(x).template getType<EffectTypeContainer>() } -> same_as_ref<const EffectTypeContainer>;
-};
+concept GetTypeTemplateRestoreEffectsAccessable = helpers::get_type_template_accessable<T, EffectTypeContainer>;
 #endif
 
 }  // namespace traits

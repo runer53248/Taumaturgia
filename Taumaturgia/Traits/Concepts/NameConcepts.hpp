@@ -28,16 +28,10 @@ template <typename T>
 struct CustomAccessName;
 
 template <typename T>
-concept CustomNameAccessable = requires(std::remove_cvref_t<T> x) {
-    { CustomAccessName<T>::get(x) } -> std::convertible_to<std::string>;
-    { CustomAccessName<T>::get(std::as_const(x)) } -> std::convertible_to<const std::string>;
-};
+concept CustomNameAccessable = helpers::custom_trait_convertible<T, CustomAccessName, std::string>;
 
 template <typename T>
-concept GetTypeTemplateNameAccessable = requires(std::remove_cvref_t<T> x) {
-    { x.template getType<Name>() } -> std::convertible_to<std::string>;
-    { std::as_const(x).template getType<Name>() } -> std::convertible_to<const std::string>;
-};
+concept GetTypeTemplateNameAccessable = helpers::get_type_template_convertible<T, Name, std::string>;
 #endif
 
 }  // namespace traits
