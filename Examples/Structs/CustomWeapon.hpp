@@ -14,7 +14,7 @@ static_assert(not Damagingable<CustomWeapon>);
 
 template <std::convertible_to<CustomWeapon> T>
 #ifdef NO_PREMADE_STRATEGIES
-struct UserStrategy_<Damage, T, ActionStatus> {
+struct UserStrategy_<Damage, T> {
 #else
 struct AttackStrategy_<T> {
 #endif

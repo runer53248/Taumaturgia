@@ -1,18 +1,18 @@
 #include "Taumaturgia/Object/Object.hpp"
-#include "Usage/Properties.hpp"
 #include "Taumaturgia/Strategies/Defaults/DefaultGetStrategy.hpp"
 #include "Usage/Enums/AliveStatus.hpp"
+#include "Usage/Properties.hpp"
 
 #ifdef NO_PREMADE_STRATEGIES
 
-template <typename T>
-struct UserStrategy_<T, Default, std::optional<AliveStatus> > {
+template <typename TYPE>
+struct UserStrategy_<TYPE, Default> {
+    // std::optional<AliveStatus>
     constexpr std::optional<AliveStatus> operator()(Livingable auto&) const {
         return AliveStatus::Living;
     }
-};
-template <typename T>
-struct UserStrategy_<T, Default, ActionStatus> {
+
+    // ActionStatus
     constexpr ActionStatus operator()(auto&, Object*, Object*) const {
         return ActionStatus::Success;
     }

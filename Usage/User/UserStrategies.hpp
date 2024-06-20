@@ -34,14 +34,14 @@ concept is_custom_wear_strategy = is_custom_type_strategy<WearContainer, T, Acti
 
 // forward eventualy implemented strategy
 template <typename T>
-struct UserStrategy_<Health, Healing_impl<T>, std::optional<AliveStatus>> : public UserStrategy_<Health, T, std::optional<AliveStatus>> {};
+struct UserStrategy_<Health, Healing_impl<T>> : public UserStrategy_<Health, T> {};
 template <typename T>
-struct UserStrategy_<WearContainer, Wearing_impl<T>, ActionStatus> : public UserStrategy_<WearContainer, T, ActionStatus> {};
+struct UserStrategy_<WearContainer, Wearing_impl<T>> : public UserStrategy_<WearContainer, T> {};
 template <typename T>
-struct UserStrategy_<Damage, Damaging_impl<T>, ActionStatus> : public UserStrategy_<Damage, T, ActionStatus> {};
+struct UserStrategy_<Damage, Damaging_impl<T>> : public UserStrategy_<Damage, T> {};
 template <typename T>
-struct UserStrategy_<Protection, Protecting_impl<T>, ActionStatus> : public UserStrategy_<Protection, T, ActionStatus> {};
+struct UserStrategy_<Protection, Protecting_impl<T>> : public UserStrategy_<Protection, T> {};
 template <typename T>
-struct UserStrategy_<CureHealth, Healing_impl<T>, ActionStatus> : public UserStrategy_<CureHealth, T, ActionStatus> {};
+struct UserStrategy_<CureHealth, Healing_impl<T>> : public UserStrategy_<CureHealth, T> {};
 template <typename T>
-struct UserStrategy_<EffectTypeContainer, Restoring_impl<T>, ActionStatus> : public UserStrategy_<EffectTypeContainer, T, ActionStatus> {};
+struct UserStrategy_<EffectTypeContainer, Restoring_impl<T>> : public UserStrategy_<EffectTypeContainer, T> {};

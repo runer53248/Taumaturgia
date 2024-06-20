@@ -200,4 +200,4 @@ struct UserPropertyConceptAdapter {
 
 // TODO: check is this needed?
 // template <typename TYPE, typename T>
-// struct UserStrategy_<TYPE, impl::UserProperty_<TYPE, T>, ActionStatus> : public UserStrategy_<TYPE, T, ActionStatus> {};  // forward eventualy implemented strategy
+// struct UserStrategy_<TYPE, impl::UserProperty_<TYPE, T>> : public UserStrategy_<TYPE, T> {};  // forward eventualy implemented strategy

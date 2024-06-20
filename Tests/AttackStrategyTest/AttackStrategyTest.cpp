@@ -21,7 +21,7 @@
 
     template <>
     #ifdef NO_PREMADE_STRATEGIES
-    struct UserStrategy_<Damage, CustomWeapon, ActionStatus> {
+    struct UserStrategy_<Damage, CustomWeapon> {
     #else
     struct AttackStrategy_<CustomWeapon> {
     #endif

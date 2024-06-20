@@ -70,7 +70,7 @@ struct traits::CustomAccessType<TYPE, T> {
 };
 
 template <typename TYPE>
-struct UserStrategy_<TYPE, Default, ActionStatus> {
+struct UserStrategy_<TYPE, Default> {
     constexpr ActionStatus operator()(accessType_trait_able<TYPE> auto& obj) const {
         if consteval {
             // if (std::is_constant_evaluated()) {
@@ -227,13 +227,13 @@ int main() {
         using UserClass5_3 = add_properties<name_type3, UserPropertyAdapter<int>::type, UserPropertyAdapter<float>::type>;
         UserClass5_3 type3{Name{}, value_i_3, value_f_3};
 
-        UserStrategy_<float, Default, ActionStatus> userStrategy{};
+        UserStrategy_<float, Default> userStrategy{};
 
         userStrategy(type3);
         userStrategy(std::as_const(type3));
 
-        UserStrategy_<int, Default, ActionStatus>{}(type3);
-        UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3));
+        UserStrategy_<int, Default>{}(type3);
+        UserStrategy_<int, Default>{}(std::as_const(type3));
 
         std::cout << '\n';
 
@@ -245,17 +245,17 @@ int main() {
                                userStrategy(std::as_const(type3))>{};
 
         ActionStatus_Assertion<ActionStatus::Success,
-                               UserStrategy_<int, Default, ActionStatus>{}(type3)>{};
+                               UserStrategy_<int, Default>{}(type3)>{};
         ActionStatus_Assertion<ActionStatus::Success,
-                               UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3))>{};
+                               UserStrategy_<int, Default>{}(std::as_const(type3))>{};
 
         std::cout << '\n';
 
         ActionStatus_Assertion<ActionStatus::Success,
                                userStrategy(type3),
                                userStrategy(std::as_const(type3)),
-                               UserStrategy_<int, Default, ActionStatus>{}(type3),
-                               UserStrategy_<int, Default, ActionStatus>{}(std::as_const(type3))>{};
+                               UserStrategy_<int, Default>{}(type3),
+                               UserStrategy_<int, Default>{}(std::as_const(type3))>{};
 #endif
     }
 }

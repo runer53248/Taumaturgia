@@ -45,7 +45,7 @@ struct LivingTile : Tile {
 template <typename T>
     requires std::is_base_of_v<Tile, T>
 #ifdef NO_PREMADE_STRATEGIES
-struct UserStrategy_<Health, T, std::optional<AliveStatus>> {
+struct UserStrategy_<Health, T> {
 #else
 struct AliveStrategy_<T> {
 #endif
