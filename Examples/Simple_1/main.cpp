@@ -1,7 +1,7 @@
 #include <vector>
-#include "Actions.hpp"
-#include "FillBackpack.hpp"
-#include "Print.hpp"
+#include "Examples/Main/Actions.hpp"
+#include "Examples/Main/FillBackpack.hpp"
+#include "Examples/Main/Print.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
 int main(int, [[maybe_unused]] char* argv[]) {

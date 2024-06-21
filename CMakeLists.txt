@@ -31,6 +31,8 @@ add_compile_options(
 
 # link_libraries(-lubsan)
 
+include_directories(${PROJECT_SOURCE_DIR})
+
 add_compile_definitions(
   # ACCESS_TRAIT_MACRO
 )
@@ -51,8 +53,6 @@ if(no_premade_strategies)
 endif()
 
 set(addons ${NO_PREMADE_PROPERTIES}${NO_PREMADE_STRATEGIES})
-
-include_directories(${PROJECT_SOURCE_DIR})
 
 add_subdirectory(Examples)
 

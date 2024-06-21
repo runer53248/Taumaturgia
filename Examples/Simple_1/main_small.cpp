@@ -1,6 +1,6 @@
 #include <vector>
-#include "Print.hpp"
-#include "structs.hpp"
+#include "Examples/Main/Print.hpp"
+#include "Examples/Main/structs.hpp"
 
 int main() {
     static_assert(Namingable<player_type>);
