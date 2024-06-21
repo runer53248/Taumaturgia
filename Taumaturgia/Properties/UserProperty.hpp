@@ -176,15 +176,24 @@ private:
     TYPE type_{};
 };
 
-namespace Test {
-struct UserProperty_Test {};
-static_assert(accessType_trait_able<UserProperty_<int, UserProperty_Test>, int>);
-}  // namespace Test
-
 }  // namespace impl
 
+namespace impl::Test {
+struct UserProperty_Test {};
+static_assert(
+    // accessType_trait_able<UserProperty_<int, UserProperty_Test>, int>)
+    traits::helpers::trait_accessable<
+        UserProperty_<int, UserProperty_Test>,
+        traits::accessType<int>,
+        int>);
+}  // namespace impl::Test
+
 template <typename TYPE, typename T, typename... Args>
-using UserProperty = std::conditional_t<accessType_trait_able<T, TYPE>, T, impl::UserProperty_<TYPE, T, Args...>>;
+using UserProperty = std::conditional_t<
+    // accessType_trait_able<T, TYPE>, T, impl::UserProperty_<TYPE, T, Args...>
+    traits::helpers::trait_accessable<T, traits::accessType<TYPE>, TYPE>,
+    T,
+    impl::UserProperty_<TYPE, T, Args...>>;
 
 template <typename TYPE, typename... Args>
 struct UserPropertyAdapter {

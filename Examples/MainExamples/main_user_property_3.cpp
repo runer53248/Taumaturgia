@@ -13,7 +13,7 @@ struct MyType {
 using Type_basic = UserProperty<Damage, MyType>;
 static_assert(traits::GetTypeTemplateAccessable<Type_basic, Damage>);
 
-using Type_no_nest = UserProperty<Damage, UserProperty<Damage, UserProperty<Damage, MyType>>>;                              // UserProperty don't allow nesting - accessType_trait_able concept check disallow it
+using Type_no_nest = UserProperty<Damage, UserProperty<Damage, UserProperty<Damage, MyType>>>;                              // UserProperty don't allow nesting - trait_accessable concept check disallow it
 using Type_unlimited_nest = impl::UserProperty_<Damage, impl::UserProperty_<Damage, impl::UserProperty_<Damage, MyType>>>;  // impl::UserProperty_ allow unlimited nesting
 using Type_unlimited_nest_collapse = add_properties<Type_unlimited_nest>;
 
