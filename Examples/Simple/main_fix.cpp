@@ -3,13 +3,24 @@
 #include "Usage/DefaultStrategies.hpp"
 #include "Usage/Properties.hpp"
 
+// MARK: Empty
+
+#ifdef WITH_ADD_PROPERTIES
+template <typename TAG = void, typename... TAGS>
+struct Empty {};
+#endif
+
 // MARK: Item
 
+#ifdef WITH_ADD_PROPERTIES
+using Item = add_properties<Empty<struct ItemTag>, Naming, Living, Damaging>;
+#else
 struct Item {
     std::string name;
     Health hp;
-    Damage dmg{3};
+    Damage dmg;
 };
+#endif
 
 template <>
 struct GetStrategy_<Item> {
@@ -25,22 +36,24 @@ struct GetStrategy_<Item> {
     }
 };
 
-static_assert(std::is_same_v<Item, Living<Naming<Item>>>);
-
 static_assert(Gettingable<Item>);
 static_assert(is_custom_get_strategy<Item>);
 static_assert(not is_custom_alive_strategy<Item>);
 
 // MARK: Tile
 
+#ifdef WITH_ADD_PROPERTIES
+using Tile = add_properties<Empty<>, Naming, Damaging>;
+using LivingTile = add_properties<Tile, Living>;
+#else
 struct Tile {
     std::string name;
-    Damage dmg{3};
+    Damage dmg;
 };
-
 struct LivingTile : Tile {
-    Health hp{30};
+    Health hp;
 };
+#endif
 
 template <typename T>
     requires std::is_base_of_v<Tile, T>
@@ -60,12 +73,30 @@ struct AliveStrategy_<T> {
     }
 };
 
+template <typename T>
+    requires std::is_base_of_v<Tile, T>
+struct GetStrategy_<T> {
+    template <Properties PROPERTY>
+    constexpr auto operator()(Gettingable auto& obj) const {
+        if constexpr (PROPERTY == Properties::Health) {
+            std::cout << 'H';
+            return default_get_behavior<Properties::Health>(obj);
+        } else if constexpr (PROPERTY == Properties::Damage) {
+            std::cout << 'D';
+            return default_get_behavior<Properties::Damage>(obj);
+        } else {
+            std::cout << 'V';
+            return default_get_behavior<PROPERTY>(obj);
+        }
+    }
+};
+
 static_assert(Gettingable<Tile>);
-static_assert(not is_custom_get_strategy<Tile>);
+static_assert(is_custom_get_strategy<Tile>);
 static_assert(is_custom_alive_strategy<Tile>);
 
 static_assert(Gettingable<LivingTile>);
-static_assert(not is_custom_get_strategy<LivingTile>);
+static_assert(is_custom_get_strategy<LivingTile>);
 static_assert(is_custom_alive_strategy<LivingTile>);
 
 // MARK: main
@@ -73,23 +104,23 @@ static_assert(is_custom_alive_strategy<LivingTile>);
 int main() {
     auto item = Item{
         Name{"Book"},
-        Health{30}};
+        Health{30},
+        Damage{3}};
 
     auto tile = Tile{
-        Name{"Tile"}};
+        Name{"Tile"},
+        Damage{3}};
 
     auto living_tile = LivingTile{
         Name{"Grass"},
+#ifdef WITH_ADD_PROPERTIES
+        Health{160},
+        Damage{0, Effect{EffectType::Burn}}
+#else
         Damage{0, Effect{EffectType::Burn}},
-        Health{60}};
-
-    Object obj(item);
-    Object obj_2(tile);
-    Object obj_3(living_tile);
-
-    obj.getOpt<Properties::Health>();
-    obj_2.getOpt<Properties::Health>();
-    std::cout << '\n';
+        Health{60}
+#endif
+    };
 
     print_object_properties(item);
     print_customized_properties(item);
