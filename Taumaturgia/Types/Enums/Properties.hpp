@@ -3,8 +3,8 @@
 enum class Properties {
     Health,
     CureHealth,
-    Protection,
     Damage,
+    Protection,
     Restore,
     Wear,
     Get

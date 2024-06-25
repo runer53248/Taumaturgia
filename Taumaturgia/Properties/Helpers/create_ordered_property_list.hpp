@@ -4,7 +4,7 @@
 
 template <template <typename...> typename property>
     requires is_property<property>
-class Property;
+struct Property;
 
 namespace helpers {
 

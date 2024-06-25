@@ -2,8 +2,8 @@
 #include <stdexcept>
 #include <vector>
 #include "Duration.hpp"
-#include "Enums/EffectState.hpp"
-#include "Enums/EffectType.hpp"
+#include "Taumaturgia/Types/Enums/EffectState.hpp"
+#include "Taumaturgia/Types/Enums/EffectType.hpp"
 
 // enum class EffectStatusModifier {
 //     Suspended,

@@ -2,8 +2,8 @@
 #include <boost/mp11.hpp>
 #include <stdexcept>
 #include <variant>
-#include "Helpers/PropertyData.hpp"
 #include "Helpers/constructible_from_args.hpp"
+#include "Structs/PropertyData.hpp"
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
 #include "Taumaturgia/Types/Name.hpp"
 

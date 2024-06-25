@@ -1,7 +1,7 @@
 #pragma once
 #include <concepts>
 #include <optional>
-#include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
+#include "Helpers/StrategyConditional.hpp"
 #include "Taumaturgia/Traits/UserTypeTraits.hpp"
 
 template <typename TYPE, typename T>

@@ -1,7 +1,7 @@
 #pragma once
 #include <stddef.h>
 #include <array>
-#include "Enums/DurationType.hpp"
+#include "Taumaturgia/Types/Enums/DurationType.hpp"
 
 class Duration {
 public:

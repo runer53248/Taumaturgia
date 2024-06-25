@@ -1,9 +1,9 @@
 #pragma once
-#include "taged_list.hpp"
+#include "Taumaturgia/Properties/Helpers/taged_list.hpp"
 
 template <template <typename...> typename property>
     requires is_property<property>
-class Property;
+struct Property;
 
 template <const char* NAME, template <typename...> typename property, typename T, typename... Args>
 struct PropertyData {

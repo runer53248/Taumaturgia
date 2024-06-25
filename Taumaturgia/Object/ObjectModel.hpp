@@ -15,14 +15,9 @@ constexpr std::optional<AliveStatus> alive(const T& type) {
 }
 
 template <typename T>
-constexpr auto get_impl(T& type, Properties param) {  // TODO: implement test for get
-    using result_type = std::conditional_t<
-        std::is_const_v<std::remove_reference_t<decltype(type)>>,
-        optional_get_variant_const_type,
-        optional_get_variant_type>;
-
+constexpr auto get_impl(T& type, Properties param) -> to_optional_get_variant<decltype(type)> {  // TODO: implement test for get
     if constexpr (not Gettingable<T>) {
-        return result_type{};
+        return {};
     } else {
         static constinit GetStrategy<std::remove_const_t<T>> getStrategy_{};
         switch (param) {
@@ -39,7 +34,7 @@ constexpr auto get_impl(T& type, Properties param) {  // TODO: implement test fo
         case Properties::Wear:
             return getStrategy_.template operator()<Properties::Wear>(type);
         default:
-            return result_type{};
+            return {};
         };
     }
 }

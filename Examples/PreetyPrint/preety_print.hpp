@@ -27,7 +27,7 @@ void print_ref_sign(auto&& value) {
 }
 
 struct {
-    auto operator()(is_ref_type<Health> auto&& value) const {
+    auto operator()(is_ref_of_type<Health> auto&& value) const {
         auto& hp = value.get();
         print_ref_sign(hp);
         std::cout << hp;
@@ -36,7 +36,7 @@ struct {
 } print_hp;
 
 struct {
-    auto operator()(is_ref_type<CureHealth> auto&& value) const {
+    auto operator()(is_ref_of_type<CureHealth> auto&& value) const {
         auto& cureHealth = value.get();
         print_ref_sign(cureHealth);
         std::cout << cureHealth;
@@ -45,7 +45,7 @@ struct {
 } print_cure_hp;
 
 template <typename T>
-concept WrappedProtectionOrArmorClass = is_ref_type<T, ArmorClass> or is_ref_type<T, Protection>;
+concept WrappedProtectionOrArmorClass = is_ref_of_type<T, ArmorClass> or is_ref_of_type<T, Protection>;
 
 struct {
     auto operator()(WrappedProtectionOrArmorClass auto&& value) const {
@@ -57,7 +57,7 @@ struct {
 } print_protection;
 
 struct {
-    auto operator()(is_ref_type<WearContainer> auto&& value) const {
+    auto operator()(is_ref_of_type<WearContainer> auto&& value) const {
         auto& armorWear = value.get();
         print_ref_sign(armorWear);
         std::cout << armorWear;
@@ -66,7 +66,7 @@ struct {
 } print_wear;
 
 struct {
-    auto operator()(is_ref_type<Damage> auto&& value) const {
+    auto operator()(is_ref_of_type<Damage> auto&& value) const {
         auto& damage = value.get();
         print_ref_sign(damage);
         std::cout << damage;
@@ -75,7 +75,7 @@ struct {
 } print_dmg;
 
 struct {
-    auto operator()(is_ref_type<EffectTypeContainer> auto&& value) const {
+    auto operator()(is_ref_of_type<EffectTypeContainer> auto&& value) const {
         auto& effects = value.get();
         print_ref_sign(effects);
         print_in_round_braces(

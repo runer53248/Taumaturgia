@@ -36,7 +36,7 @@ using order_list = taged_list<
     Living,
     Naming  // should be last property to add (used closest to type)
     >;
-#include "Taumaturgia/Properties/Helpers/Property.hpp"
+#include "Taumaturgia/Properties/Structs/Property.hpp"
 
 ///////////////////////////////////////////
 

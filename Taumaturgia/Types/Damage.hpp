@@ -1,5 +1,5 @@
 #pragma once
-#include "Effect.hpp"
+#include "Structs/Effect.hpp"
 #include "Enums/DamageType.hpp"
 
 class Damage {

@@ -1,16 +1,13 @@
 #pragma once
 #include <concepts>
 #include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
-#include "Taumaturgia/Types/VariantType.hpp"
+#include "Taumaturgia/Types/Helpers/extract_optional_type.hpp"
 #include "Usage/Traits.hpp"
 
 enum class Properties;
 
 template <typename T>
 struct GetStrategy_ {};
-
-template <typename T>
-concept Gettingable = Damagingable<T> or Healingable<T> or Livingable<T> or Protectingable<T> or Restoringable<T> or Wearingable<T>;
 
 // other return type for const T
 template <typename T>

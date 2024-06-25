@@ -1,7 +1,6 @@
 #pragma once
 #include <limits>
-#include "Effect.hpp"
-#include "EffectContainer.hpp"
+#include "Structs/EffectContainer.hpp"
 #include "Health.hpp"
 
 enum class CureValueType {

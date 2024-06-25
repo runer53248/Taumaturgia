@@ -9,7 +9,7 @@ using order_list = taged_list<
     UserPropertyAdapter<float>::type  // floats have less priority
     >;                                // properties list in order
 
-#include "Taumaturgia/Properties/Helpers/Property.hpp"  // depends on order_list existence
+#include "Taumaturgia/Properties/Structs/Property.hpp"  // depends on order_list existence
 
 struct name_type1 {
     std::string name{};
