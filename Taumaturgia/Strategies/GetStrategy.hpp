@@ -9,7 +9,6 @@ enum class Properties;
 template <typename T>
 struct GetStrategy_ {};
 
-// other return type for const T
 template <typename T>
 concept is_custom_get_strategy = Strategable_template<GetStrategy_, T, optional_get_variant_type, Properties>  //
                                  and Strategable_template<GetStrategy_, const T, optional_get_variant_const_type, Properties>;

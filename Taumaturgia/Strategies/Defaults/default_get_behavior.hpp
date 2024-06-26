@@ -2,34 +2,27 @@
 #include "Taumaturgia/Strategies/GetStrategy.hpp"
 #include "Taumaturgia/Types/Enums/Properties.hpp"
 
-template <Properties PROPERTY>
-inline constexpr auto default_get_behavior(Gettingable auto& obj) -> to_optional_get_variant<decltype(obj)> {
-    using type = std::remove_reference_t<decltype(obj)>;
+// * this version return optional variant of reference_wraper of types
+// template <Properties PROPERTY>
+// inline constexpr auto default_get_behavior(Gettingable auto& obj) -> to_optional_get_variant<decltype(obj)> {
+//     if constexpr (is_properties_accessable<PROPERTY, decltype(obj)>) {
+//         return std::ref(properties_trait<PROPERTY>::get(obj));
+//     }
+//     return {};
+// }
 
-    if constexpr (PROPERTY == Properties::Health) {
-        if constexpr (Livingable<type>) {
-            return std::ref(Livingable_trait::get(obj));
-        }
-    } else if constexpr (PROPERTY == Properties::CureHealth) {
-        if constexpr (Healingable<type>) {
-            return std::ref(Healingable_trait::get(obj));
-        }
-    } else if constexpr (PROPERTY == Properties::Protection) {
-        if constexpr (Protectingable<type>) {
-            return std::ref(Protectingable_trait::get(obj));
-        }
-    } else if constexpr (PROPERTY == Properties::Damage) {
-        if constexpr (Damagingable<type>) {
-            return std::ref(Damagingable_trait::get(obj));
-        }
-    } else if constexpr (PROPERTY == Properties::Restore) {
-        if constexpr (Restoringable<type>) {
-            return std::ref(Restoringable_trait::get(obj));
-        }
-    } else if constexpr (PROPERTY == Properties::Wear) {
-        if constexpr (Wearingable<type>) {
-            return std::ref(Wearingable_trait::get(obj));
-        }
+// * this version return optional reference_wraper of type
+template <Properties PROPERTY, typename T>
+using get_result_type = std::optional<std::reference_wrapper<
+    std::conditional_t<
+        std::is_const_v<std::remove_reference_t<T>>,
+        const properties_type<PROPERTY>,
+        properties_type<PROPERTY>>>>;
+
+template <Properties PROPERTY>
+inline constexpr auto default_get_behavior(Gettingable auto& obj) -> get_result_type<PROPERTY, decltype(obj)>{
+    if constexpr (is_properties_accessable<PROPERTY, decltype(obj)>) {
+        return std::optional{std::ref(properties_trait<PROPERTY>::get(obj))};
     }
     return {};
 }

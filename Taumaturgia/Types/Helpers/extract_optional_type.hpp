@@ -1,10 +1,10 @@
 #pragma once
 #include "optional_get_variant.hpp"
-#include "properties_to_type.hpp"
+#include "properties_info.hpp"
 
 //         Properties
 //             |
-//    properties_to_type
+//       properties_info
 //             |
 //       list_of_types
 //             |
@@ -33,5 +33,5 @@ constexpr decltype(auto) extract_optional_type(is_optional_get_variant auto&& op
 
 template <Properties PROPERTY>
 constexpr decltype(auto) extract_optional_type(is_optional_get_variant auto&& opt_variant) {
-    return impl::extract_optional_type<properties_to_type<PROPERTY>>(opt_variant);
+    return impl::extract_optional_type<properties_type<PROPERTY>>(opt_variant);
 }

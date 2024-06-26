@@ -13,7 +13,8 @@ concept Strategable = std::is_invocable_r_v<RET, Strategy<std::remove_const_t<T>
 
 template <template <typename> typename Strategy, typename T, typename RET, typename TA, typename... Args>
 concept Strategable_template = requires(Strategy<std::remove_const_t<T>> strategy, T& type, Args... args) {
-    { strategy.template operator()<TA{}>(type, args...) } -> std::same_as<RET>;
+    { strategy.template operator()<TA{}>(type, args...) } -> std::convertible_to<RET>;
+    // { strategy.template operator()<TA{}>(type, args...) } -> std::same_as<RET>;
 };
 
 template <template <typename, typename> typename Strategy, typename TYPE, typename T, typename RET, typename... Args>

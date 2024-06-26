@@ -22,6 +22,8 @@ struct Item {
 };
 #endif
 
+// MARK: GetStrategy_<Item>
+
 template <>
 struct GetStrategy_<Item> {
     template <Properties PROPERTY>
@@ -55,6 +57,8 @@ struct LivingTile : Tile {
 };
 #endif
 
+// MARK: AliveStrategy_<T>
+
 template <typename T>
     requires std::is_base_of_v<Tile, T>
 #ifdef NO_PREMADE_STRATEGIES
@@ -72,6 +76,8 @@ struct AliveStrategy_<T> {
         return AliveStatus::Living;
     }
 };
+
+// MARK: GetStrategy_<T>
 
 template <typename T>
     requires std::is_base_of_v<Tile, T>
@@ -133,4 +139,8 @@ int main() {
     print_object_properties(living_tile);
     print_customized_properties(living_tile);
     print_object(living_tile);
+
+    static_assert(std::is_same_v<
+                  get_result_type<Properties::Health, Tile>,
+                  std::optional<std::reference_wrapper<Health>>>);
 }
