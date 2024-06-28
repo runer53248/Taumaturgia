@@ -1,5 +1,8 @@
 #pragma once
+#include "Enums/ActionStatus.hpp"
 #include "Usage/Strategies.hpp"
+
+class Object;
 
 class CommandConcept {
 public:

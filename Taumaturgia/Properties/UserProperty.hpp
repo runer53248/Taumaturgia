@@ -5,7 +5,7 @@
 #include "Helpers/constructible_from_args.hpp"
 #include "Structs/PropertyData.hpp"
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
-#include "Taumaturgia/Types/Name.hpp"
+#include "Usage/Types/Name.hpp"
 
 namespace impl {
 inline constinit const char user_type_name[] = "UserProperty";

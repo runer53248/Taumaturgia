@@ -1,6 +1,6 @@
 #pragma once
-#include "Taumaturgia/Types/Name.hpp"
-#include "Taumaturgia/Types/Protection.hpp"
+#include "Usage/Types/Name.hpp"
+#include "Usage/Types/Protection.hpp"
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"

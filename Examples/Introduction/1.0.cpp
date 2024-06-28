@@ -1,4 +1,4 @@
-#include "Taumaturgia/Traits/NameTraits.hpp"
+#include "Usage/Traits.hpp"
 // Namingable concepts is valif for types that:
 /////////////////////////////////////////////////
 // * type that have public name member convertible to std::string or const std::string
@@ -19,7 +19,7 @@ struct Valid_type_2_2 {
 static_assert(Namingable<Valid_type_2>);
 static_assert(Namingable<Valid_type_2_2>);
 /////////////////////////////////////////////////
-#include "Taumaturgia/Types/Name.hpp"
+#include "Usage/Types/Name.hpp"
 
 struct Valid_type_3 {
     Name name{"Valid"};

@@ -5,7 +5,6 @@
 #include "Strategies/HealStrategy.hpp"
 #include "Strategies/RestoreStrategy.hpp"
 #include "Strategies/WearStrategy.hpp"
-#include "Usage/Traits.hpp"
 
 // forward eventualy implemented strategy
 template <typename T>

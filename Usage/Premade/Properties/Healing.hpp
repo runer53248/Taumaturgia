@@ -3,8 +3,8 @@
 #include <variant>
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
-#include "Taumaturgia/Types/CureHealth.hpp"
-#include "Taumaturgia/Types/Name.hpp"
+#include "Usage/Types/CureHealth.hpp"
+#include "Usage/Types/Name.hpp"
 
 namespace impl {
 inline constinit const char healing_type_name[] = "Healing";

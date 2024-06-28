@@ -1,10 +1,7 @@
 #pragma once
 #include <concepts>
 #include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
-#include "Taumaturgia/Types/Helpers/extract_optional_type.hpp"
-#include "Usage/Traits.hpp"
-
-enum class Properties;
+#include "Usage/Types/Helpers/extract_optional_type.hpp"
 
 template <typename T>
 struct GetStrategy_ {};

@@ -9,3 +9,6 @@ enum class Properties {
     Wear,
     Get
 };
+
+template <Properties P>
+struct sProperties {};

@@ -1,6 +1,7 @@
 #pragma once
-#include "Enums/ActionStatus.hpp"
 #include <map>
+#include "Enums/ActionStatus.hpp"
+#include "Usage/Enums/Actions.hpp"
 
 namespace action_impl {
 
@@ -15,11 +16,12 @@ constexpr std::optional<AliveStatus> alive(const T& type) {
 }
 
 template <typename T>
-constexpr auto get_impl(T& type, Properties param) -> to_optional_get_variant<decltype(type)> {  // TODO: implement test for get
+constexpr auto get_impl(T& type, Properties param) -> to_optional_get_variant<T> {  // TODO: implement test for get
     if constexpr (not Gettingable<T>) {
         return {};
     } else {
         static constinit GetStrategy<std::remove_const_t<T>> getStrategy_{};
+
         switch (param) {
         case Properties::Protection:
             return getStrategy_.template operator()<Properties::Protection>(type);
@@ -36,6 +38,16 @@ constexpr auto get_impl(T& type, Properties param) -> to_optional_get_variant<de
         default:
             return {};
         };
+    }
+}
+
+template <typename T, Properties P>
+constexpr auto get_impl(T& type, sProperties<P>) -> to_optional_get_variant<T> {  // TODO: implement test for get
+    if constexpr (not Gettingable<T>) {
+        return {};
+    } else {
+        static constinit GetStrategy<std::remove_const_t<T>> getStrategy_{};
+        return getStrategy_.template operator()<P>(type);
     }
 }
 
@@ -75,12 +87,10 @@ constexpr ActionStatus Object::ObjectModel<T>::action(Actions action, Object* ow
 
 template <Namingable T>
 constexpr auto Object::ObjectModel<T>::get(Properties param) -> optional_get_variant_type {
-    static_assert(not std::is_const_v<std::remove_reference_t<decltype((type_))>>);
     return action_impl::get_impl(type_, param);
 }
 
 template <Namingable T>
 constexpr auto Object::ObjectModel<T>::get(Properties param) const -> optional_get_variant_const_type {
-    static_assert(std::is_const_v<std::remove_reference_t<decltype((type_))>>);
     return action_impl::get_impl(type_, param);
 }

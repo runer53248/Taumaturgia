@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Taumaturgia/Types/Structs/Duration.hpp"
+#include "Usage/Types/Structs/Duration.hpp"
 #include "PrintDurationType.hpp"
 
 auto& operator<<(std::ostream& out, const Duration& duration) {

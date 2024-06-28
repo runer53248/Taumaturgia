@@ -7,6 +7,7 @@
 #include "Traits/accessHealth.hpp"
 #include "Traits/accessProtection.hpp"
 #include "Traits/accessRestoreEffects.hpp"
+#include "Usage/Traits/accessName.hpp"
 
 using Damagingable_trait = traits::accessDamage;
 using Healingable_trait = traits::accessCureHealth;
@@ -14,3 +15,4 @@ using Livingable_trait = traits::accessHealth;
 using Protectingable_trait = traits::accessProtection;
 using Restoringable_trait = traits::accessRestoreEffects;
 using Wearingable_trait = traits::accessArmorWear;
+using Namingable_trait = traits::accessName;

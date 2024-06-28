@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Taumaturgia/Types/Structs/EffectContainer.hpp"
+#include "Usage/Types/Structs/EffectContainer.hpp"
 #include "PrintEffect.hpp"
 
 auto& operator<<(std::ostream& out, const EffectContainer& effectContainer) {

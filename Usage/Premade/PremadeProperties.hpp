@@ -1,6 +1,4 @@
 #pragma once
-#include "Usage/Traits.hpp"
-
 #include "Properties/Damaging.hpp"
 #include "Properties/Healing.hpp"
 #include "Properties/Living.hpp"
@@ -11,7 +9,7 @@
 
 template <typename T>
 using Living_impl = impl::Living_<T>;
-template <typename T> 
+template <typename T>
 using Wearing_impl = impl::Wearing_<T>;
 template <typename T>
 using Damaging_impl = impl::Damaging_<T>;
@@ -21,3 +19,5 @@ template <typename T>
 using Healing_impl = impl::Healing_<T>;
 template <typename T>
 using Restoring_impl = impl::Restoring_<T>;
+template <typename T>
+using Naming_impl = impl::Naming_<T>;

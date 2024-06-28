@@ -1,12 +1,5 @@
 #pragma once
-#include "Taumaturgia/Types/Enums/Properties.hpp"
-
-struct Health;
-struct CureHealth;
-struct Damage;
-struct Protection;
-struct EffectTypeContainer;
-struct WearContainer;
+#include "Usage/Types/Enums/Properties.hpp"
 
 namespace impl {
 

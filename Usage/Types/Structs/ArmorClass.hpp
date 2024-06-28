@@ -1,8 +1,8 @@
 #pragma once
 #include <array>
 #include <numeric>
-#include "Taumaturgia/Types/EffectTypeContainer.hpp"
-#include "Taumaturgia/Types/Enums/BodyLocation.hpp"
+#include "Usage/Types/EffectTypeContainer.hpp"
+#include "Usage/Types/Enums/BodyLocation.hpp"
 
 class ArmorClass {
 public:

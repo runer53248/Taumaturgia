@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "Taumaturgia/Types/WearContainer.hpp"
+#include "Usage/Types/WearContainer.hpp"
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"

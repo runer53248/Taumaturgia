@@ -1,5 +1,5 @@
 #pragma once
-#include "Concepts/NameConcepts.hpp"
+#include "Usage/Concepts/NameConcepts.hpp"
 
 namespace traits {
 

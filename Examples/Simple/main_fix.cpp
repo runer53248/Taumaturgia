@@ -143,4 +143,12 @@ int main() {
     static_assert(std::is_same_v<
                   get_result_type<Properties::Health, Tile>,
                   std::optional<std::reference_wrapper<Health>>>);
+    static_assert(std::is_same_v<
+                  get_result_type<Properties::Health, const Tile>,
+                  std::optional<std::reference_wrapper<const Health>>>);
+    static_assert(not is_properties_accessable<Properties::Health, Tile>);
+    static_assert(is_properties_accessable<Properties::Health, LivingTile>);
+
+    action_impl::get_impl(item, sProperties<Properties::Health>{});
+    action_impl::get_impl(tile, sProperties<Properties::Damage>{});
 }

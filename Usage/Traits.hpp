@@ -4,7 +4,6 @@
 #else
 #include "Usage/Premade/PremadeTraits.hpp"
 #endif
-#include "Taumaturgia/Traits/NameTraits.hpp"  //
 
 template <typename T>
 concept Damagingable = traits::helpers::trait_accessable<T, Damagingable_trait, Damage>;
@@ -18,6 +17,8 @@ template <typename T>
 concept Restoringable = traits::helpers::trait_accessable<T, Restoringable_trait, EffectTypeContainer>;
 template <typename T>
 concept Wearingable = traits::helpers::trait_accessable<T, Wearingable_trait, WearContainer>;
+template <typename T>
+concept Namingable = traits::helpers::trait_access_covertable<T, Namingable_trait, std::string>;
 template <typename T>
 concept Gettingable = Damagingable<T> or
                       Healingable<T> or

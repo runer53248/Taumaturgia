@@ -3,18 +3,12 @@
 #include <functional>
 #include <memory>
 #include <optional>
-#include "Enums/ActionStatus.hpp"
-#include "Usage/Enums/Actions.hpp"
-#include "Usage/Strategies.hpp"
-#include "Taumaturgia/Traits/NameTraits.hpp"
-
 #ifndef _MSC_VER
 #include <experimental/propagate_const>
 #endif
-
 #include "Command.hpp"
 
-class Object;
+enum class Actions;
 
 template <typename T>
 concept is_object = std::same_as<T, Object> or std::same_as<T, const Object>;

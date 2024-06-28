@@ -1,14 +1,13 @@
 #pragma once
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
-#include "Usage/Traits.hpp"
-
-#include "Taumaturgia/Types/Name.hpp"
-#include "Taumaturgia/Types/Health.hpp"
-#include "Taumaturgia/Types/WearContainer.hpp"
-#include "Taumaturgia/Types/Damage.hpp"
-#include "Taumaturgia/Types/CureHealth.hpp"
-#include "Taumaturgia/Types/Protection.hpp"
+#include "Usage/Types/CureHealth.hpp"
+#include "Usage/Types/Damage.hpp"
+#include "Usage/Types/EffectTypeContainer.hpp"
+#include "Usage/Types/Health.hpp"
+#include "Usage/Types/Name.hpp"
+#include "Usage/Types/Protection.hpp"
+#include "Usage/Types/WearContainer.hpp"
 
 template <typename TYPE>
 using Living = UserPropertyConceptAdapter<Health, Livingable<TYPE>>::template type<TYPE>;
@@ -27,7 +26,7 @@ using Naming = UserPropertyConceptAdapter<Name, Namingable<TYPE>>::template type
 
 template <typename T>
 using Living_impl = impl::UserProperty_<Health, T>;
-template <typename T> 
+template <typename T>
 using Wearing_impl = impl::UserProperty_<WearContainer, T>;
 template <typename T>
 using Damaging_impl = impl::UserProperty_<Damage, T>;
@@ -37,3 +36,5 @@ template <typename T>
 using Healing_impl = impl::UserProperty_<CureHealth, T>;
 template <typename T>
 using Restoring_impl = impl::UserProperty_<EffectTypeContainer, T>;
+template <typename T>
+using Naming_impl = impl::UserProperty_<Name, T>;

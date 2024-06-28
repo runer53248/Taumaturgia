@@ -2,8 +2,8 @@
 #include <variant>
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
-#include "Taumaturgia/Types/Name.hpp"
-#include "Taumaturgia/Types/Protection.hpp"
+#include "Usage/Types/Name.hpp"
+#include "Usage/Types/Protection.hpp"
 
 namespace impl {
 inline constinit const char protecting_type_name[] = "Protecting";

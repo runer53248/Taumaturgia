@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include "Taumaturgia/Types/Structs/ArmorClass.hpp"
-#include "Taumaturgia/Types/Protection.hpp"
+#include "Usage/Types/Structs/ArmorClass.hpp"
+#include "Usage/Types/Protection.hpp"
 #include "PrintBodyLocation.hpp"
 #include "PrintEffectType.hpp"
 

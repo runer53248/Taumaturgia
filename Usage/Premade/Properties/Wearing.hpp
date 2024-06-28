@@ -3,8 +3,8 @@
 #include <variant>
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
-#include "Taumaturgia/Types/Name.hpp"
-#include "Taumaturgia/Types/WearContainer.hpp"
+#include "Usage/Types/Name.hpp"
+#include "Usage/Types/WearContainer.hpp"
 
 namespace impl {
 inline constinit const char wearing_type_name[] = "Wearing";

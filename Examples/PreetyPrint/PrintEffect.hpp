@@ -4,7 +4,7 @@
 #include "PrintEffectState.hpp"
 #include "PrintEffectType.hpp"
 #include "PrintWrapper.hpp"
-#include "Taumaturgia/Types/Structs/Effect.hpp"
+#include "Usage/Types/Structs/Effect.hpp"
 
 auto& operator<<(std::ostream& out, const Effect& effect) {
     auto effectType = effect.effectType();
