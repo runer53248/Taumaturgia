@@ -32,6 +32,11 @@ concept is_optional_get_variant =
     std::same_as<std::remove_cvref_t<T>, optional_get_variant_type> or
     std::same_as<std::remove_cvref_t<T>, optional_get_variant_const_type>;
 
+template <typename T>
+concept is_get_variant =
+    std::same_as<std::remove_cvref_t<T>, get_variant_type> or
+    std::same_as<std::remove_cvref_t<T>, get_variant_const_type>;
+
 template <typename T, typename TYPE>
 concept is_ref_of_type =
     std::same_as<std::remove_cvref_t<T>, std::reference_wrapper<TYPE>> or

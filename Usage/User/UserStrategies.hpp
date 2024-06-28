@@ -5,7 +5,6 @@ enum class ActionStatus;
 enum class AliveStatus : signed char;
 
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
-#include "Taumaturgia/Strategies/GetStrategy.hpp"
 
 template <typename T>
 using AliveStrategy = UserStrategy<Health, T, Livingable<T>, std::optional<AliveStatus>>;

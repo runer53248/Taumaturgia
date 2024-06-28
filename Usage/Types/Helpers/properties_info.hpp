@@ -53,3 +53,10 @@ template <Properties PROPERTY, typename T>
 concept is_properties_accessable = traits::helpers::trait_accessable<std::remove_reference_t<T>,
                                                                      properties_trait<PROPERTY>,
                                                                      properties_type<PROPERTY>>;
+
+template <Properties PROPERTY, typename T>
+using get_result_type = std::optional<std::reference_wrapper<
+    std::conditional_t<
+        std::is_const_v<T>,
+        const properties_type<PROPERTY>,
+        properties_type<PROPERTY>>>>;

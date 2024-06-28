@@ -1,8 +1,6 @@
 #pragma once
-#include "Taumaturgia/Traits/Helpers/traits_helper.hpp"
 #include "Taumaturgia/Traits/UserTypeTraits.hpp"
 #include "Usage/Concepts/Concepts.hpp"
-
 #include "Usage/Traits/accessName.hpp"
 
 using Damagingable_trait = traits::accessType<Damage>;
