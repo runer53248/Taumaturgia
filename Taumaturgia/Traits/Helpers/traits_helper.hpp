@@ -10,7 +10,7 @@ concept trait_accessable = requires(std::remove_cvref_t<T> x) {
 };
 
 template <typename T, typename TRAIT, typename CONVERT_TYPE>
-concept trait_access_covertable = requires(std::remove_cvref_t<T> x) {
+concept trait_access_convertable = requires(std::remove_cvref_t<T> x) {
     { TRAIT::get(x) } -> std::convertible_to<CONVERT_TYPE>;
     { TRAIT::get(std::as_const(x)) } -> std::convertible_to<const CONVERT_TYPE>;
 };

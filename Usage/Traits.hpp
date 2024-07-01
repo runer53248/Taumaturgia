@@ -18,7 +18,7 @@ concept Restoringable = traits::helpers::trait_accessable<T, Restoringable_trait
 template <typename T>
 concept Wearingable = traits::helpers::trait_accessable<T, Wearingable_trait, WearContainer>;
 template <typename T>
-concept Namingable = traits::helpers::trait_access_covertable<T, Namingable_trait, std::string>;
+concept Namingable = traits::helpers::trait_access_convertable<T, Namingable_trait, std::string>;
 template <typename T>
 concept Gettingable = Damagingable<T> or
                       Healingable<T> or
