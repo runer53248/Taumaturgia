@@ -1,7 +1,7 @@
 #pragma once
 #include <array>
 #include <numeric>
-#include "Structs/ArmorClass.hpp"
+#include "Usage/Types/Structs/ArmorClass.hpp"
 
 class Protection {
 public:

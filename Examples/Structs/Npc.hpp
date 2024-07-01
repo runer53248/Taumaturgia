@@ -1,5 +1,5 @@
 #pragma once
-#include "Usage/Types/Health.hpp"
+#include "Usage/Types/Health/Health.hpp"
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"

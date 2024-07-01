@@ -1,6 +1,6 @@
 #pragma once
-#include "Structs/Effect.hpp"
-#include "Enums/DamageType.hpp"
+#include "Usage/Types/Structs/Effect.hpp"
+#include "Usage/Types/Enums/DamageType.hpp"
 
 class Damage {
 public:

@@ -1,5 +1,5 @@
 #pragma once
-#include "Usage/Concepts/ProtectionConcepts.hpp"
+#include "Usage/Types/Protection/ProtectionConcepts.hpp"
 
 namespace traits {
 

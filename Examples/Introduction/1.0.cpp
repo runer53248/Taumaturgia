@@ -19,7 +19,7 @@ struct Valid_type_2_2 {
 static_assert(Namingable<Valid_type_2>);
 static_assert(Namingable<Valid_type_2_2>);
 /////////////////////////////////////////////////
-#include "Usage/Types/Name.hpp"
+#include "Usage/Types/Name/Name.hpp"
 
 struct Valid_type_3 {
     Name name{"Valid"};

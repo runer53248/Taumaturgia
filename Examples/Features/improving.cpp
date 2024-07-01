@@ -4,8 +4,8 @@
 #ifdef NO_PREMADE_PROPERTIES
 
 #include "Taumaturgia/Properties/UserProperty.hpp"
-#include "Usage/Types/Health.hpp"
-#include "Usage/Types/Name.hpp"
+#include "Usage/Types/Health/Health.hpp"
+#include "Usage/Types/Name/Name.hpp"
 
 template <typename TYPE>
 using Living = UserPropertyConceptAdapter<Health, Livingable<TYPE>>::template type<TYPE>;

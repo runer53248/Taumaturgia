@@ -1,7 +1,7 @@
 #pragma once
 #include <array>
 #include <optional>
-#include "Protection.hpp"
+#include "Usage/Types/Protection/Protection.hpp"
 
 class WearContainer {
 public:

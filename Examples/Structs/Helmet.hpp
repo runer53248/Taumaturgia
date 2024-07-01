@@ -1,6 +1,6 @@
 #pragma once
-#include "Usage/Types/Name.hpp"
-#include "Usage/Types/Protection.hpp"
+#include "Usage/Types/Name/Name.hpp"
+#include "Usage/Types/Protection/Protection.hpp"
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"

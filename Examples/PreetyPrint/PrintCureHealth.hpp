@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Usage/Types/CureHealth.hpp"
+#include "Usage/Types/CureHealth/CureHealth.hpp"
 #include "PrintEffectContainer.hpp"
 
 constexpr const char* toString(CureValueType type) noexcept {

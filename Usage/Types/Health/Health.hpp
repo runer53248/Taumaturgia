@@ -1,6 +1,6 @@
 #pragma once
 #include <limits>
-#include "Structs/EffectContainer.hpp"
+#include "Usage/Types/Structs/EffectContainer.hpp"
 
 class Health {
 public:

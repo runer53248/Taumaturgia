@@ -1,13 +1,8 @@
 #pragma once
 #include <limits>
-#include "Structs/EffectContainer.hpp"
-#include "Health.hpp"
-
-enum class CureValueType {
-    VALUE,
-    CURRENT_PERCENT,
-    MAX_PERCENT
-};
+#include "Usage/Types/Structs/EffectContainer.hpp"
+#include "Usage/Types/Health/Health.hpp"
+#include "Usage/Types/Enums/CureValueType.hpp"
 
 class CureHealth {
 public:

@@ -1,13 +1,13 @@
 #pragma once
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
-#include "Usage/Types/CureHealth.hpp"
-#include "Usage/Types/Damage.hpp"
-#include "Usage/Types/EffectTypeContainer.hpp"
-#include "Usage/Types/Health.hpp"
-#include "Usage/Types/Name.hpp"
-#include "Usage/Types/Protection.hpp"
-#include "Usage/Types/WearContainer.hpp"
+#include "Usage/Types/CureHealth/CureHealth.hpp"
+#include "Usage/Types/Damage/Damage.hpp"
+#include "Usage/Types/EffectTypeContainer/EffectTypeContainer.hpp"
+#include "Usage/Types/Health/Health.hpp"
+#include "Usage/Types/Name/Name.hpp"
+#include "Usage/Types/Protection/Protection.hpp"
+#include "Usage/Types/WearContainer/WearContainer.hpp"
 
 template <typename TYPE>
 using Living = UserPropertyConceptAdapter<Health, Livingable<TYPE>>::template type<TYPE>;

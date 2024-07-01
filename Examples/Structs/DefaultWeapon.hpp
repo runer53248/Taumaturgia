@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "Usage/Types/Damage.hpp"
+#include "Usage/Types/Damage/Damage.hpp"
 
 #ifdef WITH_ADD_PROPERTIES
 struct EmptyType {};

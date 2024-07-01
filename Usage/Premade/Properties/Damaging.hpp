@@ -3,8 +3,8 @@
 #include <variant>
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
-#include "Usage/Types/Damage.hpp"
-#include "Usage/Types/Name.hpp"
+#include "Usage/Types/Damage/Damage.hpp"
+#include "Usage/Types/Name/Name.hpp"
 
 namespace impl {
 inline constinit const char damaging_type_name[] = "Damaging";

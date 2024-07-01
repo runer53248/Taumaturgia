@@ -1,7 +1,7 @@
 #pragma once
 #include <array>
 #include <numeric>
-#include "Usage/Types/EffectTypeContainer.hpp"
+#include "Usage/Types/EffectTypeContainer/EffectTypeContainer.hpp"
 #include "Usage/Types/Enums/BodyLocation.hpp"
 
 class ArmorClass {

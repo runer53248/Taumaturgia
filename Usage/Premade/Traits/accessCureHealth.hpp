@@ -1,5 +1,5 @@
 #pragma once
-#include "Usage/Concepts/CureHealthConcepts.hpp"
+#include "Usage/Types/CureHealth/CureHealthConcepts.hpp"
 
 namespace traits {
 

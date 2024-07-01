@@ -1,5 +1,5 @@
 #pragma once
-#include "Usage/Concepts/ArmorWearConcepts.hpp"
+#include "Usage/Types/WearContainer/ArmorWearConcepts.hpp"
 
 namespace traits {
 

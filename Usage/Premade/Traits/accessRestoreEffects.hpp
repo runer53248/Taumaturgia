@@ -1,5 +1,5 @@
 #pragma once
-#include "Usage/Concepts/RestoreEffectsConcepts.hpp"
+#include "Usage/Types/EffectTypeContainer/RestoreEffectsConcepts.hpp"
 
 namespace traits {
 

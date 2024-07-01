@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Usage/Types/Health.hpp"
+#include "Usage/Types/Health/Health.hpp"
 #include "PrintWrapper.hpp"
 
 auto& operator<<(std::ostream& out, const Health& health) {

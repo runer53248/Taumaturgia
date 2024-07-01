@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Usage/Types/Damage.hpp"
+#include "Usage/Types/Damage/Damage.hpp"
 #include "PrintDamageType.hpp"
 #include "PrintDuration.hpp"
 #include "PrintEffectState.hpp"

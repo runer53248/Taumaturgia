@@ -3,8 +3,8 @@
 #include <variant>
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
-#include "Usage/Types/EffectTypeContainer.hpp"
-#include "Usage/Types/Name.hpp"
+#include "Usage/Types/EffectTypeContainer/EffectTypeContainer.hpp"
+#include "Usage/Types/Name/Name.hpp"
 
 namespace impl {
 inline constinit const char restoring_type_name[] = "Restoring";
