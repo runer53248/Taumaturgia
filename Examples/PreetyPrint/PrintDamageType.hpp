@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Usage/Types/Enums/DamageType.hpp"
+#include "Usage/Enums/DamageType.hpp"
 
 constexpr const char* toString(DamageType damageType) noexcept {
     switch (damageType) {

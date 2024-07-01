@@ -2,7 +2,7 @@
 #include <array>
 #include <numeric>
 #include "Usage/Types/EffectTypeContainer/EffectTypeContainer.hpp"
-#include "Usage/Types/Enums/BodyLocation.hpp"
+#include "Usage/Enums/BodyLocation.hpp"
 
 class ArmorClass {
 public:

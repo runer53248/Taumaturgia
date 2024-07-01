@@ -2,7 +2,7 @@
 #include <limits>
 #include "Usage/Types/Structs/EffectContainer.hpp"
 #include "Usage/Types/Health/Health.hpp"
-#include "Usage/Types/Enums/CureValueType.hpp"
+#include "Usage/Enums/CureValueType.hpp"
 
 class CureHealth {
 public:

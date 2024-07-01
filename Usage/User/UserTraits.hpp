@@ -1,7 +1,7 @@
 #pragma once
 #include "Taumaturgia/Traits/UserTypeTraits.hpp"
 #include "Usage/Types/Concepts.hpp"
-#include "Usage/Traits/accessName.hpp"
+#include "Usage/Types/Name/accessName.hpp"
 
 using Damagingable_trait = traits::accessType<Damage>;
 using Healingable_trait = traits::accessType<CureHealth>;

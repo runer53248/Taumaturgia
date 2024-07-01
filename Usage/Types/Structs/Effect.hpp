@@ -2,8 +2,8 @@
 #include <stdexcept>
 #include <vector>
 #include "Duration.hpp"
-#include "Usage/Types/Enums/EffectState.hpp"
-#include "Usage/Types/Enums/EffectType.hpp"
+#include "Usage/Enums/EffectState.hpp"
+#include "Usage/Enums/EffectType.hpp"
 
 // enum class EffectStatusModifier {
 //     Suspended,

@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Usage/Types/Enums/DurationType.hpp"
+#include "Usage/Enums/DurationType.hpp"
 
 constexpr const char* toString(DurationType duration) noexcept {
 switch (duration) {

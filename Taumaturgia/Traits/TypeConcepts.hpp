@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Traits/Helpers/traits_helper.hpp"
+#include "Helpers/traits_helper.hpp"
 
 namespace traits {
 

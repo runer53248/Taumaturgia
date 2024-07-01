@@ -1,6 +1,6 @@
 #pragma once
 #include "Taumaturgia/Strategies/GetStrategy.hpp"
-#include "Usage/Types/Enums/Properties.hpp"
+#include "Usage/Enums/Properties.hpp"
 
 // * this version return optional variant of reference_wraper of types
 // template <Properties PROPERTY, Gettingable GET_TYPE>

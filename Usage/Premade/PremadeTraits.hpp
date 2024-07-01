@@ -1,11 +1,5 @@
 #pragma once
-#include "Traits/accessArmorWear.hpp"
-#include "Traits/accessCureHealth.hpp"
-#include "Traits/accessDamage.hpp"
-#include "Traits/accessHealth.hpp"
-#include "Traits/accessProtection.hpp"
-#include "Traits/accessRestoreEffects.hpp"
-#include "Usage/Traits/accessName.hpp"
+#include "Usage/Types/PremadeTraits.hpp"
 
 using Damagingable_trait = traits::accessDamage;
 using Healingable_trait = traits::accessCureHealth;

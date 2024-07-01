@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <iterator>  // std::inserter
 #include <set>
-#include "Usage/Types/Enums/EffectType.hpp"
+#include "Usage/Enums/EffectType.hpp"
 
 class EffectTypeContainer {
 public:

@@ -1,5 +1,5 @@
 #pragma once
-#include "Structs/accessType.hpp"
+#include "accessType.hpp"
 
 template <typename T, typename RESULT_TYPE>
 concept accessType_trait_able = traits::helpers::trait_accessable<T, traits::accessType<RESULT_TYPE>, RESULT_TYPE>;
