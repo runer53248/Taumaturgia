@@ -3,8 +3,8 @@
 #include "Usage/Types/Damage/Damage.hpp"
 
 #ifdef WITH_ADD_PROPERTIES
-struct EmptyType {};
-using DefaultWeapon = add_properties<EmptyType, Naming, Damaging>;
+#include "EmptyType.hpp"
+using DefaultWeapon = add_properties<Type, Naming, Damaging>;
 #else
 
 struct DefaultWeapon {

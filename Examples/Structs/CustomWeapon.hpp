@@ -2,12 +2,23 @@
 #include "DefaultWeapon.hpp"
 #include "Usage/DefaultStrategies.hpp"
 
+#ifdef WITH_ADD_PROPERTIES
+struct WithDefaultWeaponVector {
+    std::vector<DefaultWeapon> others{// will be used in AttackStrategy_<CustomWeapon>
+                                      DefaultWeapon{Name{"Light weapon"}, Damage{10}},
+                                      DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
+};
+using CustomWeapon = add_properties<WithDefaultWeaponVector, Naming>;
+#else
+
 struct CustomWeapon {  // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
     Name name;
     std::vector<DefaultWeapon> others{// will be used in AttackStrategy_<CustomWeapon>
                                       DefaultWeapon{Name{"Light weapon"}, Damage{10}},
                                       DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
 };
+
+#endif
 
 static_assert(Damagingable<DefaultWeapon>);
 static_assert(not Damagingable<CustomWeapon>);

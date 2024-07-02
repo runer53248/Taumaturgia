@@ -4,12 +4,14 @@
 #include "Usage/Properties.hpp"
 
 // MARK: Weapon_A
+
 struct Weapon_A {
     std::string name;
     Damage dmg;
 };
 
 // MARK: Weapon_B
+
 class Weapon_B {
 public:
     std::string name;
@@ -25,11 +27,12 @@ private:
 };
 
 // MARK: Weapon_C
+
 class Weapon_C {
 public:
-    std::string name;
+    Name name;
 
-    Weapon_C(const std::string& name, Damage dmg)
+    Weapon_C(const Name& name, Damage dmg)
         : name{name}, dmg{dmg} {}
 
     constexpr auto& Dmg() { return dmg; }
@@ -40,11 +43,14 @@ private:
 };
 
 // MARK: Weapon_D
+
 struct Empty {};
 using Weapon_D = add_properties<Empty, Naming, Damaging>;
 
 #ifdef WITH_ADD_PROPERTIES
-// MARK: CustomAccessType<Damage, Weapon_A>
+
+// MARK: Weapon_A Damage
+
 template <typename T>
     requires std::is_base_of_v<Weapon_A, T>
 struct traits::CustomAccessType<Damage, T> {
@@ -53,7 +59,8 @@ struct traits::CustomAccessType<Damage, T> {
     }
 };
 
-// MARK: CustomAccessType<Damage, Weapon_B>
+// MARK: Weapon_B Damage
+
 template <typename T>
     requires std::is_base_of_v<Weapon_B, T>
 struct traits::CustomAccessType<Damage, T> {
@@ -62,7 +69,8 @@ struct traits::CustomAccessType<Damage, T> {
     }
 };
 
-// MARK: CustomAccessType<Damage, Weapon_C>
+// MARK: Weapon_C Damage
+
 template <typename T>
     requires std::is_base_of_v<Weapon_C, T>
 struct traits::CustomAccessType<Damage, T> {
@@ -70,8 +78,58 @@ struct traits::CustomAccessType<Damage, T> {
         return el.Dmg();
     }
 };
+
+// MARK: name_access concept
+
+template <typename T>
+concept name_access = requires(T t) {
+    { t.name } -> std::convertible_to<std::string>;
+    { std::as_const(t).name } -> std::convertible_to<const std::string>;
+};
+
+// MARK: AccessType Name
+
+template <name_access T>
+struct traits::CustomAccessType<Name, T> {
+    static constexpr decltype(auto) get(name_access auto& el) {
+        return (el.name);
+    }
+};
+
+// MARK: Weapon_A Name
+
+// template <typename T>
+//     requires std::is_base_of_v<Weapon_A, T>
+// struct traits::CustomAccessType<Name, T> {
+//     static constexpr decltype(auto) get(auto& el) {
+//         return (el.name);
+//     }
+// };
+
+// MARK: Weapon_B Name
+
+// template <typename T>
+//     requires std::is_base_of_v<Weapon_B, T>
+// struct traits::CustomAccessType<Name, T> {
+//     static constexpr decltype(auto) get(auto& el) {
+//         return (el.name);
+//     }
+// };
+
+// MARK: Weapon_C Name
+
+// template <typename T>
+//     requires std::is_base_of_v<Weapon_C, T>
+// struct traits::CustomAccessType<Name, T> {
+//     static constexpr decltype(auto) get(auto& el) {
+//         return (el.name);
+//     }
+// };
+
 #else
-// MARK: CustomAccessDamage<Weapon_C>
+
+// MARK: Weapon_C Damage
+
 template <typename T>
     requires std::is_base_of_v<Weapon_C, T>
 struct traits::CustomAccessDamage<T> {
@@ -82,56 +140,49 @@ struct traits::CustomAccessDamage<T> {
 #endif
 
 // MARK: attack_impl_x
+
 inline constexpr ActionStatus attack_impl_x(Damagingable auto& obj, Object* owner, Object*) {
     std::cout << "X owner name: " << owner->name() << "   " << Damagingable_trait::get(obj) << '\n';
     return {};
 }
 
-#ifdef NO_PREMADE_STRATEGIES
 // MARK: UserStrategy_<Damage, Weapon_D, ...>
-// override UserStrategy_<T, Default, ActionStatus>
-template <>
-struct UserStrategy_<Damage, Weapon_D> {
-    constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) const {
-        return attack_impl_x(obj, owner, nullptr);
-    }
-};
-#else
 // MARK: AttackStrategy_<Weapon_D>
-// to override AttackStrategy_<Default>
+
 template <>
-struct AttackStrategy_<Weapon_D> {
+#ifdef NO_PREMADE_STRATEGIES
+struct UserStrategy_<Damage, Weapon_D> {// override UserStrategy_<T, Default, ActionStatus>
+#else
+struct AttackStrategy_<Weapon_D> {// override AttackStrategy_<Default>
+#endif
     constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) const {
         return attack_impl_x(obj, owner, nullptr);
     }
 };
-#endif
 
 // MARK: attack_impl
+
 inline constexpr ActionStatus attack_impl(Damagingable auto& obj, Object* owner, Object*) {
     std::cout << "owner name: " << owner->name() << "   " << Damagingable_trait::get(obj) << '\n';
     return {};
 }
 
-#ifdef NO_PREMADE_STRATEGIES
 // MARK: UserStrategy_<Damage, Damagingable>
-template <Damagingable T>
-struct UserStrategy_<Damage, T> {
-    constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) const {
-        return attack_impl(obj, owner, nullptr);
-    }
-};
-#else
 // MARK: AttackStrategy_<Damagingable>
+
 template <Damagingable T>
+#ifdef NO_PREMADE_STRATEGIES
+struct UserStrategy_<Damage, T> {
+#else
 struct AttackStrategy_<T> {
+#endif
     constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) const {
         return attack_impl(obj, owner, nullptr);
     }
 };
-#endif
 
 // MARK: main
+
 int main(int, char** argv) {
     static_assert(Damagingable<Weapon_A>);
     static_assert(Damagingable<Weapon_B>);
@@ -174,5 +225,7 @@ int main(int, char** argv) {
     std::cout << "Weapon_D = " << name<Weapon_D>() << "\n";
     std::cout << "\n";
     std::cout << "Damagingable_trait = " << name<Damagingable_trait>() << "\n";
-    std::cout << "program = " << argv[0] << "\n";
+    std::cout << "Namingable_trait = " << name<Namingable_trait>() << "\n";
+    std::cout << "program = " << argv[0] << "\n"
+              << "\n";
 }

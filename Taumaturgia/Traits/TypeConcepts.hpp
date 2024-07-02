@@ -18,8 +18,8 @@ concept GetTypeAccessable = requires(std::remove_cvref_t<T> x) {
 template <typename TYPE, typename T>
 struct CustomAccessType;
 
-template <typename T, typename TYPE>
-concept CustomTypeAccessable = helpers::custom_type_trait_accessable<T, CustomAccessType, TYPE>;
+template <typename T, typename TYPE, typename CONVERT_TYPE = void>
+concept CustomTypeAccessable = helpers::custom_type_trait_accessable<T, CustomAccessType, TYPE, CONVERT_TYPE>;
 
 template <typename T, typename TYPE>
 concept GetTypeTemplateAccessable = helpers::get_type_template_accessable<T, TYPE>;
