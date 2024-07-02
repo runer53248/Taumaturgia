@@ -32,6 +32,7 @@ auto propertiesExistanceMap() {
         {Properties::Damage, is_attack_strategy<T>},
         {Properties::Restore, is_restore_strategy<T>},
         {Properties::Wear, is_wear_strategy<T>},
+        // {Properties::Name, is_name_strategy<T>},
         {Properties::Get, Gettingable<T>}};
 }
 
@@ -44,6 +45,7 @@ auto propertiesCustomizationMap() {
         {Properties::Damage, is_custom_attack_strategy<T>},
         {Properties::Restore, is_custom_restore_strategy<T>},
         {Properties::Wear, is_custom_wear_strategy<T>},
+        // {Properties::Name, is_custom_name_strategy<T>},
         {Properties::Get, is_custom_get_strategy<T>}
     };
 }

@@ -107,6 +107,8 @@ static_assert(is_custom_alive_strategy<LivingTile>);
 
 // MARK: main
 
+#include "Examples/demangle_type_name.hpp"
+
 int main() {
     auto item = Item{
         Name{"Book"},
@@ -151,4 +153,12 @@ int main() {
 
     action_impl::get_impl(item, sProperties<Properties::Health>{});
     action_impl::get_impl(tile, sProperties<Properties::Damage>{});
+
+    auto name_result = action_impl::get_impl(tile, Properties::Name);
+    std::cout << '\n'
+              << name<decltype(name_result)>() << '\n';
+
+    auto name_result_ = action_impl::get_impl(tile, sProperties<Properties::Name>{});
+    std::cout << '\n'
+              << name<decltype(name_result_)>() << '\n';
 }

@@ -35,6 +35,8 @@ constexpr auto get_impl(T& type, Properties param) -> to_optional_get_variant<T>
             return getStrategy_.template operator()<Properties::Restore>(type);
         case Properties::Wear:
             return getStrategy_.template operator()<Properties::Wear>(type);
+        case Properties::Name:
+            return getStrategy_.template operator()<Properties::Name>(type);
         default:
             return {};
         };
@@ -42,7 +44,7 @@ constexpr auto get_impl(T& type, Properties param) -> to_optional_get_variant<T>
 }
 
 template <typename T, Properties P>
-constexpr auto get_impl(T& type, sProperties<P>) -> to_optional_get_variant<T> {  // TODO: implement test for get
+constexpr auto get_impl(T& type, sProperties<P>) {  // TODO: implement test for get
     if constexpr (not Gettingable<T>) {
         return {};
     } else {

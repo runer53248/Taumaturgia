@@ -41,6 +41,12 @@ struct properties_info<Properties::Wear> {
     using trait = Wearingable_trait;
 };
 
+template <>
+struct properties_info<Properties::Name> {
+    using type = Name;
+    using trait = Namingable_trait;
+};
+
 }  // namespace impl
 
 template <Properties PROPERTY>

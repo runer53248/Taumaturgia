@@ -108,6 +108,7 @@ inline void print_person(const Object& person) {
 inline void print_object_properties(const Object& obj) {
     std::cout << "Name: " << obj.name() << '\n';
     std::cout << " [can get] " << obj.hasProperty(Properties::Get) << '\n';
+    // std::cout << " [can name] " << obj.hasProperty(Properties::Name) << '\n';
     std::cout << " [can alive] " << obj.hasProperty(Properties::Health) << '\n';
     std::cout << " [can attack] " << obj.hasProperty(Properties::Damage) << '\n';
     std::cout << " [can defend] " << obj.hasProperty(Properties::Protection) << '\n';
@@ -121,6 +122,7 @@ inline void print_customized_properties(const auto& type) {
     const auto map = propertiesCustomizationMap<std::remove_cvref_t<decltype(type)>>();
 
     std::cout << " [custom get] " << map.at(Properties::Get) << '\n';
+    // std::cout << " [custom name] " << map.at(Properties::Name) << '\n';
     std::cout << " [custom alive] " << map.at(Properties::Health) << '\n';
     std::cout << " [custom attack] " << map.at(Properties::Damage) << '\n';
     std::cout << " [custom defend] " << map.at(Properties::Protection) << '\n';
@@ -135,6 +137,9 @@ inline void print_object(const Object& obj) {
     print_liveable(obj);
     std::cout << '\n';
 
+    // if (obj.hasProperty(Properties::Name)) {
+        // getOpt<Properties::Health>(obj).and_then(print_name).and_then(print_new_line);
+    // }
     if (obj.hasProperty(Properties::Health)) {
         getOpt<Properties::Health>(obj).and_then(print_hp).and_then(print_new_line);
     }

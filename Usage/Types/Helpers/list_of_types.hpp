@@ -7,4 +7,5 @@ using list_of_types = list<
     properties_type<Properties::Damage>,
     properties_type<Properties::Protection>,
     properties_type<Properties::Restore>,
-    properties_type<Properties::Wear>>;
+    properties_type<Properties::Wear>,
+    properties_type<Properties::Name> >;

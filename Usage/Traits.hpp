@@ -25,4 +25,5 @@ concept Gettingable = Damagingable<T> or
                       Livingable<T> or
                       Protectingable<T> or
                       Restoringable<T> or
+                    //   Namingable<T> or
                       Wearingable<T>;
