@@ -48,7 +48,7 @@ using Tile = add_properties<Empty<>, Naming, Damaging>;
 using LivingTile = add_properties<Tile, Living>;
 #else
 struct Tile {
-    std::string name;
+    Name name;
     Damage dmg;
 };
 struct LivingTile : Tile {
@@ -141,18 +141,27 @@ int main() {
     print_customized_properties(living_tile);
     print_object(living_tile);
 
+    std::cout << '\n';
+
     static_assert(std::is_same_v<
-                  get_result_type<Properties::Health, Tile>,
-                  std::optional<std::reference_wrapper<Health>>>);
+                  get_result_type<Properties::Health>,
+                  add_optional_ref_wrapper<Health>>);
     static_assert(std::is_same_v<
-                  get_result_type<Properties::Health, const Tile>,
-                  std::optional<std::reference_wrapper<const Health>>>);
+                  get_result_type<Properties::Health, true>,
+                  add_optional_ref_wrapper<const Health>>);
+
     static_assert(not is_properties_accessable<Properties::Health, Tile>);
     static_assert(is_properties_accessable<Properties::Health, LivingTile>);
 
+    static_assert(is_properties_accessable<Properties::Name, Tile>);
+    static_assert(is_properties_accessable<Properties::Name, LivingTile>);
+
+    static_assert(properties_trait<Properties::Name>::template accessable<Tile>);
+    static_assert(properties_trait<Properties::Name>::template accessable<LivingTile>);
+
     std::optional health_result = action_impl::get_impl(item, sProperties<Properties::Health>{});
     std::optional damage_result = action_impl::get_impl(tile, sProperties<Properties::Damage>{});
-    std::optional name_result = action_impl::get_impl(tile, sProperties<Properties::Name>{});
+    std::optional name_result = action_impl::get_impl(tile, sProperties<Properties::Name>{});  // return value only if type is Name
     std::cout << '\n';
     std::cout << "health_result = "
               << name<decltype(health_result)>() << '\n';
@@ -160,6 +169,19 @@ int main() {
               << name<decltype(damage_result)>() << '\n';
     std::cout << "name_result = "
               << name<decltype(name_result)>() << '\n';
+    if (name_result) {
+        std::cout << "name = " << name_result.value() << '\n';
+    }
+    std::cout << "name = "
+              << properties_trait<Properties::Name>::get(tile) << '\n'  // return value if type is Name or std::string
+              << '\n';
+    std::cout << "name trait type = "
+              << name<decltype(properties_trait<Properties::Name>::get(tile))>() << '\n'
+              << '\n';
+
+    std::cout << "Protection trait type = "
+              << name<decltype(action_impl::get_impl(tile, sProperties<Properties::Protection>{}))>() << '\n'  // return void
+              << '\n';
 
     std::optional name_result_2 = action_impl::get_impl(tile, Properties::Name);
 

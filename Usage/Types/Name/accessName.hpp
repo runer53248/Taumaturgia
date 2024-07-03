@@ -7,6 +7,9 @@ namespace traits {
 CreateAccessTrait(Name, name, Name);
 #else
 struct accessName {
+    template <typename T>
+    static const bool accessable = helpers::trait_access_convertable<T, accessName, std::string>;
+
     static constexpr auto& get(NameAccessable auto& el) noexcept {
         return el.name;
     }

@@ -1,5 +1,6 @@
 #pragma once
 #include "Usage/Enums/Properties.hpp"
+// #include "Usage/Traits.hpp"
 
 namespace impl {
 
@@ -56,13 +57,14 @@ template <Properties PROPERTY>
 using properties_trait = impl::properties_info<PROPERTY>::trait;
 
 template <Properties PROPERTY, typename T>
-concept is_properties_accessable = traits::helpers::trait_accessable<std::remove_reference_t<T>,
-                                                                     properties_trait<PROPERTY>,
-                                                                     properties_type<PROPERTY>>;
+concept is_properties_accessable = properties_trait<PROPERTY>::template accessable<std::remove_reference_t<T>>;
 
-template <Properties PROPERTY, typename T>
-using get_result_type = std::optional<std::reference_wrapper<
+template <typename T>
+using add_optional_ref_wrapper = std::optional<std::reference_wrapper<T>>;
+
+template <Properties PROPERTY, bool IS_CONST = false>
+using get_result_type = add_optional_ref_wrapper<
     std::conditional_t<
-        std::is_const_v<T>,
+        IS_CONST,
         const properties_type<PROPERTY>,
-        properties_type<PROPERTY>>>>;
+        properties_type<PROPERTY>>>;

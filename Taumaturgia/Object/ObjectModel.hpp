@@ -46,8 +46,8 @@ constexpr auto get_impl(T& type, Properties param) -> to_optional_get_variant<T>
 template <typename T, Properties P>
 constexpr auto get_impl(T& type, sProperties<P>) {  // TODO: implement test for get
                                                     // -> decltype(std::declval<GetStrategy<T>>().template operator()<P>(std::declval<T&>())) {
-    if constexpr (not Gettingable<T>) {
-        return {};
+    if constexpr (not is_properties_accessable<P, T> ) {
+        return;
     } else {
         static constinit GetStrategy<std::remove_const_t<T>> getStrategy_{};
         return getStrategy_.template operator()<P>(type);

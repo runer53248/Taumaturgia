@@ -5,6 +5,11 @@ namespace traits {
 
 template <typename TYPE, typename CONVERT_TYPE = void>
 struct accessType {
+    template <typename T>
+    static const bool accessable = (std::is_same_v<CONVERT_TYPE, void>)
+                                       ? helpers::trait_accessable<T, accessType<TYPE, CONVERT_TYPE>, TYPE>
+                                       : helpers::trait_access_convertable<T, accessType<TYPE, CONVERT_TYPE>, CONVERT_TYPE>;
+
     static auto& get(TypeAccessable<TYPE> auto& el) noexcept {
         return el.type;
     }

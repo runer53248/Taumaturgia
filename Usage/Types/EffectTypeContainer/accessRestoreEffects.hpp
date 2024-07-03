@@ -7,6 +7,9 @@ namespace traits {
 CreateAccessTrait(RestoreEffects, restoreEffects, EffectTypeContainer);
 #else
 struct accessRestoreEffects {
+    template <typename T>
+    static const bool accessable = helpers::trait_accessable<T, accessRestoreEffects, EffectTypeContainer>;
+
     static constexpr auto& get(RestoreEffectsAccessable auto& el) noexcept {
         return el.restoreEffects;
     }

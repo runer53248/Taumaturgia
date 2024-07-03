@@ -7,6 +7,9 @@ namespace traits {
 CreateAccessTrait(Protection, protection, Protection);
 #else
 struct accessProtection {
+    template <typename T>
+    static const bool accessable = helpers::trait_accessable<T, accessProtection, Protection>;
+
     static constexpr auto& get(ProtectionAccessable auto& el) noexcept {
         return el.protection;
     }

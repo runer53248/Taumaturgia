@@ -7,6 +7,9 @@ namespace traits {
 CreateAccessTrait(ArmorWear, armorWear, WearContainer);
 #else
 struct accessArmorWear {
+    template <typename T>
+    static const bool accessable = helpers::trait_accessable<T, accessArmorWear, WearContainer>;
+
     static constexpr auto& get(ArmorWearAccessable auto& el) noexcept {
         return el.armorWear;
     }

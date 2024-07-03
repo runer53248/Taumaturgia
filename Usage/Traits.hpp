@@ -6,19 +6,20 @@
 #endif
 
 template <typename T>
-concept Damagingable = traits::helpers::trait_accessable<T, Damagingable_trait, Damage>;
+concept Damagingable = Damagingable_trait::accessable<T>;
 template <typename T>
-concept Healingable = traits::helpers::trait_accessable<T, Healingable_trait, CureHealth>;
+concept Healingable = Healingable_trait::accessable<T>;
 template <typename T>
-concept Livingable = traits::helpers::trait_accessable<T, Livingable_trait, Health>;
+concept Livingable = Livingable_trait::accessable<T>;
 template <typename T>
-concept Protectingable = traits::helpers::trait_accessable<T, Protectingable_trait, Protection>;
+concept Protectingable = Protectingable_trait::accessable<T>;
 template <typename T>
-concept Restoringable = traits::helpers::trait_accessable<T, Restoringable_trait, EffectTypeContainer>;
+concept Restoringable = Restoringable_trait::accessable<T>;
 template <typename T>
-concept Wearingable = traits::helpers::trait_accessable<T, Wearingable_trait, WearContainer>;
+concept Wearingable = Wearingable_trait::accessable<T>;
 template <typename T>
-concept Namingable = traits::helpers::trait_access_convertable<T, Namingable_trait, std::string>;
+concept Namingable = Namingable_trait::accessable<T>;
+
 template <typename T>
 concept Gettingable = Damagingable<T> or
                       Healingable<T> or

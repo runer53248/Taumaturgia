@@ -7,6 +7,9 @@ namespace traits {
 CreateAccessTrait(CureHealth, cureHealth, CureHealth);
 #else
 struct accessCureHealth {
+    template <typename T>
+    static const bool accessable = helpers::trait_accessable<T, accessCureHealth, CureHealth>;
+
     static constexpr auto& get(CureHealthAccessable auto& el) noexcept {
         return el.cureHealth;
     }
