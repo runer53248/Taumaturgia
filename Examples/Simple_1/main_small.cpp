@@ -1,6 +1,11 @@
 #include <vector>
 #include "Examples/Main/Print.hpp"
-#include "Examples/Main/structs.hpp"
+
+#ifdef WITH_ADD_PROPERTIES
+#include "Examples/Main/structs_aP.hpp"
+#else
+#include "Examples/Main/structs_no_aP.hpp"
+#endif
 
 int main() {
     static_assert(Namingable<player_type>);

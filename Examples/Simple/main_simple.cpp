@@ -1,6 +1,5 @@
 #include <vector>
 #include "Examples/PreetyPrint/preety_print.hpp"
-#include "Usage/Properties.hpp"
 #include "Usage/DefaultStrategies.hpp"
 
 // MARK: Item

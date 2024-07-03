@@ -1,10 +1,9 @@
 #pragma once
+#include "Taumaturgia/Strategies/UserStrategy.hpp"
 
 class Object;
 enum class ActionStatus;
 enum class AliveStatus : signed char;
-
-#include "Taumaturgia/Strategies/UserStrategy.hpp"
 
 template <typename T>
 using AliveStrategy = UserStrategy<Health, T, Livingable<T>, std::optional<AliveStatus>>;

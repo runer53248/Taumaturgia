@@ -1,7 +1,6 @@
 #include <vector>
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Usage/DefaultStrategies.hpp"
-#include "Usage/Properties.hpp"
 
 // MARK: Empty
 

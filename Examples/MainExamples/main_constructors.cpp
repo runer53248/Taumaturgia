@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include "Examples/PreetyPrint/preety_print.hpp"
-#include "Usage/Properties.hpp"
 #include "Usage/DefaultStrategies.hpp"
 
 struct Potion {

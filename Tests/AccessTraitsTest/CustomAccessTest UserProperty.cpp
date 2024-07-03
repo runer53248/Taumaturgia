@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include "Usage/DefaultStrategies.hpp"
-#include "Usage/Properties.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
 using namespace testing;

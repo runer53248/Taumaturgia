@@ -1,6 +1,5 @@
 #pragma once
 #include "Usage/Properties.hpp"
-#include "Taumaturgia/Properties/UserProperty.hpp"
 
 #ifdef NO_PREMADE_PROPERTIES
 namespace impl {

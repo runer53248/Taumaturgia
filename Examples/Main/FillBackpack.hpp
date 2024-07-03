@@ -1,5 +1,9 @@
 #pragma once
-#include "structs.hpp"
+#ifdef WITH_ADD_PROPERTIES
+#include "structs_aP.hpp"
+#else
+#include "structs_no_aP.hpp"
+#endif
 
 void fillBackpack(auto& backpack) {
     backpack.emplace_back(weapon_1{

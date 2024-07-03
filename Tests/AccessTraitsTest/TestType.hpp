@@ -1,5 +1,4 @@
 #pragma once
-#include "Usage/Properties.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
 struct MyType {};
