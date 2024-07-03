@@ -151,14 +151,23 @@ int main() {
     static_assert(not is_properties_accessable<Properties::Health, Tile>);
     static_assert(is_properties_accessable<Properties::Health, LivingTile>);
 
-    action_impl::get_impl(item, sProperties<Properties::Health>{});
-    action_impl::get_impl(tile, sProperties<Properties::Damage>{});
-
-    auto name_result = action_impl::get_impl(tile, Properties::Name);
-    std::cout << '\n'
+    std::optional health_result = action_impl::get_impl(item, sProperties<Properties::Health>{});
+    std::optional damage_result = action_impl::get_impl(tile, sProperties<Properties::Damage>{});
+    std::optional name_result = action_impl::get_impl(tile, sProperties<Properties::Name>{});
+    std::cout << '\n';
+    std::cout << "health_result = "
+              << name<decltype(health_result)>() << '\n';
+    std::cout << "damage_result = "
+              << name<decltype(damage_result)>() << '\n';
+    std::cout << "name_result = "
               << name<decltype(name_result)>() << '\n';
 
-    auto name_result_ = action_impl::get_impl(tile, sProperties<Properties::Name>{});
+    std::optional name_result_2 = action_impl::get_impl(tile, Properties::Name);
+
     std::cout << '\n'
-              << name<decltype(name_result_)>() << '\n';
+              << "name_result_2 = "
+              << name<decltype(name_result_2)>() << '\n';
+    std::cout << '\n'
+              << "name_result_2_unpack = "
+              << name<unpack_to_list_t<decltype(name_result_2)>>() << '\n';
 }

@@ -21,6 +21,21 @@ using get_variant_const_type = boost::mp11::mp_append<
 using optional_get_variant_type = std::optional<get_variant_type>;
 using optional_get_variant_const_type = std::optional<get_variant_const_type>;
 
+template <typename... Args>
+struct unpack_to_list : std::optional<std::variant<std::monostate, std::reference_wrapper<Args>...>> {
+    using type = list<std::remove_const_t<Args>...>;
+};
+
+template <typename T>
+using unpack_to_list_t = decltype(unpack_to_list{T{}})::type;
+
+static_assert(std::is_same_v<
+              unpack_to_list_t<optional_get_variant_type>,
+              list_of_types>);
+static_assert(std::is_same_v<
+              unpack_to_list_t<optional_get_variant_const_type>,
+              list_of_types>);
+
 template <typename T>
 using to_optional_get_variant = std::conditional_t<
     std::is_const_v<std::remove_reference_t<T>>,
