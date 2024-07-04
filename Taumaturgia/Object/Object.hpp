@@ -19,11 +19,11 @@ private:
     public:
         virtual constexpr ~ObjectConcept() = default;
 
-        virtual constexpr std::string name() const = 0;
-        virtual constexpr std::optional<AliveStatus> alive() const = 0;
-        virtual constexpr ActionStatus action(Actions action, Object* owner, Object* target) const = 0;
-        virtual constexpr optional_get_variant_type get(Properties param) = 0;
-        virtual constexpr optional_get_variant_const_type get(Properties param) const = 0;
+        virtual constexpr auto name() const -> std::string = 0;
+        virtual constexpr auto alive() const -> std::optional<AliveStatus> = 0;
+        virtual constexpr auto action(Actions action, Object* owner, Object* target) const -> ActionStatus = 0;
+        virtual constexpr auto get(Properties param) -> optional_get_variant_type = 0;
+        virtual constexpr auto get(Properties param) const -> optional_get_variant_const_type = 0;
     };
 
     template <Namingable T>
@@ -32,11 +32,11 @@ private:
         constexpr ObjectModel(const T& type);
         constexpr ~ObjectModel() override = default;
 
-        constexpr std::string name() const override;
-        constexpr std::optional<AliveStatus> alive() const override;
-        constexpr ActionStatus action(Actions action, Object* owner, Object* target) const override;
-        constexpr optional_get_variant_type get(Properties param) override;
-        constexpr optional_get_variant_const_type get(Properties param) const override;
+        constexpr auto name() const -> std::string override;
+        constexpr auto alive() const -> std::optional<AliveStatus> override;
+        constexpr auto action(Actions action, Object* owner, Object* target) const -> ActionStatus override;
+        constexpr auto get(Properties param) -> optional_get_variant_type override;
+        constexpr auto get(Properties param) const -> optional_get_variant_const_type override;
 
     private:
         T type_;
@@ -64,13 +64,12 @@ public:
     bool checkAction(Actions action) const;
     bool hasProperty(Properties property) const;
 
-    template <Properties param>
-    decltype(auto) getOpt(this auto& self) {
+    template <Properties param, typename Self>
+    decltype(auto) getOpt(this Self& self) {
         if (self.hasProperty(param)) {
             return extract_optional_type<param>(self.object_->get(param));
         }
-        using get_result_type = decltype(self.object_->get(param));
-        return extract_optional_type<param>(get_result_type{});
+        return get_result_type<param, std::is_const_v<Self>>{};
     }
 };
 
