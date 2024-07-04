@@ -3,8 +3,11 @@
 
 #ifdef NO_PREMADE_PROPERTIES
 namespace impl {
-constinit const char damaging_type_name[] = "Damaging";
+constinit const char damaging_type_name[] = "UserDamaging";
+constinit const char protecting_type_name[] = "UserProtecting";
 }
+#else
+#include "Taumaturgia/Traits/UserTypeTraits.hpp"
 #endif
 
 template <typename T>
@@ -23,7 +26,7 @@ using DamagingImproved = std::conditional_t<Damagingable<T>,
 
 template <typename T>
 struct UserProtectingImproved_ : public T {  // example of improving user property
-    using property_data = PropertyData<impl::user_type_name, UserProtectingImproved_, T>;
+    using property_data = PropertyData<impl::protecting_type_name, UserProtectingImproved_, T>;
     using improvement_of = Protecting_impl<T>;
 
     UserProtectingImproved_() noexcept = default;
@@ -35,7 +38,7 @@ using UserProtectingImproved = std::conditional_t<accessType_trait_able<T, Prote
 
 template <typename T>
 struct UserProtectingImproved_2_ : public T {  // example of improving use property
-    using property_data = PropertyData<impl::user_type_name, UserProtectingImproved_2_, T>;
+    using property_data = PropertyData<impl::protecting_type_name, UserProtectingImproved_2_, T>;
     using improvement_of = Protecting_impl<T>;
 
     UserProtectingImproved_2_() noexcept = default;
