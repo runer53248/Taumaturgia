@@ -154,7 +154,7 @@ struct UserStrategy_<Damage, Weapon_D> {// override UserStrategy_<T, Default, Ac
 #else
 struct AttackStrategy_<Weapon_D> {// override AttackStrategy_<Default>
 #endif
-    constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) const {
+    static constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) {
         return attack_impl_x(obj, owner, nullptr);
     }
 };
@@ -175,7 +175,7 @@ struct UserStrategy_<Damage, T> {
 #else
 struct AttackStrategy_<T> {
 #endif
-    constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) const {
+    static constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) {
         return attack_impl(obj, owner, nullptr);
     }
 };

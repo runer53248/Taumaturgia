@@ -9,8 +9,7 @@ namespace action_impl {
 template <typename T>
 constexpr std::optional<AliveStatus> alive(const T& type) {
     if constexpr (is_alive_strategy<T>) {
-        static constinit AliveStrategy<T> strategy_{};
-        return strategy_(type);
+        return AliveStrategy<T>::operator()(type);
     } else {
         return {};
     }
@@ -21,23 +20,23 @@ constexpr auto get_impl(T& type, Properties param) -> to_optional_get_variant<T>
     if constexpr (not Gettingable<T>) {
         return {};
     } else {
-        static constinit GetStrategy<std::remove_const_t<T>> getStrategy_{};
+        using strategy = GetStrategy<std::remove_const_t<T>>;
 
         switch (param) {
         case Properties::Protection:
-            return getStrategy_.template operator()<Properties::Protection>(type);
+            return strategy::template operator()<Properties::Protection>(type);
         case Properties::Damage:
-            return getStrategy_.template operator()<Properties::Damage>(type);
+            return strategy::template operator()<Properties::Damage>(type);
         case Properties::Health:
-            return getStrategy_.template operator()<Properties::Health>(type);
+            return strategy::template operator()<Properties::Health>(type);
         case Properties::CureHealth:
-            return getStrategy_.template operator()<Properties::CureHealth>(type);
+            return strategy::template operator()<Properties::CureHealth>(type);
         case Properties::Restore:
-            return getStrategy_.template operator()<Properties::Restore>(type);
+            return strategy::template operator()<Properties::Restore>(type);
         case Properties::Wear:
-            return getStrategy_.template operator()<Properties::Wear>(type);
+            return strategy::template operator()<Properties::Wear>(type);
         case Properties::Name:
-            return getStrategy_.template operator()<Properties::Name>(type);
+            return strategy::template operator()<Properties::Name>(type);
         default:
             return {};
         };
@@ -46,12 +45,10 @@ constexpr auto get_impl(T& type, Properties param) -> to_optional_get_variant<T>
 
 template <typename T, Properties P>
 constexpr auto get_impl(T& type, sProperties<P>) {  // TODO: implement test for get
-                                                    // -> decltype(std::declval<GetStrategy<T>>().template operator()<P>(std::declval<T&>())) {
     if constexpr (not is_properties_accessable<P, T>) {
         return;
     } else {
-        static constinit GetStrategy<std::remove_const_t<T>> getStrategy_{};
-        return getStrategy_.template operator()<P>(type);
+        return GetStrategy<std::remove_const_t<T>>::template operator()<P>(type);
     }
 }
 

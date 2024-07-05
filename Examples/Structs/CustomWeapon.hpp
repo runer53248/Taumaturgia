@@ -41,7 +41,7 @@ struct AttackStrategy_<T> {
     //     return base_status;
     // }
 
-    constexpr ActionStatus operator()(auto& obj, Object* owner, Object* target) const {  // CustomWeapon is not Damagingable by default
+    static constexpr ActionStatus operator()(auto& obj, Object* owner, Object* target) {  // CustomWeapon is not Damagingable by default
         auto* suspect = Whom(owner, target);
         ActionStatus status{ActionStatus::None};
 

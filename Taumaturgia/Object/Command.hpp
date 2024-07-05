@@ -20,8 +20,7 @@ public:
 
     ActionStatus execute(Object* owner, Object* target) override {
         if constexpr (Strategable<STRATEGY, T, ActionStatus, Object*, Object*>) {
-            static constinit STRATEGY<T> strategy{};
-            return strategy(type_, owner, target);
+            return STRATEGY<T>::operator()(type_, owner, target);
         }
         return ActionStatus::None;
     }

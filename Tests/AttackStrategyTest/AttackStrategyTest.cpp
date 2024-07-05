@@ -24,7 +24,7 @@
     #else
     struct AttackStrategy_<CustomWeapon> {
     #endif
-        constexpr ActionStatus operator()(auto& obj, Object* owner, Object* target) const {
+        static constexpr ActionStatus operator()(auto& obj, Object* owner, Object* target) {
             auto* suspect = Whom(owner, target);
             ActionStatus status{ActionStatus::None};
 

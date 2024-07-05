@@ -26,7 +26,7 @@ struct Item {
 template <>
 struct GetStrategy_<Item> {
     template <Properties PROPERTY>
-    constexpr auto operator()(Gettingable auto& obj) const {
+    static constexpr auto operator()(Gettingable auto& obj) {
         if constexpr (PROPERTY == Properties::Health) {
             std::cout << 'x';
             return default_get_behavior<Properties::Health>(obj);
@@ -65,12 +65,12 @@ struct UserStrategy_<Health, T> {
 #else
 struct AliveStrategy_<T> {
 #endif
-    constexpr std::optional<AliveStatus> operator()(Livingable auto&) const {  // when have Livingable properties
+    static constexpr std::optional<AliveStatus> operator()(Livingable auto&) {  // when have Livingable properties
         std::cout << " [play death]";
         return AliveStatus::Death;
     }
 
-    constexpr std::optional<AliveStatus> operator()(auto&) const {  // when not have Livingable properties
+    static constexpr std::optional<AliveStatus> operator()(auto&) {  // when not have Livingable properties
         std::cout << " [imitating living]";
         return AliveStatus::Living;
     }
@@ -82,7 +82,7 @@ template <typename T>
     requires std::is_base_of_v<Tile, T>
 struct GetStrategy_<T> {
     template <Properties PROPERTY>
-    constexpr auto operator()(Gettingable auto& obj) const {
+    static constexpr auto operator()(Gettingable auto& obj) {
         if constexpr (PROPERTY == Properties::Health) {
             std::cout << 'H';
             return default_get_behavior<Properties::Health>(obj);
