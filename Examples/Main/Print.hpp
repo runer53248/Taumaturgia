@@ -22,7 +22,7 @@ void get_print_const_ref(const Object& obj) {
 // MARK: get_print_ref
 
 // non-const object will return optional to non-const reference wraper - printing will then show [&]
-void get_print_ref(is_object auto& obj) {
+void get_print_ref(type_of<Object> auto& obj) {
     std::cout << "get_print_ref:\n";
     obj.template getOpt<Properties::Health>()  // getOpt as method
         .and_then(print_hp)

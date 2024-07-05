@@ -6,17 +6,24 @@
 #ifndef _MSC_VER
 #include <experimental/propagate_const>
 #endif
-#include "Command.hpp"
+#include "Usage/Strategies.hpp"
 
 enum class Actions;
+class CommandConcept;
 
-template <typename T>
-concept is_object = std::same_as<T, Object> or std::same_as<T, const Object>;
+template <typename T, typename TYPE>
+concept type_of = std::same_as<std::remove_const_t<T>, TYPE>;
 
 class Object {
 private:
     class ObjectConcept {  // TODO: implement copy
     public:
+#ifndef _MSC_VER
+        using ptr = std::experimental::propagate_const<std::unique_ptr<ObjectConcept>>;
+#else
+        using ptr = std::unique_ptr<ObjectConcept>;
+#endif
+
         virtual constexpr ~ObjectConcept() = default;
 
         virtual constexpr auto name() const -> std::string = 0;
@@ -27,7 +34,7 @@ private:
     };
 
     template <Namingable T>
-    class ObjectModel : public ObjectConcept {
+    class ObjectModel final : public ObjectConcept {
     public:
         constexpr ObjectModel(const T& type);
         constexpr ~ObjectModel() override = default;
@@ -43,11 +50,7 @@ private:
         std::unordered_map<Actions, std::shared_ptr<CommandConcept>> commands_;
     };
 
-#ifndef _MSC_VER
-    std::experimental::propagate_const<std::unique_ptr<ObjectConcept>> object_;
-#else
-    std::unique_ptr<ObjectConcept> object_;
-#endif
+    ObjectConcept::ptr object_;
     const std::unordered_map<Properties, const bool> has_;
 
 public:
@@ -80,7 +83,7 @@ ActionStatus heal(const Object& object, Object* owner, Object* target = nullptr)
 ActionStatus restore(const Object& object, Object* owner, Object* target = nullptr);
 
 template <Properties param>
-decltype(auto) getOpt(is_object auto& object) {
+decltype(auto) getOpt(type_of<Object> auto& object) {
     return object.template getOpt<param>();
 }
 
