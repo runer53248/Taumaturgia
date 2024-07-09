@@ -8,27 +8,23 @@ class CommandConcept {
 public:
     virtual ~CommandConcept() = default;
     virtual ActionStatus execute(Object* owner, Object* target) = 0;
-    virtual bool hasStrategy() const = 0;
 };
 
-template <typename T, template <typename> typename STRATEGY>
+template <template <typename> typename STRATEGY, typename T>
 class CommandModel : public CommandConcept {
 public:
-    CommandModel(T& type)
+    CommandModel(std::reference_wrapper<T> type)
         : type_{type} {}
     ~CommandModel() override = default;
 
     ActionStatus execute(Object* owner, Object* target) override {
         if constexpr (Strategable<STRATEGY, T, ActionStatus, Object*, Object*>) {
-            return STRATEGY<T>::operator()(type_, owner, target);
+            return STRATEGY<T>::operator()(type_.get(), owner, target);
+        } else {
+            return ActionStatus::None;
         }
-        return ActionStatus::None;
-    }
-
-    bool hasStrategy() const override {
-        return Strategable<STRATEGY, T, ActionStatus, Object*, Object*>;
     }
 
 private:
-    T& type_;
+    std::reference_wrapper<T> type_;
 };

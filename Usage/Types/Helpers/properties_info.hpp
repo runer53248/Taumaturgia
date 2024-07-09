@@ -17,29 +17,44 @@ template <>
 struct properties_info<Properties::CureHealth> {
     using type = CureHealth;
     using trait = Healingable_trait;
+
+    template <typename T>
+    using strategy = HealStrategy<T>;
 };
 
 template <>
 struct properties_info<Properties::Damage> {
     using type = Damage;
     using trait = Damagingable_trait;
+
+    template <typename T>
+    using strategy = AttackStrategy<T>;
 };
 
 template <>
 struct properties_info<Properties::Protection> {
     using type = Protection;
     using trait = Protectingable_trait;
+
+    template <typename T>
+    using strategy = DefendStrategy<T>;
 };
 
 template <>
 struct properties_info<Properties::Restore> {
     using type = EffectTypeContainer;
     using trait = Restoringable_trait;
+
+    template <typename T>
+    using strategy = RestoreStrategy<T>;
 };
 template <>
 struct properties_info<Properties::Wear> {
     using type = WearContainer;
     using trait = Wearingable_trait;
+
+    template <typename T>
+    using strategy = WearStrategy<T>;
 };
 
 template <>

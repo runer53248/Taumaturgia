@@ -52,14 +52,27 @@ constexpr auto get_impl(T& type, sProperties<P>) {  // TODO: implement test for 
     }
 }
 
-template <typename T>
-auto createCommands(T& type) {
+template <Properties P>
+struct get_strategy {
+    template <typename T>
+    using strategy = impl::properties_info<P>::template strategy<T>;
+};
+
+template <Properties P, typename T>
+decltype(auto) make_command_p(T& type) {
+    using get_ = get_strategy<P>;
+    if constexpr (requires { typename get_::strategy<T>; }) {
+        return std::make_shared<CommandModel<get_::template strategy, T>>(type);
+    }
+}
+
+auto createCommands(auto& type) {
     return std::unordered_map<Actions, std::shared_ptr<CommandConcept>>{
-        {Actions::Attack, std::make_shared<CommandModel<T, AttackStrategy>>(type)},
-        {Actions::Defend, std::make_shared<CommandModel<T, DefendStrategy>>(type)},
-        {Actions::Heal, std::make_shared<CommandModel<T, HealStrategy>>(type)},
-        {Actions::Restore, std::make_shared<CommandModel<T, RestoreStrategy>>(type)},
-        {Actions::Wear, std::make_shared<CommandModel<T, WearStrategy>>(type)}};
+        {Actions::Attack, make_command_p<Properties::Damage>(type)},
+        {Actions::Defend, make_command_p<Properties::Protection>(type)},
+        {Actions::Heal, make_command_p<Properties::CureHealth>(type)},
+        {Actions::Restore, make_command_p<Properties::Restore>(type)},
+        {Actions::Wear, make_command_p<Properties::Wear>(type)}};
 }
 
 }  // namespace action_impl
