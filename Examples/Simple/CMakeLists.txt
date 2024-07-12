@@ -12,3 +12,7 @@ add_executable(main_fix_Ap_${addons}
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 target_compile_definitions(main_fix_Ap_${addons} PUBLIC WITH_ADD_PROPERTIES)
+
+add_executable(main_pipe
+    main_pipe.cpp
+)
