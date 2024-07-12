@@ -2,9 +2,7 @@
 #include <iostream>
 #include "Usage/Types/Damage/Damage.hpp"
 #include "PrintDamageType.hpp"
-#include "PrintDuration.hpp"
-#include "PrintEffectState.hpp"
-#include "PrintEffectType.hpp"
+#include "PrintEffect.hpp"
 
 #include "PrintWrapper.hpp"
 
