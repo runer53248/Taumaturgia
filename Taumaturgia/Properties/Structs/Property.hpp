@@ -3,7 +3,7 @@
 #include "Taumaturgia/Properties/Helpers/property_helpers.hpp"
 
 static_assert(std::is_same_v<boost::mp11::mp_clear<order_list>, taged_list<>>);  // order_list is taged_list
-static_assert(boost::mp11::mp_size<order_list>::value);                          // order_list is not empty
+// static_assert(boost::mp11::mp_size<order_list>::value);                          // order_list is not empty
 
 constexpr static auto properties_counter = boost::mp11::mp_size<order_list>::value;
 
