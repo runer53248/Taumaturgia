@@ -1,12 +1,15 @@
 #pragma once
 #include <limits>
+#include "HealthRange.hpp"
 #include "Usage/Types/Structs/EffectContainer.hpp"
 
 class Health {
 public:
     constexpr Health() noexcept = default;
-    constexpr explicit Health(int value) noexcept
-        : value_{std::min(value, MAX_VALUE)} {}
+    constexpr explicit Health(int value, int limit = HealthRange::default_max) noexcept
+        : MAX_VALUE{std::max(1, limit)}, value_{std::min(value, MAX_VALUE)} {}
+    constexpr explicit Health(HealthRange range) noexcept
+        : MAX_VALUE{range.getLimit()}, value_{range.getValue()} {}
     constexpr Health(int value, const Effect& effect) noexcept
         : value_{std::min(value, MAX_VALUE)}, effects_{EffectContainer{effect}} {}
     constexpr Health(int value, const EffectContainer& effects) noexcept
@@ -27,9 +30,9 @@ public:
     void removeHealth(int value);
 
 private:
+    int MAX_VALUE{HealthRange::default_max};
     int value_{};
     EffectContainer effects_{};
-    static constexpr int MAX_VALUE = 200;
 };
 
 inline void Health::addHealth(int value) {

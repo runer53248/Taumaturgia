@@ -7,6 +7,15 @@
 class ArmorClass {
 public:
     ArmorClass() noexcept = default;
+
+    ArmorClass(const ArmorClass&) noexcept = default;
+    ArmorClass(ArmorClass&&) noexcept = default;
+
+    ArmorClass& operator=(const ArmorClass&) noexcept = default;
+    ArmorClass& operator=(ArmorClass&&) noexcept = default;
+
+    ~ArmorClass() noexcept = default;
+
     explicit ArmorClass(int value) noexcept
         : value_{value} {}
     ArmorClass(int value, BodyLocation location) noexcept
