@@ -20,24 +20,14 @@ public:
     Damaging_(const Name& name, std::tuple<INFO...>&& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           dmg_{std::make_from_tuple<Damage>(std::move(dmg))} {
+        static_assert(constructible_from_args<Damage, INFO...>, "Can't create Damage from given tuple.");
     }
 
     template <typename... INFO, typename... Args>
     Damaging_(const Name& name, const std::tuple<INFO...>& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           dmg_{std::make_from_tuple<Damage>(dmg)} {
-    }
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<Damage, INFO...>)
-    Damaging_(const Name&, std::tuple<INFO...>&&, Args&&...) {
-        throw std::logic_error("Can't create Damage from given tuple.");
-    }
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<Damage, INFO...>)
-    Damaging_(const Name&, const std::tuple<INFO...>&, Args&&...) {
-        throw std::logic_error("Can't create Damage from given tuple.");
+        static_assert(constructible_from_args<Damage, INFO...>, "Can't create Damage from given tuple.");
     }
 
     Damaging_(const Name& name)
@@ -67,6 +57,14 @@ public:
         requires not_contains_type<Damage, V...>
     Damaging_(const Name& name, [[maybe_unused]] const std::variant<V...>& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
+
+    // MARK: nameless C-tor
+
+    template <typename... Args>
+    Damaging_(Damage&& dmg, Args&&... args)
+        : T{std::forward<Args>(args)...}, dmg_{std::move(dmg)} {}
+
+    // MARK: getDamage
 
     constexpr auto& getDamage(this auto& self) {
         return self.dmg_;

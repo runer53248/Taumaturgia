@@ -19,23 +19,15 @@ public:
     template <typename... INFO, typename... Args>
     Wearing_(const Name& name, std::tuple<INFO...>&& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          armorWear_{std::make_from_tuple<WearContainer>(std::move(armorWear))} {}
+          armorWear_{std::make_from_tuple<WearContainer>(std::move(armorWear))} {
+        static_assert(constructible_from_args<WearContainer, INFO...>, "Can't create WearContainer from given tuple.");
+    }
 
     template <typename... INFO, typename... Args>
     Wearing_(const Name& name, const std::tuple<INFO...>& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          armorWear_{std::make_from_tuple<WearContainer>(armorWear)} {}
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<WearContainer, INFO...>)
-    Wearing_(const Name&, std::tuple<INFO...>&&, Args&&...) {
-        throw std::logic_error("Can't create WearContainer from given tuple.");
-    }
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<WearContainer, INFO...>)
-    Wearing_(const Name&, const std::tuple<INFO...>&, Args&&...) {
-        throw std::logic_error("Can't create WearContainer from given tuple.");
+          armorWear_{std::make_from_tuple<WearContainer>(armorWear)} {
+        static_assert(constructible_from_args<WearContainer, INFO...>, "Can't create WearContainer from given tuple.");
     }
 
     Wearing_(const Name& name)
@@ -65,6 +57,14 @@ public:
         requires not_contains_type<WearContainer, V...>
     Wearing_(const Name& name, [[maybe_unused]] const std::variant<V...>& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
+
+    // MARK: nameless C-tor
+
+    template <typename... Args>
+    Wearing_(WearContainer&& armorWear, Args&&... args)
+        : T{std::forward<Args>(args)...}, armorWear_{std::move(armorWear)} {}
+
+    // MARK: getArmorWear
 
     constexpr auto& getArmorWear(this auto& self) {
         return self.armorWear_;

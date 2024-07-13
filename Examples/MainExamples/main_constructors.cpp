@@ -103,48 +103,6 @@ int main() {
     restoring_protecting_damaging_potion{
         spiked_shield_potion_name};
 
-// TODO: fix ambigious calls
-#ifndef NO_PREMADE_PROPERTIES
-    // MARK: incorrect tuple
-    try {
-        restoring_protecting_damaging_potion{
-            spiked_shield_potion_name,
-            std::tuple{"test"},
-            std::ignore,
-            std::tuple{"test"}};  // damaging
-    } catch (const std::logic_error& err) {
-        std::cout << "exception: " << err.what() << '\n';
-    }
-
-    // MARK: incorrect tuple
-    try {
-        std::tuple tuple_invalid_for_restoring{"test"};
-        std::tuple tuple_invalid_for_damaging{"test"};
-
-        restoring_protecting_damaging_potion{
-            spiked_shield_potion_name,
-            tuple_invalid_for_restoring,
-            std::ignore,
-            tuple_invalid_for_damaging};  // damaging
-    } catch (const std::logic_error& err) {
-        std::cout << "exception: " << err.what() << '\n';
-    }
-
-    // MARK: incorrect tuple
-    try {
-        std::tuple tuple_invalid_for_restoring{"test"};
-        std::tuple tuple_invalid_for_damaging{"test"};
-
-        restoring_protecting_damaging_potion{
-            spiked_shield_potion_name,
-            std::move(tuple_invalid_for_restoring),
-            std::ignore,
-            std::move(tuple_invalid_for_damaging)};  // damaging
-    } catch (const std::logic_error& err) {
-        std::cout << "exception: " << err.what() << '\n';
-    }
-#endif
-
     using container = std::variant<std::monostate, Damage, Protection, EffectTypeContainer>;
 
     // MARK: set from moved types or initializer_list

@@ -16,25 +16,17 @@ public:
     Protecting_() = default;
 
     template <typename... INFO, typename... Args>
-    Protecting_(const Name& name, std::tuple<INFO...>&& protection, Args&&... args)
+    constexpr Protecting_(const Name& name, std::tuple<INFO...>&& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          protection_{std::make_from_tuple<Protection>(std::move(protection))} {}
-
-    template <typename... INFO, typename... Args>
-    Protecting_(const Name& name, const std::tuple<INFO...>& protection, Args&&... args)
-        : T{name, std::forward<Args>(args)...},
-          protection_{std::make_from_tuple<Protection>(protection)} {}
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<Protection, INFO...>)
-    Protecting_(const Name&, std::tuple<INFO...>&&, Args&&...) {
-        throw std::logic_error("Can't create Protection from given tuple.");
+          protection_{std::make_from_tuple<Protection>(std::move(protection))} {
+        static_assert(constructible_from_args<Protection, INFO...>, "Can't create Protection from given tuple.");
     }
 
     template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<Protection, INFO...>)
-    Protecting_(const Name&, const std::tuple<INFO...>&, Args&&...) {
-        throw std::logic_error("Can't create Protection from given tuple.");
+    constexpr Protecting_(const Name& name, const std::tuple<INFO...>& protection, Args&&... args)
+        : T{name, std::forward<Args>(args)...},
+          protection_{std::make_from_tuple<Protection>(protection)} {
+        static_assert(constructible_from_args<Protection, INFO...>, "Can't create Protection from given tuple.");
     }
 
     Protecting_(const Name& name)
@@ -64,6 +56,14 @@ public:
         requires not_contains_type<Protection, V...>
     Protecting_(const Name& name, [[maybe_unused]] const std::variant<V...>& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
+
+    // MARK: nameless C-tor
+
+    template <typename... Args>
+    Protecting_(Protection&& protection, Args&&... args)
+        : T{std::forward<Args>(args)...}, protection_{std::move(protection)} {}
+
+    // MARK: getProtection
 
     constexpr auto& getProtection(this auto& self) {
         return self.protection_;

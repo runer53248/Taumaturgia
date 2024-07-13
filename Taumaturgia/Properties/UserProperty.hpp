@@ -25,24 +25,16 @@ public:
         requires(not std::is_same_v<TYPE, Name>)
     UserProperty_(const Name& name, std::tuple<INFO...>&& type, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          type_{std::make_from_tuple<TYPE>(std::move(type))} {}
+          type_{std::make_from_tuple<TYPE>(std::move(type))} {
+        static_assert(constructible_from_args<TYPE, INFO...>, "Can't create TYPE from given tuple.");
+    }
 
     template <typename... INFO, typename... Args>
         requires(not std::is_same_v<TYPE, Name>)
     UserProperty_(const Name& name, const std::tuple<INFO...>& type, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          type_{std::make_from_tuple<TYPE>(type)} {}
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<TYPE, INFO...>)
-    UserProperty_(const Name&, std::tuple<INFO...>&&, Args&&...) {
-        throw std::logic_error("Can't create TYPE from given tuple.");
-    }
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<TYPE, INFO...>)
-    UserProperty_(const Name&, const std::tuple<INFO...>&, Args&&...) {
-        throw std::logic_error("Can't create TYPE from given tuple.");
+          type_{std::make_from_tuple<TYPE>(type)} {
+        static_assert(constructible_from_args<TYPE, INFO...>, "Can't create TYPE from given tuple.");
     }
 
     // MARK: Namingable default and ignore C-tors
@@ -88,23 +80,15 @@ public:
     template <typename... INFO, typename... Args>
     constexpr UserProperty_(std::tuple<INFO...>&& type, Args&&... args)
         : T{std::forward<Args>(args)...},
-          type_{std::make_from_tuple<TYPE>(std::move(type))} {}
+          type_{std::make_from_tuple<TYPE>(std::move(type))} {
+        static_assert(constructible_from_args<TYPE, INFO...>, "Can't create TYPE from given tuple.");
+    }
 
     template <typename... INFO, typename... Args>
     constexpr UserProperty_(const std::tuple<INFO...>& type, Args&&... args)
         : T{std::forward<Args>(args)...},
-          type_{std::make_from_tuple<TYPE>(type)} {}
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<TYPE, INFO...>)
-    constexpr UserProperty_(std::tuple<INFO...>&&, Args&&...) {
-        throw std::logic_error("Can't create TYPE from given tuple.");
-    }
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<TYPE, INFO...>)
-    constexpr UserProperty_(const std::tuple<INFO...>&, Args&&...) {
-        throw std::logic_error("Can't create TYPE from given tuple.");
+          type_{std::make_from_tuple<TYPE>(type)} {
+        static_assert(constructible_from_args<TYPE, INFO...>, "Can't create TYPE from given tuple.");
     }
 
     // MARK: default and ignore C-tors

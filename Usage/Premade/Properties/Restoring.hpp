@@ -1,8 +1,8 @@
 #pragma once
 #include <boost/mp11.hpp>
 #include <variant>
-#include "Taumaturgia/Properties/Structs/PropertyData.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
+#include "Taumaturgia/Properties/Structs/PropertyData.hpp"
 #include "Usage/Types/EffectTypeContainer/EffectTypeContainer.hpp"
 #include "Usage/Types/Name/Name.hpp"
 
@@ -19,23 +19,15 @@ public:
     template <typename... INFO, typename... Args>
     Restoring_(const Name& name, std::tuple<INFO...>&& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          restoreEffects_{std::make_from_tuple<EffectTypeContainer>(std::move(restoreEffects))} {}
+          restoreEffects_{std::make_from_tuple<EffectTypeContainer>(std::move(restoreEffects))} {
+        static_assert(constructible_from_args<EffectTypeContainer, INFO...>, "Can't create EffectTypeContainer from given tuple.");
+    }
 
     template <typename... INFO, typename... Args>
     Restoring_(const Name& name, const std::tuple<INFO...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          restoreEffects_{std::make_from_tuple<EffectTypeContainer>(restoreEffects)} {}
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<EffectTypeContainer, INFO...>)
-    Restoring_(const Name&, std::tuple<INFO...>&&, Args&&...) {
-        throw std::logic_error("Can't create EffectTypeContainer from given tuple.");
-    }
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<EffectTypeContainer, INFO...>)
-    Restoring_(const Name&, const std::tuple<INFO...>&, Args&&...) {
-        throw std::logic_error("Can't create EffectTypeContainer from given tuple.");
+          restoreEffects_{std::make_from_tuple<EffectTypeContainer>(restoreEffects)} {
+        static_assert(constructible_from_args<EffectTypeContainer, INFO...>, "Can't create EffectTypeContainer from given tuple.");
     }
 
     Restoring_(const Name& name)
@@ -69,6 +61,14 @@ public:
         requires not_contains_type<EffectTypeContainer, V...>
     Restoring_(const Name& name, [[maybe_unused]] const std::variant<V...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
+
+    // MARK: nameless C-tor
+
+    template <typename... Args>
+    Restoring_(EffectTypeContainer&& restoreEffects, Args&&... args)
+        : T{std::forward<Args>(args)...}, restoreEffects_{std::move(restoreEffects)} {}
+
+    // MARK: getRestoreEffects
 
     constexpr auto& getRestoreEffects(this auto& self) {
         return self.restoreEffects_;

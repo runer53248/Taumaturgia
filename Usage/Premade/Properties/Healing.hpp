@@ -19,23 +19,15 @@ public:
     template <typename... INFO, typename... Args>
     Healing_(const Name& name, std::tuple<INFO...>&& cureHealth, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          cureHealth_{std::make_from_tuple<CureHealth>(std::move(cureHealth))} {}
+          cureHealth_{std::make_from_tuple<CureHealth>(std::move(cureHealth))} {
+        static_assert(constructible_from_args<CureHealth, INFO...>, "Can't create CureHealth from given tuple.");
+    }
 
     template <typename... INFO, typename... Args>
     Healing_(const Name& name, const std::tuple<INFO...>& cureHealth, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          cureHealth_{std::make_from_tuple<CureHealth>(cureHealth)} {}
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<CureHealth, INFO...>)
-    Healing_(const Name&, std::tuple<INFO...>&&, Args&&...) {
-        throw std::logic_error("Can't create CureHealth from given tuple.");
-    }
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<CureHealth, INFO...>)
-    Healing_(const Name&, const std::tuple<INFO...>&, Args&&...) {
-        throw std::logic_error("Can't create CureHealth from given tuple.");
+          cureHealth_{std::make_from_tuple<CureHealth>(cureHealth)} {
+        static_assert(constructible_from_args<CureHealth, INFO...>, "Can't create CureHealth from given tuple.");
     }
 
     Healing_(const Name& name)
@@ -65,6 +57,14 @@ public:
         requires not_contains_type<CureHealth, V...>
     Healing_(const Name& name, [[maybe_unused]] const std::variant<V...>& cureHealth, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
+
+    // MARK: nameless C-tor
+
+    template <typename... Args>
+    Healing_(CureHealth&& cureHealth, Args&&... args)
+        : T{std::forward<Args>(args)...}, cureHealth_{std::move(cureHealth)} {}
+
+    // MARK: getCureHealth
 
     constexpr auto& getCureHealth(this auto& self) {
         return self.cureHealth_;

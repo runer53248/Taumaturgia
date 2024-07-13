@@ -19,23 +19,15 @@ public:
     template <typename... INFO, typename... Args>
     Living_(const Name& name, std::tuple<INFO...>&& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          hp_{std::make_from_tuple<Health>(std::move(hp))} {}
+          hp_{std::make_from_tuple<Health>(std::move(hp))} {
+        static_assert(constructible_from_args<Health, INFO...>, "Can't create Health from given tuple.");
+    }
 
     template <typename... INFO, typename... Args>
     Living_(const Name& name, const std::tuple<INFO...>& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          hp_{std::make_from_tuple<Health>(hp)} {}
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<Health, INFO...>)
-    Living_(const Name&, std::tuple<INFO...>&&, Args&&...) {
-        throw std::logic_error("Can't create Health from given tuple.");
-    }
-
-    template <typename... INFO, typename... Args>
-        requires(not constructible_from_args<Health, INFO...>)
-    Living_(const Name&, const std::tuple<INFO...>&, Args&&...) {
-        throw std::logic_error("Can't create Health from given tuple.");
+          hp_{std::make_from_tuple<Health>(hp)} {
+        static_assert(constructible_from_args<Health, INFO...>, "Can't create Health from given tuple.");
     }
 
     Living_(const Name& name)
@@ -65,6 +57,14 @@ public:
         requires not_contains_type<Health, V...>
     Living_(const Name& name, [[maybe_unused]] const std::variant<V...>& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
+
+    // MARK: nameless C-tor
+
+    template <typename... Args>
+    Living_(Health&& hp, Args&&... args)
+        : T{std::forward<Args>(args)...}, hp_{std::move(hp)} {}
+
+    // MARK: getHealth
 
     constexpr auto& getHealth(this auto& self) {
         return self.hp_;

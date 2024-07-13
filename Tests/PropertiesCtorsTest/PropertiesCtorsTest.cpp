@@ -220,55 +220,6 @@ TEST(CtorTest, first_argument) {
     EXPECT_EQ(Restoringable_trait::get(type), default_restore);
 }
 
-#ifndef NO_PREMADE_PROPERTIES
-
-TEST(CtorTest, incorrect_argument_tuple_rvalue) {
-    try {
-        restoring_protecting_damaging_type type{
-            default_name,
-            std::tuple{"test"},
-            std::ignore,
-            std::tuple{"test"}};
-        FAIL();
-    } catch (const std::logic_error& err) {
-        EXPECT_STREQ("Can't create EffectTypeContainer from given tuple.", err.what());
-    }
-}
-
-TEST(CtorTest, incorrect_argument_tuple_lvalue) {
-    try {
-        std::tuple tuple_invalid_for_restoring{"test"};
-        std::tuple tuple_invalid_for_damaging{"test"};
-
-        restoring_protecting_damaging_type type{
-            default_name,
-            tuple_invalid_for_restoring,
-            std::ignore,
-            tuple_invalid_for_damaging};
-        FAIL();
-    } catch (const std::logic_error& err) {
-        EXPECT_STREQ("Can't create EffectTypeContainer from given tuple.", err.what());
-    }
-}
-
-TEST(CtorTest, incorrect_argument_tuple_lvalue_move) {
-    try {
-        std::tuple tuple_invalid_for_restoring{"test"};
-        std::tuple tuple_invalid_for_damaging{"test"};
-
-        restoring_protecting_damaging_type type{
-            default_name,
-            std::move(tuple_invalid_for_restoring),
-            std::ignore,
-            std::move(tuple_invalid_for_damaging)};
-        FAIL();
-    } catch (const std::logic_error& err) {
-        EXPECT_STREQ("Can't create EffectTypeContainer from given tuple.", err.what());
-    }
-}
-
-#endif
-
 using container = std::variant<std::monostate, Damage, Protection, EffectTypeContainer>;
 
 TEST(CtorTest, arguments_variant_rvalue) {
