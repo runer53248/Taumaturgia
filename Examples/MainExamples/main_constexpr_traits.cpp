@@ -12,11 +12,11 @@ struct BaseType {
 using Type_int = UserProperty<int, BaseType>;
 
 template <typename T, typename TYPE>
-concept Type_able = std::same_as<T, TYPE> or std::same_as<T, const TYPE>;
+concept type_of = std::same_as<std::remove_const_t<T>, TYPE>;
 
 template <typename TYPE>
 struct traits::CustomAccessType<TYPE, Type_int> {
-    static constexpr decltype(auto) get(Type_able<Type_int> auto& el) {
+    static constexpr decltype(auto) get(type_of<Type_int> auto& el) {
         if consteval {
         } else {
             std::cout << name<decltype(el)>() << ' ';
