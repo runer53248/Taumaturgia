@@ -12,8 +12,8 @@ private:
     struct equivalent_properties_predicate_impl {
         static constexpr bool value =
             // (std::is_same_v<lhp, rhp>) or                                                       // same property
-            (std::is_same_v<typename lhp::template type<tag>, typename rhp::template type<tag>>) or  // same Property or UserProperty (eg. UserProperty_<int, tag>)
-            ((lhp::value == rhp::value) and lhp::value != std::numeric_limits<size_t>::max());       // same priority of known property
+            (std::is_same_v<typename lhp::template apply<tag>, typename rhp::template apply<tag>>) or  // same Property or UserProperty (eg. UserProperty_<int, tag>)
+            ((lhp::value == rhp::value) and lhp::value != std::numeric_limits<size_t>::max());         // same priority of known property
     };
 
 public:

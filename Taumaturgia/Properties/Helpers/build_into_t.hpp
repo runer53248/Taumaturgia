@@ -12,7 +12,7 @@ private:
     using rest = boost::mp11::mp_rest<L>;
 
 public:
-    using type = first::template type<typename build_into_impl<Base, rest>::type>;
+    using type = first::template apply<typename build_into_impl<Base, rest>::type>;
 };
 
 template <typename Base, typename L>

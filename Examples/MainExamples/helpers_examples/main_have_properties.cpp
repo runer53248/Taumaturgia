@@ -75,10 +75,10 @@ static_assert(not have_properties<
 int main() {
     std::cout << name<add_properties<Type, IntProperty>>() << '\n';
     std::cout << name<Property<IntProperty>>() << '\n';
-    std::cout << name<Property<IntProperty>::type<tag>>() << '\n';
+    std::cout << name<Property<IntProperty>::apply<tag>>() << '\n';
     std::cout << '\n';
     std::cout << name<add_properties<tag, Living>>() << '\n';
-    std::cout << name<Property<Living>::type<tag>>() << '\n';
+    std::cout << name<Property<Living>::apply<tag>>() << '\n';
     std::cout << '\n';
 
     std::cout << name<add_properties<Type, Living>>() << '\n';

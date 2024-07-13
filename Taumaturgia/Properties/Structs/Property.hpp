@@ -18,5 +18,5 @@ private:
 public:
     static constexpr size_t value = (properties_counter > index) ? index + 1 : std::numeric_limits<size_t>::max();  // index of property starting from 1 (or max if not found)
     template <typename T>
-    using type = property<T>;
+    using apply = property<T>;
 };

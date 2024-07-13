@@ -38,7 +38,7 @@ using Type_adapter = add_properties<Type_basic, UserPropertyAdapter<TYPE>::templ
 
 int main() {
     std::cout << "taged_list                     = " << name<taged_list<UserProperty2>>() << '\n';
-    std::cout << "Property                       = " << name<Property<UserProperty2>::type<tag>>() << '\n';
+    std::cout << "Property                       = " << name<Property<UserProperty2>::apply<tag>>() << '\n';
     std::cout << '\n';
 
     std::cout << "Type_basic                     = " << name<Type_basic>() << '\n';

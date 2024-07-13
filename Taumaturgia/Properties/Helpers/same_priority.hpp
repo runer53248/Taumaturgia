@@ -19,10 +19,10 @@ namespace helpers::impl {
                 return (A::value == B::value);
             }
             // same_priority true if any improved unordered Property improvement_of same as other
-            if constexpr (is_property_improvement_possibly_self<A::template type> or is_property_improvement_possibly_self<B::template type>) {
+            if constexpr (is_property_improvement_possibly_self<A::template apply> or is_property_improvement_possibly_self<B::template apply>) {
                 return (std::is_same_v<
-                        most_improved<A::template type>,
-                        most_improved<B::template type>>);
+                        most_improved<A::template apply>,
+                        most_improved<B::template apply>>);
             }
             return false;
         }();
