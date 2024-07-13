@@ -1,14 +1,18 @@
 #pragma once
 #include <iostream>
-#include "Usage/Types/Structs/Duration.hpp"
 #include "PrintDurationType.hpp"
+#include "Usage/Types/Structs/Duration.hpp"
 
 auto& operator<<(std::ostream& out, const Duration& duration) {
     auto value = duration.value();
     auto type = duration.type();
 
     if (type == DurationType::Instant) {
-        out << "(" << type << "("<<value<<"))";
+        if (value == 0) {
+            out << "(" << type << ")";
+        } else {
+            out << "(" << type << "(" << value << "))";
+        }
         return out;
     }
     if (value == 1) {

@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
-#include "Usage/Types/Structs/ArmorClass.hpp"
-#include "Usage/Types/Protection/Protection.hpp"
 #include "PrintBodyLocation.hpp"
-#include "PrintEffectType.hpp"
+#include "PrintEffectTypeContainer.hpp"
+#include "Usage/Types/Protection/Protection.hpp"
+#include "Usage/Types/Structs/ArmorClass.hpp"
 
 template <typename T>
     requires(std::same_as<T, ArmorClass> or std::same_as<T, Protection>)
