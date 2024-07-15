@@ -3,7 +3,9 @@
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"
-using Scroll = add_properties<Type, Naming>;
+using Scroll = add_properties<
+    Type,
+    Naming>;
 #else
 
 struct Scroll {

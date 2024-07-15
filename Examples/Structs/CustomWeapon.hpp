@@ -4,18 +4,22 @@
 
 #ifdef WITH_ADD_PROPERTIES
 struct WithDefaultWeaponVector {
-    std::vector<DefaultWeapon> others{// will be used in AttackStrategy_<CustomWeapon>
-                                      DefaultWeapon{Name{"Light weapon"}, Damage{10}},
-                                      DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
+    std::vector<DefaultWeapon> others{
+        // will be used in AttackStrategy_<CustomWeapon>
+        DefaultWeapon{Name{"Light weapon"}, Damage{10}},
+        DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
 };
-using CustomWeapon = add_properties<WithDefaultWeaponVector, Naming>;
+using CustomWeapon = add_properties<
+    WithDefaultWeaponVector,
+    Naming>;
 #else
 
 struct CustomWeapon {  // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
     Name name;
-    std::vector<DefaultWeapon> others{// will be used in AttackStrategy_<CustomWeapon>
-                                      DefaultWeapon{Name{"Light weapon"}, Damage{10}},
-                                      DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
+    std::vector<DefaultWeapon> others{
+        // will be used in AttackStrategy_<CustomWeapon>
+        DefaultWeapon{Name{"Light weapon"}, Damage{10}},
+        DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
 };
 
 #endif
@@ -30,15 +34,9 @@ struct UserStrategy_<Damage, T> {
 struct AttackStrategy_<T> {
 #endif
 
-    // constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const {  // when get Damagingable property
-    //     auto* suspect = Whom(owner, target);
-    //     ActionStatus base_status = default_attack_behavior(obj, suspect);
-
-    //     for (Damagingable auto& other : obj.others) {
-    //         default_attack_behavior(other, suspect);
-    //         std::cout << "\t\t " << other << "\n";
-    //     }
-    //     return base_status;
+    // other way: when get Damagingable property
+    // constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) const {
+    // ...
     // }
 
     static constexpr ActionStatus operator()(auto& obj, Object* owner, Object* target) {  // CustomWeapon is not Damagingable by default

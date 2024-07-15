@@ -3,7 +3,9 @@
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"
-using Enemy = add_properties<Type, Naming>;
+using Enemy = add_properties<
+    Type,
+    Naming>;
 #else
 
 struct Enemy {

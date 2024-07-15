@@ -4,7 +4,10 @@
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"
-using Weapon = add_properties<Type, Naming, Damaging>;
+using Weapon = add_properties<
+    Type,
+    Naming,
+    Damaging>;
 #else
 
 // struct Weapon {

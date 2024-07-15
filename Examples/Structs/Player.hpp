@@ -4,7 +4,11 @@
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"
-using Player = add_properties<Type, Naming, Wearing, Restoring>;
+using Player = add_properties<
+    Type,
+    Naming,
+    Wearing,
+    Restoring>;
 #else
 
 struct Player {

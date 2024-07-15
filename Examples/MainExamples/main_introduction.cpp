@@ -11,7 +11,9 @@ struct MyType {
     std::string name{"MyType"};
 };
 
-using LivingType = add_properties<MyType, Living>;
+using LivingType = add_properties<
+    MyType,
+    Living>;
 
 int main() {
     BaseType baseType{};

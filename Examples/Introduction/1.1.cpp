@@ -11,9 +11,17 @@ struct Type_living {
 using Type_named = Naming<EmptyType>;
 
 using Type_1 = Living<Type_named>;
-using Type_2 = add_properties<Type_named, Living>;
-using Type_2a = add_properties<EmptyType, Naming, Living>;
-using Type_2b = add_properties<EmptyType, Living, Naming>;
+using Type_2 = add_properties<
+    Type_named,
+    Living>;
+using Type_2a = add_properties<
+    EmptyType,
+    Naming,
+    Living>;
+using Type_2b = add_properties<
+    EmptyType,
+    Living,
+    Naming>;
 
 static_assert(std::is_same_v<Type_1, Type_2>);
 static_assert(sizeof(Type_living) == sizeof(Type_2));
@@ -39,21 +47,23 @@ static_assert(Healingable<Type_all>);
 static_assert(Restoringable<Type_all>);
 
 using Type_3 = Living<Wearing<Damaging<Protecting<Healing<Restoring<Naming<EmptyType>>>>>>>;
-using Type_4 = add_properties<EmptyType,
-                              Naming,
-                              Living,
-                              Wearing,
-                              Damaging,
-                              Protecting,
-                              Healing,
-                              Restoring>;
-using Type_5 = add_properties<Type_named,
-                              Healing,
-                              Protecting,
-                              Restoring,
-                              Living,
-                              Wearing,
-                              Damaging>;
+using Type_4 = add_properties<
+    EmptyType,
+    Naming,
+    Living,
+    Wearing,
+    Damaging,
+    Protecting,
+    Healing,
+    Restoring>;
+using Type_5 = add_properties<
+    Type_named,
+    Healing,
+    Protecting,
+    Restoring,
+    Living,
+    Wearing,
+    Damaging>;
 
 // Type_3, Type_4 and Type_5 are the same type
 static_assert(std::is_same_v<Type_3, Type_4>);

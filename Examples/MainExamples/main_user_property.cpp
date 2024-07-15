@@ -133,9 +133,17 @@ int main() {
     constexpr float value_f_2 = 3.14159f;
     constexpr float value_f_3 = 6.11f;
 
-    using user_name_a_int_type = add_properties<name_type1, UserPropertyAdapter<int>::type>;                                            // just int
-    using user_name_a_float_a_int_type = add_properties<name_type1, UserPropertyAdapter<float>::type, UserPropertyAdapter<int>::type>;  // float and int
-    using user_name_a_int_a_float_type = add_properties<name_type1, UserPropertyAdapter<int>::type, UserPropertyAdapter<float>::type>;  // int and float
+    using user_name_a_int_type = add_properties<
+        name_type1,
+        UserPropertyAdapter<int>::type>;  // just int
+    using user_name_a_float_a_int_type = add_properties<
+        name_type1,
+        UserPropertyAdapter<float>::type,
+        UserPropertyAdapter<int>::type>;  // float and int
+    using user_name_a_int_a_float_type = add_properties<
+        name_type1,
+        UserPropertyAdapter<int>::type,
+        UserPropertyAdapter<float>::type>;  // int and float
     static_assert(std::is_same_v<user_name_a_float_a_int_type, UserProperty<int, UserProperty<float, name_type1>>>);
     static_assert(std::is_same_v<user_name_a_float_a_int_type, user_name_a_int_a_float_type>);
 
@@ -178,7 +186,10 @@ int main() {
     std::cout << value_c_f_naiaf << "\n\n";
 
     {
-        using UserClass5_1 = add_properties<name_type1, UserPropertyAdapter<int>::type, UserPropertyAdapter<float>::type>;
+        using UserClass5_1 = add_properties<
+            name_type1,
+            UserPropertyAdapter<int>::type,
+            UserPropertyAdapter<float>::type>;
         UserClass5_1 type1{Name{}, value_i_1, value_f_1};
         std::cout << "default traits::accessType \n";
         decltype(auto) x = traits::accessType<float>::get(std::as_const(type1));
@@ -194,7 +205,10 @@ int main() {
 
     {
         std::cout << "custom traits::accessType for one type\n";
-        using UserClass5_2 = add_properties<name_type2, UserPropertyAdapter<int>::type, UserPropertyAdapter<float>::type>;
+        using UserClass5_2 = add_properties<
+            name_type2,
+            UserPropertyAdapter<int>::type,
+            UserPropertyAdapter<float>::type>;
         UserClass5_2 type2{Name{}, value_i_2, value_f_2};
         decltype(auto) x = traits::accessType<float>::get(std::as_const(type2));
         std::cout << x << '\n';
@@ -209,7 +223,10 @@ int main() {
 
     {
         std::cout << "custom traits::accessType for all types\n";
-        using UserClass5_3 = add_properties<name_type3, UserPropertyAdapter<int>::type, UserPropertyAdapter<float>::type>;
+        using UserClass5_3 = add_properties<
+            name_type3,
+            UserPropertyAdapter<int>::type,
+            UserPropertyAdapter<float>::type>;
         UserClass5_3 type3{Name{}, value_i_3, value_f_3};
         decltype(auto) x = traits::accessType<float>::get(std::as_const(type3));
         std::cout << x << '\n';
@@ -224,7 +241,10 @@ int main() {
 
     {
         std::cout << "custom traits::accessType can be used both as consteval and normal\n";
-        using UserClass5_3 = add_properties<name_type3, UserPropertyAdapter<int>::type, UserPropertyAdapter<float>::type>;
+        using UserClass5_3 = add_properties<
+            name_type3,
+            UserPropertyAdapter<int>::type,
+            UserPropertyAdapter<float>::type>;
         UserClass5_3 type3{Name{}, value_i_3, value_f_3};
 
         UserStrategy_<float, Default> userStrategy{};
@@ -239,23 +259,28 @@ int main() {
 
         std::cout << "assert that result of userStrategy is ActionStatus::Success\n";
 #ifndef _MSC_VER
-        ActionStatus_Assertion<ActionStatus::Success,
-                               userStrategy(type3)>{};
-        ActionStatus_Assertion<ActionStatus::Success,
-                               userStrategy(std::as_const(type3))>{};
+        ActionStatus_Assertion<
+            ActionStatus::Success,
+            userStrategy(type3)>{};
+        ActionStatus_Assertion<
+            ActionStatus::Success,
+            userStrategy(std::as_const(type3))>{};
 
-        ActionStatus_Assertion<ActionStatus::Success,
-                               UserStrategy_<int, Default>{}(type3)>{};
-        ActionStatus_Assertion<ActionStatus::Success,
-                               UserStrategy_<int, Default>{}(std::as_const(type3))>{};
+        ActionStatus_Assertion<
+            ActionStatus::Success,
+            UserStrategy_<int, Default>{}(type3)>{};
+        ActionStatus_Assertion<
+            ActionStatus::Success,
+            UserStrategy_<int, Default>{}(std::as_const(type3))>{};
 
         std::cout << '\n';
 
-        ActionStatus_Assertion<ActionStatus::Success,
-                               userStrategy(type3),
-                               userStrategy(std::as_const(type3)),
-                               UserStrategy_<int, Default>{}(type3),
-                               UserStrategy_<int, Default>{}(std::as_const(type3))>{};
+        ActionStatus_Assertion<
+            ActionStatus::Success,
+            userStrategy(type3),
+            userStrategy(std::as_const(type3)),
+            UserStrategy_<int, Default>{}(type3),
+            UserStrategy_<int, Default>{}(std::as_const(type3))>{};
 #endif
     }
 }

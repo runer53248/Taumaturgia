@@ -2,8 +2,8 @@
 #include <typeinfo>
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/demangle_type_name.hpp"
-#include "Usage/Properties.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
+#include "Usage/Properties.hpp"
 
 struct MyType {
     // std::string name{};
@@ -18,16 +18,27 @@ template <typename T>
 using IntProperty = UserProperty<int, T>;
 
 // UserProperties are added after order_list properties if not on list itself:
-using t1 = add_properties<BoolProperty<Type>, Damaging>;
-using t2 = add_properties<Damaging<Type>, BoolProperty>;
-using t3 = add_properties<Type, BoolProperty, Damaging>;
-using t4 = add_properties<Type, Damaging, BoolProperty>;
+using t1 = add_properties<
+    BoolProperty<Type>,
+    Damaging>;
+using t2 = add_properties<
+    Damaging<Type>,
+    BoolProperty>;
+using t3 = add_properties<
+    Type,
+    BoolProperty,
+    Damaging>;
+using t4 = add_properties<
+    Type,
+    Damaging,
+    BoolProperty>;
 //  will have same type and order of arguments in c-tor
 
-using t5 = add_properties<Type,
-                          IntProperty,
-                          Damaging,
-                          BoolProperty>;
+using t5 = add_properties<
+    Type,
+    IntProperty,
+    Damaging,
+    BoolProperty>;
 
 static_assert(std::is_same_v<t1, t2>);
 static_assert(std::is_same_v<t2, t3>);

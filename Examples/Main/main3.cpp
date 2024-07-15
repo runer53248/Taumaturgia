@@ -1,36 +1,30 @@
 #include <vector>
 #include "Actions.hpp"
 #include "FillBackpack.hpp"
-#include "Taumaturgia/Properties/UserProperty.hpp"
 #include "Print.hpp"
+#include "Taumaturgia/Properties/UserProperty.hpp"
 
 int main() {
-#ifdef WITH_ADD_PROPERTIES
-    std::cout << "*** WITH_ADD_PROPERTIES ***" << '\n';
-
-    using gustav_weapon = add_properties<Weapon, Living, Healing, Living, Healing>;
-    static_assert(std::is_same_v<gustav_weapon, add_properties<Weapon, Living, Healing>>);
-
+    using gustav_weapon = add_properties<
+        Weapon,
+        Living,
+        Healing,
+        Living,
+        Healing>;
     static_assert(std::is_same_v<
                   gustav_weapon,
-                  Living<Damaging<Healing<Naming<Type>>>>>);  // Type is base from with Weapon is build
-    // static_assert(std::is_same_v<gustav_weapon, Living<Damaging<Healing<Naming<Weapon>>>>>); // ! old way will not reorder Damaging property from build Weapon type
+                  add_properties<
+                      Weapon,
+                      Living,
+                      Healing>>);
 
+#ifdef WITH_ADD_PROPERTIES
     auto gustav = gustav_weapon{
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},
         /*dmg*/ std::ignore,       // can be ignored but not ommited if later is present
         /*healHp*/ CureHealth{}};  // can be ommited
 #else
-    std::cout << "*** WITHOUT_ADD_PROPERTIES ***" << '\n';
-
-    using gustav_weapon = Living<Healing<Living<Healing<Weapon>>>>;
-    static_assert(std::is_same_v<gustav_weapon, Living<Healing<Weapon>>>);
-
-    static_assert(std::is_same_v<
-                  gustav_weapon,
-                  Living<Healing<Damaging<Naming<Weapon>>>>>);
-
     auto gustav = gustav_weapon{
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},
@@ -42,11 +36,11 @@ int main() {
     trait<Health>::get(gustav) = Health{75};  // universal access version
     trait<CureHealth>::get(gustav) = CureHealth{30};
     trait<Damage>::get(gustav) = Damage{100,
-                                               DamageType::Magical,
-                                               Effect{
-                                                   EffectType::Stun,
-                                                   Duration{3, DurationType::Round},
-                                                   EffectState::Active}};
+                                        DamageType::Magical,
+                                        Effect{
+                                            EffectType::Stun,
+                                            Duration{3, DurationType::Round},
+                                            EffectState::Active}};
     {
         Object gustav_obj{gustav};
 
@@ -67,6 +61,6 @@ int main() {
 
     std::cout << "print franco:\n";
     print_object(franco);
-    
+
     return 0;
 }

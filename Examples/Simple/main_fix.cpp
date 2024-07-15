@@ -12,7 +12,11 @@ struct Empty {};
 // MARK: Item
 
 #ifdef WITH_ADD_PROPERTIES
-using Item = add_properties<Empty<struct ItemTag>, Naming, Living, Damaging>;
+using Item = add_properties<
+    Empty<struct ItemTag>,
+    Naming,
+    Living,
+    Damaging>;
 #else
 struct Item {
     std::string name;
@@ -44,8 +48,13 @@ static_assert(not is_custom_alive_strategy<Item>);
 // MARK: Tile
 
 #ifdef WITH_ADD_PROPERTIES
-using Tile = add_properties<Empty<>, Naming, Damaging>;
-using LivingTile = add_properties<Tile, Living>;
+using Tile = add_properties<
+    Empty<>,
+    Naming,
+    Damaging>;
+using LivingTile = add_properties<
+    Tile,
+    Living>;
 #else
 struct Tile {
     Name name;

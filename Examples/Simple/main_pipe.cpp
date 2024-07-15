@@ -37,7 +37,10 @@ auto operator|(T, Property<Prop>) {
 struct Base {};
 
 int main() {
-    using type_1 = add_properties<Base, Damaging, Naming>;
+    using type_1 = add_properties<
+        Base,
+        Damaging,
+        Naming>;
     using type_2 = Damaging<Naming<Base>>;
     auto create_type_3 =
         Base{}              //
