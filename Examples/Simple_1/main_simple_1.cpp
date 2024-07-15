@@ -141,7 +141,7 @@ struct traits::CustomAccessDamage<T> {
 // MARK: attack_impl_x
 
 inline constexpr ActionStatus attack_impl_x(Damagingable auto& obj, Object* owner, Object*) {
-    std::cout << "X owner name: " << owner->name() << "   " << Damagingable_trait::get(obj) << '\n';
+    std::cout << "X owner name: " << owner->name() << "   " << trait<Damage>::get(obj) << '\n';
     return {};
 }
 
@@ -162,7 +162,7 @@ struct AttackStrategy_<Weapon_D> {// override AttackStrategy_<Default>
 // MARK: attack_impl
 
 inline constexpr ActionStatus attack_impl(Damagingable auto& obj, Object* owner, Object*) {
-    std::cout << "owner name: " << owner->name() << "   " << Damagingable_trait::get(obj) << '\n';
+    std::cout << "owner name: " << owner->name() << "   " << trait<Damage>::get(obj) << '\n';
     return {};
 }
 
@@ -223,8 +223,8 @@ int main(int, char** argv) {
     std::cout << "Weapon_C = " << name<Weapon_C>() << "\n";
     std::cout << "Weapon_D = " << name<Weapon_D>() << "\n";
     std::cout << "\n";
-    std::cout << "Damagingable_trait = " << name<Damagingable_trait>() << "\n";
-    std::cout << "Namingable_trait = " << name<Namingable_trait>() << "\n";
+    std::cout << "trait<Damage> = " << name<trait<Damage>>() << "\n";
+    std::cout << "trait<Name> = " << name<trait<Name>>() << "\n";
     std::cout << "program = " << argv[0] << "\n"
               << "\n";
 }

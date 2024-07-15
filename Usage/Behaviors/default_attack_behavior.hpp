@@ -22,9 +22,9 @@ inline constexpr ActionStatus default_attack_behavior(Damagingable auto& obj, Ob
             return std::optional{ActionStatus::Interrupted};  // can't do more damage to target
         }
 
-        target_hp_ref.removeHealth(Damagingable_trait::get(obj).value());
+        target_hp_ref.removeHealth(trait<Damage>::get(obj).value());
 
-        if (const auto attackEffect = Damagingable_trait::get(obj).effect(); attackEffect.effectType() != EffectType::None) {  // attack have effect
+        if (const auto attackEffect = trait<Damage>::get(obj).effect(); attackEffect.effectType() != EffectType::None) {  // attack have effect
 
             if (opt_protection.has_value()) {  // target have protection against effect
                 Protection& target_protection = opt_protection.value();

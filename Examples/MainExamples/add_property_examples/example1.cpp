@@ -102,10 +102,10 @@ int main() {
     templated_call<print_type, base_6>(type6);
 
     auto fill_type = [](auto&& type) {
-        Namingable_trait::get(type) = default_name;
-        Livingable_trait::get(type) = default_health;
-        Damagingable_trait::get(type) = default_damage;
-        Protectingable_trait::get(type) = default_protection;
+        trait<Name>::get(type) = default_name;
+        trait<Health>::get(type) = default_health;
+        trait<Damage>::get(type) = default_damage;
+        trait<Protection>::get(type) = default_protection;
     };
 
     fill_type(type1);

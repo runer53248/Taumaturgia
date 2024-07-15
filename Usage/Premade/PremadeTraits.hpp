@@ -1,10 +1,43 @@
 #pragma once
 #include "Usage/Types/PremadeTraits.hpp"
 
-using Damagingable_trait = traits::accessDamage;
-using Healingable_trait = traits::accessCureHealth;
-using Livingable_trait = traits::accessHealth;
-using Protectingable_trait = traits::accessProtection;
-using Restoringable_trait = traits::accessRestoreEffects;
-using Wearingable_trait = traits::accessArmorWear;
-using Namingable_trait = traits::accessName;
+template <typename T>
+struct trait_ {};
+
+template <>
+struct trait_<Damage> {
+    using type = traits::accessDamage;
+};
+
+template <>
+struct trait_<CureHealth> {
+    using type = traits::accessCureHealth;
+};
+
+template <>
+struct trait_<Health> {
+    using type = traits::accessHealth;
+};
+
+template <>
+struct trait_<Protection> {
+    using type = traits::accessProtection;
+};
+
+template <>
+struct trait_<EffectTypeContainer> {
+    using type = traits::accessRestoreEffects;
+};
+
+template <>
+struct trait_<WearContainer> {
+    using type = traits::accessArmorWear;
+};
+
+template <>
+struct trait_<Name> {
+    using type = traits::accessName;
+};
+
+template <typename T>
+using trait = trait_<T>::type;

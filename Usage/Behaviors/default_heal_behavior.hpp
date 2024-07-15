@@ -4,7 +4,7 @@
 inline constexpr ActionStatus default_heal_behavior(Healingable auto& obj, Object* target) {
     auto is_success = getOpt<Properties::Health>(*target).and_then([&](auto&& ref_wrap) {
         Health& target_hp = ref_wrap;
-        Healingable_trait::get(obj).applyOn(target_hp);
+        trait<CureHealth>::get(obj).applyOn(target_hp);
         return std::optional{true};
     });
 

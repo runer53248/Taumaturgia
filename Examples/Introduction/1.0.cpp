@@ -122,13 +122,13 @@ int main() {
     std::cout << "std::as_const(type5).name() = " << std::as_const(type5).name() << '\n';
 
     std::cout << "Take name from by access trait:" << '\n';
-    std::cout << "Namingable_trait::get(type1) = " << Namingable_trait::get(type1) << '\n';
-    std::cout << "Namingable_trait::get(type2) = " << Namingable_trait::get(type2) << '\n';
-    std::cout << "Namingable_trait::get(type3) = " << Namingable_trait::get(type3) << '\n';
-    std::cout << "Namingable_trait::get(type4_1) = " << Namingable_trait::get(type4_1) << '\n';
-    std::cout << "Namingable_trait::get(type4_2) = " << Namingable_trait::get(type4_2) << '\n';
-    std::cout << "Namingable_trait::get(type4_3) = " << Namingable_trait::get(type4_3) << '\n';
-    std::cout << "Namingable_trait::get(type5) = " << Namingable_trait::get(type5) << '\n';
-    std::cout << "Namingable_trait::get(std::as_const(type5)) = " << Namingable_trait::get(std::as_const(type5)) << '\n';
+    std::cout << "trait<Name>::get(type1) = " << trait<Name>::get(type1) << '\n';
+    std::cout << "trait<Name>::get(type2) = " << trait<Name>::get(type2) << '\n';
+    std::cout << "trait<Name>::get(type3) = " << trait<Name>::get(type3) << '\n';
+    std::cout << "trait<Name>::get(type4_1) = " << trait<Name>::get(type4_1) << '\n';
+    std::cout << "trait<Name>::get(type4_2) = " << trait<Name>::get(type4_2) << '\n';
+    std::cout << "trait<Name>::get(type4_3) = " << trait<Name>::get(type4_3) << '\n';
+    std::cout << "trait<Name>::get(type5) = " << trait<Name>::get(type5) << '\n';
+    std::cout << "trait<Name>::get(std::as_const(type5)) = " << trait<Name>::get(std::as_const(type5)) << '\n';
     return 0;
 }

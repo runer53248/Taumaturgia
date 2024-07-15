@@ -70,8 +70,8 @@ TEST_F(ArmorWear_Fixture, Access_by_trait_accessArmorWear_with_CustomAccessArmor
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_armor));
 #endif
 
-    decltype(auto) armor = Wearingable_trait::get(*type);
-    decltype(auto) armor_const = Wearingable_trait::get(std::as_const(*type));
+    decltype(auto) armor = trait<WearContainer>::get(*type);
+    decltype(auto) armor_const = trait<WearContainer>::get(std::as_const(*type));
 
     static_assert(not std::is_const_v<std::remove_reference_t<decltype(armor)>>);
     static_assert(std::is_const_v<std::remove_reference_t<decltype(armor_const)>>);
@@ -80,7 +80,7 @@ TEST_F(ArmorWear_Fixture, Access_by_trait_accessArmorWear_with_CustomAccessArmor
     EXPECT_EQ(armor_const, default_armor);
 
     armor = default_armor_change;
-    armor = Wearingable_trait::get(*type);
+    armor = trait<WearContainer>::get(*type);
 
     EXPECT_EQ(armor, default_armor_change);
 }

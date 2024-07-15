@@ -47,19 +47,19 @@ int main() {
     std::cout << '\n';
 
     auto fill_and_print_type = [](auto& el) {
-        Livingable_trait::get(el) = Health{500};
-        Wearingable_trait::get(el) = {};
-        Protectingable_trait::get(el) = Protection{15, BodyLocation::Arms};
-        Restoringable_trait::get(el) = {EffectType::Burn};
+        trait<Health>::get(el) = Health{500};
+        trait<WearContainer>::get(el) = {};
+        trait<Protection>::get(el) = Protection{15, BodyLocation::Arms};
+        trait<EffectTypeContainer>::get(el) = {EffectType::Burn};
         print_object(Object{el});
     };
 
     y_type Y{};
-    Namingable_trait::get(Y) = Name{"y_type Y"};
+    trait<Name>::get(Y) = Name{"y_type Y"};
     fill_and_print_type(Y);
 
     z_type Z{};
-    Namingable_trait::get(Z) = Name{"z_type Z"};
+    trait<Name>::get(Z) = Name{"z_type Z"};
     fill_and_print_type(Z);
 
     static_assert(sizeof(Y) == sizeof(Z));

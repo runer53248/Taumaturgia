@@ -10,13 +10,13 @@ struct properties_info;
 template <>
 struct properties_info<Properties::Health> {
     using type = Health;
-    using trait = Livingable_trait;
+    using trait = trait<Health>;
 };
 
 template <>
 struct properties_info<Properties::CureHealth> {
     using type = CureHealth;
-    using trait = Healingable_trait;
+    using trait = trait<CureHealth>;
 
     template <typename T>
     using strategy = HealStrategy<T>;
@@ -25,7 +25,7 @@ struct properties_info<Properties::CureHealth> {
 template <>
 struct properties_info<Properties::Damage> {
     using type = Damage;
-    using trait = Damagingable_trait;
+    using trait = trait<Damage>;
 
     template <typename T>
     using strategy = AttackStrategy<T>;
@@ -34,7 +34,7 @@ struct properties_info<Properties::Damage> {
 template <>
 struct properties_info<Properties::Protection> {
     using type = Protection;
-    using trait = Protectingable_trait;
+    using trait = trait<Protection>;
 
     template <typename T>
     using strategy = DefendStrategy<T>;
@@ -43,7 +43,7 @@ struct properties_info<Properties::Protection> {
 template <>
 struct properties_info<Properties::Restore> {
     using type = EffectTypeContainer;
-    using trait = Restoringable_trait;
+    using trait = trait<EffectTypeContainer>;
 
     template <typename T>
     using strategy = RestoreStrategy<T>;
@@ -51,7 +51,7 @@ struct properties_info<Properties::Restore> {
 template <>
 struct properties_info<Properties::Wear> {
     using type = WearContainer;
-    using trait = Wearingable_trait;
+    using trait = trait<WearContainer>;
 
     template <typename T>
     using strategy = WearStrategy<T>;
@@ -60,7 +60,7 @@ struct properties_info<Properties::Wear> {
 template <>
 struct properties_info<Properties::Name> {
     using type = Name;
-    using trait = Namingable_trait;
+    using trait = trait<Name>;
 };
 
 }  // namespace impl

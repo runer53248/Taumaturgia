@@ -74,14 +74,14 @@ TEST_F(Name_Fixture, Access_by_trait_accessName_with_CustomAccessName) {
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_name));
 #endif
 
-    decltype(auto) name = Namingable_trait::get((*type));
-    decltype(auto) name_const = Namingable_trait::get(std::as_const((*type)));
+    decltype(auto) name = trait<Name>::get((*type));
+    decltype(auto) name_const = trait<Name>::get(std::as_const((*type)));
 
     EXPECT_EQ(name, default_name);
     EXPECT_EQ(name_const, default_name);
 
     name = default_name_change;
-    name = Namingable_trait::get((*type));
+    name = trait<Name>::get((*type));
 
     EXPECT_EQ(name, default_name_change);
 }

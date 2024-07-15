@@ -43,13 +43,13 @@ int main() {
     t5 type{Name{"Rat"}, Damage{5}, 24, true};
 
 #ifdef NO_PREMADE_PROPERTIES
-    decltype(auto) s = Namingable_trait::get(type);
-    decltype(auto) d = Damagingable_trait::get(type);
+    decltype(auto) s = trait<Name>::get(type);
+    decltype(auto) d = trait<Damage>::get(type);
     [[maybe_unused]] decltype(auto) s2 = type.getType<Name>();
     [[maybe_unused]] decltype(auto) d2 = type.getType<Damage>();
 #else
-    decltype(auto) s = Namingable_trait::get(type);
-    decltype(auto) d = Damagingable_trait::get(type);
+    decltype(auto) s = trait<Name>::get(type);
+    decltype(auto) d = trait<Damage>::get(type);
     [[maybe_unused]] decltype(auto) s2 = type.getName();
     [[maybe_unused]] decltype(auto) d2 = type.getDamage();
 #endif

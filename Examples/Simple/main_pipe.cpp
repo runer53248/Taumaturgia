@@ -64,19 +64,19 @@ int main() {
     std::cout << '\n';
 
     std::cout << name<decltype(t1)>() << '\n';
-    std::cout << Namingable_trait::get(t1) << '\n';
-    std::cout << Damagingable_trait::get(t1) << '\n';
+    std::cout << trait<Name>::get(t1) << '\n';
+    std::cout << trait<Damage>::get(t1) << '\n';
     std::cout << '\n';
 
     std::cout << name<decltype(t2)>() << '\n';
-    std::cout << Namingable_trait::get(t2) << '\n';
-    std::cout << Damagingable_trait::get(t2) << '\n';
+    std::cout << trait<Name>::get(t2) << '\n';
+    std::cout << trait<Damage>::get(t2) << '\n';
     std::cout << '\n';
 
     std::cout << name<decltype(t3)>() << '\n';
-    std::cout << Namingable_trait::get(t3) << '\n';
-    std::cout << Damagingable_trait::get(t3) << '\n';
-    std::cout << Protectingable_trait::get(t3) << '\n';
-    std::cout << Livingable_trait::get(t3) << '\n';
+    std::cout << trait<Name>::get(t3) << '\n';
+    std::cout << trait<Damage>::get(t3) << '\n';
+    std::cout << trait<Protection>::get(t3) << '\n';
+    std::cout << trait<Health>::get(t3) << '\n';
     std::cout << '\n';
 }

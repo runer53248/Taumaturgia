@@ -14,9 +14,9 @@ int main(int, [[maybe_unused]] char* argv[]) {
 
     auto armorSet = ArmorSet{Name{"Body of Lidia"}};
 
-    Wearingable_trait::get(armorSet).wearProtection(Protection{
+    trait<WearContainer>::get(armorSet).wearProtection(Protection{
         ArmorClass{5, BodyLocation::Legs, {EffectType::Burn, EffectType::Freeze}}});
-    Wearingable_trait::get(armorSet).wearProtection(Protection{
+    trait<WearContainer>::get(armorSet).wearProtection(Protection{
         ArmorClass{3, BodyLocation::Arms, {EffectType::Burn, EffectType::Freeze}}});
 
     backpack.push_back(armorSet);

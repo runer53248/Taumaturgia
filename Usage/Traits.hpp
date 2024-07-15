@@ -6,19 +6,19 @@
 #endif
 
 template <typename T>
-concept Damagingable = Damagingable_trait::accessable<T>;
+concept Damagingable = trait<Damage>::accessable<T>;
 template <typename T>
-concept Healingable = Healingable_trait::accessable<T>;
+concept Healingable = trait<CureHealth>::accessable<T>;
 template <typename T>
-concept Livingable = Livingable_trait::accessable<T>;
+concept Livingable = trait<Health>::accessable<T>;
 template <typename T>
-concept Protectingable = Protectingable_trait::accessable<T>;
+concept Protectingable = trait<Protection>::accessable<T>;
 template <typename T>
-concept Restoringable = Restoringable_trait::accessable<T>;
+concept Restoringable = trait<EffectTypeContainer>::accessable<T>;
 template <typename T>
-concept Wearingable = Wearingable_trait::accessable<T>;
+concept Wearingable = trait<WearContainer>::accessable<T>;
 template <typename T>
-concept Namingable = Namingable_trait::accessable<T>;
+concept Namingable = trait<Name>::accessable<T>;
 
 template <typename T>
 concept Gettingable = Damagingable<T> or

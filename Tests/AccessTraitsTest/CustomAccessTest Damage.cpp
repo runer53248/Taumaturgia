@@ -66,14 +66,14 @@ TEST_F(Damage_Fixture, Access_by_trait_accessDamage_with_CustomAccessDamage) {
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_damage));
 #endif
 
-    decltype(auto) damage = Damagingable_trait::get((*type));
-    decltype(auto) damage_const = Damagingable_trait::get(std::as_const((*type)));
+    decltype(auto) damage = trait<Damage>::get((*type));
+    decltype(auto) damage_const = trait<Damage>::get(std::as_const((*type)));
 
     EXPECT_EQ(damage, default_damage);
     EXPECT_EQ(damage_const, default_damage);
 
     damage = default_damage_change;
-    damage = Damagingable_trait::get((*type));
+    damage = trait<Damage>::get((*type));
 
     EXPECT_EQ(damage, default_damage_change);
 }

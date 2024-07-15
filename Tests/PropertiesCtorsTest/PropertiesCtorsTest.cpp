@@ -35,9 +35,9 @@ TEST(CtorTest, empty) {
     EXPECT_EQ(type.getProtection(), Protection{});
     EXPECT_EQ(type.getDamage(), Damage{});
 #endif
-    EXPECT_EQ(Restoringable_trait::get(type), EffectTypeContainer{});
-    EXPECT_EQ(Protectingable_trait::get(type), Protection{});
-    EXPECT_EQ(Damagingable_trait::get(type), Damage{});
+    EXPECT_EQ(trait<EffectTypeContainer>::get(type), EffectTypeContainer{});
+    EXPECT_EQ(trait<Protection>::get(type), Protection{});
+    EXPECT_EQ(trait<Damage>::get(type), Damage{});
 }
 
 // empty c-tor
@@ -51,9 +51,9 @@ TEST(CtorTest, name) {
     EXPECT_EQ(type.getProtection(), Protection{});
     EXPECT_EQ(type.getDamage(), Damage{});
 #endif
-    EXPECT_EQ(Restoringable_trait::get(type), EffectTypeContainer{});
-    EXPECT_EQ(Protectingable_trait::get(type), Protection{});
-    EXPECT_EQ(Damagingable_trait::get(type), Damage{});
+    EXPECT_EQ(trait<EffectTypeContainer>::get(type), EffectTypeContainer{});
+    EXPECT_EQ(trait<Protection>::get(type), Protection{});
+    EXPECT_EQ(trait<Damage>::get(type), Damage{});
 }
 
 TEST(CtorTest, all_arguments) {
@@ -69,9 +69,9 @@ TEST(CtorTest, all_arguments) {
     EXPECT_EQ(type.getProtection(), default_protection);
     EXPECT_EQ(type.getDamage(), default_damage);
 #endif
-    EXPECT_EQ(Restoringable_trait::get(type), default_restore);
-    EXPECT_EQ(Protectingable_trait::get(type), default_protection);
-    EXPECT_EQ(Damagingable_trait::get(type), default_damage);
+    EXPECT_EQ(trait<EffectTypeContainer>::get(type), default_restore);
+    EXPECT_EQ(trait<Protection>::get(type), default_protection);
+    EXPECT_EQ(trait<Damage>::get(type), default_damage);
 }
 
 TEST(CtorTest, all_const_arguments) {
@@ -87,9 +87,9 @@ TEST(CtorTest, all_const_arguments) {
     EXPECT_EQ(type.getProtection(), const_default_protection);
     EXPECT_EQ(type.getDamage(), const_default_damage);
 #endif
-    EXPECT_EQ(Restoringable_trait::get(type), const_default_restore);
-    EXPECT_EQ(Protectingable_trait::get(type), const_default_protection);
-    EXPECT_EQ(Damagingable_trait::get(type), const_default_damage);
+    EXPECT_EQ(trait<EffectTypeContainer>::get(type), const_default_restore);
+    EXPECT_EQ(trait<Protection>::get(type), const_default_protection);
+    EXPECT_EQ(trait<Damage>::get(type), const_default_damage);
 }
 
 TEST(CtorTest, arguments_are_initializer_list) {
@@ -105,9 +105,9 @@ TEST(CtorTest, arguments_are_initializer_list) {
     EXPECT_EQ(type.getProtection(), default_protection);
     EXPECT_EQ(type.getDamage(), default_damage);
 #endif
-    EXPECT_EQ(Restoringable_trait::get(type), default_restore);
-    EXPECT_EQ(Protectingable_trait::get(type), default_protection);
-    EXPECT_EQ(Damagingable_trait::get(type), default_damage);
+    EXPECT_EQ(trait<EffectTypeContainer>::get(type), default_restore);
+    EXPECT_EQ(trait<Protection>::get(type), default_protection);
+    EXPECT_EQ(trait<Damage>::get(type), default_damage);
 }
 
 TEST(CtorTest, arguments_are_tuples_rvalues) {
@@ -123,9 +123,9 @@ TEST(CtorTest, arguments_are_tuples_rvalues) {
     EXPECT_EQ(type.getProtection(), default_protection);
     EXPECT_EQ(type.getDamage(), default_damage);
 #endif
-    EXPECT_EQ(Restoringable_trait::get(type), default_restore);
-    EXPECT_EQ(Protectingable_trait::get(type), default_protection);
-    EXPECT_EQ(Damagingable_trait::get(type), default_damage);
+    EXPECT_EQ(trait<EffectTypeContainer>::get(type), default_restore);
+    EXPECT_EQ(trait<Protection>::get(type), default_protection);
+    EXPECT_EQ(trait<Damage>::get(type), default_damage);
 }
 
 TEST(CtorTest, arguments_are_tuples_lvalues) {
@@ -145,9 +145,9 @@ TEST(CtorTest, arguments_are_tuples_lvalues) {
     EXPECT_EQ(type.getProtection(), default_protection);
     EXPECT_EQ(type.getDamage(), default_damage);
 #endif
-    EXPECT_EQ(Restoringable_trait::get(type), default_restore);
-    EXPECT_EQ(Protectingable_trait::get(type), default_protection);
-    EXPECT_EQ(Damagingable_trait::get(type), default_damage);
+    EXPECT_EQ(trait<EffectTypeContainer>::get(type), default_restore);
+    EXPECT_EQ(trait<Protection>::get(type), default_protection);
+    EXPECT_EQ(trait<Damage>::get(type), default_damage);
 }
 
 TEST(CtorTest, last_arguments_is_lvalues) {
@@ -161,7 +161,7 @@ TEST(CtorTest, last_arguments_is_lvalues) {
 #ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getDamage(), default_damage);
 #endif
-    EXPECT_EQ(Damagingable_trait::get(type), default_damage);
+    EXPECT_EQ(trait<Damage>::get(type), default_damage);
 }
 
 TEST(CtorTest, last_arguments_is_rvalue) {
@@ -175,7 +175,7 @@ TEST(CtorTest, last_arguments_is_rvalue) {
 #ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getDamage(), default_damage);
 #endif
-    EXPECT_EQ(Damagingable_trait::get(type), default_damage);
+    EXPECT_EQ(trait<Damage>::get(type), default_damage);
 }
 
 TEST(CtorTest, last_arguments_is_tuple_lvalue) {
@@ -191,7 +191,7 @@ TEST(CtorTest, last_arguments_is_tuple_lvalue) {
 #ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getDamage(), default_damage);
 #endif
-    EXPECT_EQ(Damagingable_trait::get(type), default_damage);
+    EXPECT_EQ(trait<Damage>::get(type), default_damage);
 }
 
 TEST(CtorTest, last_arguments_is_tuple_rvalue) {
@@ -205,7 +205,7 @@ TEST(CtorTest, last_arguments_is_tuple_rvalue) {
 #ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getDamage(), default_damage);
 #endif
-    EXPECT_EQ(Damagingable_trait::get(type), default_damage);
+    EXPECT_EQ(trait<Damage>::get(type), default_damage);
 }
 
 TEST(CtorTest, first_argument) {
@@ -217,7 +217,7 @@ TEST(CtorTest, first_argument) {
 #ifndef NO_PREMADE_PROPERTIES
     EXPECT_EQ(type.getRestoreEffects(), default_restore);
 #endif
-    EXPECT_EQ(Restoringable_trait::get(type), default_restore);
+    EXPECT_EQ(trait<EffectTypeContainer>::get(type), default_restore);
 }
 
 using container = std::variant<std::monostate, Damage, Protection, EffectTypeContainer>;
@@ -233,9 +233,9 @@ TEST(CtorTest, arguments_variant_rvalue) {
     EXPECT_EQ(type.getProtection(), default_protection);
     EXPECT_EQ(type.getDamage(), default_damage);
 #endif
-    EXPECT_EQ(Restoringable_trait::get(type), default_restore);
-    EXPECT_EQ(Protectingable_trait::get(type), default_protection);
-    EXPECT_EQ(Damagingable_trait::get(type), default_damage);
+    EXPECT_EQ(trait<EffectTypeContainer>::get(type), default_restore);
+    EXPECT_EQ(trait<Protection>::get(type), default_protection);
+    EXPECT_EQ(trait<Damage>::get(type), default_damage);
 }
 
 TEST(CtorTest, arguments_wrong_variant_rvalue) {
@@ -250,9 +250,9 @@ TEST(CtorTest, arguments_wrong_variant_rvalue) {
         EXPECT_EQ(type.getProtection(), Protection{});
         EXPECT_EQ(type.getDamage(), default_damage);
 #endif
-        EXPECT_EQ(Restoringable_trait::get(type), EffectTypeContainer{});
-        EXPECT_EQ(Protectingable_trait::get(type), Protection{});
-        EXPECT_EQ(Damagingable_trait::get(type), default_damage);
+        EXPECT_EQ(trait<EffectTypeContainer>::get(type), EffectTypeContainer{});
+        EXPECT_EQ(trait<Protection>::get(type), Protection{});
+        EXPECT_EQ(trait<Damage>::get(type), default_damage);
 
         // FAIL();
     } catch (const std::exception& err) {
@@ -275,9 +275,9 @@ TEST(CtorTest, arguments_wrong_variant_lvalue) {
         EXPECT_EQ(type.getProtection(), Protection{});
         EXPECT_EQ(type.getDamage(), default_damage);
 #endif
-        EXPECT_EQ(Restoringable_trait::get(type), EffectTypeContainer{});
-        EXPECT_EQ(Protectingable_trait::get(type), Protection{});
-        EXPECT_EQ(Damagingable_trait::get(type), default_damage);
+        EXPECT_EQ(trait<EffectTypeContainer>::get(type), EffectTypeContainer{});
+        EXPECT_EQ(trait<Protection>::get(type), Protection{});
+        EXPECT_EQ(trait<Damage>::get(type), default_damage);
 
         // FAIL();
     } catch (const std::exception& err) {
@@ -300,9 +300,9 @@ TEST(CtorTest, arguments_wrong_limited_variant_rvalue) {
         EXPECT_EQ(type.getProtection(), Protection{});
         EXPECT_EQ(type.getDamage(), default_damage);
 #endif
-        EXPECT_EQ(Restoringable_trait::get(type), EffectTypeContainer{});
-        EXPECT_EQ(Protectingable_trait::get(type), Protection{});
-        EXPECT_EQ(Damagingable_trait::get(type), default_damage);
+        EXPECT_EQ(trait<EffectTypeContainer>::get(type), EffectTypeContainer{});
+        EXPECT_EQ(trait<Protection>::get(type), Protection{});
+        EXPECT_EQ(trait<Damage>::get(type), default_damage);
 
         // FAIL();
     } catch (const std::exception& err) {

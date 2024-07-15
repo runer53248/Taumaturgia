@@ -66,14 +66,14 @@ TEST_F(RestoreEffects_Fixture, Access_by_trait_accessRestoreEffects_with_CustomA
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_restoreEffects));
 #endif
 
-    decltype(auto) restoreEffects = Restoringable_trait::get((*type));
-    decltype(auto) restoreEffects_const = Restoringable_trait::get(std::as_const((*type)));
+    decltype(auto) restoreEffects = trait<EffectTypeContainer>::get((*type));
+    decltype(auto) restoreEffects_const = trait<EffectTypeContainer>::get(std::as_const((*type)));
 
     EXPECT_EQ(restoreEffects, default_restoreEffects);
     EXPECT_EQ(restoreEffects_const, default_restoreEffects);
 
     restoreEffects = default_restoreEffects_change;
-    restoreEffects = Restoringable_trait::get((*type));
+    restoreEffects = trait<EffectTypeContainer>::get((*type));
 
     EXPECT_EQ(restoreEffects, default_restoreEffects_change);
 }
