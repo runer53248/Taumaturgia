@@ -1,53 +1,9 @@
 #include <gtest/gtest.h>
 #include "Examples/PreetyPrint/preety_print.hpp"
-
-#ifdef WITH_ADD_PROPERTIES
-    #include "Usage/DefaultStrategies.hpp"
-
-    struct Type {};
-
-    using Weapon = add_properties<Type, Naming, Damaging>;
-    using DefaultWeapon = add_properties<Type, Naming, Damaging>;
-    using Player = add_properties<Type, Naming, Restoring, Wearing>;
-
-    struct CustomType {
-        std::vector<DefaultWeapon> others{
-            DefaultWeapon{Name{"Light weapon"}, Damage{10}},
-            DefaultWeapon{Name{"Medium weapon"}, Damage{20}}};
-    };
-
-    using CustomWeapon = add_properties<CustomType, Naming>;
-
-    template <>
-    #ifdef NO_PREMADE_STRATEGIES
-    struct UserStrategy_<Damage, CustomWeapon> {
-    #else
-    struct AttackStrategy_<CustomWeapon> {
-    #endif
-        static constexpr ActionStatus operator()(auto& obj, Object* owner, Object* target) {
-            auto* suspect = Whom(owner, target);
-            ActionStatus status{ActionStatus::None};
-
-            if constexpr (Damagingable<std::remove_reference_t<decltype(obj)>>) {
-                status = default_attack_behavior(obj, suspect);
-            }
-
-            if constexpr (Damagingable<typename decltype(obj.others)::value_type>) {
-                for (auto& other : obj.others) {
-                    status = default_attack_behavior(other, suspect);
-                    std::cout << "\t\t " << other << "\n";
-                }
-            }
-            return status;
-        }
-    };
-
-#else
-    #include "Examples/Structs/CustomWeapon.hpp"
-    #include "Examples/Structs/Player.hpp"
-    #include "Examples/Structs/Weapon.hpp"
-    #include "Usage/DefaultStrategies.hpp"
-#endif
+#include "Examples/Structs/CustomWeapon.hpp"
+#include "Examples/Structs/Player.hpp"
+#include "Examples/Structs/Weapon.hpp"
+#include "Usage/DefaultStrategies.hpp"
 
 constinit const auto max_health = 100;
 
