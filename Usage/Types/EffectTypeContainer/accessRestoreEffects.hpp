@@ -1,4 +1,5 @@
 #pragma once
+#include "Taumaturgia/Traits/accessType.hpp"
 #include "Usage/Types/EffectTypeContainer/RestoreEffectsConcepts.hpp"
 
 namespace traits {
@@ -6,7 +7,7 @@ namespace traits {
 #ifdef ACCESS_TRAIT_MACRO
 CreateAccessTrait(RestoreEffects, restoreEffects, EffectTypeContainer);
 #else
-struct accessRestoreEffects {
+struct accessRestoreEffects : public accessType<EffectTypeContainer> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessRestoreEffects, EffectTypeContainer>;
 
@@ -30,6 +31,8 @@ struct accessRestoreEffects {
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.template getType<EffectTypeContainer>();
     }
+
+    using accessType<EffectTypeContainer>::get;
 };
 #endif
 

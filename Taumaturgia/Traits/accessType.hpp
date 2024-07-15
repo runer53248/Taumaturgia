@@ -10,7 +10,7 @@ struct accessType {
                                        ? helpers::trait_accessable<T, accessType<TYPE, CONVERT_TYPE>, TYPE>
                                        : helpers::trait_access_convertable<T, accessType<TYPE, CONVERT_TYPE>, CONVERT_TYPE>;
 
-    static auto& get(TypeAccessable<TYPE> auto& el) noexcept {
+    static constexpr auto& get(TypeAccessable<TYPE> auto& el) noexcept {
         return el.type;
     }
 
@@ -34,3 +34,9 @@ struct accessType {
 };
 
 }  // namespace traits
+
+template <typename T, typename RESULT_TYPE>
+concept accessType_trait_able = traits::helpers::trait_accessable<T, traits::accessType<RESULT_TYPE>, RESULT_TYPE>;
+
+template <typename T, typename RESULT_TYPE>
+concept getType_template_able = traits::GetTypeTemplateAccessable<T, RESULT_TYPE>;

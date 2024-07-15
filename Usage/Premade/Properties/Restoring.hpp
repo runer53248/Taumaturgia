@@ -80,16 +80,6 @@ private:
 
 }  // namespace impl
 
-#ifdef WITH_ADD_PROPERTIES
-#include "Taumaturgia/Traits/UserTypeTraits.hpp"
-template <typename T>
-struct traits::CustomAccessType<EffectTypeContainer, T> {
-    static constexpr decltype(auto) get(GetRestoreEffectsAccessable auto& el) {
-        return el.getRestoreEffects();
-    }
-};
-#endif
-
 namespace impl::Test {
 struct Restoring_Test {};
 static_assert(Restoringable<Restoring_<Restoring_Test>>);

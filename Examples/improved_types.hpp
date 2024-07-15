@@ -32,7 +32,7 @@ struct UserProtectingImproved_ : public T {  // example of improving user proper
     UserProtectingImproved_() noexcept = default;
 };
 template <typename T>
-using UserProtectingImproved = std::conditional_t<accessType_trait_able<T, Protection>,
+using UserProtectingImproved = std::conditional_t<accessable<T, Protection>,
                                                   T,
                                                   UserProtectingImproved_<T>>;
 
@@ -44,6 +44,6 @@ struct UserProtectingImproved_2_ : public T {  // example of improving use prope
     UserProtectingImproved_2_() noexcept = default;
 };
 template <typename T>
-using UserProtectingImproved_2 = std::conditional_t<accessType_trait_able<T, Protection>,
+using UserProtectingImproved_2 = std::conditional_t<accessable<T, Protection>,
                                                     T,
                                                     UserProtectingImproved_2_<T>>;

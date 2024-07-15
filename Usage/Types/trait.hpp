@@ -1,5 +1,11 @@
 #pragma once
-#include "Usage/Types/PremadeTraits.hpp"
+#include "CureHealth/accessCureHealth.hpp"
+#include "Damage/accessDamage.hpp"
+#include "EffectTypeContainer/accessRestoreEffects.hpp"
+#include "Health/accessHealth.hpp"
+#include "Name/accessName.hpp"
+#include "Protection/accessProtection.hpp"
+#include "WearContainer/accessArmorWear.hpp"
 
 template <typename T>
 struct trait_ {};
@@ -41,3 +47,6 @@ struct trait_<Name> {
 
 template <typename T>
 using trait = trait_<T>::type;
+
+template <typename T, typename TYPE>
+concept accessable = trait<TYPE>::template accessable<T>;

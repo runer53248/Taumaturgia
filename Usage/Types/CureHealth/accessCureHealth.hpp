@@ -1,4 +1,5 @@
 #pragma once
+#include "Taumaturgia/Traits/accessType.hpp"
 #include "Usage/Types/CureHealth/CureHealthConcepts.hpp"
 
 namespace traits {
@@ -6,7 +7,7 @@ namespace traits {
 #ifdef ACCESS_TRAIT_MACRO
 CreateAccessTrait(CureHealth, cureHealth, CureHealth);
 #else
-struct accessCureHealth {
+struct accessCureHealth : public accessType<CureHealth> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessCureHealth, CureHealth>;
 
@@ -30,6 +31,8 @@ struct accessCureHealth {
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.template getType<CureHealth>();
     }
+
+    using accessType<CureHealth>::get;
 };
 #endif
 

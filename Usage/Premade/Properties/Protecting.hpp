@@ -75,16 +75,6 @@ private:
 
 }  // namespace impl
 
-#ifdef WITH_ADD_PROPERTIES
-#include "Taumaturgia/Traits/UserTypeTraits.hpp"
-template <typename T>
-struct traits::CustomAccessType<Protection, T> {
-    static constexpr decltype(auto) get(GetProtectionAccessable auto& el) {
-        return el.getProtection();
-    }
-};
-#endif
-
 namespace impl::Test {
 struct Protecting_Test {};
 static_assert(Protectingable<Protecting_<Protecting_Test>>);

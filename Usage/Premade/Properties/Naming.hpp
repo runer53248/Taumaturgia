@@ -25,16 +25,6 @@ private:
 
 }  // namespace impl
 
-#ifdef WITH_ADD_PROPERTIES
-#include "Taumaturgia/Traits/UserTypeTraits.hpp"
-template <typename T>
-struct traits::CustomAccessType<Name, T> {
-    static constexpr decltype(auto) get(GetNameAccessable auto& el) {
-        return el.getName();
-    }
-};
-#endif
-
 namespace impl::Test {
 struct Naming_Test {};
 static_assert(Namingable<Naming_<Naming_Test>>);

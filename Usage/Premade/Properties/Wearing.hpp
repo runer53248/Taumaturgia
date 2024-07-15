@@ -76,16 +76,6 @@ private:
 
 }  // namespace impl
 
-#ifdef WITH_ADD_PROPERTIES
-#include "Taumaturgia/Traits/UserTypeTraits.hpp"
-template <typename T>
-struct traits::CustomAccessType<WearContainer, T> {
-    static constexpr decltype(auto) get(GetArmorWearAccessable auto& el) {
-        return el.getArmorWear();
-    }
-};
-#endif
-
 namespace impl::Test {
 struct Wearing_Test {};
 static_assert(Wearingable<Wearing_<Wearing_Test>>);
