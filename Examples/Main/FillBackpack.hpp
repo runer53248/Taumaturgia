@@ -1,9 +1,5 @@
 #pragma once
-#ifdef WITH_ADD_PROPERTIES
-#include "structs_aP.hpp"
-#else
-#include "structs_no_aP.hpp"
-#endif
+#include "structs.hpp"
 
 void fillBackpack(auto& backpack) {
     backpack.emplace_back(weapon_1{
@@ -40,6 +36,8 @@ void fillBackpack(auto& backpack) {
         /*dmg*/ Damage{32},  // ? move damage here (it's it correct place)
         /*cureHealth*/ CureHealth{30});
 #else
+    // Weapon_6 and weapon_7 are build from struct holding damage - blocked it's move to correct position
+
     auto gustav_2 = weapon_6(
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},

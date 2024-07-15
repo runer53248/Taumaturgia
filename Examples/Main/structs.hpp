@@ -26,6 +26,7 @@ using weapon_4 = add_properties<CustomWeapon, Damaging>;   // CustomWeapon becam
 using weapon_5 = add_properties<DefaultWeapon, Damaging>;
 using weapon_6 = add_properties<Weapon, Living, Healing, Living, Healing>;
 using weapon_7 = add_properties<NoNameWeapon, Living, Healing, Living, Healing, Naming>;
+
 static_assert(std::is_same_v<weapon_6, add_properties<Weapon, Living, Healing>>);
 
 using armor_1 = Armor;
