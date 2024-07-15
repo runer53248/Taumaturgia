@@ -11,6 +11,7 @@ public:
 
     template <typename Self>
     constexpr operator std::string(this Self&& self) noexcept { return std::forward<Self>(self).value_; }
+    constexpr operator std::string() const noexcept { return value_; }
 
 private:
     std::string value_{};
