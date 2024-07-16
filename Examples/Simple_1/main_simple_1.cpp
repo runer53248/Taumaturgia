@@ -53,23 +53,23 @@ using Weapon_D = add_properties<
 
 // MARK: Weapon_A Damage
 
-template <typename T>
-    requires std::is_base_of_v<Weapon_A, T>
-struct traits::CustomAccessType<Damage, T> {
-    static constexpr decltype(auto) get(auto& el) {
-        return (el.dmg);
-    }
-};
+// template <typename T>
+//     requires std::is_base_of_v<Weapon_A, T>
+// struct traits::CustomAccessType<Damage, T> {
+//     static constexpr decltype(auto) get(auto& el) {
+//         return (el.dmg);
+//     }
+// };
 
-// MARK: Weapon_B Damage
+// // MARK: Weapon_B Damage
 
-template <typename T>
-    requires std::is_base_of_v<Weapon_B, T>
-struct traits::CustomAccessType<Damage, T> {
-    static constexpr decltype(auto) get(auto& el) {
-        return el.getDamage();
-    }
-};
+// template <typename T>
+//     requires std::is_base_of_v<Weapon_B, T>
+// struct traits::CustomAccessType<Damage, T> {
+//     static constexpr decltype(auto) get(auto& el) {
+//         return el.getDamage();
+//     }
+// };
 
 // MARK: Weapon_C Damage
 
@@ -83,20 +83,20 @@ struct traits::CustomAccessType<Damage, T> {
 
 // MARK: name_access concept
 
-template <typename T>
-concept name_access = requires(T t) {
-    { t.name } -> std::convertible_to<std::string>;
-    { std::as_const(t).name } -> std::convertible_to<const std::string>;
-};
+// template <typename T>
+// concept name_access = requires(T t) {
+//     { t.name } -> std::convertible_to<std::string>;
+//     { std::as_const(t).name } -> std::convertible_to<const std::string>;
+// };
 
-// MARK: AccessType Name
+// // MARK: AccessType Name
 
-template <name_access T>
-struct traits::CustomAccessType<Name, T> {
-    static constexpr decltype(auto) get(name_access auto& el) {
-        return (el.name);
-    }
-};
+// template <name_access T>
+// struct traits::CustomAccessType<Name, T> {
+//     static constexpr decltype(auto) get(name_access auto& el) {
+//         return (el.name);
+//     }
+// };
 
 // MARK: Weapon_A Name
 
