@@ -27,11 +27,6 @@ struct accessCureHealth : public accessType<CureHealth> {
         return CustomAccessCureHealth<std::remove_cvref_t<T> >::get(el);
     }
 
-    template <GetTypeTemplateCureHealthAccessable T>
-    static constexpr decltype(auto) get(T& el) noexcept {
-        return el.template getType<CureHealth>();
-    }
-
     using accessType<CureHealth>::get;
 };
 #endif

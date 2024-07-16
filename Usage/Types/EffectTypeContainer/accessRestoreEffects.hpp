@@ -27,11 +27,6 @@ struct accessRestoreEffects : public accessType<EffectTypeContainer> {
         return CustomAccessRestoreEffects<std::remove_cvref_t<T> >::get(el);
     }
 
-    template <GetTypeTemplateRestoreEffectsAccessable T>
-    static constexpr decltype(auto) get(T& el) noexcept {
-        return el.template getType<EffectTypeContainer>();
-    }
-
     using accessType<EffectTypeContainer>::get;
 };
 #endif

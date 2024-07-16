@@ -27,11 +27,6 @@ struct accessArmorWear : public accessType<WearContainer> {
         return CustomAccessArmorWear<std::remove_cvref_t<T> >::get(el);
     }
 
-    template <GetTypeTemplateArmorWearAccessable T>
-    static constexpr decltype(auto) get(T& el) noexcept {
-        return el.template getType<WearContainer>();
-    }
-
     using accessType<WearContainer>::get;
 };
 #endif

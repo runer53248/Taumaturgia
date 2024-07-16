@@ -27,11 +27,6 @@ struct accessDamage : public accessType<Damage> {
         return CustomAccessDamage<std::remove_cvref_t<T> >::get(el);
     }
 
-    template <GetTypeTemplateDamageAccessable T>
-    static constexpr decltype(auto) get(T& el) noexcept {
-        return el.template getType<Damage>();
-    }
-
     using accessType<Damage>::get;
 };
 #endif

@@ -28,11 +28,6 @@ struct accessName : public accessType<Name, std::string> {
         return CustomAccessName<std::remove_cvref_t<T> >::get(el);
     }
 
-    template <GetTypeTemplateNameAccessable T>
-    static constexpr decltype(auto) get(T& el) noexcept {
-        return el.template getType<Name>();
-    }
-
     using accessType<Name, std::string>::get;
 };
 #endif
