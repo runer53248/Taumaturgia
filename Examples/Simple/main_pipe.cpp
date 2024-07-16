@@ -12,13 +12,13 @@
 #include "Examples/demangle_type_name.hpp"
 
 namespace With {
-constexpr Property<Naming> Name{};
-constexpr Property<Damaging> Damage{};
-constexpr Property<Healing> CureHealth{};
-constexpr Property<Living> Health{};
-constexpr Property<Protecting> Protection{};
-constexpr Property<Restoring> EffectTypeContainer{};
-constexpr Property<Wearing> WearContainer{};
+[[maybe_unused]] constexpr Property<Naming> Name{};
+[[maybe_unused]] constexpr Property<Damaging> Damage{};
+[[maybe_unused]] constexpr Property<Healing> CureHealth{};
+[[maybe_unused]] constexpr Property<Living> Health{};
+[[maybe_unused]] constexpr Property<Protecting> Protection{};
+[[maybe_unused]] constexpr Property<Restoring> EffectTypeContainer{};
+[[maybe_unused]] constexpr Property<Wearing> WearContainer{};
 };  // namespace With
 
 template <typename T, template <typename> typename Prop>

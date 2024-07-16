@@ -7,7 +7,7 @@ constinit const char damaging_type_name[] = "UserDamaging";
 constinit const char protecting_type_name[] = "UserProtecting";
 }
 #else
-#include "Taumaturgia/Traits/UserTypeTraits.hpp"
+#include "Taumaturgia/Traits/accessType.hpp"
 #endif
 
 template <typename T>

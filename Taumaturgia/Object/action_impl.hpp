@@ -61,7 +61,7 @@ struct get_strategy {
 template <Properties P, typename T>
 decltype(auto) make_command_p(T& type) {
     using get_ = get_strategy<P>;
-    if constexpr (requires { typename get_::strategy<T>; }) {
+    if constexpr (requires { typename get_::template strategy<T>; }) {
         return std::make_shared<CommandModel<get_::template strategy, T>>(type);
     }
 }
