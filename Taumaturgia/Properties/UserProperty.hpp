@@ -7,6 +7,10 @@
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
 #include "Usage/Types/Name/Name.hpp"
 
+struct Token {};
+
+inline Token token{};
+
 namespace impl {
 inline constinit const char user_type_name[] = "UserProperty";
 
@@ -47,6 +51,14 @@ public:
     UserProperty_(const Name& name, [[maybe_unused]] decltype(std::ignore) type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<Args>(args)...} {}
+
+    // !
+
+    template <typename... Args>
+    UserProperty_(const Token&, Args&&... args)
+        : T{} {
+        ((trait<Args>::get(*this) = std::forward<Args>(args)),...);
+    }
 
     // MARK: Namingable type C-tors
 
