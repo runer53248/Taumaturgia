@@ -30,6 +30,15 @@ public:
         static_assert(constructible_from_args<Health, INFO...>, "Can't create Health from given tuple.");
     }
 
+    // !
+
+    template <typename... Args>
+    Living_(const Token&, Args&&... args)
+        : T{} {
+        ((trait<Args>::get(*this) = std::forward<Args>(args)),...);
+    }
+
+
     Living_(const Name& name)
         : T{name} {}
 

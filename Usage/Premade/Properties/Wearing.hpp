@@ -30,6 +30,15 @@ public:
         static_assert(constructible_from_args<WearContainer, INFO...>, "Can't create WearContainer from given tuple.");
     }
 
+    // !
+
+    template <typename... Args>
+    Wearing_(const Token&, Args&&... args)
+        : T{} {
+        ((trait<Args>::get(*this) = std::forward<Args>(args)),...);
+    }
+
+
     Wearing_(const Name& name)
         : T{name} {}
 

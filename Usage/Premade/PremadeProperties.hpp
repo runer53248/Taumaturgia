@@ -1,4 +1,6 @@
 #pragma once
+#include "Taumaturgia/Properties/Token.hpp"
+
 #include "Properties/Damaging.hpp"
 #include "Properties/Healing.hpp"
 #include "Properties/Living.hpp"

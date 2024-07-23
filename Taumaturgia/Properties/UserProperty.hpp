@@ -7,9 +7,7 @@
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
 #include "Usage/Types/Name/Name.hpp"
 
-struct Token {};
-
-inline Token token{};
+#include "Token.hpp"
 
 namespace impl {
 inline constinit const char user_type_name[] = "UserProperty";

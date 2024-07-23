@@ -30,6 +30,14 @@ public:
         static_assert(constructible_from_args<Damage, INFO...>, "Can't create Damage from given tuple.");
     }
 
+    // !
+
+    template <typename... Args>
+    Damaging_(const Token&, Args&&... args)
+        : T{} {
+        ((trait<Args>::get(*this) = std::forward<Args>(args)),...);
+    }
+
     Damaging_(const Name& name)
         : T{name} {}
 

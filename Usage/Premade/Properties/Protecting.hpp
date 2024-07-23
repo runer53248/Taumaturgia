@@ -29,6 +29,15 @@ public:
         static_assert(constructible_from_args<Protection, INFO...>, "Can't create Protection from given tuple.");
     }
 
+    // !
+
+    template <typename... Args>
+    Protecting_(const Token&, Args&&... args)
+        : T{} {
+        ((trait<Args>::get(*this) = std::forward<Args>(args)),...);
+    }
+
+
     Protecting_(const Name& name)
         : T{name} {}
 

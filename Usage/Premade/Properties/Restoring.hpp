@@ -30,6 +30,15 @@ public:
         static_assert(constructible_from_args<EffectTypeContainer, INFO...>, "Can't create EffectTypeContainer from given tuple.");
     }
 
+    // !
+
+    template <typename... Args>
+    Restoring_(const Token&, Args&&... args)
+        : T{} {
+        ((trait<Args>::get(*this) = std::forward<Args>(args)),...);
+    }
+
+
     Restoring_(const Name& name)
         : T{name} {}
 

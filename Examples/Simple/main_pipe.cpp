@@ -1,4 +1,4 @@
-// #define IGNORE_ORDER_LIST
+#define IGNORE_ORDER_LIST
 
 // TODO: split preety prints requiring Object class from those that don't and group them for simple one include
 #include "Examples/PreetyPrint/PrintDamage.hpp"
@@ -116,31 +116,7 @@ int main() {
     }
 
     {
-        using type_2 =
-            Living<
-                Damaging<
-                    Protecting<
-                        Naming<
-                            Base>>>>;
-
-        auto t2 = type_2{
-            token,  // ignore order of arguments
-            Health{100, 100},
-            Damage{5, DamageType::Physical},
-            Name{"Test"},
-            Protection{10, BodyLocation::Head},
-        };
-
-        std::cout << name<decltype(t2)>() << '\n';
-        std::cout << trait<Name>::get(t2) << '\n';
-        std::cout << trait<Damage>::get(t2) << '\n';
-        std::cout << trait<Protection>::get(t2) << '\n';
-        std::cout << trait<Health>::get(t2) << '\n';
-        std::cout << '\n';
-    }
-
-    {
-        auto create_type_3 =
+        auto create_type_2 =
             Base{}              //
             | With::Name        //
             | With::Health      //
@@ -148,18 +124,18 @@ int main() {
             | With::Protection  //
             ;
 
-        auto t3 = create_type_3(
+        auto t2 = create_type_2(
             token,  // ignore order of arguments
             Damage{5, DamageType::Magical},
             Protection{10, BodyLocation::Head},
             Name{"Test"},
             Health{100, 100});
 
-        std::cout << name<decltype(t3)>() << '\n';
-        std::cout << trait<Name>::get(t3) << '\n';
-        std::cout << trait<Damage>::get(t3) << '\n';
-        std::cout << trait<Protection>::get(t3) << '\n';
-        std::cout << trait<Health>::get(t3) << '\n';
+        std::cout << name<decltype(t2)>() << '\n';
+        std::cout << trait<Name>::get(t2) << '\n';
+        std::cout << trait<Damage>::get(t2) << '\n';
+        std::cout << trait<Protection>::get(t2) << '\n';
+        std::cout << trait<Health>::get(t2) << '\n';
         std::cout << '\n';
     }
 }

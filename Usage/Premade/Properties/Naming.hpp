@@ -11,6 +11,15 @@ public:
 
     Naming_() = default;
 
+    // !
+
+    template <typename... Args>
+    Naming_(const Token&, Args&&... args)
+        : T{} {
+        ((trait<Args>::get(*this) = std::forward<Args>(args)),...);
+    }
+
+
     template <typename... Args>
     Naming_(const Name& name, Args&&... args)
         : T{std::forward<Args>(args)...}, name_{name} {}
