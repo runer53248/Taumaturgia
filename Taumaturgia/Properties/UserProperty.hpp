@@ -8,9 +8,37 @@
 #include "Usage/Types/Name/Name.hpp"
 
 #include "Token.hpp"
+#include "Usage/Types/trait.hpp"
 
 namespace impl {
 inline constinit const char user_type_name[] = "UserProperty";
+
+template <typename TYPE, typename T, typename... Tags>
+class UserProperty_;
+
+template <typename TYPE>
+class UserProperty_<TYPE, tag> {
+public:
+    template <typename TAG>
+    using self = UserProperty_<TYPE, TAG>;                          // make yourself one template argument type to satisfy PropertyData
+    using property_data = PropertyData<user_type_name, self, tag>;  // ? should add TYPE into PropertyData?
+    using improvement_of = self<tag>;                               // will act like same type if TYPE and Tags are same
+
+    // MARK: getType
+
+    template <typename RETURN = TYPE, size_t DIG = 0>
+    constexpr decltype(auto) getType() & {
+        return (type_);
+    }
+
+    template <typename RETURN = TYPE, size_t DIG = 0>
+    constexpr decltype(auto) getType() const& {
+        return (type_);
+    }
+
+private:
+    TYPE type_{};
+};
 
 template <typename TYPE, typename T, typename... Tags>
 class UserProperty_ : public T {
@@ -55,7 +83,7 @@ public:
     template <typename... Args>
     UserProperty_(const Token&, Args&&... args)
         : T{} {
-        ((trait<Args>::get(*this) = std::forward<Args>(args)),...);
+        ((trait<Args>::get(*this) = std::forward<Args>(args)), ...);
     }
 
     // MARK: Namingable type C-tors
@@ -175,13 +203,17 @@ private:
 namespace impl::Test {
 struct UserProperty_Test {};
 static_assert(traits::accessType<int>::accessable<UserProperty_<int, UserProperty_Test>>);
+static_assert(traits::accessType<int>::accessable<UserProperty_<int, tag>>);
 }  // namespace impl::Test
 
 template <typename TYPE, typename T, typename... Args>
 using UserProperty = std::conditional_t<
     traits::accessType<TYPE>::template accessable<T>,
     T,
-    impl::UserProperty_<TYPE, T, Args...>>;
+    std::conditional_t<
+        trait<TYPE>::template accessable<T>,  // ! requiring that trait<TYPE> exist
+        T,
+        impl::UserProperty_<TYPE, T, Args...>>>;
 
 template <typename TYPE, typename... Args>
 struct UserPropertyAdapter {
