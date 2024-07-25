@@ -9,10 +9,11 @@ CreateAccessTrait(Damage, dmg, Damage);
 #else
 struct accessDamage : public accessType<Damage> {
     template <typename T>
-    static const bool accessable = helpers::trait_accessable<T, accessDamage, Damage>;
+    static constexpr bool accessable = helpers::trait_accessable<T, accessDamage, Damage>;
 
-    static constexpr auto& get(DamageAccessable auto& el) noexcept {
-        return el.dmg;
+    template <DamageAccessable T>
+    static constexpr decltype(auto) get(T& el) noexcept {
+        return (el.dmg);
     }
 
     template <GetDamageAccessable T>

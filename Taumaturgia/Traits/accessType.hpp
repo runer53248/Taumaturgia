@@ -3,15 +3,18 @@
 
 namespace traits {
 
+// TODO: consider use of trait<TYPE> when specialization exist
+
 template <typename TYPE, typename CONVERT_TYPE = void>
 struct accessType {
     template <typename T>
     static constexpr bool accessable = (std::is_same_v<CONVERT_TYPE, void>)
-                                       ? helpers::trait_accessable<T, accessType<TYPE, CONVERT_TYPE>, TYPE>
-                                       : helpers::trait_access_convertable<T, accessType<TYPE, CONVERT_TYPE>, CONVERT_TYPE>;
+                                           ? helpers::trait_accessable<T, accessType<TYPE, CONVERT_TYPE>, TYPE>
+                                           : helpers::trait_access_convertable<T, accessType<TYPE, CONVERT_TYPE>, CONVERT_TYPE>;
 
-    static constexpr auto& get(TypeAccessable<TYPE> auto& el) noexcept {
-        return el.type;
+    template <TypeAccessable<TYPE> T>
+    static constexpr decltype(auto) get(T& el) noexcept {
+        return (el.type);
     }
 
     template <GetTypeAccessable<TYPE> T>
