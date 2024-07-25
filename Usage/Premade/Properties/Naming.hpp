@@ -1,5 +1,6 @@
 #pragma once
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
+#include "Taumaturgia/Properties/Token.hpp"
 
 namespace impl {
 inline constinit const char naming_type_name[] = "Naming";

@@ -5,6 +5,7 @@
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
 #include "Usage/Types/Health/Health.hpp"
 #include "Usage/Types/Name/Name.hpp"
+#include "Taumaturgia/Properties/Token.hpp"
 
 namespace impl {
 inline constinit const char living_type_name[] = "Living";

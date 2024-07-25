@@ -4,6 +4,7 @@
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
 #include "Usage/Types/Name/Name.hpp"
 #include "Usage/Types/Protection/Protection.hpp"
+#include "Taumaturgia/Properties/Token.hpp"
 
 namespace impl {
 inline constinit const char protecting_type_name[] = "Protecting";

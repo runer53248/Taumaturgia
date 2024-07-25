@@ -5,9 +5,29 @@
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
 #include "Usage/Types/Damage/Damage.hpp"
 #include "Usage/Types/Name/Name.hpp"
+#include "Taumaturgia/Properties/Token.hpp"
 
 namespace impl {
 inline constinit const char damaging_type_name[] = "Damaging";
+
+template <typename T>
+class Damaging_;
+
+template <>
+class Damaging_<tag> {
+public:
+    using property_data = PropertyData<damaging_type_name, Damaging_, tag>;
+
+    template <typename TARGET>
+    using apply = std::conditional_t<Damagingable<TARGET>, TARGET, impl::Damaging_<TARGET>>;
+
+    constexpr auto& getDamage(this auto& self) {
+        return self.dmg_;
+    }
+
+private:
+    Damage dmg_{};
+};
 
 template <typename T>
 class Damaging_ : public T {
@@ -35,7 +55,7 @@ public:
     template <typename... Args>
     Damaging_(const Token&, Args&&... args)
         : T{} {
-        ((trait<Args>::get(*this) = std::forward<Args>(args)),...);
+        ((trait<Args>::get(*this) = std::forward<Args>(args)), ...);
     }
 
     Damaging_(const Name& name)
@@ -87,7 +107,8 @@ private:
 namespace impl::Test {
 struct Damaging_Test {};
 static_assert(Damagingable<Damaging_<Damaging_Test>>);
+static_assert(Damagingable<Damaging_<tag>>);
 }  // namespace impl::Test
 
 template <typename T>
-using Damaging = std::conditional_t<Damagingable<T>, T, impl::Damaging_<T>>;
+using Damaging = impl::Damaging_<tag>::apply<T>;

@@ -5,6 +5,7 @@
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
 #include "Usage/Types/Name/Name.hpp"
 #include "Usage/Types/WearContainer/WearContainer.hpp"
+#include "Taumaturgia/Properties/Token.hpp"
 
 namespace impl {
 inline constinit const char wearing_type_name[] = "Wearing";
