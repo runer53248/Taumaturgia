@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <chrono>
 #include <iostream>
 #include <numeric>
@@ -18,7 +19,7 @@ public:
         using namespace std::chrono;
 
         using time_type = nanoseconds;
-        auto begin_value = time_type{0};
+        auto begin_value = time_type{};
         std::vector<time_type> times;
         times.reserve(repetition);
 
@@ -49,10 +50,13 @@ public:
         times.push_back(duration);
         std::cout << "last run duration: " << duration << '\n';
 
-        auto dur_sum= std::accumulate(times.begin(), times.end(), begin_value);
-        auto dur_aprox = dur_sum / static_cast<int>(repetition);
+        auto dur_sum = std::accumulate(times.begin(), times.end(), begin_value);
+        auto dur_aprox = dur_sum / repetition;
+
+        auto dur_max = std::ranges::max(times);
 
         std::cout << "duration all: " << dur_sum << "\n";
+        std::cout << "duration MAX: " << dur_max.count() << "\n";
         std::cout << "dur_aprox: " << dur_aprox << " (after repeat: " << repetition << " times)\n";
         return result;
     }
