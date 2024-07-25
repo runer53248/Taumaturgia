@@ -8,7 +8,13 @@
 #include "WearContainer/accessArmorWear.hpp"
 
 template <typename T>
-struct trait_ {};
+struct trait_ {
+    struct Default {
+        template <typename>
+        static constexpr bool accessable = false;
+    };
+    using type = Default;
+};
 
 template <>
 struct trait_<Damage> {
