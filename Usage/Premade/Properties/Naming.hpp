@@ -10,16 +10,25 @@ class Naming_ : public T {
 public:
     using property_data = PropertyData<naming_type_name, Naming_, T>;
 
+    template <typename TARGET>
+    using apply = std::conditional_t<Namingable<TARGET>, TARGET, impl::Naming_<TARGET>>;
+
     Naming_() = default;
 
-    // !
+    // MARK: Token C-tors
 
     template <typename... Args>
     Naming_(const Token&, Args&&... args)
         : T{} {
-        ((trait<Args>::get(*this) = std::forward<Args>(args)),...);
+        ((trait<Args>::get(*this) = std::forward<Args>(args)), ...);
     }
 
+    // MARK: copy/move C-tors
+
+    template <typename TT>
+        requires(not(std::same_as<std::remove_cvref_t<TT>, Token> or std::same_as<std::remove_cvref_t<TT>, Name>))
+    explicit Naming_(TT&& t)
+        : T{std::forward<TT>(t)} {}
 
     template <typename... Args>
     Naming_(const Name& name, Args&&... args)

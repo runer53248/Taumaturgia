@@ -2,9 +2,9 @@
 #include <variant>
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
+#include "Taumaturgia/Properties/Token.hpp"
 #include "Usage/Types/Name/Name.hpp"
 #include "Usage/Types/Protection/Protection.hpp"
-#include "Taumaturgia/Properties/Token.hpp"
 
 namespace impl {
 inline constinit const char protecting_type_name[] = "Protecting";
@@ -13,6 +13,9 @@ template <typename T>
 class Protecting_ : public T {
 public:
     using property_data = PropertyData<protecting_type_name, Protecting_, T>;
+
+    template <typename TARGET>
+    using apply = std::conditional_t<Protectingable<TARGET>, TARGET, impl::Protecting_<TARGET>>;
 
     Protecting_() = default;
 
@@ -30,14 +33,21 @@ public:
         static_assert(constructible_from_args<Protection, INFO...>, "Can't create Protection from given tuple.");
     }
 
-    // !
+    // MARK: Token C-tors
 
     template <typename... Args>
     Protecting_(const Token&, Args&&... args)
         : T{} {
-        ((trait<Args>::get(*this) = std::forward<Args>(args)),...);
+        ((trait<Args>::get(*this) = std::forward<Args>(args)), ...);
     }
 
+    // MARK: copy/move C-tors
+
+    template <typename TT>
+        requires(not std::same_as<std::remove_cvref_t<TT>, Token>  //
+                 and (std::copy_constructible<T> or std::move_constructible<T>))
+    Protecting_(TT&& t)
+        : T{std::forward<TT>(t)} {}
 
     Protecting_(const Name& name)
         : T{name} {}

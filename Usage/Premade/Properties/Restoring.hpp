@@ -3,9 +3,9 @@
 #include <variant>
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
+#include "Taumaturgia/Properties/Token.hpp"
 #include "Usage/Types/EffectTypeContainer/EffectTypeContainer.hpp"
 #include "Usage/Types/Name/Name.hpp"
-#include "Taumaturgia/Properties/Token.hpp"
 
 namespace impl {
 inline constinit const char restoring_type_name[] = "Restoring";
@@ -14,6 +14,9 @@ template <typename T>
 class Restoring_ : public T {
 public:
     using property_data = PropertyData<restoring_type_name, Restoring_, T>;
+
+    template <typename TARGET>
+    using apply = std::conditional_t<Restoringable<TARGET>, TARGET, impl::Restoring_<TARGET>>;
 
     Restoring_() = default;
 
@@ -31,14 +34,21 @@ public:
         static_assert(constructible_from_args<EffectTypeContainer, INFO...>, "Can't create EffectTypeContainer from given tuple.");
     }
 
-    // !
+    // MARK: Token C-tors
 
     template <typename... Args>
     Restoring_(const Token&, Args&&... args)
         : T{} {
-        ((trait<Args>::get(*this) = std::forward<Args>(args)),...);
+        ((trait<Args>::get(*this) = std::forward<Args>(args)), ...);
     }
 
+    // MARK: copy/move C-tors
+
+    template <typename TT>
+        requires(not std::same_as<std::remove_cvref_t<TT>, Token>  //
+                 and (std::copy_constructible<T> or std::move_constructible<T>))
+    Restoring_(TT&& t)
+        : T{std::forward<TT>(t)} {}
 
     Restoring_(const Name& name)
         : T{name} {}

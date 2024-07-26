@@ -3,9 +3,9 @@
 #include <variant>
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
+#include "Taumaturgia/Properties/Token.hpp"
 #include "Usage/Types/Damage/Damage.hpp"
 #include "Usage/Types/Name/Name.hpp"
-#include "Taumaturgia/Properties/Token.hpp"
 
 namespace impl {
 inline constinit const char damaging_type_name[] = "Damaging";
@@ -50,13 +50,21 @@ public:
         static_assert(constructible_from_args<Damage, INFO...>, "Can't create Damage from given tuple.");
     }
 
-    // !
+    // MARK: Token C-tors
 
     template <typename... Args>
     Damaging_(const Token&, Args&&... args)
         : T{} {
         ((trait<Args>::get(*this) = std::forward<Args>(args)), ...);
     }
+
+    // MARK: copy/move C-tors
+
+    template <typename TT>
+        requires(not std::same_as<std::remove_cvref_t<TT>, Token>  //
+                 and (std::copy_constructible<T> or std::move_constructible<T>))
+    Damaging_(TT&& t)
+        : T{std::forward<TT>(t)} {}
 
     Damaging_(const Name& name)
         : T{name} {}

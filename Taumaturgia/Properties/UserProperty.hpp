@@ -78,13 +78,20 @@ public:
         requires(not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<Args>(args)...} {}
 
-    // !
+    // MARK: Token C-tors
 
     template <typename... Args>
     UserProperty_(const Token&, Args&&... args)
         : T{} {
         ((trait<Args>::get(*this) = std::forward<Args>(args)), ...);
     }
+
+    // MARK: copy/move C-tors
+
+    template <typename TT>
+        requires(not (std::same_as<std::remove_cvref_t<TT>, Token> or std::same_as<std::remove_cvref_t<TT>, TYPE>))
+    explicit UserProperty_(TT&& t)
+        : T{std::forward<TT>(t)} {}
 
     // MARK: Namingable type C-tors
 
