@@ -1,10 +1,19 @@
 #pragma once
 #include <concepts>
 
-template <typename... T>
-struct list {};
-
 struct tag {};
+
+template <typename... T>
+struct list {
+    list() = default;
+
+    template <typename TT>
+    list(const TT&) {}
+};
+
+// implicit conversion from Property<Naming> to list<Naming<tag>>
+template <template <template <typename...> typename> typename Prop, template <typename...> typename property>
+list(const Prop<property>&) -> list<property<tag>>;
 
 template <typename T>
 struct empty_property : public T {};
