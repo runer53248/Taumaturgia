@@ -9,11 +9,7 @@
 
 template <typename T>
 struct trait_ {
-    struct Default {
-        template <typename>
-        static constexpr bool accessable = false;
-    };
-    using type = Default;
+    using type = traits::accessType<T>;
 };
 
 template <>
