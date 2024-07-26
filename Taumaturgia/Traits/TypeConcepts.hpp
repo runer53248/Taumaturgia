@@ -4,9 +4,9 @@
 namespace traits {
 
 template <typename T, typename TYPE>
-concept TypeAccessable = requires(T x) {
-    x.type;
-    std::is_same_v<decltype(T::type), TYPE>;
+concept TypeAccessable = requires(std::remove_cvref_t<T> x) {
+    { x.type } -> std::same_as<TYPE&>;
+    { std::as_const(x).type } -> std::same_as<const TYPE&>;
 };
 
 template <typename T, typename TYPE>
