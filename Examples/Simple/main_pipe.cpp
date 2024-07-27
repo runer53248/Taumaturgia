@@ -38,8 +38,8 @@ struct Base {
 
     TokenCtor(Base);
 
-    template <typename T>
-    constexpr decltype(auto) getType() noexcept {
+    template <typename T, size_t = 0>
+    constexpr decltype(auto) getType() & noexcept {
         if constexpr (std::same_as<T, int>) {
             return (type1);
         }
@@ -47,8 +47,8 @@ struct Base {
             return (type2);
         }
     }
-    template <typename T>
-    constexpr decltype(auto) getType() const noexcept {
+    template <typename T, size_t = 0>
+    constexpr decltype(auto) getType() const& noexcept {
         if constexpr (std::same_as<T, int>) {
             return (type1);
         }
@@ -86,6 +86,9 @@ int main() {
             Damage{5, DamageType::Divine},
             Health{100, 100},
             Protection{10, BodyLocation::Head},
+            int{100},       // type<int>
+            float{3.14f},   // type<float>
+            double{20.20},  // type<double>
             Name{"Test"},
         };
 
@@ -96,6 +99,9 @@ int main() {
         std::cout << trait<Health>::get(t1) << '\n';
         std::cout << t1.x << '\n';
         std::cout << t1.y << '\n';
+        std::cout << trait<int>::get(t1) << '\n';
+        std::cout << trait<float>::get(t1) << '\n';
+        std::cout << trait<double>::get(t1) << '\n';
         std::cout << '\n';
     }
 
@@ -114,6 +120,9 @@ int main() {
             token,  // ignore order of arguments
             Damage{5, DamageType::Divine},
             Health{100, 100},
+            int{100},       // type<int>
+            float{3.14f},   // type<float>
+            double{20.20},  // type<double>
             Protection{10, BodyLocation::Head},
             Name{"Test"},
         };
@@ -125,6 +134,9 @@ int main() {
         std::cout << trait<Health>::get(t1) << '\n';
         std::cout << t1.x << '\n';
         std::cout << t1.y << '\n';
+        std::cout << trait<int>::get(t1) << '\n';
+        std::cout << trait<float>::get(t1) << '\n';
+        std::cout << trait<double>::get(t1) << '\n';
         std::cout << '\n';
     }
 
@@ -145,7 +157,10 @@ int main() {
             token,  // ignore order of arguments
             Health{100, 100},
             Damage{5, DamageType::Magical},
+            float{3.14f},  // type<float>
             Protection{10, BodyLocation::Head},
+            int{100},       // type<int>
+            double{20.20},  // type<double>
             Name{"Test"});
 
         std::cout << "x = " << default_x << " | " << t2.x << '\n';  // ! should remember x value
@@ -158,7 +173,9 @@ int main() {
         std::cout << trait<Health>::get(t2) << '\n';
         std::cout << t2.x << '\n';
         std::cout << t2.y << '\n';
-
+        std::cout << trait<int>::get(t2) << '\n';
+        std::cout << trait<float>::get(t2) << '\n';
+        std::cout << trait<double>::get(t2) << '\n';
         std::cout << '\n';
     }
 
@@ -167,26 +184,11 @@ int main() {
 
         // Base base{default_x, default_y};  // target
         // auto tp = base | tlist;           // modify existing target type
+
         auto tp = Base{default_x, default_y} | tlist;
 
         std::cout << "x = " << default_x << " | " << tp.x << '\n';
         std::cout << "y = " << default_y << " | " << tp.y << '\n';
-        std::cout << "tlist =  " << name<decltype(tlist)>() << '\n';
-        std::cout << "tlist2 = " << name<decltype(tlist)>() << '\n';
-        std::cout << "tp =     " << name<decltype(tp)>() << '\n';
-        std::cout << '\n';
-
-        {                              // extra example
-            list tlist2 = With::Name;  // ? implicit conversion needed (don't use auto)
-            auto tlist3 = With::Name;  // !
-
-            auto tp2 = Base{default_x, default_y} | tlist2;
-            auto tp3 = Base{default_x, default_y} | tlist3;  // ! creator
-
-            std::cout << "tp2 =    " << name<decltype(tp2)>() << '\n';
-            std::cout << "tp3 =    " << name<decltype(tp3)>() << '\n';  // ! creator
-            std::cout << '\n';
-        }
 
         // update rest of target parameters
         auto update = [](auto& target) {
@@ -197,16 +199,10 @@ int main() {
             };
         };
 
-        // static_assert(trait<float>::template accessable<decltype(tp)>);
-        // static_assert(traits::TypeAccessable<decltype(tp), float>);
-
-        static_assert(trait<double>::template accessable<decltype(tp)>);
-        static_assert(traits::TypeAccessable<decltype(tp), double>);
-
         update(tp)(
             Health{100, 100},
-            int{100},      // type<int>
-            float{3.14f},  // type<float>
+            float{3.14f},   // type<float>
+            int{100},       // type<int>
             double{20.20},  // type<double>
             Damage{5},
             Protection{10, BodyLocation::Head},
@@ -222,5 +218,18 @@ int main() {
         std::cout << trait<int>::get(tp) << '\n';
         std::cout << trait<float>::get(tp) << '\n';
         std::cout << trait<double>::get(tp) << '\n';
+    }
+
+    {                              // extra example
+        list tlist2 = With::Name;  // ? implicit conversion needed (don't use auto)
+        auto tlist3 = With::Name;  // !
+
+        auto tp2 = Base{default_x, default_y} | tlist2;
+        auto tp3 = Base{default_x, default_y} | tlist3;  // ! creator
+
+        std::cout << '\n';
+        std::cout << "tp2 =    " << name<decltype(tp2)>() << '\n';
+        std::cout << "tp3 =    " << name<decltype(tp3)>() << '\n';  // ! creator
+        std::cout << '\n';
     }
 }
