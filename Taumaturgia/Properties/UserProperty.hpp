@@ -27,12 +27,12 @@ public:
     // MARK: getType
 
     template <typename RETURN = TYPE, size_t DIG = 0>
-    constexpr decltype(auto) getType() & {
+    constexpr decltype(auto) getType() & noexcept {
         return (type_);
     }
 
     template <typename RETURN = TYPE, size_t DIG = 0>
-    constexpr decltype(auto) getType() const& {
+    constexpr decltype(auto) getType() const& noexcept {
         return (type_);
     }
 
@@ -89,7 +89,7 @@ public:
     // MARK: copy/move C-tors
 
     template <typename TT>
-        requires(not (std::same_as<std::remove_cvref_t<TT>, Token> or std::same_as<std::remove_cvref_t<TT>, TYPE>))
+        requires(not(std::same_as<std::remove_cvref_t<TT>, Token> or std::same_as<std::remove_cvref_t<TT>, TYPE>))
     explicit UserProperty_(TT&& t)
         : T{std::forward<TT>(t)} {}
 
@@ -171,8 +171,10 @@ public:
 
     // MARK: getType
 
+    // TODO: consider replace digging with tags
+
     template <typename RETURN = TYPE, size_t DIG = 0>
-    constexpr decltype(auto) getType() & {
+    constexpr decltype(auto) getType() & noexcept {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             if constexpr (DIG) {
                 if constexpr (getType_template_able<T, RETURN>) {
@@ -187,7 +189,7 @@ public:
     }
 
     template <typename RETURN = TYPE, size_t DIG = 0>
-    constexpr decltype(auto) getType() const& {
+    constexpr decltype(auto) getType() const& noexcept {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
             if constexpr (DIG) {
                 if constexpr (getType_template_able<T, RETURN>) {
