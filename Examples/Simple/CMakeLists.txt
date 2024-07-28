@@ -13,6 +13,10 @@ add_executable(main_fix_Ap_${addons}
 )
 target_compile_definitions(main_fix_Ap_${addons} PUBLIC WITH_ADD_PROPERTIES)
 
+add_executable(main_token
+    main_token.cpp
+)
+
 add_executable(main_pipe
     main_pipe.cpp
 )

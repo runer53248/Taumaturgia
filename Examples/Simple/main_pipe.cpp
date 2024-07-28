@@ -5,7 +5,7 @@
 #include "Examples/PreetyPrint/PrintHealth.hpp"
 #include "Examples/PreetyPrint/PrintName.hpp"
 #include "Examples/PreetyPrint/PrintProtection.hpp"
-#include "Usage/Strategies.hpp"
+#include "Usage/Properties.hpp"
 
 #include "Examples/demangle_type_name.hpp"
 
@@ -19,14 +19,17 @@ namespace With {
 [[maybe_unused]] constexpr Property<Protecting> Protection{};
 [[maybe_unused]] constexpr Property<Restoring> EffectTypeContainer{};
 [[maybe_unused]] constexpr Property<Wearing> WearContainer{};
+
+template <template <typename> typename P>
+[[maybe_unused]] constexpr Property<P> property{};
 };  // namespace With
 
 template <typename T, typename TYPE>
 concept type_of = std::same_as<std::remove_const_t<T>, TYPE>;
 
 #define TokenCtor(ClassName)                                         \
-    template <type_of<Token> Arg, typename... Args>                  \
-    ClassName(Arg&, Args&&... args) noexcept {                       \
+    template <typename... Args>                                      \
+    ClassName(const Token&, Args&&... args) noexcept {               \
         ((trait<Args>::get(*this) = std::forward<Args>(args)), ...); \
     }
 
@@ -59,10 +62,10 @@ struct Base {
 
     int x{};
     int y{};
-    Name name;
+    // Name name;
     Damage dmg;
-    Health hp;
-    // Protection protection;
+    // Health hp;
+    Protection protection;
     double type{};
 
 private:
@@ -72,89 +75,38 @@ private:
 
 int main() {
     std::cout << '\n';
-    {
-        // create a type
-        using type_1 = add_properties<
-            Base,
-            Living,
-            Damaging,
-            Protecting,
-            Naming>;
 
-        auto t1 = type_1{
-            token,  // ignore order of arguments
-            Damage{5, DamageType::Divine},
-            Health{100, 100},
-            Protection{10, BodyLocation::Head},
-            int{100},       // type<int>
-            float{3.14f},   // type<float>
-            double{20.20},  // type<double>
-            Name{"Test"},
-        };
-
-        std::cout << name<decltype(t1)>() << '\n';
-        std::cout << trait<Name>::get(t1) << '\n';
-        std::cout << trait<Damage>::get(t1) << '\n';
-        std::cout << trait<Protection>::get(t1) << '\n';
-        std::cout << trait<Health>::get(t1) << '\n';
-        std::cout << t1.x << '\n';
-        std::cout << t1.y << '\n';
-        std::cout << trait<int>::get(t1) << '\n';
-        std::cout << trait<float>::get(t1) << '\n';
-        std::cout << trait<double>::get(t1) << '\n';
+    auto print = [](auto type) {
+        std::cout << "type       = " << name<decltype(type)>() << '\n';
+        std::cout << "Name       = " << trait<Name>::get(type) << '\n';
+        std::cout << "Damage     = " << trait<Damage>::get(type) << '\n';
+        std::cout << "Protection = " << trait<Protection>::get(type) << '\n';
+        std::cout << "Health     = " << trait<Health>::get(type) << '\n';
+        std::cout << "x      = " << type.x << '\n';
+        std::cout << "y      = " << type.y << '\n';
+        std::cout << "int    = " << trait<int>::get(type) << '\n';
+        std::cout << "float  = " << trait<float>::get(type) << '\n';
+        std::cout << "double = " << trait<double>::get(type) << '\n';
         std::cout << '\n';
-    }
-
-    {
-        // create a properties_list
-        using p_list = properties_list<
-            Living,
-            Damaging,
-            Protecting,
-            Naming>;
-
-        // create a type
-        using type_1 = p_list::apply_properties<Base>;
-
-        auto t1 = type_1{
-            token,  // ignore order of arguments
-            Damage{5, DamageType::Divine},
-            Health{100, 100},
-            int{100},       // type<int>
-            float{3.14f},   // type<float>
-            double{20.20},  // type<double>
-            Protection{10, BodyLocation::Head},
-            Name{"Test"},
-        };
-
-        std::cout << name<decltype(t1)>() << '\n';
-        std::cout << trait<Name>::get(t1) << '\n';
-        std::cout << trait<Damage>::get(t1) << '\n';
-        std::cout << trait<Protection>::get(t1) << '\n';
-        std::cout << trait<Health>::get(t1) << '\n';
-        std::cout << t1.x << '\n';
-        std::cout << t1.y << '\n';
-        std::cout << trait<int>::get(t1) << '\n';
-        std::cout << trait<float>::get(t1) << '\n';
-        std::cout << trait<double>::get(t1) << '\n';
-        std::cout << '\n';
-    }
+    };
 
     constexpr auto default_x = 12;
     constexpr auto default_y = 5;
 
     {
+        Base base{default_x, default_y};
+
         // create a lambda factory
         auto create_type_2 =
-            Base{default_x, default_y}  // ! ignore prototype and use default c-tor
-            | With::Name                //
-            | With::Health              //
-            | With::Damage              //
-            | With::Protection          //
-            ;
+            base                // ! ignore prototype and use default c-tor
+            | With::Name        //
+            | With::Health      //
+            | With::Damage      //
+            | With::Protection  //
+            | With::property<Protecting>;
 
         auto t2 = create_type_2(
-            token,  // ignore order of arguments
+            unordered,  // ignore order of arguments
             Health{100, 100},
             Damage{5, DamageType::Magical},
             float{3.14f},  // type<float>
@@ -163,61 +115,42 @@ int main() {
             double{20.20},  // type<double>
             Name{"Test"});
 
-        std::cout << "x = " << default_x << " | " << t2.x << '\n';  // ! should remember x value
-        std::cout << "y = " << default_y << " | " << t2.y << '\n';  // ! should remember x value
-
-        std::cout << name<decltype(t2)>() << '\n';
-        std::cout << trait<Name>::get(t2) << '\n';
-        std::cout << trait<Damage>::get(t2) << '\n';
-        std::cout << trait<Protection>::get(t2) << '\n';
-        std::cout << trait<Health>::get(t2) << '\n';
-        std::cout << t2.x << '\n';
-        std::cout << t2.y << '\n';
-        std::cout << trait<int>::get(t2) << '\n';
-        std::cout << trait<float>::get(t2) << '\n';
-        std::cout << trait<double>::get(t2) << '\n';
-        std::cout << '\n';
+        print(t2);
     }
 
     {
+        Base base{default_x, default_y};  // target
+
         auto tlist = With::Name | With::Health | With::Protection | With::Damage;
 
-        // Base base{default_x, default_y};  // target
-        // auto tp = base | tlist;           // modify existing target type
-
-        auto tp = Base{default_x, default_y} | tlist;
-
-        std::cout << "x = " << default_x << " | " << tp.x << '\n';
-        std::cout << "y = " << default_y << " | " << tp.y << '\n';
+        // auto tp = Base{default_x, default_y} | tlist;
+        auto tp = base | tlist;  // modify existing target type
 
         // update rest of target parameters
         auto update = [](auto& target) {
             return [&target]<typename... Args>
-                requires(trait<Args>::template accessable<std::remove_cvref_t<decltype(target)>> and ...)
+                requires(
+                    (std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>) and  // every argument have unique type
+                    (trait<std::remove_cvref_t<Args>>::template accessable<std::remove_cvref_t<decltype(target)>> and ...))             // every type is accessable by trait
             (Args&&... args) {
-                ((trait<Args>::get(target) = std::forward<Args>(args)), ...);
+                ((trait<std::remove_cvref_t<Args>>::get(target) = std::forward<Args>(args)), ...);
             };
         };
 
+        int default_int = 100;
+        // constexpr int default_int = 100;
+
         update(tp)(
             Health{100, 100},
-            float{3.14f},   // type<float>
-            int{100},       // type<int>
+            float{3.14f},  // type<float>
+            // int{100},       // type<int>
+            default_int,    // type<int>
             double{20.20},  // type<double>
-            Damage{5},
+            Damage{5, DamageType::Divine},
             Protection{10, BodyLocation::Head},
             Name{"Test"});
 
-        std::cout << name<decltype(tp)>() << '\n';
-        std::cout << trait<Name>::get(tp) << '\n';
-        std::cout << trait<Damage>::get(tp) << '\n';
-        std::cout << trait<Protection>::get(tp) << '\n';
-        std::cout << trait<Health>::get(tp) << '\n';
-        std::cout << tp.x << '\n';
-        std::cout << tp.y << '\n';
-        std::cout << trait<int>::get(tp) << '\n';
-        std::cout << trait<float>::get(tp) << '\n';
-        std::cout << trait<double>::get(tp) << '\n';
+        print(tp);
     }
 
     {                              // extra example

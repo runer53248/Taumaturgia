@@ -1,4 +1,4 @@
 #pragma once
 
 struct Token {};
-inline Token token{};
+inline Token unordered{};
