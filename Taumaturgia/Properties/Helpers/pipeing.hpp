@@ -1,4 +1,5 @@
 #pragma once
+#include "Taumaturgia/Properties/UserProperty.hpp"  // for UserPropertyAdapter
 #include "taged_list.hpp"
 
 namespace impl {
@@ -50,6 +51,26 @@ auto creator_impl() {
     };
 }
 
+// for build in properties
+template <typename T, template <typename> typename... Props, typename P>
+auto pipe_helper(T&& t, Props<P>...) {
+    using result = add_properties<std::remove_cvref_t<T>, Props<P>::template apply...>;
+
+    if constexpr (std::same_as<std::remove_cvref_t<T>, result>) {
+        return std::forward<T>(t);
+    } else {
+        return result{std::forward<T>(t)};
+    }
+}
+
+// for user type properties
+template <typename T, template <typename, typename> typename... Props, typename... TYPES, typename P>
+auto pipe_helper(T&& t, Props<TYPES, P>...) {
+    using result = add_properties<std::remove_cvref_t<T>, UserPropertyAdapter<TYPES>::template type...>;
+
+    return result{std::forward<T>(t)};
+}
+
 }  // namespace impl
 
 template <typename T, template <typename> typename Prop>
@@ -69,28 +90,7 @@ auto operator|(list<Props...>, Property<Prop2>) {
     return boost::mp11::mp_append<list<Props...>, taged_list<Prop2>>{};
 }
 
-// for build in properties
-template <typename T, template <typename> typename... Props, typename P>
-auto fx([[maybe_unused]] T&& t, Props<P>...) {
-    using result = add_properties<T, Props<P>::template apply...>;
-    if constexpr (std::same_as<std::remove_cvref_t<T>, result>) {
-        return t;
-    } else {
-        return result{t};
-    }
-}
-
-#include "Taumaturgia/Properties/UserProperty.hpp"  // for UserPropertyAdapter
-
-// for user type properties
-template <typename T, template <typename, typename> typename... Props, typename... TYPES, typename P>
-auto fx(T t, Props<TYPES, P>...) {
-    using result = add_properties<T, UserPropertyAdapter<TYPES>::template type...>;
-    return result(t);
-}
-
-//
 template <typename T, typename... Props>
 auto operator|(T&& t, list<Props...>) {
-    return fx(std::forward<T>(t), Props{}...);
+    return impl::pipe_helper(std::forward<T>(t), Props{}...);
 }

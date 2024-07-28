@@ -11,10 +11,11 @@
 template <typename T, typename TYPE>
 concept type_of = std::same_as<std::remove_const_t<T>, TYPE>;
 
-#define TokenCtor(ClassName)                                         \
-    template <typename... Args>                                      \
-    ClassName(const Token&, Args&&... args) noexcept {               \
-        ((trait<Args>::get(*this) = std::forward<Args>(args)), ...); \
+#define TokenCtor(ClassName)                                                                                                  \
+    template <typename... Args>                                                                                               \
+        requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>> \
+    ClassName(const Token&, Args&&... args) noexcept {                                                                        \
+        ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);                                     \
     }
 
 struct Base {
@@ -42,10 +43,10 @@ struct Base {
 
     int x{};
     int y{};
-    // Name name;
-    Damage dmg;
-    Health hp;
-    // Protection protection;
+    Name name;
+    // Damage dmg;
+    // Health hp;
+    Protection protection;
     double type{};
 
 private:
@@ -55,6 +56,14 @@ private:
 
 int main() {
     std::cout << '\n';
+
+    [[maybe_unused]] int default_int{100};
+    [[maybe_unused]] float default_float{3.14f};
+    [[maybe_unused]] double default_double{20.20};
+    [[maybe_unused]] Health default_health{100, 100};
+    [[maybe_unused]] Damage default_damage{5, DamageType::Divine};
+    [[maybe_unused]] Protection default_protection{10, BodyLocation::Head};
+    [[maybe_unused]] Name default_name{"Test"};
 
     auto print = [](auto type) {
         std::cout << "type       = " << name<decltype(type)>() << '\n';
@@ -84,13 +93,24 @@ int main() {
             Damage{5, DamageType::Divine},
             Name{"Test"},
             float{3.14f},   // type<float>
-            int{100},       // type<int>
+            default_int,    // type<int>
             double{20.20},  // type<double>
             Health{100, 100},
             Protection{10, BodyLocation::Head},
         };
 
+        auto t2 = type_1{
+            unordered,  // ignore order of arguments
+            default_int,
+            default_float,
+            default_double,
+            default_health,
+            default_damage,
+            default_protection,
+            default_name};
+
         print(t1);
+        print(t2);
     }
 
     {
@@ -107,7 +127,7 @@ int main() {
         auto t1 = type_1{
             unordered,      // ignore order of arguments
             float{3.14f},   // type<float>
-            int{100},       // type<int>
+            default_int,    // type<int>
             double{20.20},  // type<double>
             Protection{10, BodyLocation::Head},
             Damage{5, DamageType::Magical},
@@ -115,6 +135,17 @@ int main() {
             Health{100, 100},
         };
 
+        auto t2 = type_1{
+            unordered,  // ignore order of arguments
+            default_int,
+            default_float,
+            default_double,
+            default_health,
+            default_damage,
+            default_protection,
+            default_name};
+
         print(t1);
+        print(t2);
     }
 }

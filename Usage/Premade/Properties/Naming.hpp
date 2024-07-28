@@ -1,4 +1,5 @@
 #pragma once
+#include <boost/mp11.hpp>
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
 #include "Taumaturgia/Properties/Token.hpp"
 
@@ -18,15 +19,16 @@ public:
     // MARK: Token C-tors
 
     template <typename... Args>
+        requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
     Naming_(const Token&, Args&&... args)
         : T{} {
-        ((trait<Args>::get(*this) = std::forward<Args>(args)), ...);
+        ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
     }
 
     // MARK: copy/move C-tors
 
     template <typename TT>
-        requires(not(std::same_as<std::remove_cvref_t<TT>, Token> or std::same_as<std::remove_cvref_t<TT>, Name>))
+        requires(std::derived_from<T, std::remove_cvref_t<TT>>)
     explicit Naming_(TT&& t)
         : T{std::forward<TT>(t)} {}
 

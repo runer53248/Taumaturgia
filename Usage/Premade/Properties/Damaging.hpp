@@ -53,17 +53,17 @@ public:
     // MARK: Token C-tors
 
     template <typename... Args>
+        requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
     Damaging_(const Token&, Args&&... args)
         : T{} {
-        ((trait<Args>::get(*this) = std::forward<Args>(args)), ...);
+        ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
     }
 
     // MARK: copy/move C-tors
 
     template <typename TT>
-        requires(not std::same_as<std::remove_cvref_t<TT>, Token>  //
-                 and (std::copy_constructible<T> or std::move_constructible<T>))
-    Damaging_(TT&& t)
+        requires(std::derived_from<T, std::remove_cvref_t<TT>>)
+    explicit Damaging_(TT&& t)
         : T{std::forward<TT>(t)} {}
 
     Damaging_(const Name& name)

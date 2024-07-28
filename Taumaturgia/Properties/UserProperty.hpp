@@ -14,6 +14,7 @@ namespace impl {
 inline constinit const char user_type_name[] = "UserProperty";
 
 template <typename TYPE, typename T, typename... Tags>
+    // requires(not std::is_reference_v<T>)
 class UserProperty_;
 
 template <typename TYPE>
@@ -41,6 +42,7 @@ private:
 };
 
 template <typename TYPE, typename T, typename... Tags>
+    // requires(not std::is_reference_v<T>)
 class UserProperty_ : public T {
 public:
     template <typename TAG>
@@ -81,15 +83,16 @@ public:
     // MARK: Token C-tors
 
     template <typename... Args>
+        requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
     UserProperty_(const Token&, Args&&... args)
         : T{} {
-        ((trait<Args>::get(*this) = std::forward<Args>(args)), ...);
+        ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
     }
 
     // MARK: copy/move C-tors
 
     template <typename TT>
-        requires(not(std::same_as<std::remove_cvref_t<TT>, Token> or std::same_as<std::remove_cvref_t<TT>, TYPE>))
+        requires(std::derived_from<T, std::remove_cvref_t<TT>>)
     explicit UserProperty_(TT&& t)
         : T{std::forward<TT>(t)} {}
 

@@ -27,10 +27,11 @@ template <template <typename> typename P>
 template <typename T, typename TYPE>
 concept type_of = std::same_as<std::remove_const_t<T>, TYPE>;
 
-#define TokenCtor(ClassName)                                         \
-    template <typename... Args>                                      \
-    ClassName(const Token&, Args&&... args) noexcept {               \
-        ((trait<Args>::get(*this) = std::forward<Args>(args)), ...); \
+#define TokenCtor(ClassName)                                                                                                  \
+    template <typename... Args>                                                                                               \
+        requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>> \
+    ClassName(const Token&, Args&&... args) noexcept {                                                                        \
+        ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);                                     \
     }
 
 struct Base {
@@ -62,8 +63,8 @@ struct Base {
 
     int x{};
     int y{};
-    // Name name;
-    Damage dmg;
+    Name name;
+    // Damage dmg;
     // Health hp;
     Protection protection;
     double type{};
@@ -93,19 +94,28 @@ int main() {
     constexpr auto default_x = 12;
     constexpr auto default_y = 5;
 
+    [[maybe_unused]] int default_int{100};
+    [[maybe_unused]] float default_float{3.14f};
+    [[maybe_unused]] double default_double{20.20};
+    [[maybe_unused]] Health default_health{100, 100};
+    [[maybe_unused]] Damage default_damage{5, DamageType::Divine};
+    [[maybe_unused]] Protection default_protection{10, BodyLocation::Head};
+    [[maybe_unused]] Name default_name{"Test"};
+
     {
         Base base{default_x, default_y};
 
         // create a lambda factory
-        auto create_type_2 =
-            base                // ! ignore prototype and use default c-tor
-            | With::Name        //
-            | With::Health      //
-            | With::Damage      //
-            | With::Protection  //
-            | With::property<Protecting>;
+        auto create_type =
+            base                          // ! ignore prototype and use default c-tor
+            | With::Name                  //
+            | With::Health                //
+            | With::Damage                //
+            | With::Protection            //
+            | With::property<Protecting>  //
+            ;
 
-        auto t2 = create_type_2(
+        auto t1 = create_type(
             unordered,  // ignore order of arguments
             Health{100, 100},
             Damage{5, DamageType::Magical},
@@ -115,16 +125,27 @@ int main() {
             double{20.20},  // type<double>
             Name{"Test"});
 
+        auto t2 = create_type(
+            unordered,  // ignore order of arguments
+            default_int,
+            default_float,
+            default_double,
+            default_health,
+            default_damage,
+            default_protection,
+            default_name);
+
+        print(t1);
         print(t2);
     }
 
     {
-        Base base{default_x, default_y};  // target
-
         auto tlist = With::Name | With::Health | With::Protection | With::Damage;
 
-        // auto tp = Base{default_x, default_y} | tlist;
-        auto tp = base | tlist;  // modify existing target type
+        auto t1 = Base{default_x, default_y} | tlist;
+
+        [[maybe_unused]] Base base{default_x, default_y};  // target
+        auto t2 = base | tlist;                            // modify existing target type
 
         // update rest of target parameters
         auto update = [](auto& target) {
@@ -137,20 +158,26 @@ int main() {
             };
         };
 
-        int default_int = 100;
-        // constexpr int default_int = 100;
-
-        update(tp)(
+        update(t1)(
             Health{100, 100},
-            float{3.14f},  // type<float>
-            // int{100},       // type<int>
+            float{3.14f},   // type<float>
             default_int,    // type<int>
             double{20.20},  // type<double>
-            Damage{5, DamageType::Divine},
+            Damage{5, DamageType::Magical},
             Protection{10, BodyLocation::Head},
             Name{"Test"});
 
-        print(tp);
+        update(t2)(
+            default_int,
+            default_float,
+            default_double,
+            default_health,
+            default_damage,
+            default_protection,
+            default_name);
+
+        print(t1);
+        print(t2);
     }
 
     {                              // extra example
