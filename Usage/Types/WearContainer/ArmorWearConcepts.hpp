@@ -23,14 +23,6 @@ concept GetArmorWearAccessable = requires(std::remove_cvref_t<T> x) {
     { std::as_const(x).getArmorWear() } -> std::same_as<const WearContainer&>;
 };
 
-template <typename T>
-struct CustomAccessArmorWear;
-
-template <typename T>
-concept CustomArmorWearAccessable = helpers::custom_trait_accessable<T, CustomAccessArmorWear, WearContainer>;
-
-template <typename T>
-concept GetTypeTemplateArmorWearAccessable = helpers::get_type_template_accessable<T, WearContainer>;
 #endif
 
 }  // namespace traits

@@ -17,15 +17,8 @@ struct accessDamage : public accessType<Damage> {
     }
 
     template <GetDamageAccessable T>
-        requires(not(CustomDamageAccessable<T> or GetTypeTemplateDamageAccessable<T>))
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getDamage();
-    }
-
-    template <CustomDamageAccessable T>
-        requires(not GetTypeTemplateDamageAccessable<T>)
-    static constexpr decltype(auto) get(T& el) noexcept {
-        return CustomAccessDamage<std::remove_cvref_t<T> >::get(el);
     }
 
     using accessType<Damage>::get;

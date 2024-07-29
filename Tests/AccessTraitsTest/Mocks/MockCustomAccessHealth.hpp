@@ -11,8 +11,8 @@ EndCustomAccessMock();
 CustomMock(Health);
 #else
 template <typename T>
-struct traits::CustomAccessHealth {
-    inline static traits::CustomAccessHealth<T>* mock = nullptr;
+struct traits::CustomAccessType<Health, T> {
+    inline static traits::CustomAccessType<Health, T>* mock = nullptr;
 
     MOCK_METHOD(Health&, get_, (TestType & el));
     MOCK_METHOD(const Health&, get_, (const TestType& el));
@@ -26,5 +26,5 @@ struct traits::CustomAccessHealth {
 };
 
 template <typename T>
-using CustomAccessHealthMock = traits::CustomAccessHealth<T>;
+using CustomAccessHealthMock = traits::CustomAccessType<Health, T>;
 #endif

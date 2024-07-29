@@ -23,14 +23,6 @@ concept GetCureHealthAccessable = requires(std::remove_cvref_t<T> x) {
     { std::as_const(x).getCureHealth() } -> std::same_as<const CureHealth&>;
 };
 
-template <typename T>
-struct CustomAccessCureHealth;
-
-template <typename T>
-concept CustomCureHealthAccessable = helpers::custom_trait_accessable<T, CustomAccessCureHealth, CureHealth>;
-
-template <typename T>
-concept GetTypeTemplateCureHealthAccessable = helpers::get_type_template_accessable<T, CureHealth>;
 #endif
 
 }  // namespace traits

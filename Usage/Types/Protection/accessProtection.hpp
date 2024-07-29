@@ -16,15 +16,8 @@ struct accessProtection : public accessType<Protection> {
     }
 
     template <GetProtectionAccessable T>
-        requires(not(CustomProtectionAccessable<T> or GetTypeTemplateProtectionAccessable<T>))
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getProtection();
-    }
-
-    template <CustomProtectionAccessable T>
-        requires(not GetTypeTemplateProtectionAccessable<T>)
-    static constexpr decltype(auto) get(T& el) noexcept {
-        return CustomAccessProtection<std::remove_cvref_t<T> >::get(el);
     }
 
     using accessType<Protection>::get;

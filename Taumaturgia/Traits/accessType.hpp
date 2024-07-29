@@ -3,8 +3,6 @@
 
 namespace traits {
 
-// TODO: consider use of trait<TYPE> when specialization exist
-
 template <typename TYPE, typename CONVERT_TYPE = void>
 struct accessType {
     template <typename T>

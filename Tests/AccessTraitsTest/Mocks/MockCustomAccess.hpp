@@ -1,10 +1,10 @@
 #pragma once
 
-#define StartCustomAccessMock(Name)                                            \
+#define StartCustomAccessMock(Name, Type)                                      \
     template <typename T>                                                      \
-    struct traits::CustomAccess##Name {                                        \
-        inline static traits::CustomAccess##Name<T>* mock = nullptr;           \
-        static constexpr decltype(auto) get(auto& el) {                                  \
+    struct traits::CustomAccessType<##Type, T> {                               \
+        inline static traits::CustomAccessType<##Type, T>* mock = nullptr;     \
+        static constexpr decltype(auto) get(auto& el) {                        \
             if (mock) {                                                        \
                 return mock->get_(el);                                         \
             }                                                                  \
@@ -15,6 +15,6 @@
     }                         \
     ;
 
-#define CustomMock(Name)  \
-    template <typename T> \
-    using CustomAccess##Name##Mock = traits::CustomAccess##Name<T>;
+#define CustomMock(Name, Type) \
+    template <typename T>      \
+    using CustomAccess##Name##Mock = traits::CustomAccessType<##Type, T>;

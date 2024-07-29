@@ -23,14 +23,6 @@ concept GetRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
     { std::as_const(x).getRestoreEffects() } -> std::same_as<const EffectTypeContainer&>;
 };
 
-template <typename T>
-struct CustomAccessRestoreEffects;
-
-template <typename T>
-concept CustomRestoreEffectsAccessable = helpers::custom_trait_accessable<T, CustomAccessRestoreEffects, EffectTypeContainer>;
-
-template <typename T>
-concept GetTypeTemplateRestoreEffectsAccessable = helpers::get_type_template_accessable<T, EffectTypeContainer>;
 #endif
 
 }  // namespace traits

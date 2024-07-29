@@ -11,8 +11,8 @@ EndCustomAccessMock();
 CustomMock(Protection);
 #else
 template <typename T>
-struct traits::CustomAccessProtection {
-    inline static traits::CustomAccessProtection<T>* mock = nullptr;
+struct traits::CustomAccessType<Protection, T> {
+    inline static traits::CustomAccessType<Protection, T>* mock = nullptr;
 
     MOCK_METHOD(Protection&, get_, (TestType & el));
     MOCK_METHOD(const Protection&, get_, (const TestType& el));
@@ -26,5 +26,5 @@ struct traits::CustomAccessProtection {
 };
 
 template <typename T>
-using CustomAccessProtectionMock = traits::CustomAccessProtection<T>;
+using CustomAccessProtectionMock = traits::CustomAccessType<Protection, T> ;
 #endif

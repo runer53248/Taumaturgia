@@ -24,14 +24,6 @@ concept GetNameAccessable = requires(std::remove_cvref_t<T> x) {
     { std::as_const(x).getName() } -> std::convertible_to<const std::string>;
 };
 
-template <typename T>
-struct CustomAccessName;
-
-template <typename T>
-concept CustomNameAccessable = helpers::custom_trait_convertible<T, CustomAccessName, std::string>;
-
-template <typename T>
-concept GetTypeTemplateNameAccessable = helpers::get_type_template_convertible<T, Name, std::string>;
 #endif
 
 }  // namespace traits

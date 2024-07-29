@@ -23,14 +23,6 @@ concept GetProtectionAccessable = requires(std::remove_cvref_t<T> x) {
     { std::as_const(x).getProtection() } -> std::same_as<const Protection&>;
 };
 
-template <typename T>
-struct CustomAccessProtection;
-
-template <typename T>
-concept CustomProtectionAccessable = helpers::custom_trait_accessable<T, CustomAccessProtection, Protection>;
-
-template <typename T>
-concept GetTypeTemplateProtectionAccessable = helpers::get_type_template_accessable<T, Protection>;
 #endif
 
 }  // namespace traits

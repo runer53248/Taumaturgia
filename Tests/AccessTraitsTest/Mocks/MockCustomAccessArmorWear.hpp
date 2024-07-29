@@ -1,30 +1,39 @@
 #pragma once
 #include <gmock/gmock.h>
-#include "MockCustomAccess.hpp"
 #include "Usage/Traits.hpp"
 
 #ifdef CUSTOM_ACCESS_MOCK_MACRO
-StartCustomAccessMock(ArmorWear);
+#include "MockCustomAccess.hpp"
+
+StartCustomAccessMock(ArmorWear, WearContainer);
 MOCK_METHOD(WearContainer&, get_, (TestType & el));
 MOCK_METHOD(const WearContainer&, get_, (const TestType& el));
 EndCustomAccessMock();
-CustomMock(ArmorWear);
+CustomMock(ArmorWear, WearContainer);
 #else
+
 template <typename T>
-struct traits::CustomAccessArmorWear {
-    inline static traits::CustomAccessArmorWear<T>* mock = nullptr;
+struct traits::CustomAccessType<WearContainer, T> {
+    inline static traits::CustomAccessType<WearContainer, T>* mock = nullptr;
 
     MOCK_METHOD(WearContainer&, get_, (TestType & el));
     MOCK_METHOD(const WearContainer&, get_, (const TestType& el));
 
-    static constexpr decltype(auto) get(auto& el) {
+    static constexpr decltype(auto) get(TestType& el) {
         if (mock) {
             return mock->get_(el);
         }
-        throw std::logic_error("Mock not set for CustomAccessArmorWear!");
+        throw std::logic_error("Mock not set for CustomAccessType<WearContainer, T>!");
     }
+
+    // static constexpr decltype(auto) get(const TestType& el) {
+    //     if (mock) {
+    //         return mock->get_(el);
+    //     }
+    //     throw std::logic_error("Mock not set for CustomAccessType<WearContainer, T>!");
+    // }
 };
 
 template <typename T>
-using CustomAccessArmorWearMock = traits::CustomAccessArmorWear<T>;
+using CustomAccessArmorWearMock = traits::CustomAccessType<WearContainer, T>;
 #endif

@@ -134,7 +134,7 @@ struct traits::CustomAccessType<Damage, T> {
 
 template <typename T>
     requires std::is_base_of_v<Weapon_C, T>
-struct traits::CustomAccessDamage<T> {
+struct traits::CustomAccessType<Damage, T> {
     static constexpr decltype(auto) get(auto& el) {
         return el.Dmg();
     }

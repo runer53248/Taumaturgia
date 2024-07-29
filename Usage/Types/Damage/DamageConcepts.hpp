@@ -23,14 +23,6 @@ concept GetDamageAccessable = requires(std::remove_cvref_t<T> x) {
     { std::as_const(x).getDamage() } -> std::same_as<const Damage&>;
 };
 
-template <typename T>
-struct CustomAccessDamage;
-
-template <typename T>
-concept CustomDamageAccessable = helpers::custom_trait_accessable<T, CustomAccessDamage, Damage>;
-
-template <typename T>
-concept GetTypeTemplateDamageAccessable = helpers::get_type_template_accessable<T, Damage>;
 #endif
 
 }  // namespace traits

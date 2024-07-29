@@ -11,8 +11,8 @@ EndCustomAccessMock();
 CustomMock(RestoreEffects);
 #else
 template <typename T>
-struct traits::CustomAccessRestoreEffects {
-    inline static traits::CustomAccessRestoreEffects<T>* mock = nullptr;
+struct traits::CustomAccessType<EffectTypeContainer, T> {
+    inline static traits::CustomAccessType<EffectTypeContainer, T>* mock = nullptr;
 
     MOCK_METHOD(EffectTypeContainer&, get_, (TestType & el));
     MOCK_METHOD(const EffectTypeContainer&, get_, (const TestType& el));
@@ -26,5 +26,5 @@ struct traits::CustomAccessRestoreEffects {
 };
 
 template <typename T>
-using CustomAccessRestoreEffectsMock = traits::CustomAccessRestoreEffects<T>;
+using CustomAccessRestoreEffectsMock = traits::CustomAccessType<EffectTypeContainer, T>;
 #endif

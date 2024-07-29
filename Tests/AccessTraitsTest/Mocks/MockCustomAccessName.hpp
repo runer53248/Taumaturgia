@@ -11,8 +11,8 @@ EndCustomAccessMock();
 CustomMock(Name);
 #else
 template <typename T>
-struct traits::CustomAccessName {
-    inline static traits::CustomAccessName<T>* mock = nullptr;
+struct traits::CustomAccessType<Name, T> {
+    inline static traits::CustomAccessType<Name, T>* mock = nullptr;
 
     MOCK_METHOD(Name&, get_, (TestType & el));
     MOCK_METHOD(const Name&, get_, (const TestType& el));
@@ -25,8 +25,8 @@ struct traits::CustomAccessName {
     }
 };
 
-static_assert(traits::CustomNameAccessable<TestType>);
+static_assert(traits::CustomTypeAccessable<TestType, Name>);
 
 template <typename T>
-using CustomAccessNameMock = traits::CustomAccessName<T>;
+using CustomAccessNameMock = traits::CustomAccessType<Name, T>;
 #endif

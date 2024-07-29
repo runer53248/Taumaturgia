@@ -16,15 +16,8 @@ struct accessCureHealth : public accessType<CureHealth> {
     }
 
     template <GetCureHealthAccessable T>
-        requires(not(CustomCureHealthAccessable<T> or GetTypeTemplateCureHealthAccessable<T>))
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getCureHealth();
-    }
-
-    template <CustomCureHealthAccessable T>
-        requires(not GetTypeTemplateCureHealthAccessable<T>)
-    static constexpr decltype(auto) get(T& el) noexcept {
-        return CustomAccessCureHealth<std::remove_cvref_t<T> >::get(el);
     }
 
     using accessType<CureHealth>::get;

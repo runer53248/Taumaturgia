@@ -40,8 +40,8 @@ protected:
         static_assert(traits::GetNameAccessable<decltype(*type)>);
         static_assert(traits::GetNameAccessable<decltype(std::as_const(*type))>);
 #endif
-        static_assert(traits::CustomNameAccessable<decltype(*type)>);
-        static_assert(traits::CustomNameAccessable<decltype(std::as_const(*type))>);
+        static_assert(traits::CustomTypeAccessable<decltype(*type), Name>);
+        static_assert(traits::CustomTypeAccessable<decltype(std::as_const(*type)), Name>);
 
         CustomAccessNameMock<TestType>::mock = &customMock;
     }

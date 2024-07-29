@@ -17,15 +17,8 @@ struct accessName : public accessType<Name, std::string> {
     }
 
     template <GetNameAccessable T>
-        requires(not(CustomNameAccessable<T> or GetTypeTemplateNameAccessable<T>))
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getName();
-    }
-
-    template <CustomNameAccessable T>
-        requires(not GetTypeTemplateNameAccessable<T>)
-    static constexpr decltype(auto) get(T& el) noexcept {
-        return CustomAccessName<std::remove_cvref_t<T> >::get(el);
     }
 
     using accessType<Name, std::string>::get;

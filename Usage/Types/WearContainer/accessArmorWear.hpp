@@ -16,15 +16,8 @@ struct accessArmorWear : public accessType<WearContainer> {
     }
 
     template <GetArmorWearAccessable T>
-        requires(not(CustomArmorWearAccessable<T> or GetTypeTemplateArmorWearAccessable<T>))
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getArmorWear();
-    }
-
-    template <CustomArmorWearAccessable T>
-        requires(not GetTypeTemplateArmorWearAccessable<T>)
-    static constexpr decltype(auto) get(T& el) noexcept {
-        return CustomAccessArmorWear<std::remove_cvref_t<T> >::get(el);
     }
 
     using accessType<WearContainer>::get;

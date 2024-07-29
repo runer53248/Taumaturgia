@@ -100,27 +100,18 @@ concept get_type_template_convertible = requires(std::remove_cvref_t<T> x) {
     template <typename T>                                  \
     concept GetTypeTemplate##NAME##Accessable = helpers::get_type_template_accessable<T, TYPE>;
 
-#define CreateAccessTrait(NAME, MEMBER, TYPE)                                                  \
-    struct access##NAME {                                                                      \
-        static constexpr auto& get(NAME##Accessable auto& el) noexcept {                       \
-            return el.MEMBER;                                                                  \
-        }                                                                                      \
-                                                                                               \
-        template <Get##NAME##Accessable T>                                                     \
-            requires(not(Custom##NAME##Accessable<T> or GetTypeTemplate##NAME##Accessable<T>)) \
-        static constexpr decltype(auto) get(T& el) noexcept {                                  \
-            return el.get##NAME();                                                             \
-        }                                                                                      \
-                                                                                               \
-        template <Custom##NAME##Accessable T>                                                  \
-            requires(not GetTypeTemplate##NAME##Accessable<T>)                                 \
-        static constexpr decltype(auto) get(T& el) noexcept {                                  \
-            return CustomAccess##NAME<std::remove_cvref_t<T>>::get(el);                        \
-        }                                                                                      \
-                                                                                               \
-        template <GetTypeTemplate##NAME##Accessable T>                                         \
-        static constexpr decltype(auto) get(T& el) noexcept {                                  \
-            return el.template getType<TYPE>();                                                \
-        }                                                                                      \
+#define CreateAccessTrait(NAME, MEMBER, TYPE)                                              \
+    struct access##NAME : public accessType<##TYPE> {                                      \
+        template <typename T>                                                              \
+        static const bool accessable = helpers::trait_accessable<T, access##NAME, ##TYPE>; \
+                                                                                           \
+        static constexpr decltype(auto) get(NAME##Accessable auto& el) noexcept {          \
+            return (el.MEMBER);                                                            \
+        }                                                                                  \
+                                                                                           \
+        template <Get##NAME##Accessable T>                                                 \
+        static constexpr decltype(auto) get(T& el) noexcept {                              \
+            return el.get##NAME();                                                         \
+        }                                                                                  \
     };
 #endif

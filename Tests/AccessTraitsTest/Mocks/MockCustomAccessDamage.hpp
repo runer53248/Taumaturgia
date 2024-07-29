@@ -11,8 +11,8 @@ EndCustomAccessMock();
 CustomMock(Damage);
 #else
 template <typename T>
-struct traits::CustomAccessDamage {
-    inline static traits::CustomAccessDamage<T>* mock = nullptr;
+struct traits::CustomAccessType<Damage, T> {
+    inline static traits::CustomAccessType<Damage, T>* mock = nullptr;
 
     MOCK_METHOD(Damage&, get_, (TestType & el));
     MOCK_METHOD(const Damage&, get_, (const TestType& el));
@@ -26,5 +26,5 @@ struct traits::CustomAccessDamage {
 };
 
 template <typename T>
-using CustomAccessDamageMock = traits::CustomAccessDamage<T>;
+using CustomAccessDamageMock = traits::CustomAccessType<Damage, T>;
 #endif
