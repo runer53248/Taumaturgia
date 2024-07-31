@@ -11,11 +11,14 @@ struct accessArmorWear : public accessType<WearContainer> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessArmorWear, WearContainer>;
 
-    static constexpr auto& get(ArmorWearAccessable auto& el) noexcept {
+    template <ArmorWearAccessable T>
+        requires(not accessType<WearContainer>::accessable<T>)
+    static constexpr auto& get(T& el) noexcept {
         return el.armorWear;
     }
 
     template <GetArmorWearAccessable T>
+        requires(not accessType<WearContainer>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getArmorWear();
     }

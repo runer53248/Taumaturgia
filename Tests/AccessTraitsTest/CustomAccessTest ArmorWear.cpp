@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "Usage/DefaultStrategies.hpp"
+
 #include "TestType.hpp"
 
 #include "Mocks/MockCustomAccessArmorWear.hpp"
@@ -45,11 +46,14 @@ protected:
     }
 };
 
-
+TEST_F(ArmorWear_Fixture, Access_by_getArmorWear_or_getType) {
 #ifndef NO_PREMADE_PROPERTIES
-TEST_F(ArmorWear_Fixture, Access_by_getArmorWear) {
     decltype(auto) armor = (*type).getArmorWear();
     decltype(auto) armor_const = std::as_const(*type).getArmorWear();
+#else
+    decltype(auto) armor = (*type).getType<WearContainer>();
+    decltype(auto) armor_const = std::as_const(*type).getType<WearContainer>();
+#endif
 
     static_assert(not std::is_const_v<std::remove_reference_t<decltype(armor)>>);
     static_assert(std::is_const_v<std::remove_reference_t<decltype(armor_const)>>);
@@ -58,17 +62,21 @@ TEST_F(ArmorWear_Fixture, Access_by_getArmorWear) {
     EXPECT_EQ(armor_const, default_armor);
 
     armor = default_armor_change;
+
+#ifndef NO_PREMADE_PROPERTIES
     armor = (*type).getArmorWear();
+#else
+    armor = (*type).getType<WearContainer>();
+#endif
 
     EXPECT_EQ(armor, default_armor_change);
 }
-#endif
 
-TEST_F(ArmorWear_Fixture, Access_by_trait_accessArmorWear_with_CustomAccessArmorWear) {
-#ifndef NO_PREMADE_PROPERTIES
+TEST_F(ArmorWear_Fixture, Access_by_trait_accessArmorWear_with_CustomAccessType) {
+    static_assert(traits::CustomTypeAccessable<TestType, WearContainer>);
+
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_armor));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_armor));
-#endif
 
     decltype(auto) armor = trait<WearContainer>::get(*type);
     decltype(auto) armor_const = trait<WearContainer>::get(std::as_const(*type));
