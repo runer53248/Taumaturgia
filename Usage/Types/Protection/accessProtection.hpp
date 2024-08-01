@@ -11,11 +11,14 @@ struct accessProtection : public accessType<Protection> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessProtection, Protection>;
 
-    static constexpr auto& get(ProtectionAccessable auto& el) noexcept {
-        return el.protection;
+    template <ProtectionAccessable T>
+        requires(not accessType<Protection>::accessable<T>)
+    static constexpr decltype(auto) get(T& el) noexcept {
+        return (el.protection);
     }
 
     template <GetProtectionAccessable T>
+        requires(not accessType<Protection>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getProtection();
     }

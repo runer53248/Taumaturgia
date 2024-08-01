@@ -1,9 +1,9 @@
 #pragma once
 #include <gmock/gmock.h>
-#include "MockCustomAccess.hpp"
 #include "Usage/Traits.hpp"
 
 #ifdef CUSTOM_ACCESS_MOCK_MACRO
+#include "MockCustomAccess.hpp"
 StartCustomAccessMock(Health);
 MOCK_METHOD(Health&, get_, (TestType & el));
 MOCK_METHOD(const Health&, get_, (const TestType& el));

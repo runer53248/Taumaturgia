@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "Usage/DefaultStrategies.hpp"
+
 #include "TestType.hpp"
 
 #include "Mocks/MockCustomAccessHealth.hpp"
@@ -45,26 +46,34 @@ protected:
     }
 };
 
-#ifndef NO_PREMADE_PROPERTIES
 TEST_F(Health_Fixture, Access_by_getHealth) {
+#ifndef NO_PREMADE_PROPERTIES
     decltype(auto) hp = (*type).getHealth();
     decltype(auto) hp_const = std::as_const((*type)).getHealth();
+#else
+    decltype(auto) hp = (*type).getType<Health>();
+    decltype(auto) hp_const = std::as_const((*type)).getType<Health>();
+#endif
 
     EXPECT_EQ(hp, default_hp);
     EXPECT_EQ(hp_const, default_hp);
 
     hp = default_hp_change;
+#ifndef NO_PREMADE_PROPERTIES
     hp = (*type).getHealth();
+#else
+    hp = (*type).getType<Health>();
+#endif
 
     EXPECT_EQ(hp, default_hp_change);
 }
-#endif
 
 TEST_F(Health_Fixture, Access_by_trait_accessHealth_with_CustomAccessHealth) {
-#ifndef NO_PREMADE_PROPERTIES
+    static_assert(traits::CustomTypeAccessable<TestType, Health>);
+
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_hp));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_hp));
-#endif
+
 
     decltype(auto) hp = trait<Health>::get((*type));
     decltype(auto) hp_const = trait<Health>::get(std::as_const((*type)));

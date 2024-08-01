@@ -11,11 +11,14 @@ struct accessRestoreEffects : public accessType<EffectTypeContainer> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessRestoreEffects, EffectTypeContainer>;
 
-    static constexpr auto& get(RestoreEffectsAccessable auto& el) noexcept {
-        return el.restoreEffects;
+    template <RestoreEffectsAccessable T>
+    requires(not accessType<EffectTypeContainer>::accessable<T>)
+    static constexpr decltype(auto) get(T& el) noexcept {
+        return (el.restoreEffects);
     }
 
     template <GetRestoreEffectsAccessable T>
+    requires(not accessType<EffectTypeContainer>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getRestoreEffects();
     }

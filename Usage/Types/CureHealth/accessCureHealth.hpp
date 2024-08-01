@@ -11,11 +11,14 @@ struct accessCureHealth : public accessType<CureHealth> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessCureHealth, CureHealth>;
 
-    static constexpr auto& get(CureHealthAccessable auto& el) noexcept {
-        return el.cureHealth;
+    template <CureHealthAccessable T>
+        requires(not accessType<CureHealth>::accessable<T>)
+    static constexpr decltype(auto) get(T& el) noexcept {
+        return (el.cureHealth);
     }
 
     template <GetCureHealthAccessable T>
+        requires(not accessType<CureHealth>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getCureHealth();
     }

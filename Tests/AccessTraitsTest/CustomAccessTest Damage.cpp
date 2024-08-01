@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "Usage/DefaultStrategies.hpp"
+
 #include "TestType.hpp"
 
 #include "Mocks/MockCustomAccessDamage.hpp"
@@ -45,26 +46,33 @@ protected:
     }
 };
 
-#ifndef NO_PREMADE_PROPERTIES
 TEST_F(Damage_Fixture, Access_by_getDamage) {
+#ifndef NO_PREMADE_PROPERTIES
     decltype(auto) damage = (*type).getDamage();
     decltype(auto) damage_const = std::as_const((*type)).getDamage();
+#else
+    decltype(auto) damage = (*type).getType<Damage>();
+    decltype(auto) damage_const = std::as_const((*type)).getType<Damage>();
+#endif
 
     EXPECT_EQ(damage, default_damage);
     EXPECT_EQ(damage_const, default_damage);
 
     damage = default_damage_change;
+#ifndef NO_PREMADE_PROPERTIES
     damage = (*type).getDamage();
+#else
+    damage = (*type).getType<Damage>();
+#endif
 
     EXPECT_EQ(damage, default_damage_change);
 }
-#endif
 
 TEST_F(Damage_Fixture, Access_by_trait_accessDamage_with_CustomAccessDamage) {
-#ifndef NO_PREMADE_PROPERTIES
+    static_assert(traits::CustomTypeAccessable<TestType, Damage>);
+
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_damage));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_damage));
-#endif
 
     decltype(auto) damage = trait<Damage>::get((*type));
     decltype(auto) damage_const = trait<Damage>::get(std::as_const((*type)));

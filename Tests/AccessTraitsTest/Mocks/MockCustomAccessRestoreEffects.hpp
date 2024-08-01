@@ -1,9 +1,9 @@
 #pragma once
 #include <gmock/gmock.h>
-#include "MockCustomAccess.hpp"
 #include "Usage/Traits.hpp"
 
 #ifdef CUSTOM_ACCESS_MOCK_MACRO
+#include "MockCustomAccess.hpp"
 StartCustomAccessMock(RestoreEffects);
 MOCK_METHOD(EffectTypeContainer&, get_, (TestType & el));
 MOCK_METHOD(const EffectTypeContainer&, get_, (const TestType& el));

@@ -4,7 +4,6 @@
 
 #ifdef CUSTOM_ACCESS_MOCK_MACRO
 #include "MockCustomAccess.hpp"
-
 StartCustomAccessMock(ArmorWear, WearContainer);
 MOCK_METHOD(WearContainer&, get_, (TestType & el));
 MOCK_METHOD(const WearContainer&, get_, (const TestType& el));

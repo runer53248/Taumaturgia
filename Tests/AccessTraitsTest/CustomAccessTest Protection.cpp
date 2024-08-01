@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "Usage/DefaultStrategies.hpp"
+
 #include "TestType.hpp"
 
 #include "Mocks/MockCustomAccessProtection.hpp"
@@ -45,26 +46,33 @@ protected:
     }
 };
 
-#ifndef NO_PREMADE_PROPERTIES
 TEST_F(Protection_Fixture, Access_by_getProtection) {
+#ifndef NO_PREMADE_PROPERTIES
     decltype(auto) protection = (*type).getProtection();
     decltype(auto) protection_const = std::as_const((*type)).getProtection();
+#else
+    decltype(auto) protection = (*type).getType<Protection>();
+    decltype(auto) protection_const = std::as_const((*type)).getType<Protection>();
+#endif
 
     EXPECT_EQ(protection, default_protection);
     EXPECT_EQ(protection_const, default_protection);
 
     protection = default_protection_change;
+#ifndef NO_PREMADE_PROPERTIES
     protection = (*type).getProtection();
+#else
+    protection = (*type).getType<Protection>();
+#endif
 
     EXPECT_EQ(protection, default_protection_change);
 }
-#endif
 
 TEST_F(Protection_Fixture, Access_by_trait_accessProtection_with_CustomAccessProtection) {
-#ifndef NO_PREMADE_PROPERTIES
+    static_assert(traits::CustomTypeAccessable<TestType, Protection>);
+
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_protection));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_protection));
-#endif
 
     decltype(auto) protection = trait<Protection>::get((*type));
     decltype(auto) protection_const = trait<Protection>::get(std::as_const((*type)));

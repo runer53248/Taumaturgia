@@ -12,11 +12,14 @@ struct accessName : public accessType<Name, std::string> {
     template <typename T>
     static const bool accessable = helpers::trait_access_convertable<T, accessName, std::string>;
 
-    static constexpr auto& get(NameAccessable auto& el) noexcept {
-        return el.name;
+    template <NameAccessable T>
+        requires(not accessType<Name, std::string>::accessable<T>)
+    static constexpr decltype(auto) get(T& el) noexcept {
+        return (el.name);
     }
 
     template <GetNameAccessable T>
+        requires(not accessType<Name, std::string>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getName();
     }

@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "Usage/DefaultStrategies.hpp"
+
 #include "TestType.hpp"
 
 #include "Mocks/MockCustomAccessRestoreEffects.hpp"
@@ -45,26 +46,33 @@ protected:
     }
 };
 
-#ifndef NO_PREMADE_PROPERTIES
 TEST_F(RestoreEffects_Fixture, Access_by_getRestoreEffects) {
+#ifndef NO_PREMADE_PROPERTIES
     decltype(auto) restoreEffects = (*type).getRestoreEffects();
     decltype(auto) restoreEffects_const = std::as_const((*type)).getRestoreEffects();
+#else
+    decltype(auto) restoreEffects = (*type).getType<EffectTypeContainer>();
+    decltype(auto) restoreEffects_const = std::as_const((*type)).getType<EffectTypeContainer>();
+#endif
 
     EXPECT_EQ(restoreEffects, default_restoreEffects);
     EXPECT_EQ(restoreEffects_const, default_restoreEffects);
 
     restoreEffects = default_restoreEffects_change;
+#ifndef NO_PREMADE_PROPERTIES
     restoreEffects = (*type).getRestoreEffects();
+#else
+    restoreEffects = (*type).getType<EffectTypeContainer>();
+#endif
 
     EXPECT_EQ(restoreEffects, default_restoreEffects_change);
 }
-#endif
 
 TEST_F(RestoreEffects_Fixture, Access_by_trait_accessRestoreEffects_with_CustomAccessRestoreEffects) {
-#ifndef NO_PREMADE_PROPERTIES
+    static_assert(traits::CustomTypeAccessable<TestType, EffectTypeContainer>);
+
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_restoreEffects));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_restoreEffects));
-#endif
 
     decltype(auto) restoreEffects = trait<EffectTypeContainer>::get((*type));
     decltype(auto) restoreEffects_const = trait<EffectTypeContainer>::get(std::as_const((*type)));

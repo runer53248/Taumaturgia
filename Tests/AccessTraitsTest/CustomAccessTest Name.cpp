@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "Usage/DefaultStrategies.hpp"
+
 #include "TestType.hpp"
 
 #include "Mocks/MockCustomAccessName.hpp"
@@ -53,26 +54,34 @@ protected:
     }
 };
 
-#ifndef NO_PREMADE_PROPERTIES
 TEST_F(Name_Fixture, Access_by_getName) {
+#ifndef NO_PREMADE_PROPERTIES
     decltype(auto) name = (*type).getName();
     decltype(auto) name_const = std::as_const((*type)).getName();
+#else
+    decltype(auto) name = (*type).getType<Name>();
+    decltype(auto) name_const = std::as_const((*type)).getType<Name>();
+#endif
 
     EXPECT_EQ(name, default_name);
     EXPECT_EQ(name_const, default_name);
 
     name = default_name_change;
+
+#ifndef NO_PREMADE_PROPERTIES
     name = (*type).getName();
+#else
+    name = (*type).getType<Name>();
+#endif
 
     EXPECT_EQ(name, default_name_change);
 }
-#endif
 
 TEST_F(Name_Fixture, Access_by_trait_accessName_with_CustomAccessName) {
-#ifndef NO_PREMADE_PROPERTIES
+    static_assert(traits::CustomTypeAccessable<TestType, Name>);
+
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_name));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_name));
-#endif
 
     decltype(auto) name = trait<Name>::get((*type));
     decltype(auto) name_const = trait<Name>::get(std::as_const((*type)));

@@ -12,11 +12,13 @@ struct accessDamage : public accessType<Damage> {
     static constexpr bool accessable = helpers::trait_accessable<T, accessDamage, Damage>;
 
     template <DamageAccessable T>
+    requires(not accessType<Damage>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return (el.dmg);
     }
 
     template <GetDamageAccessable T>
+    requires(not accessType<Damage>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getDamage();
     }

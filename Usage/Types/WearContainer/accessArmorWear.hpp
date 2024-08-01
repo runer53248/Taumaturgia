@@ -13,8 +13,8 @@ struct accessArmorWear : public accessType<WearContainer> {
 
     template <ArmorWearAccessable T>
         requires(not accessType<WearContainer>::accessable<T>)
-    static constexpr auto& get(T& el) noexcept {
-        return el.armorWear;
+    static constexpr decltype(auto) get(T& el) noexcept {
+        return (el.armorWear);
     }
 
     template <GetArmorWearAccessable T>
