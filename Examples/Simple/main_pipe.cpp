@@ -11,6 +11,8 @@
 
 #include "Taumaturgia/Properties/Helpers/pipeing.hpp"
 
+// MARK: With
+
 namespace With {
 [[maybe_unused]] constexpr Property<Naming> Name{};
 [[maybe_unused]] constexpr Property<Damaging> Damage{};
@@ -33,6 +35,8 @@ concept type_of = std::same_as<std::remove_const_t<T>, TYPE>;
     ClassName(const Token&, Args&&... args) noexcept {                                                                        \
         ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);                                     \
     }
+
+// MARK: Base
 
 struct Base {
     Base() noexcept = default;
@@ -74,8 +78,12 @@ private:
     float type2{};
 };
 
+// MARK: main
+
 int main() {
     std::cout << '\n';
+
+    // MARK: print lambda
 
     auto print = [](auto type) {
         std::cout << "type       = " << name<decltype(type)>() << '\n';
@@ -91,6 +99,8 @@ int main() {
         std::cout << '\n';
     };
 
+    // MARK: defaults
+
     constexpr auto default_x = 12;
     constexpr auto default_y = 5;
 
@@ -102,7 +112,7 @@ int main() {
     [[maybe_unused]] Protection default_protection{10, BodyLocation::Head};
     [[maybe_unused]] Name default_name{"Test"};
 
-    {
+    {  // MARK: create a lambda factory
         Base base{default_x, default_y};
 
         // create a lambda factory
@@ -139,7 +149,7 @@ int main() {
         print(t2);
     }
 
-    {
+    {  // MARK: modify target
         auto tlist = With::Name | With::Health | With::Protection | With::Damage;
 
         auto t1 = Base{default_x, default_y} | tlist;
@@ -180,7 +190,7 @@ int main() {
         print(t2);
     }
 
-    {                              // extra example
+    {                              // MARK: extra example
         list tlist2 = With::Name;  // ? implicit conversion needed (don't use auto)
         auto tlist3 = With::Name;  // !
 
