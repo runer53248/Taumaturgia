@@ -1,6 +1,8 @@
 #include "Examples/PreetyPrint/preety_print_types.hpp"
 #include "Usage/Properties.hpp"
 
+#include <functional>
+
 struct EmptyType {};
 
 struct Type_living {
@@ -101,7 +103,6 @@ int main() {
     Type_5 type5_3{Name{"Valid"}, varDmg, varDmg, varDmg};                          // create properties from wrong variants
 
 #ifndef NO_PREMADE_PROPERTIES
-
     std::cout << "type3_0 Name:       " << type3_0.getName() << '\n';
     std::cout << "type3 Hp:           " << type3.getHealth() << '\n';
     std::cout << "type4 CureHp:       " << type4.getCureHealth() << '\n';
@@ -113,7 +114,21 @@ int main() {
     std::cout << "type5_2 Damage:     " << type5_2.getDamage() << '\n';
     std::cout << "type5_3 Damage:     " << type5_3.getDamage() << '\n';
     std::cout << '\n';
+#else
+    std::cout << "type3_0 Name:       " << type3_0.getType<Name>() << '\n';
+    std::cout << "type3 Hp:           " << type3.getType<Health>() << '\n';
+    std::cout << "type4 CureHp:       " << type4.getType<CureHealth>() << '\n';
+    std::cout << "type5 Hp:           " << type5.getType<Health>() << '\n';
+    std::cout << "type5_1 Hp:         " << type5_1.getType<Health>() << '\n';
+    std::cout << "type5_1 Armor:      " << type5_1.getType<WearContainer>() << '\n';
+    std::cout << "type5_1 CureHp:     " << type5_1.getType<CureHealth>() << '\n';
+    std::cout << "type5_2 Hp:         " << type5_2.getType<Health>() << '\n';
+    std::cout << "type5_2 Damage:     " << type5_2.getType<Damage>() << '\n';
+    std::cout << "type5_3 Damage:     " << type5_3.getType<Damage>() << '\n';
+    std::cout << '\n';
+#endif
 
+#ifndef NO_PREMADE_PROPERTIES
     type5.getArmorWear().wearProtection(Protection{ArmorClass{8, BodyLocation::Body, {EffectType::Paralyze}}});
     type5.getArmorWear().wearProtection(Protection{ArmorClass{4, BodyLocation::Arms, {EffectType::Burn}}});
     type5.getArmorWear().wearProtection(Protection{ArmorClass{5, BodyLocation::Legs, {EffectType::Burn, EffectType::Freeze}}});
@@ -122,7 +137,18 @@ int main() {
     type5.getProtection() = ArmorClass{8, BodyLocation::Body, {EffectType::Paralyze}};
     type5.getCureHealth() = CureHealth{15, {Effect{EffectType::Devour}, Effect{EffectType::Shock}}};
     type5.getRestoreEffects() = {EffectType::Burn, EffectType::Smite};
+#else
+    type5.getType<WearContainer>().wearProtection(Protection{ArmorClass{8, BodyLocation::Body, {EffectType::Paralyze}}});
+    type5.getType<WearContainer>().wearProtection(Protection{ArmorClass{4, BodyLocation::Arms, {EffectType::Burn}}});
+    type5.getType<WearContainer>().wearProtection(Protection{ArmorClass{5, BodyLocation::Legs, {EffectType::Burn, EffectType::Freeze}}});
 
+    type5.getType<Damage>() = Damage{15, DamageType::Physical, Effect{EffectType::Poison, Duration{5, DurationType::Round}, EffectState::Inactive}};
+    type5.getType<Protection>() = ArmorClass{8, BodyLocation::Body, {EffectType::Paralyze}};
+    type5.getType<CureHealth>() = CureHealth{15, {Effect{EffectType::Devour}, Effect{EffectType::Shock}}};
+    type5.getType<EffectTypeContainer>() = {EffectType::Burn, EffectType::Smite};
+#endif
+
+#ifndef NO_PREMADE_PROPERTIES
     std::cout << "Name:         " << type5.getName() << '\n';
     std::cout << "Hp:           " << type5.getHealth() << '\n';
     std::cout << "Armor:        " << type5.getArmorWear() << '\n';
@@ -130,6 +156,14 @@ int main() {
     std::cout << "Protection:   " << type5.getProtection() << '\n';
     std::cout << "CureHp:       " << type5.getCureHealth() << '\n';
     std::cout << "Restore:      " << type5.getRestoreEffects() << '\n';
+#else
+    std::cout << "Name:         " << type5.getType<Name>() << '\n';
+    std::cout << "Hp:           " << type5.getType<Health>() << '\n';
+    std::cout << "Armor:        " << type5.getType<WearContainer>() << '\n';
+    std::cout << "Damage:       " << type5.getType<Damage>() << '\n';
+    std::cout << "Protection:   " << type5.getType<Protection>() << '\n';
+    std::cout << "CureHp:       " << type5.getType<CureHealth>() << '\n';
+    std::cout << "Restore:      " << type5.getType<EffectTypeContainer>() << '\n';
 #endif
 
     return 0;
