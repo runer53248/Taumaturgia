@@ -125,17 +125,17 @@ int main() {
             | With::property<Protecting>  //
             ;
 
-        auto t1 = create_type(
+        auto type1 = create_type(
             unordered,  // ignore order of arguments
             Health{100, 100},
             Damage{5, DamageType::Magical},
             float{3.14f},  // type<float>
             Protection{10, BodyLocation::Head},
-            int{100},       // type<int>
+            default_int,    // type<int>
             double{20.20},  // type<double>
             Name{"Test"});
 
-        auto t2 = create_type(
+        auto type2 = create_type(
             unordered,  // ignore order of arguments
             default_int,
             default_float,
@@ -145,17 +145,17 @@ int main() {
             default_protection,
             default_name);
 
-        print(t1);
-        print(t2);
+        print(type1);
+        print(type2);
     }
 
     {  // MARK: modify target
         auto tlist = With::Name | With::Health | With::Protection | With::Damage;
 
-        auto t1 = Base{default_x, default_y} | tlist;
+        auto type3 = Base{default_x, default_y} | tlist;
 
-        [[maybe_unused]] Base base{default_x, default_y};  // target
-        auto t2 = base | tlist;                            // modify existing target type
+        Base base{default_x, default_y};  // target
+        auto type4 = base | tlist;        // modify existing target type
 
         // update rest of target parameters
         auto update = [](auto& target) {
@@ -168,7 +168,7 @@ int main() {
             };
         };
 
-        update(t1)(
+        update(type3)(
             Health{100, 100},
             float{3.14f},   // type<float>
             default_int,    // type<int>
@@ -177,7 +177,7 @@ int main() {
             Protection{10, BodyLocation::Head},
             Name{"Test"});
 
-        update(t2)(
+        update(type4)(
             default_int,
             default_float,
             default_double,
@@ -186,20 +186,24 @@ int main() {
             default_protection,
             default_name);
 
-        print(t1);
-        print(t2);
+        print(type3);
+        print(type4);
     }
 
     {                              // MARK: extra example
-        list tlist2 = With::Name;  // ? implicit conversion needed (don't use auto)
-        auto tlist3 = With::Name;  // !
+        list tlist2 = With::Name;  // ? explicit conversion needed (don't use auto)
+        auto tlist3 = With::Name;  // ! auto deduce wrong type here (single object is not a list)
 
-        auto tp2 = Base{default_x, default_y} | tlist2;
-        auto tp3 = Base{default_x, default_y} | tlist3;  // ! creator
+        auto tlist4 = tlist2 | With::Health;
+        auto tlist5 = tlist3 | With::Health;
+        static_assert(std::same_as<decltype(tlist4), decltype(tlist5)>);
+
+        auto type5 = Base{default_x, default_y} | tlist2;
+        auto type6 = Base{default_x, default_y} | tlist3;  // ! creator
 
         std::cout << '\n';
-        std::cout << "tp2 =    " << name<decltype(tp2)>() << '\n';
-        std::cout << "tp3 =    " << name<decltype(tp3)>() << '\n';  // ! creator
+        std::cout << "type5 =    " << name<decltype(type5)>() << '\n';
+        std::cout << "type6 =    " << name<decltype(type6)>() << '\n';  // ! creator
         std::cout << '\n';
     }
 }
