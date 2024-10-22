@@ -49,28 +49,6 @@ using Weapon_D = add_properties<
     Naming,
     Damaging>;
 
-#ifdef WITH_ADD_PROPERTIES
-
-// MARK: Weapon_A Damage
-
-// template <typename T>
-//     requires std::is_base_of_v<Weapon_A, T>
-// struct traits::CustomAccessType<Damage, T> {
-//     static constexpr decltype(auto) get(auto& el) {
-//         return (el.dmg);
-//     }
-// };
-
-// // MARK: Weapon_B Damage
-
-// template <typename T>
-//     requires std::is_base_of_v<Weapon_B, T>
-// struct traits::CustomAccessType<Damage, T> {
-//     static constexpr decltype(auto) get(auto& el) {
-//         return el.getDamage();
-//     }
-// };
-
 // MARK: Weapon_C Damage
 
 template <typename T>
@@ -80,66 +58,6 @@ struct traits::CustomAccessType<Damage, T> {
         return el.Dmg();
     }
 };
-
-// MARK: name_access concept
-
-// template <typename T>
-// concept name_access = requires(T t) {
-//     { t.name } -> std::convertible_to<std::string>;
-//     { std::as_const(t).name } -> std::convertible_to<const std::string>;
-// };
-
-// // MARK: AccessType Name
-
-// template <name_access T>
-// struct traits::CustomAccessType<Name, T> {
-//     static constexpr decltype(auto) get(name_access auto& el) {
-//         return (el.name);
-//     }
-// };
-
-// MARK: Weapon_A Name
-
-// template <typename T>
-//     requires std::is_base_of_v<Weapon_A, T>
-// struct traits::CustomAccessType<Name, T> {
-//     static constexpr decltype(auto) get(auto& el) {
-//         return (el.name);
-//     }
-// };
-
-// MARK: Weapon_B Name
-
-// template <typename T>
-//     requires std::is_base_of_v<Weapon_B, T>
-// struct traits::CustomAccessType<Name, T> {
-//     static constexpr decltype(auto) get(auto& el) {
-//         return (el.name);
-//     }
-// };
-
-// MARK: Weapon_C Name
-
-// template <typename T>
-//     requires std::is_base_of_v<Weapon_C, T>
-// struct traits::CustomAccessType<Name, T> {
-//     static constexpr decltype(auto) get(auto& el) {
-//         return (el.name);
-//     }
-// };
-
-#else
-
-// MARK: Weapon_C Damage
-
-template <typename T>
-    requires std::is_base_of_v<Weapon_C, T>
-struct traits::CustomAccessType<Damage, T> {
-    static constexpr decltype(auto) get(auto& el) {
-        return el.Dmg();
-    }
-};
-#endif
 
 // MARK: attack_impl_x
 
