@@ -4,9 +4,8 @@
 #include "Examples/PreetyPrint/PrintHealth.hpp"
 #include "Examples/PreetyPrint/PrintName.hpp"
 #include "Examples/PreetyPrint/PrintProtection.hpp"
-#include "Usage/Properties.hpp"
-
 #include "Examples/demangle_type_name.hpp"
+#include "Usage/Properties.hpp"
 
 template <typename T, typename TYPE>
 concept type_of = std::same_as<std::remove_const_t<T>, TYPE>;
@@ -81,50 +80,30 @@ int main() {
 
     {
         // create a type
-        using type_1 = add_properties<
+        using Type_0_5 = add_properties<
             Base,
-            Living,
             Damaging,
+            Living>;
+        using Type_1 = add_properties<
+            Type_0_5,
             Protecting,
             Naming>;
 
-        auto t1 = type_1{
-            unordered,  // ignore order of arguments
-            Damage{5, DamageType::Divine},
-            Name{"Test"},
-            float{3.14f},   // type<float>
-            default_int,    // type<int>
-            double{20.20},  // type<double>
-            Health{100, 100},
-            Protection{10, BodyLocation::Head},
-        };
-
-        auto t2 = type_1{
-            unordered,  // ignore order of arguments
-            default_int,
-            default_float,
-            default_double,
-            default_health,
-            default_damage,
-            default_protection,
-            default_name};
-
-        print(t1);
-        print(t2);
-    }
-
-    {
         // create a properties_list
         using p_list = properties_list<
-            Living,
             Damaging,
+            Living>;
+        using p_list_2 = properties_list<
             Protecting,
             Naming>;
 
         // create a type
-        using type_1 = p_list::apply_properties<Base>;
+        using Type_1_5 = p_list::apply_properties<Base>;
+        using Type_2 = p_list_2::apply_properties<Type_1_5>;
 
-        auto t1 = type_1{
+        static_assert(std::same_as<Type_1, Type_2>);
+
+        auto type1 = Type_1{
             unordered,      // ignore order of arguments
             float{3.14f},   // type<float>
             default_int,    // type<int>
@@ -135,7 +114,7 @@ int main() {
             Health{100, 100},
         };
 
-        auto t2 = type_1{
+        auto type2 = Type_1{
             unordered,  // ignore order of arguments
             default_int,
             default_float,
@@ -145,7 +124,7 @@ int main() {
             default_protection,
             default_name};
 
-        print(t1);
-        print(t2);
+        print(type1);
+        print(type2);
     }
 }
