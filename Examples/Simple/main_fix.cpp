@@ -25,19 +25,18 @@ struct Item {
 };
 #endif
 
-// MARK: GetStrategy_<Item>
+// MARK: GetterStrategy_<Item>
 
 template <>
-struct GetStrategy_<Item> {
+struct GetterStrategy_<Item> {
     template <Properties PROPERTY>
     static constexpr auto operator()(Gettingable auto& obj) {
         if constexpr (PROPERTY == Properties::Health) {
-            std::cout << 'x';
-            return default_get_behavior<Properties::Health>(obj);
+            std::cout << "Hp";
         } else {
-            std::cout << 'y';
-            return default_get_behavior<PROPERTY>(obj);
+            std::cout << "Oth";
         }
+        return default_get_behavior<PROPERTY>(obj);
     }
 };
 
@@ -85,23 +84,21 @@ struct AliveStrategy_<T> {
     }
 };
 
-// MARK: GetStrategy_<T>
+// MARK: GetterStrategy_<T>
 
 template <typename T>
     requires std::is_base_of_v<Tile, T>
-struct GetStrategy_<T> {
+struct GetterStrategy_<T> {
     template <Properties PROPERTY>
     static constexpr auto operator()(Gettingable auto& obj) {
         if constexpr (PROPERTY == Properties::Health) {
             std::cout << 'H';
-            return default_get_behavior<Properties::Health>(obj);
         } else if constexpr (PROPERTY == Properties::Damage) {
             std::cout << 'D';
-            return default_get_behavior<Properties::Damage>(obj);
         } else {
             std::cout << 'V';
-            return default_get_behavior<PROPERTY>(obj);
         }
+        return default_get_behavior<PROPERTY>(obj);
     }
 };
 
@@ -118,16 +115,16 @@ static_assert(is_custom_alive_strategy<LivingTile>);
 #include "Examples/demangle_type_name.hpp"
 
 int main() {
-    auto item = Item{
+    const auto item = Item{
         Name{"Book"},
         Health{30},
         Damage{3}};
 
-    auto tile = Tile{
+    const auto tile = Tile{
         Name{"Tile"},
         Damage{3}};
 
-    auto living_tile = LivingTile{
+    const auto living_tile = LivingTile{
         Name{"Grass"},
 #ifdef WITH_ADD_PROPERTIES
         Health{160},
@@ -168,12 +165,27 @@ int main() {
     static_assert(properties_trait<Properties::Name>::template accessable<Tile>);
     static_assert(properties_trait<Properties::Name>::template accessable<LivingTile>);
 
-    std::optional health_result = action_impl::get_impl(item, sProperties<Properties::Health>{});
-    std::optional damage_result = action_impl::get_impl(tile, sProperties<Properties::Damage>{});
-    std::optional name_result = action_impl::get_impl(tile, sProperties<Properties::Name>{});  // return value only if type is Name
+    std::optional health_result = action_impl::get_impl(tile, DeduceProperties::Health);
     std::cout << '\n';
-    std::cout << "health_result = "
-              << name<decltype(health_result)>() << '\n';
+    std::cout << "health_result has_value  = " << health_result.has_value() << '\n';
+    std::cout << "health_result type  = " << name<decltype(health_result)>() << '\n';
+
+    std::optional item_health_result = action_impl::get_impl(item, DeduceProperties::Health);
+    std::optional item_health_result_2 = action_impl::get_impl(item, Properties::Health);
+    static_assert(not std::same_as<decltype(item_health_result), decltype(item_health_result_2)>);
+    std::cout << '\n'
+              << '\n'
+              << "item_health_result (sProperties) = "
+              << name<decltype(item_health_result)>() << '\n';
+    std::cout << "item_health_result_2 (Properties) = "
+              << name<decltype(item_health_result_2)>() << '\n'
+              << '\n';
+
+    std::optional damage_result = action_impl::get_impl(tile, DeduceProperties::Damage);
+    std::optional name_result = action_impl::get_impl(tile, DeduceProperties::Name);  // return value only if type is Name
+    std::cout << '\n';
+    std::cout << "item_health_result = "
+              << name<decltype(item_health_result)>() << '\n';
     std::cout << "damage_result = "
               << name<decltype(damage_result)>() << '\n';
     std::cout << "name_result = "
@@ -189,7 +201,7 @@ int main() {
               << '\n';
 
     std::cout << "Protection trait type = "
-              << name<decltype(action_impl::get_impl(tile, sProperties<Properties::Protection>{}))>() << '\n'  // return void
+              << name<decltype(action_impl::get_impl(tile, DeduceProperties::Protection))>() << '\n'  // return void
               << '\n';
 
     std::optional name_result_2 = action_impl::get_impl(tile, Properties::Name);
