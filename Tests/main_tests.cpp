@@ -44,15 +44,15 @@ int main() {
     static_assert(std::is_same_v<Living<Damaging<Npc>>, Damaging<Npc>>);
     static_assert(std::is_same_v<Damaging<Living<Npc>>, Damaging<Npc>>);
 
-    static_assert(std::is_same_v<GetStrategy<Default>, GetStrategy<Npc>>);             // Npc will use default Get strategy - Livable concept pass
-    static_assert(std::is_same_v<GetStrategy<Default>, GetStrategy<Living<Player>>>);  // Player will use default Get strategy - Livable concept pass
+    static_assert(std::is_same_v<GetterStrategy<Default>, GetterStrategy<Npc>>);             // Npc will use default Get strategy - Livable concept pass
+    static_assert(std::is_same_v<GetterStrategy<Default>, GetterStrategy<Living<Player>>>);  // Player will use default Get strategy - Livable concept pass
 
     static_assert(std::is_same_v<Living_impl<Player>, Living<Player>>);  // Livable traits added
     static_assert(std::is_same_v<Npc, Living<Npc>>);                       // Livable concept pass
 
     static_assert(not std::is_same_v<AttackStrategy<Default>, AttackStrategy<Player>>);
 
-    static_assert(std::is_same_v<GetStrategy<Default>, GetStrategy<Damaging<Living<Healing<Player>>>>>);
+    static_assert(std::is_same_v<GetterStrategy<Default>, GetterStrategy<Damaging<Living<Healing<Player>>>>>);
     static_assert(std::is_same_v<Damaging<Healing<Living<Player>>>, Damaging<Damaging<Living<Living<Healing<Living<Player>>>>>>>);  // the last duplication will be used
     static_assert(std::is_same_v<Damaging<Npc>, Damaging<Living<Npc>>>);
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Strategies/GetStrategy.hpp"
+#include "Taumaturgia/Strategies/GetterStrategy.hpp"
 #include "Usage/Enums/Properties.hpp"
 
 // * this version return optional variant of reference_wraper of types

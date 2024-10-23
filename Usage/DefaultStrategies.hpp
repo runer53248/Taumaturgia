@@ -10,4 +10,4 @@
 #include "Premade/PremadeDefaultStrategies.hpp"
 #endif
 
-#include "Taumaturgia/Strategies/Defaults/DefaultGetStrategy.hpp"  //
+#include "Taumaturgia/Strategies/Defaults/DefaultGetterStrategy.hpp"  //

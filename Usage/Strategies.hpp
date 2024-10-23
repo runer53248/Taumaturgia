@@ -8,7 +8,7 @@
 #include "Usage/Premade/PremadeStrategies.hpp"
 #endif
 
-#include "Taumaturgia/Strategies/GetStrategy.hpp"  //
+#include "Taumaturgia/Strategies/GetterStrategy.hpp"  //
 
 template <typename T>
 concept is_alive_strategy = Strategable<AliveStrategy, T, std::optional<AliveStatus>>;

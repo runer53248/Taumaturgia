@@ -1,5 +1,5 @@
 #include "Taumaturgia/Object/Object.hpp"
-#include "Taumaturgia/Strategies/Defaults/DefaultGetStrategy.hpp"
+#include "Taumaturgia/Strategies/Defaults/DefaultGetterStrategy.hpp"
 #include "Usage/Enums/AliveStatus.hpp"
 
 #ifdef NO_PREMADE_STRATEGIES
