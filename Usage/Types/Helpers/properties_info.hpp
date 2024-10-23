@@ -11,6 +11,9 @@ template <>
 struct properties_info<Properties::Health> {
     using type = Health;
     using trait = trait<Health>;
+
+    template <typename T>
+    using strategy = AliveStrategy<T>;
 };
 
 template <>
@@ -48,6 +51,7 @@ struct properties_info<Properties::Restore> {
     template <typename T>
     using strategy = RestoreStrategy<T>;
 };
+
 template <>
 struct properties_info<Properties::Wear> {
     using type = WearContainer;
@@ -70,6 +74,14 @@ using properties_type = impl::properties_info<PROPERTY>::type;
 
 template <Properties PROPERTY>
 using properties_trait = impl::properties_info<PROPERTY>::trait;
+
+template <Properties PROPERTY>
+struct properties_strategy {
+    constexpr static bool exist = requires { typename impl::properties_info<PROPERTY>::template strategy<tag>; };
+
+    template <typename T>
+    using strategy = impl::properties_info<PROPERTY>::template strategy<T>;
+};
 
 template <Properties PROPERTY, typename T>
 concept is_properties_accessable = properties_trait<PROPERTY>::template accessable<std::remove_reference_t<T>>;

@@ -15,12 +15,13 @@ constexpr std::optional<AliveStatus> alive(const T& type) {
     }
 }
 
+// version for Object::ObjectModel<T>::get returning optional of variant (of ref_wrappers)
 template <typename T>
 constexpr auto get_impl(T& type, Properties param) -> to_optional_get_variant<T> {  // TODO: implement test for get
     if constexpr (not Gettingable<T>) {
         return {};
     } else {
-        using strategy = GetStrategy<std::remove_const_t<T>>;
+        using strategy = GetterStrategy<std::remove_const_t<T>>;
 
         switch (param) {
         case Properties::Protection:
@@ -43,26 +44,22 @@ constexpr auto get_impl(T& type, Properties param) -> to_optional_get_variant<T>
     }
 }
 
+// version returning optional of ref_wrapper to specific type (or empty optional to tag)
 template <typename T, Properties P>
-constexpr auto get_impl(T& type, sProperties<P>) {  // TODO: implement test for get
+constexpr auto get_impl(T& type, Deduced<P>) {  // TODO: implement test for get
     if constexpr (not is_properties_accessable<P, T>) {
-        return;
+        return std::optional<tag>{};
     } else {
-        return GetStrategy<std::remove_const_t<T>>::template operator()<P>(type);
+        using strategy = GetterStrategy<std::remove_const_t<T>>;
+        return strategy::template operator()<P>(type);
     }
 }
 
-template <Properties P>
-struct get_strategy {
-    template <typename T>
-    using strategy = impl::properties_info<P>::template strategy<T>;
-};
-
 template <Properties P, typename T>
 decltype(auto) make_command_p(T& type) {
-    using get_ = get_strategy<P>;
-    if constexpr (requires { typename get_::template strategy<T>; }) {
-        return std::make_shared<CommandModel<get_::template strategy, T>>(type);
+    using property_strategy = properties_strategy<P>;
+    if constexpr (property_strategy::exist) {
+        return std::make_shared<CommandModel<property_strategy::template strategy, T>>(type);
     }
 }
 
@@ -74,5 +71,4 @@ auto createCommands(auto& type) {
         {Actions::Restore, make_command_p<Properties::Restore>(type)},
         {Actions::Wear, make_command_p<Properties::Wear>(type)}};
 }
-
 }  // namespace action_impl
