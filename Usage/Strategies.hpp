@@ -24,16 +24,35 @@ template <typename T>
 concept is_heal_strategy = Strategable<HealStrategy, T, ActionStatus, Object*, Object*>;
 
 template <Namingable T>
-auto propertiesExistanceMap() {
-    return std::unordered_map<Properties, const bool>{
-        {Properties::Health, is_alive_strategy<T>},
-        {Properties::CureHealth, is_heal_strategy<T>},
-        {Properties::Protection, is_defend_strategy<T>},
-        {Properties::Damage, is_attack_strategy<T>},
-        {Properties::Restore, is_restore_strategy<T>},
-        {Properties::Wear, is_wear_strategy<T>},
-        // {Properties::Name, is_name_strategy<T>},
-        {Properties::Get, Gettingable<T>}};
+auto propertiesWithValidStrategies() {
+    std::set<Properties> result{};
+
+    if (is_alive_strategy<T>) {
+        result.insert(Properties::Health);
+    }
+    if (is_heal_strategy<T>) {
+        result.insert(Properties::CureHealth);
+    }
+    if (is_defend_strategy<T>) {
+        result.insert(Properties::Protection);
+    }
+    if (is_attack_strategy<T>) {
+        result.insert(Properties::Damage);
+    }
+    if (is_restore_strategy<T>) {
+        result.insert(Properties::Restore);
+    }
+    if (is_wear_strategy<T>) {
+        result.insert(Properties::Wear);
+    }
+    // if (is_name_strategy<T>) {
+    //     result.insert(Properties::Name);
+    // }
+    if (Gettingable<T>) {
+        result.insert(Properties::Get);
+    }
+
+    return result;
 }
 
 template <Namingable T>
@@ -46,6 +65,5 @@ auto propertiesCustomizationMap() {
         {Properties::Restore, is_custom_restore_strategy<T>},
         {Properties::Wear, is_custom_wear_strategy<T>},
         // {Properties::Name, is_custom_name_strategy<T>},
-        {Properties::Get, is_custom_get_strategy<T>}
-    };
+        {Properties::Get, is_custom_get_strategy<T>}};
 }

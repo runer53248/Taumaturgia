@@ -51,25 +51,24 @@ private:
     };
 
     ObjectConcept::ptr object_;
-    const std::unordered_map<Properties, const bool> has_;
+    const std::set<Properties> have_strategy_for_;
 
 public:
     template <Namingable T>
     Object(const T& obj)
         : object_{std::make_unique<ObjectModel<T>>(obj)},
-          has_{propertiesExistanceMap<T>()} {}
+          have_strategy_for_{propertiesWithValidStrategies<T>()} {}
 
     ActionStatus doAction(Actions action, Object* owner, Object* target) const;
 
     std::string name() const;
     std::optional<AliveStatus> alive() const;
 
-    bool checkAction(Actions action) const;
-    bool hasProperty(Properties property) const;
+    bool hasStrategyFor(Properties property) const;
 
     template <Properties param, typename Self>
     decltype(auto) getOpt(this Self& self) {
-        if (self.hasProperty(param)) {
+        if (self.hasStrategyFor(param)) {
             return extract_optional_type<param>(self.object_->get(param));
         }
         return get_result_type<param, std::is_const_v<Self>>{};

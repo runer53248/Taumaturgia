@@ -7,7 +7,7 @@
 void attack(auto& backpack, auto& player, auto& enemy) {
     std::cout << "Items I can attack with:  //////////////////////////////\n\n";
     for (const Object& item : backpack) {
-        if (not item.hasProperty(Properties::Damage)) {
+        if (not item.hasStrategyFor(Properties::Damage)) {
             continue;
         }
         std::cout << player.name() << " attack " << enemy.name() << " with " << item.name() << ' ';
@@ -30,7 +30,7 @@ void wear(auto& backpack, auto& player) {
     std::cout << "(armor protection protect against effect from attack)\n";
     std::cout << "(armor protection don't protect against ongoing effect)\n\n";
     for (const auto& item : backpack) {
-        if (not item.hasProperty(Properties::Wear)) {
+        if (not item.hasStrategyFor(Properties::Wear)) {
             continue;
         }
         auto status = wear(item, &player /*, &player*/);
@@ -56,7 +56,7 @@ void wear(auto& backpack, auto& player) {
 void defend(auto& backpack, auto& player) {
     std::cout << "Items I can defend with:  //////////////////////////////\n\n";
     for (const auto& item : backpack) {
-        if (not item.hasProperty(Properties::Protection)) {
+        if (not item.hasStrategyFor(Properties::Protection)) {
             continue;
         }
         auto status = defend(item, &player /*, &player*/);
@@ -83,7 +83,7 @@ void enemy_defend(auto& backpack, auto& enemy) {
     std::cout << "(enemy don't have wearingable property)\n\n";
 
     for (const auto& item : backpack) {
-        if (not item.hasProperty(Properties::Protection)) {
+        if (not item.hasStrategyFor(Properties::Protection)) {
             continue;
         }
         auto status = defend(item, &enemy /*, &player*/);
@@ -108,7 +108,7 @@ void enemy_defend(auto& backpack, auto& enemy) {
 void restore(auto& backpack, auto& player) {
     std::cout << "Items I can restore with:  //////////////////////////////\n\n";
     for (const auto& item : backpack) {
-        if (not item.hasProperty(Properties::Restore) ) {
+        if (not item.hasStrategyFor(Properties::Restore) ) {
             continue;
         }
         auto status = restore(item, &player, &player);
@@ -129,7 +129,7 @@ void restore(auto& backpack, auto& player) {
 void heal(auto& backpack, auto& player) {
     std::cout << "Items I can heal with:  //////////////////////////////\n\n";
     for (const auto& item : backpack) {
-        if (not item.hasProperty(Properties::CureHealth)) {
+        if (not item.hasStrategyFor(Properties::CureHealth)) {
             continue;
         }
         auto status = heal(item, &player, &player);

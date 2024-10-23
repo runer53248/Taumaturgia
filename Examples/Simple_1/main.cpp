@@ -41,7 +41,7 @@ int main(int, [[maybe_unused]] char* argv[]) {
 
     std::cout << "print living items from backpack:\n";
     for (auto item = backpack.begin(); item != backpack.end(); ++item) {
-        if (item->hasProperty(Properties::Health)) {
+        if (item->hasStrategyFor(Properties::Health)) {
             print_person(*item);
         }
     }
