@@ -19,11 +19,11 @@ void get_print_const_ref(const Object& obj) {
         .and_then(print_new_line);
 }
 
-// MARK: get_print_ref
+// MARK: get_print_ref_with_cure_health_as_const
 
-// non-const object will return optional to non-const reference wraper - printing will then show [&]
-void get_print_ref(type_of<Object> auto& obj) {
-    std::cout << "get_print_ref:\n";
+void get_print_ref_with_cure_health_as_const(type_of<Object> auto& obj) {
+    std::cout << "get_print_ref_with_cure_health_as_const:\n";
+    // non-const object will return optional to non-const reference wraper
     obj.template getOpt<Properties::Health>()  // getOpt as method
         .and_then(print_hp)
         .and_then(print_new_line);
@@ -38,10 +38,10 @@ void get_print_ref(type_of<Object> auto& obj) {
         .and_then(print_new_line);
 }
 
-// MARK: get_print_with_damage_as_const
+// MARK: get_print_ref_with_health_and_damage_as_const
 
-void get_print_with_damage_as_const(auto& obj) {
-    std::cout << "get_print_with_damage_as_const:\n";
+void get_print_ref_with_health_and_damage_as_const(auto& obj) {
+    std::cout << "get_print_ref_with_health_and_damage_as_const:\n";
     getOpt<Properties::Health>(std::as_const(obj))  // getOpt as function with const Object as argument
         .and_then(print_hp)
         .and_then(print_new_line);

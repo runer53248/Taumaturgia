@@ -32,8 +32,9 @@ int main() {
         /*dmg*/ Damage{}};  // can be ommited - type inside Weapon type
 #endif
 
+    // universal access by trait
     trait<Name>::get(gustav) = Name{"Franco The Inteligent Sword"};
-    trait<Health>::get(gustav) = Health{75};  // universal access version
+    trait<Health>::get(gustav) = Health{75};  
     trait<CureHealth>::get(gustav) = CureHealth{30};
     trait<Damage>::get(gustav) = Damage{100,
                                         DamageType::Magical,
@@ -48,9 +49,9 @@ int main() {
         std::cout << gustav_obj.name() << '\n';
         get_print_const_ref(gustav_obj);
         std::cout << '\n';
-        get_print_ref(gustav_obj);
+        get_print_ref_with_cure_health_as_const(gustav_obj);
         std::cout << '\n';
-        get_print_with_damage_as_const(gustav_obj);
+        get_print_ref_with_health_and_damage_as_const(gustav_obj);
         std::cout << '\n';
     }
 
