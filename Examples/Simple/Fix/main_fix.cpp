@@ -1,118 +1,22 @@
+#define IGNORE_ORDER_LIST
+
 #include <vector>
 #include "Examples/PreetyPrint/preety_print.hpp"
+#include "Examples/demangle_type_name.hpp"
 #include "Usage/DefaultStrategies.hpp"
 
-// MARK: Empty
-
-#ifdef WITH_ADD_PROPERTIES
-template <typename TAG = void, typename... TAGS>
-struct Empty {};
-#endif
-
-// MARK: Item
-
-#ifdef WITH_ADD_PROPERTIES
-using Item = add_properties<
-    Empty<struct ItemTag>,
-    Naming,
-    Living,
-    Damaging>;
-#else
-struct Item {
-    std::string name;
-    Health hp;
-    Damage dmg;
-};
-#endif
-
-// MARK: GetterStrategy_<Item>
-
-template <>
-struct GetterStrategy_<Item> {
-    template <Properties PROPERTY>
-    static constexpr auto operator()(Gettingable auto& obj) {
-        if constexpr (PROPERTY == Properties::Health) {
-            std::cout << "Hp";
-        } else {
-            std::cout << "Oth";
-        }
-        return default_get_behavior<PROPERTY>(obj);
-    }
-};
-
-static_assert(Gettingable<Item>);
-static_assert(is_custom_get_strategy<Item>);
-static_assert(not is_custom_alive_strategy<Item>);
-
-// MARK: Tile
-
-#ifdef WITH_ADD_PROPERTIES
-using Tile = add_properties<
-    Empty<>,
-    Naming,
-    Damaging>;
-using LivingTile = add_properties<
-    Tile,
-    Living>;
-#else
-struct Tile {
-    Name name;
-    Damage dmg;
-};
-struct LivingTile : Tile {
-    Health hp;
-};
-#endif
-
-// MARK: AliveStrategy_<T>
-
-template <typename T>
-    requires std::is_base_of_v<Tile, T>
-#ifdef NO_PREMADE_STRATEGIES
-struct UserStrategy_<Health, T> {
-#else
-struct AliveStrategy_<T> {
-#endif
-    static constexpr std::optional<AliveStatus> operator()(Livingable auto&) {  // when have Livingable properties
-        std::cout << " [play death]";
-        return AliveStatus::Death;
-    }
-
-    static constexpr std::optional<AliveStatus> operator()(auto&) {  // when not have Livingable properties
-        std::cout << " [imitating living]";
-        return AliveStatus::Living;
-    }
-};
-
-// MARK: GetterStrategy_<T>
-
-template <typename T>
-    requires std::is_base_of_v<Tile, T>
-struct GetterStrategy_<T> {
-    template <Properties PROPERTY>
-    static constexpr auto operator()(Gettingable auto& obj) {
-        if constexpr (PROPERTY == Properties::Health) {
-            std::cout << 'H';
-        } else if constexpr (PROPERTY == Properties::Damage) {
-            std::cout << 'D';
-        } else {
-            std::cout << 'V';
-        }
-        return default_get_behavior<PROPERTY>(obj);
-    }
-};
-
-static_assert(Gettingable<Tile>);
-static_assert(is_custom_get_strategy<Tile>);
-static_assert(is_custom_alive_strategy<Tile>);
-
-static_assert(Gettingable<LivingTile>);
-static_assert(is_custom_get_strategy<LivingTile>);
-static_assert(is_custom_alive_strategy<LivingTile>);
+#include "Item.hpp"
+#include "LivingTile.hpp"
+#include "Tile.hpp"
+#include "WeirdTile.hpp"
 
 // MARK: main
 
-#include "Examples/demangle_type_name.hpp"
+#ifdef WITH_ADD_PROPERTIES
+#ifndef IGNORE_ORDER_LIST
+#define ARGUMENTS_REORDERED
+#endif
+#endif
 
 int main() {
     const auto item = Item{
@@ -125,15 +29,29 @@ int main() {
         Damage{3}};
 
     const auto living_tile = LivingTile{
-        Name{"Grass"},
-#ifdef WITH_ADD_PROPERTIES
+        Name{"LivingTile"},
+#ifdef ARGUMENTS_REORDERED
         Health{160},
         Damage{0, Effect{EffectType::Burn}}
 #else
-        Damage{0, Effect{EffectType::Burn}},
-        Health{60}
+        Damage{0, Effect{EffectType::Burn}},  // ! Damage is part of Tile struct and cant't be reordered in layout
+        Health{60}                            // ! or IGNORE_ORDER_LIST is defined and Living property is added last
 #endif
     };
+
+    const auto weird_tile = WeirdTile{
+        Name{"Grass"},
+        Damage{3}};
+
+    std::cout << '\n'
+              << "compare tile and living_tile: \n"
+              << name<decltype(tile)>() << '\n'
+              << name<decltype(living_tile)>() << '\n'
+              << '\n';
+    std::cout << '\n'
+              << "weird_tile: \n"
+              << name<decltype(weird_tile)>() << '\n'
+              << '\n';
 
     print_object_properties(item);
     print_customized_properties(item);
