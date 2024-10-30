@@ -98,8 +98,8 @@ int main() {
             Naming>;
 
         // create a type
-        using Type_1_5 = p_list::apply_properties<Base>;
-        using Type_2 = p_list_2::apply_properties<Type_1_5>;
+        using Type_1_5 = p_list::apply_properties_to<Base>;
+        using Type_2 = p_list_2::apply_properties_to<Type_1_5>;
 
         static_assert(std::same_as<Type_1, Type_2>);
 

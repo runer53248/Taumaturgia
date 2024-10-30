@@ -1,4 +1,4 @@
-// #define IGNORE_ORDER_LIST
+#define IGNORE_ORDER_LIST
 
 // TODO: split preety prints requiring Object class from those that don't and group them for simple one include
 #include "Examples/PreetyPrint/PrintDamage.hpp"
@@ -80,6 +80,27 @@ private:
 
 // MARK: main
 
+struct Empty {
+    auto getFloat(size_t index = 0) { return float_[index % 2]; }
+    auto getOtherDamage() { return dmg_; }
+
+    template <typename RETURN, size_t SIZE = 0>
+    constexpr decltype(auto) getType(this auto&& self) {
+        if constexpr (std::same_as<RETURN, std::string>) {
+            return (self.test_);
+        } else if constexpr (std::same_as<RETURN, float>) {
+            return (self.float_[SIZE % 2]);
+        } else {
+            return;
+        }
+    }
+
+private:
+    Damage dmg_{50, DamageType::Divine};
+    std::array<float, 2> float_{3.1113f, 0.5f};
+    std::string test_{"ok"};
+};
+
 int main() {
     std::cout << '\n';
 
@@ -111,6 +132,129 @@ int main() {
     [[maybe_unused]] Damage default_damage{5, DamageType::Divine};
     [[maybe_unused]] Protection default_protection{10, BodyLocation::Head};
     [[maybe_unused]] Name default_name{"Test"};
+
+    {
+        Empty empty{};
+
+        auto create_type =
+            empty                                             // ! ignore prototype and use default c-tor
+            | With::Damage                                    //
+            | With::Name                                      //
+            | With::Protection                                //
+            | With::Protection                                //
+            | With::property<Protecting>                      //
+            | With::Health                                    // not in order
+            | With::property<UserPropertyAdapter<int>::type>  //
+            ;
+#ifdef IGNORE_ORDER_LIST
+        auto type = create_type(
+            Damage{5, DamageType::Physical},
+            Name{"Type"},
+            Protection{10, BodyLocation::Legs},
+            Health{300, 300},  // order as given
+            15);
+#else
+        auto type = create_type(
+            Name{"Type"},
+            Health{300, 300},  // order as property priority
+            Damage{5, DamageType::Physical},
+            Protection{10, BodyLocation::Legs},
+            15);
+#endif
+        auto type_temp = create_type(
+            unordered,  // order ignored
+            15,
+            Protection{10, BodyLocation::Legs},
+            Damage{5, DamageType::Physical},
+            Health{300, 300},
+            Name{"Type"});
+
+        std::cout << "type       = " << name<decltype(type)>() << '\n';
+        std::cout << "Name       = " << trait<Name>::get(type) << '\n';
+        std::cout << "Health     = " << trait<Health>::get(type) << '\n';
+        std::cout << "Damage     = " << trait<Damage>::get(type) << '\n';
+        std::cout << "Protection = " << trait<Protection>::get(type) << '\n';
+        std::cout << "int        = " << trait<int>::get(type) << '\n';
+        std::cout << "float      = " << trait<float>::get(type) << '\n';
+        std::cout << "string     = " << trait<std::string>::get(type) << '\n';
+
+        std::cout << "float acces= " << trait<float>::accessable<decltype(type)> << '\n';
+
+        std::cout << "float 0    = " << type.getType<float, 0>() << '\n';
+        std::cout << "float 1    = " << type.getType<float, 1>() << '\n';
+        std::cout << "string     = " << type.getType<std::string>() << '\n';
+
+        std::cout << "Name       = " << type.getName() << '\n';
+        std::cout << "Health     = " << type.getHealth() << '\n';
+        std::cout << "Damage     = " << type.getDamage() << '\n';
+        std::cout << "Protection = " << type.getProtection() << '\n';
+        std::cout << "int        = " << type.getType<int>() << '\n';
+        std::cout << "float 0    = " << type.getFloat(0) << '\n';
+        std::cout << "float 1    = " << type.getFloat(1) << '\n';
+        std::cout << "dmg other  = " << type.getOtherDamage() << '\n';
+        std::cout << '\n';
+
+        struct Empty_2 {
+            auto getFloat(size_t index = 0) { return f_[index % 2]; }
+
+        private:
+            std::array<float, 2> f_{3.1113f, 0.5f};
+        };
+
+        Empty_2 empty_2{};
+
+        auto create_type_2 =
+            empty_2                                           // ! ignore prototype and use default c-tor
+            | With::Damage                                    //
+            | With::Name                                      //
+            | With::Protection                                //
+            | With::Protection                                //
+            | With::property<Protecting>                      //
+            | With::Health                                    // not in order
+            | With::property<UserPropertyAdapter<int>::type>  //
+            ;
+#ifdef IGNORE_ORDER_LIST
+        auto type_2 = create_type_2(
+            Damage{5, DamageType::Physical},
+            Name{"Type 2"},
+            Protection{10, BodyLocation::Legs},
+            Health{300, 300},  // order as given
+            15);
+#else
+        auto type_2 = create_type_2(
+            Name{"Type 2"},
+            Health{300, 300},  // order as property priority
+            Damage{5, DamageType::Physical},
+            Protection{10, BodyLocation::Legs},
+            15);
+#endif
+        auto type_temp_2 = create_type_2(
+            unordered,  // order ignored
+            15,
+            Protection{10, BodyLocation::Legs},
+            Damage{5, DamageType::Physical},
+            Health{300, 300},
+            Name{"Type 2"});
+
+        std::cout << "type       = " << name<decltype(type_2)>() << '\n';
+        std::cout << "Name       = " << trait<Name>::get(type_2) << '\n';
+        std::cout << "Health     = " << trait<Health>::get(type_2) << '\n';
+        std::cout << "Damage     = " << trait<Damage>::get(type_2) << '\n';
+        std::cout << "Protection = " << trait<Protection>::get(type_2) << '\n';
+        std::cout << "int        = " << trait<int>::get(type_2) << '\n';
+
+        std::cout << "float acces= " << trait<float>::accessable<decltype(type_2)> << '\n';
+
+        std::cout << "Name       = " << type_2.getName() << '\n';
+        std::cout << "Health     = " << type_2.getHealth() << '\n';
+        std::cout << "Damage     = " << type_2.getDamage() << '\n';
+        std::cout << "Protection = " << type_2.getProtection() << '\n';
+        std::cout << "int        = " << type_2.getType<int>() << '\n';
+        std::cout << "float 0    = " << type_2.getFloat(0) << '\n';
+        std::cout << "float 1    = " << type_2.getFloat(1) << '\n';
+
+        return 0;
+    }
 
     {  // MARK: create a lambda factory
         Base base{default_x, default_y};

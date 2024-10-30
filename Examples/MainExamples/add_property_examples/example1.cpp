@@ -55,7 +55,7 @@ int main() {
     using base_6 = add_properties<Element_name, Damaging>;
 
     auto create_type = []<typename T>() {
-        return p_list::apply_properties<T>{
+        return p_list::apply_properties_to<T>{
             default_name,
             default_health,
             default_damage,
@@ -74,7 +74,7 @@ int main() {
     auto type2 = templated_call<create_type, base_2>();
     templated_call<print_type, base_2>(type2);
 
-    auto type3 = p_list::apply_properties<base_3>{
+    auto type3 = p_list::apply_properties_to<base_3>{
         default_name,        // own name as first argument
         default_damage,      //
         default_protection,  //
@@ -82,7 +82,7 @@ int main() {
     };
     templated_call<print_type, base_3>(type3);
 
-    auto type4 = p_list::apply_properties<base_4>{
+    auto type4 = p_list::apply_properties_to<base_4>{
         default_name,        // own name as first argument
         default_protection,  //
         default_health,      // own hp moved at end of c-tor - order depends on base struct c-tor order now
@@ -90,7 +90,7 @@ int main() {
     };
     templated_call<print_type, base_4>(type4);
 
-    auto type5 = p_list::apply_properties<base_5>{
+    auto type5 = p_list::apply_properties_to<base_5>{
         default_name,        // own name as first argument
         default_damage,      //
         default_protection,  //
