@@ -6,6 +6,10 @@ template <template <typename...> typename property>
     requires is_property<property>
 struct Property;
 
+template <template <typename...> typename property>
+    requires is_property<property>
+struct Property_unordered;
+
 namespace helpers {
 
 template <typename... PROPERTY_LISTS>
@@ -21,5 +25,10 @@ template <template <typename...> typename... properties>
     requires(is_property<properties> and ...)
 using create_ordered_property_list = append_and_order_property_lists<
     list<Property<properties>...>>;
+
+template <template <typename...> typename... properties>
+    requires(is_property<properties> and ...)
+using create_unordered_property_list = append_and_order_property_lists<
+    list<Property_unordered<properties>...>>;
 
 }  // namespace helpers

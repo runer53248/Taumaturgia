@@ -2,6 +2,13 @@
 #include "Taumaturgia/Properties/UserProperty.hpp"  // for UserPropertyAdapter
 #include "taged_list.hpp"
 
+template <typename T, template <typename...> typename... properties>
+#ifndef IGNORE_ORDER_LIST
+using creator_add_properties = add_properties<T, properties...>;
+#else
+using creator_add_properties = add_properties_unordered<T, properties...>;
+#endif
+
 namespace impl {
 
 template <typename T, template <typename> typename Prop>
@@ -12,7 +19,7 @@ auto creator_impl() {
 
         if constexpr (inv_first_arg) {
             using type = std::invoke_result_t<T, Arg>;
-            using result_property = add_properties<type, Prop>;
+            using result_property = ::creator_add_properties<type, Prop>;
 
             if constexpr (not token_same) {  // token not introduced
                 static_assert(std::constructible_from<result_property, Arg, Args...>);
@@ -32,7 +39,7 @@ auto creator_impl() {
             }
         } else if constexpr (token_same) {  // token was introduced
             using type = T;
-            using result_property = add_properties<type, Prop>;
+            using result_property = ::creator_add_properties<type, Prop>;
 
             if constexpr (std::constructible_from<result_property, Arg, Args...>) {
                 static_assert(std::constructible_from<result_property, Arg, Args...>);
@@ -43,7 +50,7 @@ auto creator_impl() {
             }
         } else {  // token not introduced
             using type = T;
-            using result_property = add_properties<type, Prop>;
+            using result_property = ::creator_add_properties<type, Prop>;
 
             static_assert(std::constructible_from<result_property, Arg, Args...>);
             return result_property(std::forward<Arg>(arg), std::forward<Args>(args)...);
@@ -54,7 +61,7 @@ auto creator_impl() {
 // for build in properties
 template <typename T, template <typename> typename... Props, typename P>
 auto pipe_helper(T&& t, Props<P>...) {
-    using result = add_properties<std::remove_cvref_t<T>, Props<P>::template apply...>;
+    using result = ::creator_add_properties<std::remove_cvref_t<T>, Props<P>::template apply...>;
 
     if constexpr (std::same_as<std::remove_cvref_t<T>, result>) {
         return std::forward<T>(t);
@@ -66,7 +73,7 @@ auto pipe_helper(T&& t, Props<P>...) {
 // for user type properties
 template <typename T, template <typename, typename> typename... Props, typename... TYPES, typename P>
 auto pipe_helper(T&& t, Props<TYPES, P>...) {
-    using result = add_properties<std::remove_cvref_t<T>, UserPropertyAdapter<TYPES>::template type...>;
+    using result = ::creator_add_properties<std::remove_cvref_t<T>, UserPropertyAdapter<TYPES>::template type...>;
 
     return result{std::forward<T>(t)};
 }

@@ -17,5 +17,8 @@ template <template <typename...> typename... properties>
     requires(is_property<properties> and ...)
 struct properties_list {
     template <typename T>
-    using apply_properties = ::add_properties<T, properties...>;
+    using apply_properties_to = ::add_properties<T, properties...>;
+
+    template <typename T>
+    using apply_unordered_properties_to = ::add_properties_unordered<T, properties...>;
 };

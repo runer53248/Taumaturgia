@@ -15,6 +15,11 @@ namespace helpers::impl {
             if constexpr (std::is_same_v<A, B>) {
                 return true;
             }
+            // case to compare ew. unordered property and its conditional
+            // example: helpers::is_same_priority<Property_unordered<impl::Damaging_>, Property_unordered<Damaging>>
+            if constexpr (std::is_same_v<typename A::template apply<tag>, typename B::template apply<tag>>) {
+                return true;
+            }
             if constexpr (A::value != std::numeric_limits<size_t>::max()) {  // compare two ordered Properties
                 return (A::value == B::value);
             }
