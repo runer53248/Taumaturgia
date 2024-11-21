@@ -11,7 +11,7 @@ struct list {
     list(const TT&) {}
 };
 
-// implicit conversion from Property<Naming> to list<Naming<tag>>
+// implicit conversion from Property<ALIAS> to list<ALIAS<tag>>
 template <template <template <typename...> typename> typename Prop, template <typename...> typename property>
 list(const Prop<property>&) -> list<property<tag>>;
 

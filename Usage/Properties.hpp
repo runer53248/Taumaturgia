@@ -6,6 +6,8 @@
 #else
 #include "Usage/Premade/PremadeProperties.hpp"
 #endif
-#include "order_list.hpp"
 
+#ifndef CUSTOM_ORDER_LIST
+#include "order_list.hpp"
 #include "Taumaturgia/Properties/Structs/Property.hpp"
+#endif

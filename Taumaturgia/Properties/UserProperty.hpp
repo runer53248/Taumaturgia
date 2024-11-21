@@ -72,7 +72,7 @@ public:
     // MARK: Namingable default and ignore C-tors
 
     UserProperty_(const Name& name)
-        requires(not std::is_same_v<TYPE, Name>)
+        requires(not std::is_same_v<TYPE, Name> and std::constructible_from<T, Name>)
         : T{name} {}
 
     template <typename... Args>

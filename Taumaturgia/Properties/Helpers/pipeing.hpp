@@ -11,52 +11,35 @@ using creator_add_properties = add_properties_unordered<T, properties...>;
 
 namespace impl {
 
-template <typename T, template <typename> typename Prop>
-auto creator_impl() {
-    return []<typename Arg, typename... Args>(Arg&& arg, Args&&... args) {
-        constexpr bool inv_first_arg = std::invocable<T, Arg>;
-        constexpr bool token_same = std::is_same_v<std::remove_cvref_t<Arg>, Token>;
+template <typename T>
+struct Creator {
+    auto operator()() {
+        static_assert(std::constructible_from<T>);
+        return T{};
+    }
 
-        if constexpr (inv_first_arg) {
-            using type = std::invoke_result_t<T, Arg>;
-            using result_property = ::creator_add_properties<type, Prop>;
+    template <typename Arg, typename... Args>
+    auto operator()(Arg&& arg, Args&&... args) {
+        constexpr bool token_introduced = std::is_same_v<std::remove_cvref_t<Arg>, Token>;
+        
+        if constexpr (token_introduced) {  // token was introduced
+            using result_property = T;
 
-            if constexpr (not token_same) {  // token not introduced
+            if constexpr (std::constructible_from<result_property, Arg, Args...>) {  // can be constructed
                 static_assert(std::constructible_from<result_property, Arg, Args...>);
                 return result_property(std::forward<Arg>(arg), std::forward<Args>(args)...);
-            } else {                                                                     // token was introduced
-                if constexpr (std::constructible_from<result_property, Arg, Args...>) {  // can be constructed
-                    static_assert(std::constructible_from<result_property, Arg, Args...>);
-                    return result_property(std::forward<Arg>(arg), std::forward<Args>(args)...);
-                } else if constexpr (std::constructible_from<result_property, Args...>) {  // ignore token Arg
-                    static_assert(std::constructible_from<result_property, Args...>);
-                    return result_property(std::forward<Args>(args)...);
-                } else {  // T is base type (propably) and token was introduced - meaning unknown order of arguments given
-                    auto result = result_property{};
-                    ((trait<Args>::get(result) = std::forward<Args>(args)), ...);
-                    return result;
-                }
-            }
-        } else if constexpr (token_same) {  // token was introduced
-            using type = T;
-            using result_property = ::creator_add_properties<type, Prop>;
-
-            if constexpr (std::constructible_from<result_property, Arg, Args...>) {
-                static_assert(std::constructible_from<result_property, Arg, Args...>);
-                return result_property(std::forward<Arg>(arg), std::forward<Args>(args)...);
-            } else {  // ignore Arg == Token
+            } else {  // can be constructed, ignore Arg == Token
                 static_assert(std::constructible_from<result_property, Args...>);
                 return result_property(std::forward<Args>(args)...);
             }
         } else {  // token not introduced
-            using type = T;
-            using result_property = ::creator_add_properties<type, Prop>;
+            using result_property = T;
 
             static_assert(std::constructible_from<result_property, Arg, Args...>);
             return result_property(std::forward<Arg>(arg), std::forward<Args>(args)...);
         }
-    };
-}
+    }
+};
 
 // for build in properties
 template <typename T, template <typename> typename... Props, typename P>
@@ -81,20 +64,25 @@ auto pipe_helper(T&& t, Props<TYPES, P>...) {
 }  // namespace impl
 
 template <typename T, template <typename> typename Prop>
-auto operator|(T, Property<Prop>) {
-    return impl::creator_impl<T, Prop>();
+auto operator|(T, Property<Prop>) -> impl::Creator<::creator_add_properties<T, Prop>> {
+    return {};
+}
+
+template <typename T, template <typename> typename Prop>
+auto operator|(impl::Creator<T>, Property<Prop>) -> impl::Creator<::creator_add_properties<T, Prop>> {
+    return {};
 }
 
 // return: taged_list<Prop1, Prop2>
 template <template <typename...> typename Prop1, template <typename...> typename Prop2>
-auto operator|(Property<Prop1>, Property<Prop2>) {
-    return taged_list<Prop1, Prop2>{};
+auto operator|(Property<Prop1>, Property<Prop2>) -> taged_list<Prop1, Prop2> {
+    return {};
 }
 
 // return: taged_list<Props..., Prop2>
 template <typename... Props, template <typename> typename Prop2>
-auto operator|(list<Props...>, Property<Prop2>) {
-    return boost::mp11::mp_append<list<Props...>, taged_list<Prop2>>{};
+auto operator|(list<Props...>, Property<Prop2>) -> boost::mp11::mp_append<list<Props...>, taged_list<Prop2>> {
+    return {};
 }
 
 template <typename T, typename... Props>
