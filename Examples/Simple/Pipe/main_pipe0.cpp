@@ -15,6 +15,9 @@
 #include "Taumaturgia/Properties/Helpers/pipeing.hpp"
 
 struct Simple3 {
+    Simple3() = default;
+    Simple3(Damage dmg) : dmg{dmg} {}
+
     decltype(auto) Dmg(this auto& self) { return (self.dmg); }
     decltype(auto) Int(this auto& self) { return (self.i); }
 private:
@@ -28,16 +31,14 @@ concept Simplelike = requires (T t) {
     {t.Int()};
 };
 
-template <typename T>
-    requires Simplelike<T>
+template <Simplelike T>
 struct traits::CustomAccessType<Damage, T> {
     static constexpr decltype(auto) get(auto& el) {
         return el.Dmg();
     }
 };
 
-template <typename T> 
-    requires Simplelike<T>
+template <Simplelike T>
 struct traits::CustomAccessType<int, T> {
     static constexpr decltype(auto) get(auto& el) {
         return el.Int();
@@ -113,6 +114,7 @@ int main() {
             ;
         auto type_simple3 = create_type_simple3();
         type_simple3 = create_type_simple3(8.8f);
+        type_simple3 = create_type_simple3(std::ignore, Damage{13, DamageType::Magical});
         std::cout << "type simple3       = " << name<decltype(type_simple3)>() << '\n';
         std::cout << "type simple3 float = " << trait<float>::get(type_simple3) << '\n';
         std::cout << "type simple3 dmg   = " << trait<Damage>::get(type_simple3) << '\n';
