@@ -45,7 +45,21 @@ struct traits::CustomAccessType<int, T> {
     }
 };
 
+// MARK: main
+
 int main() {
+    auto print = [](auto type_simple, int id) {
+        auto type_name = "type simple" + std::to_string(id);
+        std::cout << type_name << "       = " << name<decltype(type_simple)>() << '\n';
+        if constexpr (trait<float>::accessable<decltype(type_simple)>)
+            std::cout << type_name << " float = " << trait<float>::get(type_simple) << '\n';
+        if constexpr (trait<Damage>::accessable<decltype(type_simple)>)
+            std::cout << type_name << " dmg   = " << trait<Damage>::get(type_simple) << '\n';
+        if constexpr (trait<int>::accessable<decltype(type_simple)>)
+            std::cout << type_name << " int   = " << trait<int>::get(type_simple) << '\n';
+        std::cout << '\n';
+    };
+
     {
         struct Simple0 {
             Damage dmg{};
@@ -57,8 +71,7 @@ int main() {
             ;
         auto type_simple0 = create_type_simple0();
         type_simple0 = create_type_simple0(Damage{1});
-        std::cout << "type simple0       = " << name<decltype(type_simple0)>() << '\n';
-        std::cout << "type simple0 dmg   = " << trait<Damage>::get(type_simple0) << '\n' << '\n';
+        print(type_simple0, 0);
     }
 
     {
@@ -70,8 +83,7 @@ int main() {
             ;
         auto type_simple1 = create_type_simple1();
         type_simple1 = create_type_simple1(Damage{2});
-        std::cout << "type simple1       = " << name<decltype(type_simple1)>() << '\n';
-        std::cout << "type simple1 dmg   = " << trait<Damage>::get(type_simple1) << '\n' << '\n';
+        print(type_simple1, 1);
     }
 
     {
@@ -99,10 +111,7 @@ int main() {
         type_simple2 = create_type_simple2(
             11.11f,
             5);
-        std::cout << "type simple2       = " << name<decltype(type_simple2)>() << '\n';
-        std::cout << "type simple2 float = " << trait<float>::get(type_simple2) << '\n';
-        std::cout << "type simple2 dmg   = " << trait<Damage>::get(type_simple2) << '\n';
-        std::cout << "type simple2 int   = " << trait<int>::get(type_simple2) << '\n' << '\n';
+        print(type_simple2, 2);
     }
 
     {
@@ -112,12 +121,10 @@ int main() {
             | With::user_property<float>  //
             | With::Damage  //
             ;
-        auto type_simple3 = create_type_simple3();
+        decltype(create_type_simple3)::result_type type_simple3;
+        type_simple3 = create_type_simple3();
         type_simple3 = create_type_simple3(8.8f);
         type_simple3 = create_type_simple3(std::ignore, Damage{13, DamageType::Magical});
-        std::cout << "type simple3       = " << name<decltype(type_simple3)>() << '\n';
-        std::cout << "type simple3 float = " << trait<float>::get(type_simple3) << '\n';
-        std::cout << "type simple3 dmg   = " << trait<Damage>::get(type_simple3) << '\n';
-        std::cout << "type simple3 int   = " << trait<int>::get(type_simple3) << '\n' << '\n';
+        print(type_simple3, 3);
     }
 }
