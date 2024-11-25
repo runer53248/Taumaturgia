@@ -13,8 +13,10 @@ namespace impl {
 
 template <typename T>
 struct Creator {
+    using result_type = T;
+
     auto operator()() {
-        static_assert(std::constructible_from<T>);
+        static_assert(std::constructible_from<T>, "Creator can't create result_type from default C-tor!");
         return T{};
     }
 
@@ -23,20 +25,16 @@ struct Creator {
         constexpr bool token_introduced = std::is_same_v<std::remove_cvref_t<Arg>, Token>;
         
         if constexpr (token_introduced) {  // token was introduced
-            using result_property = T;
-
-            if constexpr (std::constructible_from<result_property, Arg, Args...>) {  // can be constructed
-                static_assert(std::constructible_from<result_property, Arg, Args...>);
-                return result_property(std::forward<Arg>(arg), std::forward<Args>(args)...);
-            } else {  // can be constructed, ignore Arg == Token
-                static_assert(std::constructible_from<result_property, Args...>);
-                return result_property(std::forward<Args>(args)...);
+            if constexpr (std::constructible_from<result_type, Arg, Args...>) {  // can be constructed
+                return result_type(std::forward<Arg>(arg), std::forward<Args>(args)...);
+            } else if constexpr (std::constructible_from<result_type, Args...>) {  // can be constructed, ignore Arg == Token
+                return result_type(std::forward<Args>(args)...);
+            } else {
+                static_assert(false, "Creator with token introduced can't create result_type from given arguments!");
             }
         } else {  // token not introduced
-            using result_property = T;
-
-            static_assert(std::constructible_from<result_property, Arg, Args...>);
-            return result_property(std::forward<Arg>(arg), std::forward<Args>(args)...);
+            static_assert(std::constructible_from<result_type, Arg, Args...>, "Creator can't create result_type from given arguments!");
+            return result_type(std::forward<Arg>(arg), std::forward<Args>(args)...);
         }
     }
 };
@@ -46,11 +44,7 @@ template <typename T, template <typename> typename... Props, typename P>
 auto pipe_helper(T&& t, Props<P>...) {
     using result = ::creator_add_properties<std::remove_cvref_t<T>, Props<P>::template apply...>;
 
-    if constexpr (std::same_as<std::remove_cvref_t<T>, result>) {
-        return std::forward<T>(t);
-    } else {
-        return result{std::forward<T>(t)};
-    }
+    return result{std::forward<T>(t)};
 }
 
 // for user type properties
