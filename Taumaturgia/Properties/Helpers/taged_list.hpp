@@ -16,18 +16,20 @@ template <template <template <typename...> typename> typename Prop, template <ty
 list(const Prop<property>&) -> list<property<tag>>;
 
 template <typename T>
-struct empty_property : public T {};
+concept have_property_data = requires {
+    typename T::property_data;
+};
+
+template <typename T>
+struct empty_property : public T {
+    using property_data = void;
+};
 
 template <template <typename...> typename T>
 concept have_inner_reduction_feature = std::same_as<T<T<empty_property<T<T<tag>>>>>, empty_property<T<tag>>>;
 
-template <typename T>
-concept have_property = requires {
-    typename T::property_data;
-};
-
 template <template <typename...> typename T>
-concept is_property = have_property<T<tag>>;
+concept is_property = have_property_data<T<tag>>;
 
 template <template <typename...> typename T>
 concept is_proper_property = is_property<T> and have_inner_reduction_feature<T>;
