@@ -4,7 +4,7 @@
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"
-using Helmet = add_properties<
+using Helmet = add_properties_ordered<
     Type,
     Naming,
     Protecting>;

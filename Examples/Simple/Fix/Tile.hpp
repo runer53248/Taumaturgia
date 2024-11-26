@@ -8,9 +8,9 @@ using Tile_list = properties_list<
     Naming,
     Damaging>;
 using Tile_base = Empty<>;
-using Tile = Tile_list::apply_properties_to<Tile_base>;
+using Tile = Tile_list::apply_ordered_properties_to<Tile_base>;
 
-// using Tile = add_properties<
+// using Tile = add_properties_ordered<
 //     Empty<>,
 //     Naming,
 //     Damaging>;
@@ -20,11 +20,11 @@ concept is_from_Tile =
     std::is_base_of_v<Tile_base, T>  //
     and std::same_as<
             T,
-            Tile_list::apply_properties_to<T>>;
+            Tile_list::apply_ordered_properties_to<T>>;
 
 static_assert(std::same_as<
               Tile,
-              add_properties<
+              add_properties_ordered<
                   Empty<>,
                   Naming,
                   Damaging>>);
@@ -33,7 +33,7 @@ static_assert(std::same_as<
               properties_list<
                   Naming,
                   Damaging
-                >::apply_properties_to<Tile>>);
+                >::apply_ordered_properties_to<Tile>>);
 
 static_assert(is_from_Tile<Tile>);
 

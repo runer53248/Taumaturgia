@@ -52,10 +52,10 @@ int main() {
     using base_3 = Element_name_hp;
     using base_4 = Element_name_hp_dmg;
     using base_5 = Element_hp_name;
-    using base_6 = add_properties<Element_name, Damaging>;
+    using base_6 = add_properties_ordered<Element_name, Damaging>;
 
     auto create_type = []<typename T>() {
-        return p_list::apply_properties_to<T>{
+        return p_list::apply_ordered_properties_to<T>{
             default_name,
             default_health,
             default_damage,
@@ -74,7 +74,7 @@ int main() {
     auto type2 = templated_call<create_type, base_2>();
     templated_call<print_type, base_2>(type2);
 
-    auto type3 = p_list::apply_properties_to<base_3>{
+    auto type3 = p_list::apply_ordered_properties_to<base_3>{
         default_name,        // own name as first argument
         default_damage,      //
         default_protection,  //
@@ -82,7 +82,7 @@ int main() {
     };
     templated_call<print_type, base_3>(type3);
 
-    auto type4 = p_list::apply_properties_to<base_4>{
+    auto type4 = p_list::apply_ordered_properties_to<base_4>{
         default_name,        // own name as first argument
         default_protection,  //
         default_health,      // own hp moved at end of c-tor - order depends on base struct c-tor order now
@@ -90,7 +90,7 @@ int main() {
     };
     templated_call<print_type, base_4>(type4);
 
-    auto type5 = p_list::apply_properties_to<base_5>{
+    auto type5 = p_list::apply_ordered_properties_to<base_5>{
         default_name,        // own name as first argument
         default_damage,      //
         default_protection,  //
@@ -116,17 +116,17 @@ int main() {
     fill_type(type6);
 
     static_assert(std::is_same_v<decltype(type1), Living<Damaging<Protecting<Naming<base_1>>>>>);
-    static_assert(std::is_same_v<decltype(type1), add_properties<base_1, Naming, Living, Damaging, Protecting>>);
+    static_assert(std::is_same_v<decltype(type1), add_properties_ordered<base_1, Naming, Living, Damaging, Protecting>>);
     static_assert(std::is_same_v<decltype(type2), Living<Damaging<Protecting<base_2>>>>);
-    static_assert(std::is_same_v<decltype(type2), add_properties<base_2, Living, Damaging, Protecting>>);
+    static_assert(std::is_same_v<decltype(type2), add_properties_ordered<base_2, Living, Damaging, Protecting>>);
     static_assert(std::is_same_v<decltype(type3), Damaging<Protecting<base_3>>>);
-    static_assert(std::is_same_v<decltype(type3), add_properties<base_3, Damaging, Protecting>>);
+    static_assert(std::is_same_v<decltype(type3), add_properties_ordered<base_3, Damaging, Protecting>>);
     static_assert(std::is_same_v<decltype(type4), Protecting<base_4>>);
-    static_assert(std::is_same_v<decltype(type4), add_properties<base_4, Protecting>>);
+    static_assert(std::is_same_v<decltype(type4), add_properties_ordered<base_4, Protecting>>);
     static_assert(std::is_same_v<decltype(type5), Damaging<Protecting<base_5>>>);
-    static_assert(std::is_same_v<decltype(type5), add_properties<base_5, Damaging, Protecting>>);
+    static_assert(std::is_same_v<decltype(type5), add_properties_ordered<base_5, Damaging, Protecting>>);
     static_assert(std::is_same_v<decltype(type6), Living<Damaging<Protecting<Element_name>>>>);
-    static_assert(std::is_same_v<decltype(type6), add_properties<base_6, Living, Protecting>>);
+    static_assert(std::is_same_v<decltype(type6), add_properties_ordered<base_6, Living, Protecting>>);
 
     static_assert(sizeof(type1) == sizeof(type2));
     static_assert(sizeof(type1) == sizeof(type3));
@@ -138,11 +138,11 @@ int main() {
 }
 
 using type_A = Living<Damaging<Element_name>>;
-using type_B = add_properties<Element_name, Damaging, Living, Damaging, Damaging, Living, Damaging>;
-using type_C = add_properties<Element_name, Damaging, Living, Damaging, Damaging, Living>;
-using type_D = add_properties<Element_name, Damaging, Damaging, Living, Damaging, Damaging, Damaging>;
-using type_E = add_properties<Element_name, Damaging, Living, Damaging>;
-using type_F = add_properties<Element_name, Living, Damaging, Living>;
+using type_B = add_properties_ordered<Element_name, Damaging, Living, Damaging, Damaging, Living, Damaging>;
+using type_C = add_properties_ordered<Element_name, Damaging, Living, Damaging, Damaging, Living>;
+using type_D = add_properties_ordered<Element_name, Damaging, Damaging, Living, Damaging, Damaging, Damaging>;
+using type_E = add_properties_ordered<Element_name, Damaging, Living, Damaging>;
+using type_F = add_properties_ordered<Element_name, Living, Damaging, Living>;
 
 // checks that show reordering and removing of duplicated Properties
 static_assert(std::is_same_v<type_B, type_A>);

@@ -9,7 +9,7 @@ struct WithDefaultWeaponVector {
         DefaultWeapon{Name{"Light weapon"}, Damage{10}},
         DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
 };
-using CustomWeapon = add_properties<
+using CustomWeapon = add_properties_ordered<
     WithDefaultWeaponVector,
     Naming>;
 #else

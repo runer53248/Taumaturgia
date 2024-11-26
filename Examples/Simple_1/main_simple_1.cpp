@@ -44,7 +44,7 @@ private:
 // MARK: Weapon_D
 
 struct Empty {};
-using Weapon_D = add_properties<
+using Weapon_D = add_properties_ordered<
     Empty,
     Naming,
     Damaging>;

@@ -133,14 +133,14 @@ int main() {
     constexpr float value_f_2 = 3.14159f;
     constexpr float value_f_3 = 6.11f;
 
-    using user_name_a_int_type = add_properties<
+    using user_name_a_int_type = add_properties_ordered<
         name_type1,
         UserPropertyAdapter<int>::type>;  // just int
-    using user_name_a_float_a_int_type = add_properties<
+    using user_name_a_float_a_int_type = add_properties_ordered<
         name_type1,
         UserPropertyAdapter<float>::type,
         UserPropertyAdapter<int>::type>;  // float and int
-    using user_name_a_int_a_float_type = add_properties<
+    using user_name_a_int_a_float_type = add_properties_ordered<
         name_type1,
         UserPropertyAdapter<int>::type,
         UserPropertyAdapter<float>::type>;  // int and float
@@ -186,7 +186,7 @@ int main() {
     std::cout << value_c_f_naiaf << "\n\n";
 
     {
-        using UserClass5_1 = add_properties<
+        using UserClass5_1 = add_properties_ordered<
             name_type1,
             UserPropertyAdapter<int>::type,
             UserPropertyAdapter<float>::type>;
@@ -205,7 +205,7 @@ int main() {
 
     {
         std::cout << "custom traits::accessType for one type\n";
-        using UserClass5_2 = add_properties<
+        using UserClass5_2 = add_properties_ordered<
             name_type2,
             UserPropertyAdapter<int>::type,
             UserPropertyAdapter<float>::type>;
@@ -223,7 +223,7 @@ int main() {
 
     {
         std::cout << "custom traits::accessType for all types\n";
-        using UserClass5_3 = add_properties<
+        using UserClass5_3 = add_properties_ordered<
             name_type3,
             UserPropertyAdapter<int>::type,
             UserPropertyAdapter<float>::type>;
@@ -241,7 +241,7 @@ int main() {
 
     {
         std::cout << "custom traits::accessType can be used both as consteval and normal\n";
-        using UserClass5_3 = add_properties<
+        using UserClass5_3 = add_properties_ordered<
             name_type3,
             UserPropertyAdapter<int>::type,
             UserPropertyAdapter<float>::type>;

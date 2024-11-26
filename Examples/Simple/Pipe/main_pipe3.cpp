@@ -31,18 +31,7 @@ int main() {
         std::cout << '\n';
     };
 
-    // MARK: modify target
-    auto tlist = With::Name | With::Health | With::Protection | With::Damage;
-
-    Base base{default_x, default_y};  // target
-
-    auto type3 = Base{default_x, default_y} | tlist;
-    auto type4 = base | tlist;                                                          // modify existing target type
-    auto type5 = base | (With::Name | With::Health | With::Protection | With::Damage);  // modify existing target type
-
-    static_assert(std::same_as<
-                  decltype(type4),
-                  decltype(type5)>);
+    // MARK: update lambda
 
     // update rest of target parameters
     auto update = [](auto& target) {
@@ -58,6 +47,19 @@ int main() {
             ((trait<remove_cvref_t<Args>>::get(target) = std::forward<Args>(args)), ...);
         };
     };
+
+    // MARK: modify target
+    auto tlist = With::Name | With::Health | With::Protection | With::Damage;
+
+    Base base{default_x, default_y};  // target
+
+    auto type3 = Base{default_x, default_y} | tlist;
+    auto type4 = base | tlist;                                                          // modify existing target type
+    auto type5 = base | (With::Name | With::Health | With::Protection | With::Damage);  // modify existing target type
+
+    static_assert(std::same_as<
+                  decltype(type4),
+                  decltype(type5)>);
 
     update(type3)(
         Health{100, 100},

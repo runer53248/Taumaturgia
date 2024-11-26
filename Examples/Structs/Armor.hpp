@@ -4,7 +4,7 @@
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"
-using Armor = add_properties<
+using Armor = add_properties_ordered<
     Type,
     Naming,
     Protecting>;

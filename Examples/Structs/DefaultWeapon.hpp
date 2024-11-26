@@ -4,7 +4,7 @@
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"
-using DefaultWeapon = add_properties<
+using DefaultWeapon = add_properties_ordered<
     Type,
     Naming,
     Damaging>;

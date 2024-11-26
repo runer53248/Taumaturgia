@@ -5,7 +5,7 @@
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
 int main() {
-    using gustav_weapon = add_properties<
+    using gustav_weapon = add_properties_ordered<
         Weapon,
         Living,
         Healing,
@@ -13,7 +13,7 @@ int main() {
         Healing>;
     static_assert(std::is_same_v<
                   gustav_weapon,
-                  add_properties<
+                  add_properties_ordered<
                       Weapon,
                       Living,
                       Healing>>);

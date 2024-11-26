@@ -13,14 +13,14 @@ struct Type_living {
 using Type_named = Naming<EmptyType>;
 
 using Type_1 = Living<Type_named>;
-using Type_2 = add_properties<
+using Type_2 = add_properties_ordered<
     Type_named,
     Living>;
-using Type_2a = add_properties<
+using Type_2a = add_properties_ordered<
     EmptyType,
     Naming,
     Living>;
-using Type_2b = add_properties<
+using Type_2b = add_properties_ordered<
     EmptyType,
     Living,
     Naming>;
@@ -49,7 +49,7 @@ static_assert(Healingable<Type_all>);
 static_assert(Restoringable<Type_all>);
 
 using Type_3 = Living<Wearing<Damaging<Protecting<Healing<Restoring<Naming<EmptyType>>>>>>>;
-using Type_4 = add_properties<
+using Type_4 = add_properties_ordered<
     EmptyType,
     Naming,
     Living,
@@ -58,7 +58,7 @@ using Type_4 = add_properties<
     Protecting,
     Healing,
     Restoring>;
-using Type_5 = add_properties<
+using Type_5 = add_properties_ordered<
     Type_named,
     Healing,
     Protecting,

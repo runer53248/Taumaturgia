@@ -4,7 +4,7 @@
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"
-using Player = add_properties<
+using Player = add_properties_ordered<
     Type,
     Naming,
     Wearing,

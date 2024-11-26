@@ -1,11 +1,17 @@
-// #define IGNORE_ORDER_LIST
-
 #include "Examples/PreetyPrint/PrintDamage.hpp"
 #include "Examples/PreetyPrint/PrintHealth.hpp"
 #include "Examples/PreetyPrint/PrintName.hpp"
 #include "Examples/PreetyPrint/PrintProtection.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Usage/Properties.hpp"
+
+constexpr bool with_ignore_order_list = true;
+
+template <typename T, template <typename...> typename... properties>
+using add_properties_type = std::conditional_t<
+    with_ignore_order_list,
+    add_properties_unordered<T, properties...>,
+    add_properties_ordered<T, properties...>>;
 
 template <typename T, typename TYPE>
 concept type_of = std::same_as<std::remove_const_t<T>, TYPE>;
@@ -80,11 +86,11 @@ int main() {
 
     {
         // create a type
-        using Type_0_5 = add_properties<
+        using Type_0_5 = add_properties_type<
             Base,
             Damaging,
             Living>;
-        using Type_1 = add_properties<
+        using Type_1 = add_properties_type<
             Type_0_5,
             Protecting,
             Naming>;
@@ -98,8 +104,8 @@ int main() {
             Naming>;
 
         // create a type
-        using Type_1_5 = p_list::apply_properties_to<Base>;
-        using Type_2 = p_list_2::apply_properties_to<Type_1_5>;
+        using Type_1_5 = p_list::apply_properties_to<Base, not with_ignore_order_list>;
+        using Type_2 = p_list_2::apply_properties_to<Type_1_5, not with_ignore_order_list>;
 
         static_assert(std::same_as<Type_1, Type_2>);
 

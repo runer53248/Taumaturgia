@@ -11,7 +11,7 @@ struct MyType {
     std::string name{"MyType"};
 };
 
-using LivingType = add_properties<
+using LivingType = add_properties_ordered<
     MyType,
     Living>;
 

@@ -4,7 +4,7 @@
 
 #include "Empty.hpp"
 
-using Item = add_properties<
+using Item = add_properties_ordered<
     Empty<struct ItemTag>,
     Naming,
     Living,

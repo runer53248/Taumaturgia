@@ -3,7 +3,7 @@
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"
-using Scroll = add_properties<
+using Scroll = add_properties_ordered<
     Type,
     Naming>;
 #else

@@ -3,7 +3,7 @@
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"
-using Enemy = add_properties<
+using Enemy = add_properties_ordered<
     Type,
     Naming>;
 #else

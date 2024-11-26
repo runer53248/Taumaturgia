@@ -18,23 +18,23 @@ template <typename T>
 using IntProperty = UserProperty<int, T>;
 
 // UserProperties are added after order_list properties if not on list itself:
-using t1 = add_properties<
+using t1 = add_properties_ordered<
     BoolProperty<Type>,
     Damaging>;
-using t2 = add_properties<
+using t2 = add_properties_ordered<
     Damaging<Type>,
     BoolProperty>;
-using t3 = add_properties<
+using t3 = add_properties_ordered<
     Type,
     BoolProperty,
     Damaging>;
-using t4 = add_properties<
+using t4 = add_properties_ordered<
     Type,
     Damaging,
     BoolProperty>;
 //  will have same type and order of arguments in c-tor
 
-using t5 = add_properties<
+using t5 = add_properties_ordered<
     Type,
     IntProperty,
     Damaging,

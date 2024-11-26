@@ -7,7 +7,7 @@
 #include "Empty.hpp"
 
 #ifndef IGNORE_ORDER_LIST
-using LivingTile = add_properties<
+using LivingTile = add_properties_ordered<
     Tile,
     Living>;
 #else 
@@ -26,7 +26,8 @@ struct LivingTile : Tile {
 
 static_assert(Gettingable<LivingTile>);
 
-// ! if IGNORE_ORDER_LIST defined then next assertions fails because
+// TODO : check this
+// ! if IGNORE_ORDER_LIST is defined then next assertions fails because
 // ! custom strategies of Tile uses concept like:  requires std::is_base_of_v<Tile, T>
 // ! then
 // ! Tile = Naming_<Damaging_<Empty<void>>> 

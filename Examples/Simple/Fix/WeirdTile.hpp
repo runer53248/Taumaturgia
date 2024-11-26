@@ -7,7 +7,7 @@
 
 #include "Empty.hpp"
 
-using WeirdTile = add_properties<
+using WeirdTile = add_properties_ordered<
     Tile,
     Weird>;
 

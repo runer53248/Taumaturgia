@@ -7,7 +7,7 @@ using type_1 = float;
 using type_2 = int;
 using type_3 = bool;
 
-using TestType = add_properties<
+using TestType = add_properties_ordered<
     MyType,
     //
     UserPropertyAdapter<type_1>::type,  // not on order_list - last on c-tor arguments list

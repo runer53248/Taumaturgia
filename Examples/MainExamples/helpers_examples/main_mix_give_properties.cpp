@@ -7,10 +7,10 @@ struct Type {
 };
 
 using Type0 = Living<Type>;
-using Type1 = add_properties<Type, Living, Healing, Damaging>;
-using Type2 = add_properties<Type0, Living, Healing, Damaging>;
+using Type1 = add_properties_ordered<Type, Living, Healing, Damaging>;
+using Type2 = add_properties_ordered<Type0, Living, Healing, Damaging>;
 using Type3 = Healing<Type2>;
-using Type4 = add_properties<Type3, Living, Healing>;
+using Type4 = add_properties_ordered<Type3, Living, Healing>;
 
 static_assert(std::is_same_v<Type1, Type2>);
 static_assert(std::is_same_v<Type2, Type3>);
@@ -23,7 +23,7 @@ using helpers::Scheme;
 int main() {
     auto print = [](auto t) {
         using T = decltype(t);
-        std::cout << have_property<typename T::property_data::base_type> << '\n';
+        std::cout << have_property_data<typename T::property_data::base_type> << '\n';
         std::cout << "RESULT type   = " << name<T>() << '\n';
         std::cout << "Base type     = " << name<typename T::property_data::base_type>() << '\n';
         std::cout << "Property type = " << name<typename T::property_data::property_type>() << "\n\n";

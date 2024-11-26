@@ -10,8 +10,8 @@ using Tile_list = properties_list<
     Naming,
     Damaging>;
 
-using Tile = Tile_list::apply_properties_to<Empty>;
-using Tile_2 = add_properties<
+using Tile = Tile_list::apply_ordered_properties_to<Empty>;
+using Tile_2 = add_properties_ordered<
     Empty,
     Naming,
     Damaging>;
@@ -34,7 +34,7 @@ static_assert(std::same_as<
               Tile,
               properties_list<
                   Naming,
-                  Damaging>::apply_properties_to<Tile>>);
+                  Damaging>::apply_ordered_properties_to<Tile>>);
 
 static_assert(std::same_as<
               Tile_unordered,
@@ -61,14 +61,12 @@ static_assert(std::same_as<
                   Naming>,  // * <- 2
               properties_list<
                   Naming,                          // * <- 1
-                  Damaging>::apply_properties_to<  // * ordered version moves Naming at end
+                  Damaging>::apply_ordered_properties_to<  // * ordered version moves Naming at end
                   add_properties_unordered<Empty,
                                            Naming,        // * <- 1
                                            Damaging>>>);  // ! error - changes order of properties in result
 
 #endif
-
-// fixed: add_properties and apply_properties_to don't remove duplicates when IGNORE_ORDER_LIST is defined
 
 int main() {
     static_assert(not helpers::is_same_priority<Property<Naming>, Property<Damaging>>);
@@ -118,8 +116,8 @@ int main() {
     std::cout << "add_properties_unordered<Tile, Damaging, Naming> = \n\t"
               << name<add_properties_unordered<Tile, Damaging, Naming>>()
               << '\n';
-    std::cout << "add_properties<Tile, Damaging, Naming> = \n\t"
-              << name<add_properties<Tile, Damaging, Naming>>()
+    std::cout << "add_properties_ordered<Tile, Damaging, Naming> = \n\t"
+              << name<add_properties_ordered<Tile, Damaging, Naming>>()
               << '\n';
     std::cout << "add_properties_unordered<Tile, Naming, Naming, Damaging> = \n\t"
               << name<add_properties_unordered<Tile, Naming, Naming, Damaging>>()
@@ -127,15 +125,15 @@ int main() {
     std::cout << "properties_list<Naming, Naming, Damaging>::apply_unordered_properties_to<Tile>> = \n\t"
               << name<properties_list<Naming, Naming, Damaging>::apply_unordered_properties_to<Tile>>()
               << '\n';
-    std::cout << "properties_list<Naming, Naming, Damaging>::apply_properties_to<Tile>> = \n\t"
-              << name<properties_list<Naming, Naming, Damaging>::apply_properties_to<Tile>>() << '\n'
+    std::cout << "properties_list<Naming, Naming, Damaging>::apply_ordered_properties_to<Tile>> = \n\t"
+              << name<properties_list<Naming, Naming, Damaging>::apply_ordered_properties_to<Tile>>() << '\n'
               << '\n';
 
     std::cout << "add_properties_unordered<Tile_unordered, Damaging, Naming> = \n\t"
               << name<add_properties_unordered<Tile_unordered, Damaging, Naming>>()
               << '\n';
-    std::cout << "add_properties<Tile_unordered, Damaging, Naming> = \n\t"
-              << name<add_properties<Tile_unordered, Damaging, Naming>>() << " !!! fix order"
+    std::cout << "add_properties_ordered<Tile_unordered, Damaging, Naming> = \n\t"
+              << name<add_properties_ordered<Tile_unordered, Damaging, Naming>>() << " !!! fix order"
               << '\n';
     std::cout << "add_properties_unordered<Tile_unordered, Naming, Naming, Damaging> = \n\t"
               << name<add_properties_unordered<Tile_unordered, Naming, Naming, Damaging>>()
@@ -143,7 +141,7 @@ int main() {
     std::cout << "properties_list<Naming, Naming, Damaging>::apply_unordered_properties_to<Tile_unordered>> = \n\t"
               << name<properties_list<Naming, Naming, Damaging>::apply_unordered_properties_to<Tile_unordered>>()
               << '\n';
-    std::cout << "properties_list<Naming, Naming, Damaging>::apply_properties_to<Tile_unordered>> = \n\t"
-              << name<properties_list<Naming, Naming, Damaging>::apply_properties_to<Tile_unordered>>() << " !!! fix order"
+    std::cout << "properties_list<Naming, Naming, Damaging>::apply_ordered_properties_to<Tile_unordered>> = \n\t"
+              << name<properties_list<Naming, Naming, Damaging>::apply_ordered_properties_to<Tile_unordered>>() << " !!! fix order"
               << '\n';
 }

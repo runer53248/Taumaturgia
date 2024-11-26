@@ -3,7 +3,7 @@
 
 #ifdef WITH_ADD_PROPERTIES
 #include "EmptyType.hpp"
-using Npc = add_properties<
+using Npc = add_properties_ordered<
     Type,
     Living>;
 #else

@@ -27,7 +27,7 @@ int main() {
     std::cout << "D. 'add_properties' examples:" << '\n'
               << '\n';
 
-    using type_1 = add_properties<Element_name_hp_dmg, Protecting, Damaging, Living>;
+    using type_1 = add_properties_ordered<Element_name_hp_dmg, Protecting, Damaging, Living>;
 
     auto type1 = type_1{Name{"Element 9"}, std::ignore};
     std::cout << name<decltype(type1)>() << '\n';
@@ -37,9 +37,9 @@ int main() {
     std::cout << name<decltype(type2)>() << '\n';
     print_object(Object{type2});
 
-    using base_type = add_properties<Element_name, Protecting, Living>;
-    using y_type = add_properties<base_type, Wearing, Restoring>;
-    using z_type = add_properties<Element_name, Wearing, Restoring, Protecting, Living>;
+    using base_type = add_properties_ordered<Element_name, Protecting, Living>;
+    using y_type = add_properties_ordered<base_type, Wearing, Restoring>;
+    using z_type = add_properties_ordered<Element_name, Wearing, Restoring, Protecting, Living>;
     static_assert(std::is_same_v<y_type, z_type>);
     std::cout << "base_type:  " << name<base_type>() << '\n';
     std::cout << "y_type:     " << name<y_type>() << '\n';
@@ -65,9 +65,9 @@ int main() {
     static_assert(sizeof(Y) == sizeof(Z));
 
     using type_wrong_order = Damaging<Living<Naming<Element_name>>>;        // ! incorrect order
-    using type_fix = add_properties<type_wrong_order>;                      // add_properties will fix incorrect type
-    using c_type = add_properties<Element_name, Damaging, Living, Naming>;  // correct order
-    using d_type = add_properties<Damaging<Element_name>, Naming, Living>;  // correct order
+    using type_fix = add_properties_ordered<type_wrong_order>;                      // add_properties will fix incorrect type
+    using c_type = add_properties_ordered<Element_name, Damaging, Living, Naming>;  // correct order
+    using d_type = add_properties_ordered<Damaging<Element_name>, Naming, Living>;  // correct order
 
     static_assert(not std::is_same_v<
                   type_wrong_order,
@@ -81,8 +81,8 @@ int main() {
                   d_type>);
 
     using e_type = B<Protecting<A<Damaging<A<B<Empty>>>>>>;
-    using e_type_fix = add_properties<e_type>;
-    using f_type = add_properties<e_type, Naming, Living>;
+    using e_type_fix = add_properties_ordered<e_type>;
+    using f_type = add_properties_ordered<e_type, Naming, Living>;
     std::cout << "e_type:       " << name<e_type>() << '\n';
     std::cout << "e_type fix:   " << name<e_type_fix>() << '\n';
     std::cout << "f_type:       " << name<f_type>() << " = e_type + Naming + Living" << '\n';

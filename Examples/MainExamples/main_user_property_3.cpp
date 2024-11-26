@@ -15,26 +15,26 @@ static_assert(traits::GetTypeTemplateAccessable<Type_basic, Damage>);
 
 using Type_no_nest = UserProperty<Damage, UserProperty<Damage, UserProperty<Damage, MyType>>>;                              // UserProperty don't allow nesting - trait_accessable concept check disallow it
 using Type_unlimited_nest = impl::UserProperty_<Damage, impl::UserProperty_<Damage, impl::UserProperty_<Damage, MyType>>>;  // impl::UserProperty_ allow unlimited nesting
-using Type_unlimited_nest_collapse = add_properties<Type_unlimited_nest>;
+using Type_unlimited_nest_collapse = add_properties_ordered<Type_unlimited_nest>;
 
 static_assert(std::is_same_v<
               UserPropertyAdapter<Damage>::type<Type_no_nest>,
               UserProperty<Damage, Type_no_nest>>);
 
-using Type_nest_one = add_properties<Type_no_nest, UserPropertyAdapter<Damage>::type, UserPropertyAdapter<Damage>::type>;   // add_properties allow nest one level at the time
-using Type_nest_two = add_properties<Type_nest_one, UserPropertyAdapter<Damage>::type, UserPropertyAdapter<Damage>::type>;  // add_properties allow nest one level at the time
+using Type_nest_one = add_properties_ordered<Type_no_nest, UserPropertyAdapter<Damage>::type, UserPropertyAdapter<Damage>::type>;   // add_properties allow nest one level at the time
+using Type_nest_two = add_properties_ordered<Type_nest_one, UserPropertyAdapter<Damage>::type, UserPropertyAdapter<Damage>::type>;  // add_properties allow nest one level at the time
 
 template <typename T, typename TYPE = Damage, typename C = struct TOKEN>
 using UserProperty2 = UserProperty<TYPE, T, C, struct TEST, void>;
-using Type_complex = add_properties<MyType, UserProperty2>;  // add_properties allow nest one level at the time
-using Type_complex_2 = add_properties<Type_complex, UserProperty2>;  // add_properties allow nest one level at the time
+using Type_complex = add_properties_ordered<MyType, UserProperty2>;  // add_properties allow nest one level at the time
+using Type_complex_2 = add_properties_ordered<Type_complex, UserProperty2>;  // add_properties allow nest one level at the time
 
 template <typename T>
 using UserProperty3 = UserProperty<Damage, T, struct TAG>;
-using Type_tag_complex = add_properties<Type_complex, UserProperty3>;
+using Type_tag_complex = add_properties_ordered<Type_complex, UserProperty3>;
 
 template <typename TYPE>
-using Type_adapter = add_properties<Type_basic, UserPropertyAdapter<TYPE>::template type>;
+using Type_adapter = add_properties_ordered<Type_basic, UserPropertyAdapter<TYPE>::template type>;
 
 int main() {
     std::cout << "taged_list                     = " << name<taged_list<UserProperty2>>() << '\n';
@@ -52,8 +52,8 @@ int main() {
     std::cout << "Type_tag_complex               = " << name<Type_tag_complex>() << '\n';
     std::cout << "Type_adapter<Damage>           = " << name<Type_adapter<Damage>>() << '\n';
 
-    using Type_nest_unlimited_one = add_properties<Type_unlimited_nest, UserPropertyAdapter<Damage>::type>;
-    using Type_nest_unlimited_two = add_properties<Type_nest_unlimited_one, UserPropertyAdapter<Damage>::type>;
+    using Type_nest_unlimited_one = add_properties_ordered<Type_unlimited_nest, UserPropertyAdapter<Damage>::type>;
+    using Type_nest_unlimited_two = add_properties_ordered<Type_nest_unlimited_one, UserPropertyAdapter<Damage>::type>;
 
     std::cout << "Type_nest_unlimited_one        = " << name<Type_nest_unlimited_one>() << '\n';
     std::cout << "Type_nest_unlimited_two        = " << name<Type_nest_unlimited_two>() << '\n';

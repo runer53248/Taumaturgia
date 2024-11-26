@@ -14,7 +14,7 @@ using CureValueType_property = UserPropertyAdapter<CureValueType>::type<T>;
 template <typename T>
 using EffectContainer_property = UserPropertyAdapter<EffectContainer>::type<T>;
 
-using CureHealthType = add_properties<
+using CureHealthType = add_properties_ordered<
     base,
     int_property,
     CureValueType_property,

@@ -30,7 +30,7 @@ int main() {
     std::cout << "Compare 2 ways of creating new type by adding properties:\n\n";
 
     using test_type_bad = Damaging<Living<Naming<test_struct>>>;
-    using test_type_new = add_properties<test_struct, Damaging, Living, Naming>;
+    using test_type_new = add_properties_ordered<test_struct, Damaging, Living, Naming>;
     std::cout << "properties are: Damaging, Living, Naming \n";
     std::cout << "base:             " << name<Scheme<test_type_bad>::base>() << '\n';
     std::cout << "base_new:         " << name<Scheme<test_type_new>::base>() << '\n';
@@ -42,7 +42,7 @@ int main() {
     std::cout << "result_new:       " << name<test_type_new>() << '\n';
     std::cout << '\n';
     using test_type2_bad = Naming<Damaging<Living<test_struct>>>;
-    using test_type2_new = add_properties<test_struct, Naming, Damaging, Living>;
+    using test_type2_new = add_properties_ordered<test_struct, Naming, Damaging, Living>;
     std::cout << "properties are: Naming, Damaging, Living \n";
     std::cout << "base:             " << name<Scheme<test_type2_bad>::base>() << '\n';
     std::cout << "base_new:         " << name<Scheme<test_type2_new>::base>() << '\n';
@@ -83,8 +83,8 @@ int main() {
     std::cout << '\n';
 #endif
 
-    using test_type_new = add_properties<test_struct, Damaging, Living, Naming>;   // duplicate of test_type_new
-    using test_type2_new = add_properties<test_struct, Naming, Damaging, Living>;  // duplicate of test_type2_new
+    using test_type_new = add_properties_ordered<test_struct, Damaging, Living, Naming>;   // duplicate of test_type_new
+    using test_type2_new = add_properties_ordered<test_struct, Naming, Damaging, Living>;  // duplicate of test_type2_new
 
     static_assert(not std::is_same_v<test_type_bad,
                                      test_type2_bad>);  // ! incorect order
@@ -129,26 +129,26 @@ int main() {
     std::cout << Wearing<test_struct_2>::property_data::name() << '\n';
     std::cout << '\n';
 
-    using x_type = add_properties<test_struct, Protecting, Living>;
+    using x_type = add_properties_ordered<test_struct, Protecting, Living>;
     std::cout << "x_type:       " << name<x_type>() << '\n';
     std::cout << "base:         " << name<Scheme<x_type>::base>() << '\n';
     std::cout << "list_helper:  " << name<Scheme<x_type>::list_helper>() << '\n';
     std::cout << "list_t:       " << name<Scheme<x_type>::list_t>() << '\n';
     std::cout << '\n';
-    using y_type = add_properties<x_type, Wearing, Restoring>;
+    using y_type = add_properties_ordered<x_type, Wearing, Restoring>;
     std::cout << "y_type:       " << name<y_type>() << " Need to be fixed - should be the same as z_type" << '\n';
     std::cout << "base:         " << name<Scheme<y_type>::base>() << '\n';
     std::cout << "list_helper:  " << name<Scheme<y_type>::list_helper>() << '\n';
     std::cout << "list_t:       " << name<Scheme<y_type>::list_t>() << '\n';
     std::cout << '\n';
-    using z_type = add_properties<test_struct, Wearing, Restoring, Protecting, Living>;  // correctly ordered type
+    using z_type = add_properties_ordered<test_struct, Wearing, Restoring, Protecting, Living>;  // correctly ordered type
     std::cout << "z_type:       " << name<z_type>() << '\n';
     std::cout << "base:         " << name<Scheme<z_type>::base>() << '\n';
     std::cout << "list_helper:  " << name<Scheme<z_type>::list_helper>() << '\n';
     std::cout << "list_t:       " << name<Scheme<z_type>::list_t>() << '\n';
     std::cout << '\n';
 
-    using b_type = add_properties<test_struct, B, Wearing, Restoring, A, A, Protecting, Living, B>;  // correctly ordered type
+    using b_type = add_properties_ordered<test_struct, B, Wearing, Restoring, A, A, Protecting, Living, B>;  // correctly ordered type
     std::cout << "b_type:       " << name<b_type>() << '\n';
     std::cout << "base:         " << name<Scheme<b_type>::base>() << '\n';
     std::cout << "list_helper:  " << name<Scheme<b_type>::list_helper>() << '\n';

@@ -9,7 +9,7 @@
 struct Empty {};
 
 int main() {
-    using all_properties_type = add_properties<
+    using all_properties_type = add_properties_ordered<
         Empty,
         Living,
         Wearing,
