@@ -2,12 +2,17 @@
 #include "Taumaturgia/Properties/UserProperty.hpp"  // for UserPropertyAdapter
 #include "taged_list.hpp"
 
-template <typename T, template <typename...> typename... properties>
-#ifndef IGNORE_ORDER_LIST
-using creator_add_properties = add_properties<T, properties...>;
+#ifdef IGNORE_ORDER_LIST
+constexpr bool with_ignore_order_list = true;
 #else
-using creator_add_properties = add_properties_unordered<T, properties...>;
+constexpr bool with_ignore_order_list = false;
 #endif
+
+template <typename T, template <typename...> typename... properties>
+using creator_add_properties = std::conditional_t<
+    with_ignore_order_list,
+    add_properties_ordered<T, properties...>,
+    add_properties_unordered<T, properties...>>;
 
 namespace impl {
 
@@ -65,13 +70,15 @@ template <typename T>
 [[maybe_unused]] constexpr BaseType<T> base{};  // can be used even when T don't have default C-tor.
 }  // namespace From
 
-template <typename T, template <typename> typename Prop>
-auto operator|(BaseType<T>, Property<Prop>) -> impl::Creator<::creator_add_properties<T, Prop>> {
+template <typename T, template <template <typename...> typename> typename P, template <typename...> typename Prop>
+    requires is_property_type<P>
+auto operator|(BaseType<T>, P<Prop>) -> impl::Creator<::add_properties<T, P<Prop>>> {
     return {};
 }
 
-template <typename T, template <typename> typename Prop>
-auto operator|(impl::Creator<T>, Property<Prop>) -> impl::Creator<::creator_add_properties<T, Prop>> {
+template <typename T, template <template <typename...> typename> typename P, template <typename...> typename Prop>
+    requires is_property_type<P>
+auto operator|(impl::Creator<T>, P<Prop>) -> impl::Creator<::add_properties<T, P<Prop>>> {
     return {};
 }
 
