@@ -21,14 +21,23 @@ using append_and_order_property_lists =
             impl::same_priority>,
         boost::mp11::mp_less>;
 
-template <template <typename...> typename... properties>
+template <template <template <typename...> typename> typename Property_type,
+          template <typename...> typename... properties>
     requires(is_property<properties> and ...)
-using create_ordered_property_list = append_and_order_property_lists<
-    list<Property<properties>...>>;
+using create_property_list_of_type = append_and_order_property_lists<
+    list<Property_type<properties>...>>;  // for both ordered and unordered
 
 template <template <typename...> typename... properties>
     requires(is_property<properties> and ...)
-using create_unordered_property_list = append_and_order_property_lists<
-    list<Property_unordered<properties>...>>;
+using create_ordered_property_list = create_property_list_of_type<Property, properties...>;
+
+template <template <typename...> typename... properties>
+    requires(is_property<properties> and ...)
+using create_unordered_property_list = create_property_list_of_type<Property_unordered, properties...>;
+
+template <typename... properties>
+// requires(is_property<properties> and ...)
+using create_property_list = append_and_order_property_lists<
+    list<properties...>>;
 
 }  // namespace helpers
