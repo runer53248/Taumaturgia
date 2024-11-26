@@ -3,7 +3,7 @@
 
 namespace helpers::impl {
     template <template <typename...> typename property>
-    concept have_improvement_of_property = have_property<typename property<tag>::improvement_of>;  // improvement_of have property_data;
+    concept have_improvement_of_property = have_property_data<typename property<tag>::improvement_of>;  // improvement_of have property_data;
 
     template <template <typename...> typename property>
     concept is_property_improvement_possibly_self = is_property<property>                        // property have property_data
