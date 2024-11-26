@@ -35,3 +35,11 @@ public:
     template <typename T>
     using apply = property<T>;
 };
+
+template <template <template <typename...> typename> typename PROP_TYPE>
+concept is_property_type = (std::same_as<
+                                PROP_TYPE<empty_property>,
+                                Property<empty_property>> or
+                            std::same_as<
+                                PROP_TYPE<empty_property>,
+                                Property_unordered<empty_property>>);
