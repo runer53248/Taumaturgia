@@ -53,6 +53,8 @@ int main() {
     auto print = [](const auto& type, int id) {
         auto type_name = "type simple" + std::to_string(id);
         std::cout << type_name << "       = " << name<decltype(type)>() << '\n';
+        if constexpr (trait<Name>::accessable<decltype(type)>)
+            std::cout << type_name << " Name  = " << trait<Name>::get(type) << '\n';
         if constexpr (trait<float>::accessable<decltype(type)>)
             std::cout << type_name << " float = " << trait<float>::get(type) << '\n';
         if constexpr (trait<Health>::accessable<decltype(type)>)
@@ -176,8 +178,9 @@ int main() {
             ;
         auto create_type_simple4_2 =
             From::base<Simple4>                    //
-            | WithUnordered::Health                //
+            | With::Health                         //
             | WithUnordered::user_property<float>  //
+            | WithUnordered::Name                  //
             | WithUnordered::Damage                //
             ;
         auto create_type_simple4_3 =
@@ -185,6 +188,7 @@ int main() {
             | With::user_property<float>  //
             | With::Damage                //
             | With::Health                //
+            | With::Name                  //
             ;
 
         decltype(create_type_simple4_1)::result_type type_simple4_1;
@@ -194,12 +198,15 @@ int main() {
         type_simple4_1 = create_type_simple4_1(
             3.14169f,
             Damage{9, DamageType::Physical},
-            Health{41, 100});
+            Health{41, 100},
+            Name{"simple_4_1"});
         type_simple4_2 = create_type_simple4_2(
             Health{42, 100},
             3.14169f,
+            Name{"simple_4_2"},
             Damage{9, DamageType::Magical});
         type_simple4_3 = create_type_simple4_3(
+            Name{"simple_4_3"},
             Health{43, 100},
             Damage{9, DamageType::Divine},
             3.14169f);
