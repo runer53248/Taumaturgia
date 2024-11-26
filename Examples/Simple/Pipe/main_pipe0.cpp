@@ -16,19 +16,21 @@
 
 struct Simple3 {
     Simple3() = default;
-    Simple3(Damage dmg) : dmg{dmg} {}
+    Simple3(Damage dmg)
+        : dmg{dmg} {}
 
     decltype(auto) Dmg(this auto& self) { return (self.dmg); }
     decltype(auto) Int(this auto& self) { return (self.i); }
+
 private:
     Damage dmg{5};
     int i{3};
 };
 
 template <typename T>
-concept Simplelike = requires (T t) {
-    {t.Dmg()};
-    {t.Int()};
+concept Simplelike = requires(T t) {
+    { t.Dmg() };
+    { t.Int() };
 };
 
 template <Simplelike T>
@@ -63,11 +65,11 @@ int main() {
     {
         struct Simple0 {
             Damage dmg{};
-        } simple0{};
+        };
 
         auto create_type_simple0 =
-            simple0         //
-            | With::Damage  //
+            From::base<Simple0>  //
+            | With::Damage       //
             ;
         auto type_simple0 = create_type_simple0();
         type_simple0 = create_type_simple0(Damage{1});
@@ -75,11 +77,11 @@ int main() {
     }
 
     {
-        struct Simple1 {} simple1{};
+        struct Simple1 {};
 
         auto create_type_simple1 =
-            simple1         //
-            | With::Damage  //
+            From::base<Simple1>  //
+            | With::Damage       //
             ;
         auto type_simple1 = create_type_simple1();
         type_simple1 = create_type_simple1(Damage{2});
@@ -88,22 +90,24 @@ int main() {
 
     {
         struct Simple2 {
-            Simple2(int v) : dmg{v}, i{v + 5} {}
+            Simple2(int v)
+                : dmg{v}, i{v + 5} {}
 
             decltype(auto) Dmg() { return (dmg); }
             decltype(auto) Dmg() const { return (dmg); }
-            
+
             decltype(auto) Int() { return (i); }
             decltype(auto) Int() const { return (i); }
+
         private:
             Damage dmg{5};
             int i{3};
-        } simple2{5};
+        };
 
         auto create_type_simple2 =
-            simple2                       //
+            From::base<Simple2>           //
             | With::user_property<float>  //
-            | With::Damage  //
+            | With::Damage                //
             ;
         auto type_simple2 = create_type_simple2(
             std::ignore,
@@ -115,11 +119,10 @@ int main() {
     }
 
     {
-        Simple3 simple3{};
         auto create_type_simple3 =
-            simple3                       //
+            From::base<Simple3>           //
             | With::user_property<float>  //
-            | With::Damage  //
+            | With::Damage                //
             ;
         decltype(create_type_simple3)::result_type type_simple3;
         type_simple3 = create_type_simple3();

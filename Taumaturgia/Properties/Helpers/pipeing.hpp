@@ -15,16 +15,16 @@ template <typename T>
 struct Creator {
     using result_type = T;
 
-    auto operator()() {
-        static_assert(std::constructible_from<T>, "Creator can't create result_type from default C-tor!");
-        return T{};
+    auto operator()() const {
+        static_assert(std::constructible_from<result_type>, "Creator can't create result_type from default C-tor!");
+        return result_type{};
     }
 
     template <typename Arg, typename... Args>
-    auto operator()(Arg&& arg, Args&&... args) {
+    auto operator()(Arg&& arg, Args&&... args) const {
         constexpr bool token_introduced = std::is_same_v<std::remove_cvref_t<Arg>, Token>;
-        
-        if constexpr (token_introduced) {  // token was introduced
+
+        if constexpr (token_introduced) {                                        // token was introduced
             if constexpr (std::constructible_from<result_type, Arg, Args...>) {  // can be constructed
                 return result_type(std::forward<Arg>(arg), std::forward<Args>(args)...);
             } else if constexpr (std::constructible_from<result_type, Args...>) {  // can be constructed, ignore Arg == Token
@@ -57,8 +57,16 @@ auto pipe_helper(T&& t, Props<TYPES, P>...) {
 
 }  // namespace impl
 
+template <typename T>
+struct BaseType {};
+
+namespace From {
+template <typename T>
+[[maybe_unused]] constexpr BaseType<T> base{};  // can be used even when T don't have default C-tor.
+}  // namespace From
+
 template <typename T, template <typename> typename Prop>
-auto operator|(T, Property<Prop>) -> impl::Creator<::creator_add_properties<T, Prop>> {
+auto operator|(BaseType<T>, Property<Prop>) -> impl::Creator<::creator_add_properties<T, Prop>> {
     return {};
 }
 

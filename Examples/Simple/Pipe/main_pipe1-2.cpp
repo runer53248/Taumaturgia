@@ -19,10 +19,8 @@ int main() {
         std::array<float, 2> f_{3.1113f, 0.5f};
     };
 
-    Example example{};
-
     auto create_type_2 =
-        example                             // ! ignore prototype and use default c-tor
+        From::base<Example>                 //
         | With::Damage                      //
         | With::Name                        //
         | With::Protection                  //

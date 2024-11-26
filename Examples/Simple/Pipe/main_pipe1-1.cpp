@@ -36,17 +36,15 @@ private:
 };
 
 int main() {
-    Example example{};
-
     auto create_type =
-        example                                           // ! ignore prototype and use default c-tor
-        | With::Damage                                    //
-        | With::Name                                      //
-        | With::Protection                                //
-        | With::Protection                                //
-        | With::property<Protecting>                      //
-        | With::Health                                    // not in priority order
-        | With::user_property<int>  //
+        From::base<Example>           //
+        | With::Damage                //
+        | With::Name                  //
+        | With::Protection            //
+        | With::Protection            //
+        | With::property<Protecting>  //
+        | With::Health                // not in priority order
+        | With::user_property<int>    //
         ;
 
 #ifdef IGNORE_ORDER_LIST

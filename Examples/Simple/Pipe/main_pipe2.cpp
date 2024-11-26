@@ -31,12 +31,8 @@ int main() {
         std::cout << '\n';
     };
 
-    // MARK: create a lambda factory
-    Base base{default_x, default_y};
-
-    // create a lambda factory
     auto create_type =
-        base                          // ! ignore prototype and use default c-tor
+        From::base<Base>              //
         | With::Name                  //
         | With::Health                //
         | With::Damage                //
@@ -48,10 +44,10 @@ int main() {
         unordered,  // ignore order of arguments
         Health{100, 100},
         Damage{5, DamageType::Magical},
-        float{3.14f},  // type<float>
+        float{3.14f},
         Protection{10, BodyLocation::Head},
-        default_int,    // type<int>
-        double{20.20},  // type<double>
+        default_int,
+        double{20.20},
         Name{"Test"});
 
     auto type2 = create_type(
