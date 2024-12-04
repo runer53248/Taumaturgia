@@ -3,36 +3,39 @@
 #include <variant>
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
-#include "Taumaturgia/Properties/Token.hpp"
+// #include "Taumaturgia/Properties/Token.hpp"
 #include "Usage/Types/Damage/Damage.hpp"
 #include "Usage/Types/Name/Name.hpp"
 
 namespace impl {
 inline constinit const char damaging_type_name[] = "Damaging";
 
-template <typename T>
-class Damaging_;
+// template <typename T>
+// class Damaging_;
 
-template <>
-class Damaging_<tag> {
-public:
-    using property_data = PropertyData<damaging_type_name, Damaging_, tag>;
+// template <>
+// class Damaging_<tag> {
+// public:
+//     using property_data = PropertyData<damaging_type_name, Damaging_, tag>;
 
-    template <typename TARGET>
-    using apply = std::conditional_t<Damagingable<TARGET>, TARGET, impl::Damaging_<TARGET>>;
+//     template <typename TARGET>
+//     using apply = std::conditional_t<Damagingable<TARGET>, TARGET, impl::Damaging_<TARGET>>;
 
-    constexpr auto& getDamage(this auto& self) {
-        return self.dmg_;
-    }
+//     constexpr auto& getDamage(this auto& self) {
+//         return self.dmg_;
+//     }
 
-private:
-    Damage dmg_{};
-};
+// private:
+//     Damage dmg_{};
+// };
 
 template <typename T>
 class Damaging_ : public T {
 public:
     using property_data = PropertyData<damaging_type_name, Damaging_, T>;
+
+    template <typename TARGET>
+    using apply = std::conditional_t<Damagingable<TARGET>, TARGET, impl::Damaging_<TARGET>>;
 
     Damaging_() = default;
 
@@ -118,5 +121,8 @@ static_assert(Damagingable<Damaging_<Damaging_Test>>);
 static_assert(Damagingable<Damaging_<tag>>);
 }  // namespace impl::Test
 
+// template <typename T>
+// using Damaging = impl::Damaging_<tag>::apply<T>;
+
 template <typename T>
-using Damaging = impl::Damaging_<tag>::apply<T>;
+using Damaging = std::conditional_t<Damagingable<T>, T, impl::Damaging_<T>>;
