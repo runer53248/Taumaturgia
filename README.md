@@ -13,9 +13,21 @@ There are two ways to add ***`properties`*** to a type.
 using NewType = Living<Wearing<Damaging<Protecting<Healing<Restoring<Naming<Type>>>>>>>
 ```
 
-2. By using ***`add_properties`***. This allows you to specify the preferred order of ***`properties`*** and what should be considered an indexed ***`Property`*** and ordered as such.
+2. By using one of fallowed: ***`add_properties_ordered`***, ***`add_properties_unordered`***,***`add_properties`***. This allows you to specify the preferred order of ***`properties`*** and what should be considered an indexed ***`Property`*** and ordered as such.
 ```cpp
-using NewType = add_properties<Type, Naming, Living, Wearing, Damaging, Protecting, Healing, Restoring>;
+using NewType = add_properties_ordered<Type, Naming, Living, Wearing, Damaging, Protecting, Healing, Restoring>;
+```
+
+```cpp
+using NewType = add_properties_unordered<Type, Naming, Living, Wearing, Damaging, Protecting, Healing, Restoring>;
+```
+
+```cpp
+using NewType = add_properties<Type, Property<Naming>, Property<Living>, Property<Wearing>>;
+```
+
+```cpp
+using NewType = add_properties<Type, Property_unordered<Naming>, Property_unordered<Living>, Property_unordered<Wearing>>;
 ```
 
 ### What is needed for type to be considered as having ***`property`***?
