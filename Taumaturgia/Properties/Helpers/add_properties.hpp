@@ -53,7 +53,7 @@ struct add_properties_impl {
         boost::mp11::mp_count<
             list<boost::mp11::mp_bool<property_type_ordered<properties>::value>...>,
             boost::mp11::mp_true>::value;
-    static_assert(num_of_ordered == 0 or num_of_ordered == sizeof...(properties));  // must be all or none
+    static_assert(num_of_ordered == 0 or num_of_ordered == sizeof...(properties), "All properties must be from one type: Property or Property_unordered.");
 
     static constexpr bool is_ordered = num_of_ordered;
 
