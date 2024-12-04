@@ -54,7 +54,7 @@ auto nlist = tlist | With::user_property<int>;
 ```cpp
 struct Base{int x{}; int y{};};
 Base base_type{default_x, default_y};
-auto tlist = With::Name | With::Health | With::Protection | With::Damage;
+auto tlist = With::Name | With::Health | With::Protection | With::Damage; // order as given
 auto new_type = base_type | tlist;
 auto new_type2 = base_type | (With::Name | With::Health | With::Protection | With::Damage);
 auto new_type3 = Base{default_x, default_y} | tlist;
@@ -66,9 +66,10 @@ auto new_type3 = Base{default_x, default_y} | tlist;
 struct Base{int x{}; int y{};};
 Base base_type{default_x, default_y};
 auto new_type = 
-    base_type 
-    | With::Name 
-    | With::Health 
-    | With::Protection 
-    | Create;
+    base_type           //
+    | With::Name        //
+    | With::Health      //
+    | With::Protection  //
+    | Create            //
+    ;
 ```
