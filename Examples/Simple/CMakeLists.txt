@@ -17,24 +17,7 @@ add_executable(main_token
     main_token.cpp
 )
 
-add_executable(main_pipe0
-    Pipe/main_pipe0.cpp
-)
-add_executable(main_pipe1-1
-    Pipe/main_pipe1-1.cpp
-)
-add_executable(main_pipe1-2
-    Pipe/main_pipe1-2.cpp
-)
-add_executable(main_pipe2
-    Pipe/main_pipe2.cpp
-)
-add_executable(main_pipe3
-    Pipe/main_pipe3.cpp
-)
-add_executable(main_pipe4
-    Pipe/main_pipe4.cpp
-)
+add_subdirectory(Pipe)
 
 add_executable(main_ignore_order_Ap_${addons}
     main_ignore_order.cpp

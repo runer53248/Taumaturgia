@@ -1,0 +1,18 @@
+add_executable(main_pipe0
+    main_pipe0.cpp
+)
+add_executable(main_pipe1-1
+    main_pipe1-1.cpp
+)
+add_executable(main_pipe1-2
+    main_pipe1-2.cpp
+)
+add_executable(main_pipe2
+    main_pipe2.cpp
+)
+add_executable(main_pipe3
+    main_pipe3.cpp
+)
+add_executable(main_pipe4
+    main_pipe4.cpp
+)
