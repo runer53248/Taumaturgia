@@ -1,5 +1,3 @@
-#define IGNORE_ORDER_LIST
-
 // #define CUSTOM_ORDER_LIST
 #include "custom_order_list.hpp"
 
