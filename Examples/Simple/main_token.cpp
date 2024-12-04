@@ -13,9 +13,6 @@ using add_properties_type = std::conditional_t<
     add_properties_unordered<T, properties...>,
     add_properties_ordered<T, properties...>>;
 
-template <typename T, typename TYPE>
-concept type_of = std::same_as<std::remove_const_t<T>, TYPE>;
-
 #define TokenCtor(ClassName)                                                                                                  \
     template <typename... Args>                                                                                               \
         requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>> \
