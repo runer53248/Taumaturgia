@@ -16,6 +16,3 @@ add_executable(main_pipe3
 add_executable(main_pipe4
     main_pipe4.cpp
 )
-add_executable(1_main_pipe_introduction
-    main_pipe_introduction.cpp
-)

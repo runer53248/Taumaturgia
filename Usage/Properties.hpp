@@ -10,4 +10,9 @@
 #ifndef CUSTOM_ORDER_LIST
 #include "order_list.hpp"
 #include "Taumaturgia/Properties/Structs/Property.hpp"
+#else 
+#ifdef ORDER_LIST_PATH
+#include ORDER_LIST_PATH
+#include "Taumaturgia/Properties/Structs/Property.hpp"
+#endif
 #endif

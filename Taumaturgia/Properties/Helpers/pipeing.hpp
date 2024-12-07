@@ -60,6 +60,21 @@ struct DataAndPropertiesList {
     T data;
 };
 
+// for build in properties
+template <typename T, template <typename> typename... Props, typename P>
+auto pipe_helper(T&& t, Props<P>...) {
+    // using result = add_properties<std::remove_cvref_t<T>, Property<Props<tag>::template apply>...>;
+    using result = ::creator_add_properties<std::remove_cvref_t<T>, Props<P>::template apply...>;
+    return result{std::forward<T>(t)};
+}
+
+// for user type properties
+template <typename T, template <typename, typename> typename... Props, typename... TYPES, typename P>
+auto pipe_helper(T&& t, Props<TYPES, P>...) {
+    using result = ::creator_add_properties<std::remove_cvref_t<T>, UserPropertyAdapter<TYPES>::template type...>;
+    return result{std::forward<T>(t)};
+}
+
 }  // namespace impl
 
 template <typename T>
@@ -106,10 +121,11 @@ template <
     template <template <typename...> typename> typename P,
     template <typename> typename Prop2>
 auto operator|(list<Props...>, P<Prop2>) {
-    if constexpr (boost::mp11::mp_contains<list<Props...>, Prop2<tag>>::value) {
+    using namespace boost::mp11;
+    if constexpr (mp_contains<list<Props...>, Prop2<tag>>::value) {
         return list<Props...>{};
     } else {
-        return boost::mp11::mp_append<list<Props...>, taged_list<Prop2>>{};
+        return mp_append<list<Props...>, taged_list<Prop2>>{};
     }
 }
 
@@ -144,8 +160,9 @@ decltype(auto) operator|(impl::DataAndPropertiesList<T, list<Props...>>&& tp, Pr
     if constexpr (std::is_same_v<helper, base_type>) {  // ignore unnecesary property for type T
         return (tp);
     } else {
+        using namespace boost::mp11;
         using prop_list = helpers::append_and_order_property_lists<list<Props...>, list<Prop2>>;
-        if constexpr (boost::mp11::mp_contains<list<Props...>, Prop2>::value) {  // skip if property list contain Prop2
+        if constexpr (mp_contains<list<Props...>, Prop2>::value) {  // skip if property list contain Prop2
             return (tp);
         } else if constexpr (std::same_as<prop_list, list<Props...>>) {  // skip if property list don't change
             return (tp);
@@ -167,11 +184,7 @@ decltype(auto) operator|(T&& t, Prop) {
     }
 }
 
-template <
-    typename T,
-    template <typename> typename... Props>
-auto operator|(T&& t, list<Props<tag>...>) {
-    // using result = add_properties<std::remove_cvref_t<T>, Property<Props<tag>::template apply>...>;
-    using result = creator_add_properties<std::remove_cvref_t<T>, Props<tag>::template apply...>;
-    return result{std::forward<T>(t)};
+template <typename T, typename... Props>
+auto operator|(T&& t, list<Props...>) {
+    return impl::pipe_helper(std::forward<T>(t), Props{}...);
 }

@@ -4,6 +4,9 @@
 #include "Examples/PreetyPrint/PrintProtection.hpp"
 #include "Examples/demangle_type_name.hpp"
 
+#define CUSTOM_ORDER_LIST
+#define ORDER_LIST_PATH "Introduction/order_list/order_list_introduction.hpp"
+
 #include "Taumaturgia/Properties/Helpers/pipeing.hpp"
 #include "With.hpp"
 
@@ -28,6 +31,7 @@ int main() {
         );
 
         std::cout << "Example 1.a\n";
+        std::cout << "type       = " << name<decltype(type)>() << '\n';
         std::cout << "Damage     = " << trait<Damage>::get(type) << '\n';
         std::cout << "Protection = " << trait<Protection>::get(type) << '\n';
         std::cout << "int        = " << trait<int>::get(type) << '\n';
@@ -38,7 +42,7 @@ int main() {
         auto create_type =
             From::base<Base>                       //
             | WithUnordered::user_property<int>    // first: int
-            | WithUnordered::property<Protecting>  // later: Protecting
+            | WithUnordered::property<Protecting>  // later: Protection
             | WithUnordered::Damage                // last: Damage
             ;
         auto type = create_type(
@@ -47,6 +51,7 @@ int main() {
             Damage{5, DamageType::Physical});
 
         std::cout << "Example 1.b\n";
+        std::cout << "type       = " << name<decltype(type)>() << '\n';
         std::cout << "Damage     = " << trait<Damage>::get(type) << '\n';
         std::cout << "Protection = " << trait<Protection>::get(type) << '\n';
         std::cout << "int        = " << trait<int>::get(type) << '\n';

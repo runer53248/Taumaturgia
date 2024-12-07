@@ -59,6 +59,7 @@ endif()
 set(addons ${NO_PREMADE_PROPERTIES}${NO_PREMADE_STRATEGIES})
 
 add_subdirectory(Examples)
+add_subdirectory(Introduction)
 
 find_package(GTest REQUIRED)
 enable_testing()
