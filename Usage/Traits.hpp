@@ -2,19 +2,19 @@
 #include "Usage/Types/trait.hpp"
 
 template <typename T>
-concept Damagingable = accessable<T, Damage>;
+concept Damagingable = trait_accessable<T, Damage>;
 template <typename T>
-concept Healingable = accessable<T, CureHealth>;
+concept Healingable = trait_accessable<T, CureHealth>;
 template <typename T>
-concept Livingable = accessable<T, Health>;
+concept Livingable = trait_accessable<T, Health>;
 template <typename T>
-concept Protectingable = accessable<T, Protection>;
+concept Protectingable = trait_accessable<T, Protection>;
 template <typename T>
-concept Restoringable = accessable<T, EffectTypeContainer>;
+concept Restoringable = trait_accessable<T, EffectTypeContainer>;
 template <typename T>
-concept Wearingable = accessable<T, WearContainer>;
+concept Wearingable = trait_accessable<T, WearContainer>;
 template <typename T>
-concept Namingable = accessable<T, Name>;
+concept Namingable = trait_accessable<T, Name>;
 
 template <typename T>
 concept Gettingable = Damagingable<T> or

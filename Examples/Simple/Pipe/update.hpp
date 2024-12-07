@@ -12,8 +12,8 @@ auto update = [](auto& target) {
 
     return [&target]<typename... Args>
         requires(
-            (same_as<mp_unique<list<remove_cvref_t<Args>...>>, list<remove_cvref_t<Args>...>>) and         // every argument have unique type
-            (trait<remove_cvref_t<Args>>::template accessable<remove_cvref_t<decltype(target)>> and ...))  // every type is accessable by trait
+            (same_as<mp_unique<list<remove_cvref_t<Args>...>>, list<remove_cvref_t<Args>...>>) and  // every argument have unique type
+            (trait_accessable<remove_cvref_t<decltype(target)>, remove_cvref_t<Args>> and ...))     // every type is accessable by trait
     (Args&&... args) {
         ((trait<remove_cvref_t<Args>>::get(target) = std::forward<Args>(args)), ...);
     };

@@ -48,18 +48,18 @@ struct traits::CustomAccessType<int, T> {
 // MARK: main
 
 int main() {
-    auto print = [](const auto& type, int id) {
+    auto print = []<typename Type>(const Type& type, int id) {
         auto type_name = "type simple" + std::to_string(id);
-        std::cout << type_name << "       = " << name<decltype(type)>() << '\n';
-        if constexpr (trait<Name>::accessable<decltype(type)>)
+        std::cout << type_name << "       = " << name<Type>() << '\n';
+        if constexpr (trait_accessable<Type, Name>)
             std::cout << type_name << " Name  = " << trait<Name>::get(type) << '\n';
-        if constexpr (trait<float>::accessable<decltype(type)>)
+        if constexpr (trait_accessable<Type, float>)
             std::cout << type_name << " float = " << trait<float>::get(type) << '\n';
-        if constexpr (trait<Health>::accessable<decltype(type)>)
+        if constexpr (trait_accessable<Type, Health>)
             std::cout << type_name << " health= " << trait<Health>::get(type) << '\n';
-        if constexpr (trait<Damage>::accessable<decltype(type)>)
+        if constexpr (trait_accessable<Type, Damage>)
             std::cout << type_name << " dmg   = " << trait<Damage>::get(type) << '\n';
-        if constexpr (trait<int>::accessable<decltype(type)>)
+        if constexpr (trait_accessable<Type, int>)
             std::cout << type_name << " int   = " << trait<int>::get(type) << '\n';
         std::cout << '\n';
     };

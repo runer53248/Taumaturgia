@@ -51,4 +51,4 @@ template <typename T>
 using trait = trait_<T>::type;
 
 template <typename T, typename TYPE>
-concept accessable = trait<TYPE>::template accessable<T>;
+concept trait_accessable = trait<TYPE>::template accessable<T>;
