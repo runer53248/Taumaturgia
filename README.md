@@ -1,121 +1,53 @@
 # Taumaturgia Project
 
-## Project goal is to create a system that allows creating new types (and modify existing ones). <br> For this purpose will be used feature called ***`properties`***. <br> Each ***`property`*** has a single type to which it encapsulates access. <br> ***`Concepts`*** determine whether the type meets the requirements imposed on ***`properties`***. <br> Build-in ***`properties`*** allow ignore or create its private type in many ways (ie. by variant or from tuple) and to use it in conjunction with others ***`properties`***.  <br> User can create build-in like ***`properties`*** using ***`UserProperty`*** class. <br> 
+## Project goal is to create a system that allows build and manipulate new types with ease. For this purpose ***`property`*** feature will be used.
 
-## Type with ***`properties`*** that also satisfy the ***`Namingable`*** concept can be used to create an instantion of the ***`Object`*** class. <br> ***`Object`*** instantions will be used to invoke ***`strategies`*** assigned to individual ***`properties`***.
+## [Property](Introduction/Property.md)
 
-### How to add build-in ***`properties`*** to type?
+***`Property`*** is a member of specific type that can be accessed by **traits**.
 
-There are two ways to add ***`properties`*** to a type.
-
-1. By placing the type in successive layers of ***`properties`***. In this case, the type must have a ***`Namingable`*** property or ***`Naming`*** must be the deepest nested ***`property`***.
-```cpp
-using NewType = Living<Wearing<Damaging<Protecting<Healing<Restoring<Naming<Type>>>>>>>
-```
-
-2. By using one of fallowed: ***`add_properties_ordered`***, ***`add_properties_unordered`***,***`add_properties`***. This allows you to specify the preferred order of ***`properties`*** and what should be considered an indexed ***`Property`*** and ordered as such.
-```cpp
-using NewType = add_properties_ordered<Type, Naming, Living, Wearing, Damaging, Protecting, Healing, Restoring>;
-```
+Property can be validated using traits:
 
 ```cpp
-using NewType = add_properties_unordered<Type, Naming, Living, Wearing, Damaging, Protecting, Healing, Restoring>;
-```
-
-```cpp
-using NewType = add_properties<Type, Property<Naming>, Property<Living>, Property<Wearing>>;
-```
-
-```cpp
-using NewType = add_properties<Type, Property_unordered<Naming>, Property_unordered<Living>, Property_unordered<Wearing>>;
-```
-
-### What is needed for type to be considered as having ***`property`***?
-
-Type need to have way to access it's encapsulates type same as or convertible to ***`property`*** type. <br> As example for concept ***`Namingable`*** this means:
-
-1. type that have public ***`name`*** member convertible to **std::string** (or **const std::string**)
-
-```cpp
-struct Type {
-    const char* name{"Valid"};
-};
 static_assert(Namingable<Type>);
+static_assert(trait_accessable<Type, Name>);
+```
+
+Properies can be added and reordered using:
+
+1. [add_properties](Introduction/add_properties.md) features
+
+```cpp
+using NewType = add_properties_ordered<Type, Naming, Living, Wearing>
+```
+
+2. [pipeing](Introduction/Pipeing.md) features
+
+```cpp
+auto create_type =
+    From::base<Type>              //
+    | With::Name;                 //
+auto type = create_type(Name{"Type"});
 ```
 
 ```cpp
-struct Type {
-    std::string name{"Valid"};
-};
-static_assert(Namingable<Type>);
+auto new_type = type | (With::Name | With::Health | With::Damage);
 ```
+
+## [Trait](Introduction/Traits.md)
+
+***`Trait`*** feature is used to provide universal way for accessing data.
 
 ```cpp
-#include "Object/Types/Name.hpp"
-struct Type {
-    Name name{"Valid"};
-};
-static_assert(Namingable<Type>);
+if constexpr (trait_accessable<int, decltype(type)>) {
+    auto value = trait<int>::get(type);
+}
 ```
 
-2. type that have public ***`getName`*** method returning **std::string** convertible type
+## Object
 
-```cpp
-struct Type {};
+***`Object`*** class use type-erasure to hide type for other purpose than use its ***`strategies`***.
+<br> ***`Object`*** instantion will be used to invoke ***`strategies`*** assigned to individual ***`properties`***.
+<br> Only types with ***`properties`*** that also satisfy the ***`Namingable`*** concept may be used to create an instantion of the ***`Object`*** class.
 
-template <typename T, typename TYPE>
-class WithName : public T {
-public:
-    WithName() = default;
-    explicit WithName(const TYPE& name)
-        : name{name} {}
-
-    TYPE& getName() & { return name; }
-    const TYPE& getName() const& { return name; }
-
-private:
-    TYPE name{"Valid"};
-};
-static_assert(Namingable<WithName<Type, const char*>>);
-static_assert(Namingable<WithName<Type, std::string>>);
-static_assert(Namingable<WithName<Type, Name>>);
-```
-
-3. type resulted after gived ***`Naming`*** properties
-```cpp
-struct Type {};
-using named_Type = Naming<Type>;
-static_assert(Namingable<named_Type>);
-```
-
-4. type that have ***`CustomAccessName`*** trait specialization
-```cpp
-struct Type {
-    auto any_name() & { return Name{"Valid"}; }
-    const auto any_name() const& { return Name{"const Valid"}; }
-};
-
-template <typename T> requires std::is_base_of_v<Type, T>
-struct traits::CustomAccessName<T> {
-    static constexpr decltype(auto) get(auto& el) {
-        return el.any_name();
-    }
-};
-static_assert(Namingable<Type>);
-```
-
-### Is there universal method to access property data?
-Regardless of how you can access the type stored by a ***`property`***, you can also access it using ***`access traits`***.
-
-```cpp
-traits::accessArmorWear::get(type);
-traits::accessCureHealth::get(type);
-traits::accessDamage::get(type);
-traits::accessHealth::get(type);
-traits::accessName::get(type);
-traits::accessProtection::get(type);
-traits::accessRestoreEffects::get(type);
-```
-```cpp
-traits::accessType<ENCAPSULATE_TYPE>::get(type);
-```
+## Strategy

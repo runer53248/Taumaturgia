@@ -1,3 +1,5 @@
+# Traits
+
 ### ***`Access traits`*** feature is used to provide universal way for accessing data. 
 ### They also restricts type to have it's data accessable by single way.
 
@@ -95,7 +97,7 @@ struct traits::CustomAccessType<Name, T> {
 
 ```cpp
 struct CustomName { // custom getter
-    decltype(auto) name(this auto& self) & { 
+    decltype(auto) name(this auto& self) { 
         return (self.name); 
     }
 private:
@@ -126,7 +128,7 @@ struct traits::CustomAccessType<Name, T> {
 };
 ```
 
-### For convinient the different traits should be aliased like:
+### For convinient the different **traits** should be aliased like:
 
 ```cpp
 template <typename T>
