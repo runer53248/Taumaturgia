@@ -2,7 +2,7 @@
 #include <boost/mp11.hpp>
 #include <type_traits>
 #include "Taumaturgia/Properties/Helpers/taged_list.hpp"
-#include "Usage/Types/trait.hpp"
+#include "Taumaturgia/Traits/trait.hpp"
 
 // update rest of target parameters
 auto update = [](auto& target) {

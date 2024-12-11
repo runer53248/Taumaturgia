@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Traits/accessType.hpp"
+#include "Taumaturgia/Traits/trait.hpp"
 #include "Usage/Types/EffectTypeContainer/RestoreEffectsConcepts.hpp"
 
 namespace traits {
@@ -28,3 +28,8 @@ struct accessRestoreEffects : public accessType<EffectTypeContainer> {
 #endif
 
 }  // namespace traits
+
+template <>
+struct trait_<EffectTypeContainer> {
+    using type = traits::accessRestoreEffects;
+};

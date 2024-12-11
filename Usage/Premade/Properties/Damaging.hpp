@@ -3,7 +3,7 @@
 #include <variant>
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
-// #include "Taumaturgia/Properties/Token.hpp"
+#include "Taumaturgia/Properties/unordered_token.hpp"
 #include "Usage/Types/Damage/Damage.hpp"
 #include "Usage/Types/Name/Name.hpp"
 

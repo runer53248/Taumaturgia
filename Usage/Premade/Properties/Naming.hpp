@@ -1,7 +1,7 @@
 #pragma once
 #include <boost/mp11.hpp>
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
-#include "Taumaturgia/Properties/Token.hpp"
+#include "Taumaturgia/Properties/unordered_token.hpp"
 
 namespace impl {
 inline constinit const char naming_type_name[] = "Naming";

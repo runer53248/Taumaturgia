@@ -5,17 +5,20 @@
 #include "Helpers/constructible_from_args.hpp"
 #include "Structs/PropertyData.hpp"
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
+#include "Taumaturgia/Traits/trait.hpp"
 #include "Usage/Types/Name/Name.hpp"
-
-#include "Token.hpp"
-#include "Usage/Types/trait.hpp"
+#include "unordered_token.hpp"
 
 namespace impl {
 inline constinit const char user_type_name[] = "UserProperty";
 
+// MARK: UserProperty_
+
 template <typename TYPE, typename T, typename... Tags>
-    // requires(not std::is_reference_v<T>)
+// requires(not std::is_reference_v<T>)
 class UserProperty_;
+
+// MARK: UserProperty_ for tag
 
 template <typename TYPE>
 class UserProperty_<TYPE, tag> {
@@ -24,8 +27,6 @@ public:
     using self = UserProperty_<TYPE, TAG>;                          // make yourself one template argument type to satisfy PropertyData
     using property_data = PropertyData<user_type_name, self, tag>;  // ? should add TYPE into PropertyData?
     using improvement_of = self<tag>;                               // will act like same type if TYPE and Tags are same
-
-    // MARK: getType
 
     template <typename RETURN = TYPE, size_t DIG = 0>
     constexpr decltype(auto) getType() & noexcept {
@@ -41,8 +42,10 @@ private:
     TYPE type_{};
 };
 
+// MARK: UserProperty_ for T
+
 template <typename TYPE, typename T, typename... Tags>
-    // requires(not std::is_reference_v<T>)
+// requires(not std::is_reference_v<T>)
 class UserProperty_ : public T {
 public:
     template <typename TAG>

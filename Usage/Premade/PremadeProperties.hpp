@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Properties/Token.hpp"
+#include "Taumaturgia/Properties/unordered_token.hpp"
 
 #include "Properties/Damaging.hpp"
 #include "Properties/Healing.hpp"

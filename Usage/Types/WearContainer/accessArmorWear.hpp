@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Traits/accessType.hpp"
+#include "Taumaturgia/Traits/trait.hpp"
 #include "Usage/Types/WearContainer/ArmorWearConcepts.hpp"
 
 namespace traits {
@@ -28,3 +28,8 @@ struct accessArmorWear : public accessType<WearContainer> {
 #endif
 
 }  // namespace traits
+
+template <>
+struct trait_<WearContainer> {
+    using type = traits::accessArmorWear;
+};

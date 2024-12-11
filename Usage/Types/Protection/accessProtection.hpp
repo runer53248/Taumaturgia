@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Traits/accessType.hpp"
+#include "Taumaturgia/Traits/trait.hpp"
 #include "Usage/Types/Protection/ProtectionConcepts.hpp"
 
 namespace traits {
@@ -28,3 +28,8 @@ struct accessProtection : public accessType<Protection> {
 #endif
 
 }  // namespace traits
+
+template <>
+struct trait_<Protection> {
+    using type = traits::accessProtection;
+};

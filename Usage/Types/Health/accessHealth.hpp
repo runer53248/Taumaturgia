@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Traits/accessType.hpp"
+#include "Taumaturgia/Traits/trait.hpp"
 #include "Usage/Types/Health/HealthConcepts.hpp"
 
 namespace traits {
@@ -28,3 +28,8 @@ struct accessHealth : public accessType<Health> {
 #endif
 
 }  // namespace traits
+
+template <>
+struct trait_<Health> {
+    using type = traits::accessHealth;
+};

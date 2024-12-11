@@ -1,6 +1,5 @@
 #pragma once
 #include "Usage/Enums/Properties.hpp"
-// #include "Usage/Traits.hpp"
 
 namespace impl {
 

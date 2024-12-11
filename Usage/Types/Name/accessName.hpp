@@ -1,7 +1,6 @@
 #pragma once
+#include "Taumaturgia/Traits/trait.hpp"
 #include "Usage/Types/Name/NameConcepts.hpp"
-
-#include "Taumaturgia/Traits/accessType.hpp"
 
 namespace traits {
 
@@ -29,3 +28,8 @@ struct accessName : public accessType<Name, std::string> {
 #endif
 
 }  // namespace traits
+
+template <>
+struct trait_<Name> {
+    using type = traits::accessName;
+};

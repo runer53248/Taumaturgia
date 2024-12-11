@@ -1,5 +1,5 @@
 #pragma once
-#include "Usage/Types/trait.hpp"
+#include "Usage/Types/access_traits.hpp"
 
 template <typename T>
 concept Damagingable = trait_accessable<T, Damage>;

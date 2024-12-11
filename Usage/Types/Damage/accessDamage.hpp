@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Traits/accessType.hpp"
+#include "Taumaturgia/Traits/trait.hpp"
 #include "Usage/Types/Damage/DamageConcepts.hpp"
 
 namespace traits {
@@ -28,3 +28,8 @@ struct accessDamage : public accessType<Damage> {
 #endif
 
 }  // namespace traits
+
+template <>
+struct trait_<Damage> {
+    using type = traits::accessDamage;
+};
