@@ -9,5 +9,5 @@ struct trait_ {
 template <typename T>
 using trait = trait_<T>::type;
 
-template <typename T, typename TYPE>
-concept trait_accessable = trait<TYPE>::template accessable<T>;
+template <typename T, typename ACCESSED_TYPE>
+concept trait_accessable = trait<ACCESSED_TYPE>::template accessable<T>;

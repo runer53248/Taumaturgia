@@ -5,10 +5,9 @@
 #include "Examples/demangle_type_name.hpp"
 
 #define CUSTOM_ORDER_LIST
-#define ORDER_LIST_PATH "Introduction/order_list/order_list_introduction.hpp"
+#define ORDER_LIST_PATH "Introduction/pipeing/order_list.hpp"
 
-#include "Taumaturgia/Properties/Helpers/pipeing.hpp"
-#include "With.hpp"
+#include "Usage/With.hpp"
 
 struct Base {
     int x{};

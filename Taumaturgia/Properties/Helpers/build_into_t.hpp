@@ -3,9 +3,6 @@
 
 namespace helpers::impl {
 template <typename Base, typename L>
-struct build_into_impl;
-
-template <typename Base, typename L>
 struct build_into_impl {
 private:
     using first = boost::mp11::mp_first<L>;

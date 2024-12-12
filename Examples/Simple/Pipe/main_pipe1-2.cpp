@@ -1,12 +1,6 @@
-#include "With.hpp"
+#include "Usage/With.hpp"
 #include "default_values.hpp"
-
-#include "Examples/PreetyPrint/PrintDamage.hpp"
-#include "Examples/PreetyPrint/PrintHealth.hpp"
-#include "Examples/PreetyPrint/PrintName.hpp"
-#include "Examples/PreetyPrint/PrintProtection.hpp"
-#include "Examples/demangle_type_name.hpp"
-#include "Taumaturgia/Properties/Helpers/pipeing.hpp"
+#include "print.hpp"
 
 int main() {
     {

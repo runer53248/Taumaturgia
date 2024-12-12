@@ -1,13 +1,9 @@
 #define IGNORE_ORDER_LIST
 
 #include <iostream>
-
-// #include "Base.hpp"
-#include "With.hpp"
+#include "Usage/With.hpp"
 #include "default_values.hpp"
-
-#include "Examples/demangle_type_name.hpp"
-#include "Taumaturgia/Properties/Helpers/pipeing.hpp"
+#include "print.hpp"
 
 struct Base {
     int x;
@@ -39,7 +35,7 @@ int main() {
     auto type = base_with_list_Name;
     std::cout << "creator type:\n";
 
-#ifndef NO_PREMADE_PROPERTIES  
+#ifndef NO_PREMADE_PROPERTIES
     std::cout << "name = " << type.getName().operator std::string() << '\n';
 #else
     base_with_list_Name.getType<Name>() = default_name;  // used as object

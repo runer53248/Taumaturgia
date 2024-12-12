@@ -1,6 +1,5 @@
 #pragma once
-#include "Taumaturgia/Properties/UserProperty.hpp"
-#include "Usage/Properties.hpp"
+#include "Taumaturgia/Properties/Helpers/pipeing.hpp"
 
 namespace With {
 [[maybe_unused]] constexpr Property<Naming> Name{};
@@ -13,8 +12,10 @@ namespace With {
 
 template <template <typename> typename P>
 [[maybe_unused]] constexpr Property<P> property{};
-template <typename T>
-[[maybe_unused]] constexpr Property<UserPropertyAdapter<T>::template type> user_property{};
+template <typename T, typename... Tags>
+[[maybe_unused]] constexpr Property<AdvanceUserProperty<T, Tags...>::template type> user_property{};
+template <typename T, typename... Tags>
+[[maybe_unused]] constexpr Property<AdvanceUserProperty<T, Tags...>::template order> user_property_order{};
 };  // namespace With
 
 namespace WithUnordered {
@@ -28,6 +29,6 @@ namespace WithUnordered {
 
 template <template <typename> typename P>
 [[maybe_unused]] constexpr Property_unordered<P> property{};
-template <typename T>
-[[maybe_unused]] constexpr Property_unordered<UserPropertyAdapter<T>::template type> user_property{};
+template <typename T, typename... Tags>
+[[maybe_unused]] constexpr Property_unordered<UserPropertyAdapter<T, Tags...>::template type> user_property{};
 };  // namespace WithUnordered

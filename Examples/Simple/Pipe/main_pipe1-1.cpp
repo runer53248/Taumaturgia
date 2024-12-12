@@ -1,15 +1,12 @@
 #define CUSTOM_ORDER_LIST
-#include "custom_order_list.hpp"
 
-#include "With.hpp"
+#ifdef CUSTOM_ORDER_LIST
+#define ORDER_LIST_PATH "Examples/Simple/Pipe/custom_order_list.hpp"
+#endif
+
+#include "Usage/With.hpp"
 #include "default_values.hpp"
-
-#include "Examples/PreetyPrint/PrintDamage.hpp"
-#include "Examples/PreetyPrint/PrintHealth.hpp"
-#include "Examples/PreetyPrint/PrintName.hpp"
-#include "Examples/PreetyPrint/PrintProtection.hpp"
-#include "Examples/demangle_type_name.hpp"
-#include "Taumaturgia/Properties/Helpers/pipeing.hpp"
+#include "print.hpp"
 
 struct Example {
     auto getFloat(size_t index = 0) { return float_[index % 2]; }

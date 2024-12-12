@@ -174,6 +174,9 @@ decltype(auto) operator|(impl::DataAndPropertiesList<T, list<Props...>>&& tp, Pr
 }
 
 template <typename T, typename Prop>
+    requires requires {
+        typename Prop::template apply<std::remove_cvref_t<T>>;
+    }
 decltype(auto) operator|(T&& t, Prop) {
     using base_type = std::remove_cvref_t<T>;
     using helper = Prop::template apply<base_type>;

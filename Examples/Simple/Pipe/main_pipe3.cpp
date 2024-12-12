@@ -1,16 +1,10 @@
 #define IGNORE_ORDER_LIST
 
 #include "Base.hpp"
-#include "With.hpp"
+#include "Usage/With.hpp"
 #include "default_values.hpp"
+#include "print.hpp"
 #include "update.hpp"
-
-#include "Examples/PreetyPrint/PrintDamage.hpp"
-#include "Examples/PreetyPrint/PrintHealth.hpp"
-#include "Examples/PreetyPrint/PrintName.hpp"
-#include "Examples/PreetyPrint/PrintProtection.hpp"
-#include "Examples/demangle_type_name.hpp"
-#include "Taumaturgia/Properties/Helpers/pipeing.hpp"
 
 int main() {
     std::cout << '\n';
@@ -165,6 +159,22 @@ int main() {
     static_assert(std::is_same_v<
                   std::remove_reference_t<decltype(std::move(typeq2) | Create)>,
                   std::remove_reference_t<decltype(typeq2 | Create)>>);
+
+    {
+        impl::DataAndPropertiesList typeq3 =  // * moved
+            Test{500, 100}                    //
+            | With::Damage                    // * moved
+            | WithUnordered::Health           // * moved
+            ;
+        std::cout << "type q3     = " << name<decltype(typeq3)>() << '\n';
+
+        // auto type = typeq3 | Create; // ! Create required properties from same order group
+        // ? add "CreateOnOrder" for ordered and "CreateUnorder" for other ones
+        // ? or add implement adding properties in steps when mixed types occurs
+
+        // std::cout << "type q3     = " << name<decltype(std::move(typeq3) | Create)>() << '\n';
+        // std::cout << "type q3     = " << name<decltype(typeq3 | Create)>() << '\n';
+    }
 
     auto typew_list = With::Damage | With::Damage | With::Health | With::Health;
 

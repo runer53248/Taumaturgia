@@ -48,11 +48,17 @@ template <typename TYPE, typename T, typename... Tags>
 // requires(not std::is_reference_v<T>)
 class UserProperty_ : public T {
 public:
-    template <typename TAG>
-    using self = UserProperty_<TYPE, TAG, Tags...>;                        // make yourself one template argument type to satisfy PropertyData
+    template <typename TARGET>
+    using self = UserProperty_<TYPE, TARGET, Tags...>;                     // make yourself one template argument type to satisfy PropertyData
     using property_data = PropertyData<user_type_name, self, T, Tags...>;  // ? should add TYPE into PropertyData?
     using improvement_of = self<T>;                                        // will act like same type if TYPE and Tags are same
     // using hold_type = TYPE;  // unused
+
+    // template <typename TARGET>
+    // using apply = std::conditional_t<
+    //     trait_accessable<TARGET, TYPE>,
+    //     TARGET,
+    //     UserProperty_<TYPE, TARGET, Tags...>>;  // will act like same type if TYPE and Tags are same
 
     // MARK: Namingable tuple C-tors
 
@@ -217,29 +223,48 @@ private:
 
 namespace impl::Test {
 struct UserProperty_Test {};
-static_assert(traits::accessType<int>::accessable<UserProperty_<int, UserProperty_Test>>);
-static_assert(traits::accessType<int>::accessable<UserProperty_<int, tag>>);
+static_assert(trait_accessable<UserProperty_<int, UserProperty_Test>, int>);
+static_assert(trait_accessable<UserProperty_<int, tag>, int>);
 }  // namespace impl::Test
 
-template <typename TYPE, typename T, typename... Args>
-using UserProperty = std::conditional_t<
-    traits::accessType<TYPE>::template accessable<T>,
-    T,
-    std::conditional_t<
-        trait<TYPE>::template accessable<T>,  // ! requiring that trait<TYPE> exist
-        T,
-        impl::UserProperty_<TYPE, T, Args...>>>;
+#include "Helpers/derived_from_property.hpp"
 
-template <typename TYPE, typename... Args>
+template <typename TYPE, typename T, typename... Tags>
+using UserProperty = std::conditional_t<
+    trait_accessable<T, TYPE>,
+    T,
+    impl::UserProperty_<TYPE, T, Tags...>>;
+
+template <typename TYPE, typename... Tags>
 struct UserPropertyAdapter {
     template <typename T>
-    using type = UserProperty<TYPE, T, Args...>;
+    using type = UserProperty<TYPE, T, Tags...>;
 };
 
-template <typename TYPE, bool CONCEPT, typename... Args>
+// template <typename TYPE, typename... Tags>
+// struct Prop {
+//     // template <typename T>
+//     // struct then : impl::UserProperty_<TYPE, T, Tags...> {};
+
+//     template <typename T>
+//     using type = impl::UserProperty_<TYPE, T, Tags...>;
+// };
+
+template <typename TYPE, typename... Tags>
+struct AdvanceUserProperty {
+    // template <typename T>
+    // using type = Prop<TYPE, Tags...>::template type<T>;
+    template <typename T>
+    using type = impl::UserProperty_<TYPE, T, Tags...>;
+
+    template <typename T>
+    using order = UserPropertyAdapter<TYPE, Tags...>::template type<T>; // type valid for Property - pass is_property
+};
+
+template <typename TYPE, bool CONCEPT, typename... Tags>
 struct UserPropertyConceptAdapter {
     template <typename T>
-    using type = std::conditional_t<CONCEPT, T, UserProperty<TYPE, T, Args...>>;
+    using type = std::conditional_t<CONCEPT, T, UserProperty<TYPE, T, Tags...>>;
 };
 
 // TODO: check is this needed?
