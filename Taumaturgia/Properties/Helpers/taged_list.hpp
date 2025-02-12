@@ -11,9 +11,9 @@ struct list {
     list(const TT&) {}
 };
 
-// implicit conversion from Property<ALIAS> to list<ALIAS<tag>>
+// implicit conversion from Property<ALIAS> to list<Property<ALIAS>>
 template <template <template <typename...> typename> typename Prop, template <typename...> typename property>
-list(const Prop<property>&) -> list<property<tag>>;
+list(const Prop<property>&) -> list<Prop<property>>;
 
 template <typename T>
 concept have_property_data = requires {
