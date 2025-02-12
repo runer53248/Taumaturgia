@@ -3,6 +3,36 @@
 #include "build_into_t.hpp"
 
 namespace helpers::impl {
+
+template <typename property>
+struct is_property_type_ordered_impl {};  // invalid template argument
+template <template <typename...> typename property>
+    requires is_property<property>
+struct is_property_type_ordered_impl<Property<property>> {
+    static constexpr bool value = true;
+};
+template <template <typename...> typename property>
+    requires is_property<property>
+struct is_property_type_ordered_impl<Property_unordered<property>> {
+    static constexpr bool value = false;
+};
+
+}  // namespace helpers::impl
+
+namespace helpers {
+
+template <typename property>
+inline constexpr bool is_property_type_ordered = impl::is_property_type_ordered_impl<property>::value;
+
+template <typename... properties>
+inline constexpr bool all_properties_type_ordered = (std::conjunction_v<impl::is_property_type_ordered_impl<properties>...> == true);
+
+template <typename... properties>
+inline constexpr bool none_properties_type_ordered = (std::disjunction_v<impl::is_property_type_ordered_impl<properties>...> == false);
+
+}  // namespace helpers
+
+namespace helpers::impl {
 template <typename T, template <typename...> typename... properties>
     requires(is_property<properties> and ...)
 struct add_properties_ordered_impl {
@@ -33,32 +63,15 @@ struct add_properties_unordered_impl {
             create_unordered_property_list<properties...>>>;
 };
 
-template <typename property>
-struct property_type_ordered {};
-template <template <typename...> typename property>
-    requires is_property<property>
-struct property_type_ordered<Property<property>> {
-    static constexpr bool value = true;
-};
-template <template <typename...> typename property>
-    requires is_property<property>
-struct property_type_ordered<Property_unordered<property>> {
-    static constexpr bool value = false;
-};
-
 template <typename T, typename... properties>
 // requires(is_property<properties> and ...)
 struct add_properties_impl {
-    static constexpr auto num_of_ordered =  // count properties from Property
-        boost::mp11::mp_count<
-            list<boost::mp11::mp_bool<property_type_ordered<properties>::value>...>,
-            boost::mp11::mp_true>::value;
-    static_assert(num_of_ordered == 0 or num_of_ordered == sizeof...(properties), "All properties must be from one type: Property or Property_unordered.");
-
-    static constexpr bool is_ordered = num_of_ordered;
+    static_assert(
+        all_properties_type_ordered<properties...> or none_properties_type_ordered<properties...>,
+        "All properties must be of one type: ordered or unordered.");
 
     using scheme_type = std::conditional_t<
-        is_ordered,
+        all_properties_type_ordered<properties...>,
         Scheme<T>,
         Scheme_unordered<T>>;
 

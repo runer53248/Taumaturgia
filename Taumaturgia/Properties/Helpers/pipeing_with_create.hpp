@@ -14,6 +14,12 @@ struct DataAndPropertiesList {
     T data;
 };
 
+// create from DataAndPropertiesList
+template <typename T, typename... Props>
+decltype(auto) create_from_DAPL(T&& data) {
+    return (add_properties<std::remove_cvref_t<T>, Props...>{std::forward<T>(data)});
+}
+
 }  // namespace impl
 
 // Start DataAndPropertiesList pipe if property is applyable
@@ -58,22 +64,14 @@ struct Create_t {
 // Create new type object from DataAndPropertiesList
 template <typename T, typename... Props>
 decltype(auto) operator|(impl::DataAndPropertiesList<T, list<Props...>>&& tp, Create_t) {
-    using namespace boost::mp11;
-    static_assert(
-        mp_count<list<mp_bool<helpers::impl::property_type_ordered<Props>::value>...>, mp_true>::value == sizeof...(Props) or
-        mp_count<list<mp_bool<helpers::impl::property_type_ordered<Props>::value>...>, mp_false>::value == sizeof...(Props));
-    return (add_properties<std::remove_cvref_t<T>, Props...>{std::forward<T>(tp.data)});
+    return impl::create_from_DAPL<T, Props...>(std::forward<T>(tp.data));
 }
 // Create new type object from DataAndPropertiesList
 template <typename T, typename... Props>
 decltype(auto) operator|(impl::DataAndPropertiesList<T, list<Props...>>& tp, Create_t) {
-    using namespace boost::mp11;
-    static_assert(
-        mp_count<list<mp_bool<helpers::impl::property_type_ordered<Props>::value>...>, mp_true>::value == sizeof...(Props) or
-        mp_count<list<mp_bool<helpers::impl::property_type_ordered<Props>::value>...>, mp_false>::value == sizeof...(Props));
-    return (add_properties<std::remove_cvref_t<T>, Props...>{std::forward<T>(tp.data)});
+    return impl::create_from_DAPL<T, Props...>(std::forward<T>(tp.data));
 }
-// skip pipe when T isn't DataAndPropertiesList type
+// skip Create pipe when T isn't DataAndPropertiesList type
 template <typename T>
 decltype(auto) operator|(T&& tp, Create_t) {
     return (tp);
