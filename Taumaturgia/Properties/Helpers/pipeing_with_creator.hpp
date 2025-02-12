@@ -13,15 +13,15 @@ struct Creator {
 
     template <typename Arg, typename... Args>
     auto operator()(Arg&& arg, Args&&... args) const {
-        constexpr bool token_introduced = std::is_same_v<std::remove_cvref_t<Arg>, Token>;
+        constexpr bool arg_signals_unordered_args = std::is_same_v<std::remove_cvref_t<Arg>, decltype(unordered)>;
 
-        if constexpr (token_introduced) {                                        // token was introduced
-            if constexpr (std::constructible_from<result_type, Arg, Args...>) {  // can be constructed
+        if constexpr (arg_signals_unordered_args) {                                        // token was introduced
+            if constexpr (std::constructible_from<result_type, Arg, Args...>) {  // can be constructed with Arg
                 return result_type(std::forward<Arg>(arg), std::forward<Args>(args)...);
-            } else if constexpr (std::constructible_from<result_type, Args...>) {  // can be constructed, ignore Arg == Token
+            } else if constexpr (std::constructible_from<result_type, Args...>) {  // can be constructed without Arg
                 return result_type(std::forward<Args>(args)...);
             } else {
-                static_assert(false, "Creator with token introduced can't create result_type from given arguments!");
+                static_assert(false, "Creator with unordered args can't create result_type from given arguments!");
             }
         } else {  // token not introduced
             static_assert(std::constructible_from<result_type, Arg, Args...>, "Creator can't create result_type from given arguments!");
@@ -32,13 +32,10 @@ struct Creator {
 
 }  // namespace impl
 
-template <typename T>
-struct BaseType {};
-
 namespace From {
 
-// template <typename T>
-// struct BaseType {};
+template <typename T>
+struct BaseType {};
 
 template <typename T>
 [[maybe_unused]] constexpr BaseType<T> base{};  // can be used even when T don't have default C-tor.
@@ -50,7 +47,7 @@ template <
     template <template <typename...> typename> typename P,
     template <typename...> typename Prop>
     requires is_property_type<P>
-auto operator|(BaseType<T>, P<Prop>) -> impl::Creator<::add_properties<T, P<Prop>>> {
+auto operator|(From::BaseType<T>, P<Prop>) -> impl::Creator<::add_properties<T, P<Prop>>> {
     return {};
 }
 
