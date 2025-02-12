@@ -4,16 +4,16 @@
 #include "taged_list.hpp"
 
 #ifdef IGNORE_ORDER_LIST
-constexpr bool with_ignore_order_list = true;
+constexpr bool ignore_order_list = true;
 #else
-constexpr bool with_ignore_order_list = false;
+constexpr bool ignore_order_list = false;
 #endif
 
 template <typename T, template <typename...> typename... properties>
 using creator_add_properties = std::conditional_t<
-    with_ignore_order_list,
-    add_properties_ordered<T, properties...>,
-    add_properties_unordered<T, properties...>>;
+    ignore_order_list,
+    add_properties_unordered<T, properties...>,
+    add_properties_ordered<T, properties...>>;
 
 struct {
 } Create;
