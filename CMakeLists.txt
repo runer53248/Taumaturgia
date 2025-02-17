@@ -29,7 +29,8 @@ add_compile_options(
     -Werror
     # -Wshadow
     
-    -Wno-missing-braces
+    # -Wno-missing-braces
+    -Wno-changes-meaning
     # -fsanitize=undefined
 )
 
@@ -42,6 +43,11 @@ add_compile_definitions(
 )
 
 add_subdirectory(Examples/Simple_1)
+
+add_subdirectory(Examples/nn)
+add_subdirectory(Examples/nP)
+add_subdirectory(Examples/nS)
+add_subdirectory(Examples/nPnS)
 
 set(no_premade_properties true)
 set(no_premade_strategies true)
@@ -58,7 +64,7 @@ endif()
 
 set(addons ${NO_PREMADE_PROPERTIES}${NO_PREMADE_STRATEGIES})
 
-add_subdirectory(Examples)
+# add_subdirectory(Examples)
 add_subdirectory(Introduction)
 
 find_package(GTest REQUIRED)
