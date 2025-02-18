@@ -129,7 +129,6 @@ int main() {
         person.getTypeTaged<std::string, address_tag>(),
         person.getTypeTaged<std::string>());
 
-    // TODO: get by building list as template argument
     std::println("getTypeLike(list<type, tags...>{{}}) - get property by it's building list object");
     std::print(
         seven_types,
