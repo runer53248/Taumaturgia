@@ -1,6 +1,9 @@
 #pragma once
 #include "TypeConcepts.hpp"
 
+// TODO: hide accessType in traits::impl namespace as trait<T>::get is more specialized
+// TODO: make accessType::get for tagged access
+
 namespace traits {
 
 template <typename TYPE, typename CONVERT_TYPE = void>
