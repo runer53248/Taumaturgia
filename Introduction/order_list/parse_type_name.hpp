@@ -42,6 +42,11 @@ auto type_name(std::string text = name<T>()) {
 
     what = "impl::";  // replace pattern "impl::****_<" with "\nimpl::****_\n" or remove "impl::"
     for (size_t target = text.find(what); target != std::string::npos; target = text.find(what)) {
+        if (target > 0 and text.at(target - 1) == ',') {  // remove starting ','
+            text.replace(target - 1, 1, "");
+            --target;
+        }
+
         std::string ender = "_<";
         auto target_end = text.find(ender, target);
 
