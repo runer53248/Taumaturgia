@@ -4,17 +4,17 @@
 #include "Examples/demangle_type_name.hpp"
 
 template <typename T>
-auto type_name(std::string text = name<T>()) {
+auto type_name_result(std::string text = name<T>()) {  //! this version assumes that base type is named "Base" or "main::Base"
     struct Data {
         std::string type;
         std::string num;
         std::string tokens;
     };
-    std::vector<Data> result;
+
     struct Result {
         std::string base;
         std::vector<Data> properties;
-    };
+    } result;
 
     std::string what = name<std::string>();
     std::string into = "std::string";
@@ -113,7 +113,7 @@ auto type_name(std::string text = name<T>()) {
                 name.replace(e, 1, "");
             }
             auto pos = std::to_string(index++);
-            result.emplace_back(
+            result.properties.emplace_back(
                 name,
                 pos);
         }
@@ -160,7 +160,7 @@ auto type_name(std::string text = name<T>()) {
     find_and_replace(token_text, what, into);
 
     for (
-        size_t index = result.size(),
+        size_t index = result.properties.size(),
                offset = 0,
                start = token_text.find("[", offset),
                finish = token_text.find("]", offset);
@@ -174,21 +174,22 @@ auto type_name(std::string text = name<T>()) {
             break;
         }
         if (token.empty()) {
-            result[index - 1].tokens = "_";  // * mark empty token list
+            result.properties[index - 1].tokens = "_";  // * mark empty token list
         } else {
-            result[index - 1].tokens = token;
+            result.properties[index - 1].tokens = token;
         }
         index--;
         offset = finish + 1;
     }
 
-    text += '\n';
-    return Result{text, result};
+    // text += '\n';
+    result.base = text + '\n';
+    return result;
 };
 
 template <typename T>
 auto parse_type_name() {
-    auto data = type_name<T>();
+    auto data = type_name_result<T>();
 
     for (auto [type, pos, tokens] : data.properties) {
         std::cout << '\n'
