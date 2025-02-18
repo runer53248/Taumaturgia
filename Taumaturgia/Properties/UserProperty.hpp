@@ -7,6 +7,7 @@
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
 #include "Taumaturgia/Traits/trait.hpp"
 #include "Usage/Types/Name/Name.hpp"
+#include "UserDefaultValue.hpp"
 #include "unordered_token.hpp"
 
 namespace impl {
@@ -69,7 +70,7 @@ public:
 
     template <typename... INFO, typename... Args>
         requires(not std::is_same_v<TYPE, Name>)
-    UserProperty_(const Name& name, std::tuple<INFO...>&& type, Args&&... args)
+    constexpr UserProperty_(const Name& name, std::tuple<INFO...>&& type, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           type_{std::make_from_tuple<TYPE>(std::move(type))} {
         static_assert(constructible_from_args<TYPE, INFO...>, "Can't create TYPE from given tuple.");
@@ -77,7 +78,7 @@ public:
 
     template <typename... INFO, typename... Args>
         requires(not std::is_same_v<TYPE, Name>)
-    UserProperty_(const Name& name, const std::tuple<INFO...>& type, Args&&... args)
+    constexpr UserProperty_(const Name& name, const std::tuple<INFO...>& type, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           type_{std::make_from_tuple<TYPE>(type)} {
         static_assert(constructible_from_args<TYPE, INFO...>, "Can't create TYPE from given tuple.");
@@ -85,12 +86,12 @@ public:
 
     // MARK: Namingable default and ignore C-tors
 
-    UserProperty_(const Name& name)
+    constexpr UserProperty_(const Name& name)
         requires(not std::is_same_v<TYPE, Name> and std::constructible_from<T, Name>)
         : T{name} {}
 
     template <typename... Args>
-    UserProperty_(const Name& name, [[maybe_unused]] decltype(std::ignore) type, Args&&... args)
+    constexpr UserProperty_(const Name& name, [[maybe_unused]] decltype(std::ignore) type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<Args>(args)...} {}
 
@@ -98,7 +99,7 @@ public:
 
     template <typename... Args>
         requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
-    UserProperty_(const Token&, Args&&... args)
+    constexpr UserProperty_(const Token&, Args&&... args)
         : T{} {
         ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
     }
@@ -107,18 +108,18 @@ public:
 
     template <typename TT>
         requires(std::derived_from<T, std::remove_cvref_t<TT>>)
-    explicit UserProperty_(TT&& t)
+    constexpr explicit UserProperty_(TT&& t)
         : T{std::forward<TT>(t)} {}
 
     // MARK: Namingable type C-tors
 
     template <typename... Args>
-    UserProperty_(const Name& name, TYPE&& type, Args&&... args)
+    constexpr UserProperty_(const Name& name, TYPE&& type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<Args>(args)...}, type_{std::move(type)} {}
 
     template <typename... Args>
-    UserProperty_(const Name& name, const TYPE& type, Args&&... args)
+    constexpr UserProperty_(const Name& name, const TYPE& type, Args&&... args)
         requires(not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<Args>(args)...}, type_{type} {}
 
@@ -126,7 +127,7 @@ public:
 
     template <typename... V, typename... Args>
         requires contains_type<TYPE, V...> /*and Namingable<T>*/
-    UserProperty_(const Name& name, const std::variant<V...>& type, Args&&... args)
+    constexpr UserProperty_(const Name& name, const std::variant<V...>& type, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           type_{std::get_if<TYPE>(&type)
                     ? std::get<TYPE>(type)
@@ -134,7 +135,7 @@ public:
 
     template <typename... V, typename... Args>
         requires not_contains_type<TYPE, V...> /*and Namingable<T>*/
-    UserProperty_(const Name& name, [[maybe_unused]] const std::variant<V...>& type, Args&&... args)
+    constexpr UserProperty_(const Name& name, [[maybe_unused]] const std::variant<V...>& type, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
     // MARK: tuple C-tors
@@ -175,7 +176,7 @@ public:
 
     template <typename... V, typename... Args>
         requires contains_type<TYPE, V...>
-    UserProperty_(const std::variant<V...>& type, Args&&... args)
+    constexpr UserProperty_(const std::variant<V...>& type, Args&&... args)
         : T{std::forward<Args>(args)...},
           type_{std::get_if<TYPE>(&type)
                     ? std::get<TYPE>(type)
@@ -183,7 +184,7 @@ public:
 
     template <typename... V, typename... Args>
         requires not_contains_type<TYPE, V...>
-    UserProperty_([[maybe_unused]] const std::variant<V...>& type, Args&&... args)
+    constexpr UserProperty_([[maybe_unused]] const std::variant<V...>& type, Args&&... args)
         : T{std::forward<Args>(args)...} {}
 
     // MARK: getType
@@ -236,6 +237,16 @@ public:
             return T::template getTypeTaged<RETURN, TTags...>();
         }
     }
+    template <typename RETURN, typename... TTags>
+    constexpr decltype(auto) getTypeTaged() const& noexcept {
+        if constexpr (std::same_as<
+                          list<RETURN, TTags...>,
+                          list<TYPE, Tags...>>) {
+            return (type_);
+        } else if constexpr (get_type_taged_able<T, RETURN, TTags...>) {
+            return T::template getTypeTaged<RETURN, TTags...>();
+        }
+    }
 
     // MARK: getTypeLike
 
@@ -246,9 +257,20 @@ public:
     constexpr decltype(auto) getTypeLike([[maybe_unused]] TT<RETURN, TTags...> type_structure) & noexcept {
         return getTypeTaged<RETURN, TTags...>();
     }
+    template <
+        typename RETURN,
+        typename... TTags,
+        template <typename, typename...> typename TT = list>
+    constexpr decltype(auto) getTypeLike([[maybe_unused]] TT<RETURN, TTags...> type_structure) const& noexcept {
+        return getTypeTaged<RETURN, TTags...>();
+    }
 
     template <typename TT>
     constexpr decltype(auto) getTypeLike() & noexcept {
+        return getTypeLike(TT{});
+    }
+    template <typename TT>
+    constexpr decltype(auto) getTypeLike() const& noexcept {
         return getTypeLike(TT{});
     }
 
@@ -268,14 +290,32 @@ public:
             return T::template getTaged<SKIP, TTags...>();  // skip - diffrent tags
         }
     }
+    template <size_t SKIP, typename... TTags>
+    constexpr decltype(auto) getTaged() const& noexcept {
+        if constexpr (std::same_as<
+                          list<TTags...>,
+                          list<Tags...>>) {
+            if constexpr (SKIP > 0) {
+                return T::template getTaged<SKIP - 1, TTags...>();  // skip
+            } else {
+                return getTypeTaged<TYPE, TTags...>();  // return by tags and current type
+            }
+        } else {
+            return T::template getTaged<SKIP, TTags...>();  // skip - diffrent tags
+        }
+    }
 
     template <typename... TTags>
     constexpr decltype(auto) getTaged() & noexcept {
         return getTaged<0, TTags...>();
     }
+    template <typename... TTags>
+    constexpr decltype(auto) getTaged() const& noexcept {
+        return getTaged<0, TTags...>();
+    }
 
 private:
-    TYPE type_{};
+    TYPE type_ = UserDefaultValue<TYPE, Tags...>::value();  // specialization for default values
 };
 
 }  // namespace impl

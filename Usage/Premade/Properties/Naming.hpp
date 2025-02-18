@@ -2,6 +2,7 @@
 #include <boost/mp11.hpp>
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
 #include "Taumaturgia/Properties/unordered_token.hpp"
+#include "buildin_defaults.hpp"
 
 namespace impl {
 inline constinit const char naming_type_name[] = "Naming";
@@ -41,7 +42,7 @@ public:
     }
 
 private:
-    Name name_{};
+    Name name_ = buildin_defaults<Name>::get();
 };
 
 }  // namespace impl

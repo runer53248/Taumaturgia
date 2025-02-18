@@ -6,6 +6,7 @@
 #include "Taumaturgia/Properties/unordered_token.hpp"
 #include "Usage/Types/EffectTypeContainer/EffectTypeContainer.hpp"
 #include "Usage/Types/Name/Name.hpp"
+#include "buildin_defaults.hpp"
 
 namespace impl {
 inline constinit const char restoring_type_name[] = "Restoring";
@@ -95,7 +96,7 @@ public:
     }
 
 private:
-    EffectTypeContainer restoreEffects_{};
+    EffectTypeContainer restoreEffects_ = buildin_defaults<EffectTypeContainer>::get();
 };
 
 }  // namespace impl

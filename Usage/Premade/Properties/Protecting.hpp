@@ -5,6 +5,7 @@
 #include "Taumaturgia/Properties/unordered_token.hpp"
 #include "Usage/Types/Name/Name.hpp"
 #include "Usage/Types/Protection/Protection.hpp"
+#include "buildin_defaults.hpp"
 
 namespace impl {
 inline constinit const char protecting_type_name[] = "Protecting";
@@ -90,7 +91,7 @@ public:
     }
 
 private:
-    Protection protection_{};
+    Protection protection_ = buildin_defaults<Protection>::get();
 };
 
 }  // namespace impl

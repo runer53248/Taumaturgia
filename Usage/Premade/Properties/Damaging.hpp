@@ -6,6 +6,7 @@
 #include "Taumaturgia/Properties/unordered_token.hpp"
 #include "Usage/Types/Damage/Damage.hpp"
 #include "Usage/Types/Name/Name.hpp"
+#include "buildin_defaults.hpp"
 
 namespace impl {
 inline constinit const char damaging_type_name[] = "Damaging";
@@ -110,7 +111,7 @@ public:
     }
 
 private:
-    Damage dmg_{};
+    Damage dmg_ = buildin_defaults<Damage>::get();
 };
 
 }  // namespace impl

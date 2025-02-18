@@ -6,6 +6,7 @@
 #include "Taumaturgia/Properties/unordered_token.hpp"
 #include "Usage/Types/CureHealth/CureHealth.hpp"
 #include "Usage/Types/Name/Name.hpp"
+#include "buildin_defaults.hpp"
 
 namespace impl {
 inline constinit const char healing_type_name[] = "Healing";
@@ -91,7 +92,7 @@ public:
     }
 
 private:
-    CureHealth cureHealth_{};
+    CureHealth cureHealth_ = buildin_defaults<CureHealth>::get();
 };
 
 }  // namespace impl

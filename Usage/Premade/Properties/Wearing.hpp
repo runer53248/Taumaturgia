@@ -6,6 +6,7 @@
 #include "Taumaturgia/Properties/unordered_token.hpp"
 #include "Usage/Types/Name/Name.hpp"
 #include "Usage/Types/WearContainer/WearContainer.hpp"
+#include "buildin_defaults.hpp"
 
 namespace impl {
 inline constinit const char wearing_type_name[] = "Wearing";
@@ -91,7 +92,7 @@ public:
     }
 
 private:
-    WearContainer armorWear_{};
+    WearContainer armorWear_ = buildin_defaults<WearContainer>::get();
 };
 
 }  // namespace impl

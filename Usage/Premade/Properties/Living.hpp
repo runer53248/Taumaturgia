@@ -6,6 +6,7 @@
 #include "Taumaturgia/Properties/unordered_token.hpp"
 #include "Usage/Types/Health/Health.hpp"
 #include "Usage/Types/Name/Name.hpp"
+#include "buildin_defaults.hpp"
 
 namespace impl {
 inline constinit const char living_type_name[] = "Living";
@@ -91,7 +92,7 @@ public:
     }
 
 private:
-    Health hp_{};
+    Health hp_ = buildin_defaults<Health>::get();
 };
 
 }  // namespace impl
