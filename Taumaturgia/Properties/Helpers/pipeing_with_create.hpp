@@ -16,7 +16,7 @@ struct DataAndPropertiesList {
 
 // create from DataAndPropertiesList
 template <typename T, typename... Props>
-decltype(auto) create_from_DAPL(T&& data) {
+constexpr decltype(auto) create_from_DAPL(T&& data) {
     return (add_properties<std::remove_cvref_t<T>, Props...>{std::forward<T>(data)});
 }
 
@@ -27,7 +27,7 @@ template <typename T, typename Prop>
     requires requires {
         typename Prop::template apply<std::remove_cvref_t<T>>;
     }
-decltype(auto) operator|(T&& t, Prop) {
+constexpr decltype(auto) operator|(T&& t, Prop) {
     using base_type = std::remove_cvref_t<T>;
     using helper = Prop::template apply<base_type>;
     if constexpr (std::is_same_v<helper, base_type>) {  // ignore unnecessary property for type T
@@ -39,7 +39,7 @@ decltype(auto) operator|(T&& t, Prop) {
 
 // Add new property to DataAndPropertiesList
 template <typename T, typename... Props, typename Prop2>
-decltype(auto) operator|(impl::DataAndPropertiesList<T, list<Props...>>&& tp, Prop2) {
+constexpr decltype(auto) operator|(impl::DataAndPropertiesList<T, list<Props...>>&& tp, Prop2) {
     using base_type = std::remove_cvref_t<T>;
     using helper = Prop2::template apply<base_type>;
     if constexpr (std::is_same_v<helper, base_type>) {  // ignore unnecesary property for type T
@@ -59,20 +59,20 @@ decltype(auto) operator|(impl::DataAndPropertiesList<T, list<Props...>>&& tp, Pr
 }
 
 struct Create_t {
-} Create;
+} constexpr Create;
 
 // Create new type object from DataAndPropertiesList
 template <typename T, typename... Props>
-decltype(auto) operator|(impl::DataAndPropertiesList<T, list<Props...>>&& tp, Create_t) {
+constexpr decltype(auto) operator|(impl::DataAndPropertiesList<T, list<Props...>>&& tp, Create_t) {
     return impl::create_from_DAPL<T, Props...>(std::forward<T>(tp.data));
 }
 // Create new type object from DataAndPropertiesList
 template <typename T, typename... Props>
-decltype(auto) operator|(impl::DataAndPropertiesList<T, list<Props...>>& tp, Create_t) {
+constexpr decltype(auto) operator|(impl::DataAndPropertiesList<T, list<Props...>>& tp, Create_t) {
     return impl::create_from_DAPL<T, Props...>(std::forward<T>(tp.data));
 }
 // skip Create pipe when T isn't DataAndPropertiesList type
 template <typename T>
-decltype(auto) operator|(T&& tp, Create_t) {
+constexpr decltype(auto) operator|(T&& tp, Create_t) {
     return (tp);
 }
