@@ -1,8 +1,6 @@
 #include <print>
-#include "Examples/demangle_type_name.hpp"
-#include "Usage/With.hpp"
-
 #include "Introduction/parse_type_name.hpp"
+#include "Usage/With.hpp"
 
 struct Base {};
 
@@ -129,6 +127,18 @@ int main() {
         person.getTypeTaged<std::string, address_tag>(),
         person.getTypeTaged<std::string>());
 
+    std::println("getTaged<tags...>() / getTagedSKIP<index, tags...>() - get property by it's tags alone (with skipping for access toother types under same ones)");
+    std::print(
+        seven_types,
+        person.getTaged<0, name_tag>(),  // same as: person.getTaged<name_tag>()
+        person.getTaged<2, name_tag>(),
+        person.getTaged<1, name_tag>(),
+        person.getTaged<name_tag, tag_2>(),
+        person.getTaged<surname_tag>(),
+        person.getTaged<address_tag>(),
+        person.getTaged());
+    static_assert(&person.getTaged<0, name_tag>() == &person.getTaged<name_tag>());  // same reference
+
     std::println("getTypeLike(list<type, tags...>{{}}) - get property by it's building list object");
     std::print(
         seven_types,
@@ -151,18 +161,6 @@ int main() {
         person.getTypeLike<Address>(),
         person.getTypeLike<Info>());
 
-    std::println("getTaged<tags...>() / getTagedSKIP<index, tags...>() - get property by it's tags alone (with skipping for access toother types under same ones)");
-    std::print(
-        seven_types,
-        person.getTaged<0, name_tag>(),  // same as: person.getTaged<name_tag>()
-        person.getTaged<2, name_tag>(),
-        person.getTaged<1, name_tag>(),
-        person.getTaged<name_tag, tag_2>(),
-        person.getTaged<surname_tag>(),
-        person.getTaged<address_tag>(),
-        person.getTaged());
-    static_assert(&person.getTaged<0, name_tag>() == &person.getTaged<name_tag>());  // same reference
-
     // std::print("{}", ::name<Data>());
-    std::print("{}", parse_type_name<Data>());
+    std::print("{}\n\n", parse_type_name<Data>());
 }
