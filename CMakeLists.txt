@@ -8,10 +8,10 @@ endif()
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-message("Your C++ compiler supports these C++ features:")
-foreach(i ${CMAKE_CXX_COMPILE_FEATURES})
-  message("${i}")
-endforeach()
+# message("Your C++ compiler supports these C++ features:")
+# foreach(i ${CMAKE_CXX_COMPILE_FEATURES})
+#   message("${i}")
+# endforeach()
 
 find_package(Boost)
 if(Boost_FOUND)
@@ -44,29 +44,10 @@ add_compile_definitions(
 
 add_subdirectory(Examples/Simple_1)
 
+find_package(GTest REQUIRED)
+enable_testing()
+
 add_subdirectory(Examples/nn)
 add_subdirectory(Examples/nP)
 add_subdirectory(Examples/nS)
 add_subdirectory(Examples/nPnS)
-
-set(no_premade_properties true)
-set(no_premade_strategies true)
-
-if(no_premade_properties)
-  add_compile_definitions(NO_PREMADE_PROPERTIES)
-  set(NO_PREMADE_PROPERTIES "nP")
-endif()
-
-if(no_premade_strategies)
-  add_compile_definitions(NO_PREMADE_STRATEGIES)
-  set(NO_PREMADE_STRATEGIES "nS")
-endif()
-
-set(addons ${NO_PREMADE_PROPERTIES}${NO_PREMADE_STRATEGIES})
-
-# add_subdirectory(Examples)
-add_subdirectory(Introduction)
-
-find_package(GTest REQUIRED)
-enable_testing()
-add_subdirectory(Tests)

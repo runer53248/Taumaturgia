@@ -1,9 +1,9 @@
-add_executable(1_pipe_introduction
+add_executable(1_pipe_introduction_${addons}
     pipeing/pipe_introduction.cpp
 )
-add_executable(2_trait_introduction
+add_executable(2_trait_introduction_${addons}
     traits/traits_introduction.cpp
 )
-add_executable(3_order_list_introduction
+add_executable(3_order_list_introduction_${addons}
     order_list/order_list_introduction.cpp
 )
