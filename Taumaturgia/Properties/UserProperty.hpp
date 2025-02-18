@@ -12,6 +12,11 @@
 namespace impl {
 inline constinit const char user_type_name[] = "UserProperty";
 
+template <typename T, typename TYPE, typename... Tags>
+concept get_type_taged_able = requires {
+    T::template getTypeTaged<TYPE, Tags...>();
+};
+
 // MARK: UserProperty_
 
 template <typename TYPE, typename T, typename... Tags>
@@ -20,11 +25,11 @@ class UserProperty_;
 
 // MARK: UserProperty_ for tag
 
-template <typename TYPE>
-class UserProperty_<TYPE, tag> {
+template <typename TYPE /*, typename... Tags*/>
+class UserProperty_<TYPE, tag /*, Tags...*/> {
 public:
     template <typename TAG>
-    using self = UserProperty_<TYPE, TAG>;                          // make yourself one template argument type to satisfy PropertyData
+    using self = UserProperty_<TYPE, TAG /*, Tags...*/>;            // make yourself one template argument type to satisfy PropertyData
     using property_data = PropertyData<user_type_name, self, tag>;  // ? should add TYPE into PropertyData?
     using improvement_of = self<tag>;                               // will act like same type if TYPE and Tags are same
 
@@ -52,7 +57,7 @@ public:
     using self = UserProperty_<TYPE, TARGET, Tags...>;                     // make yourself one template argument type to satisfy PropertyData
     using property_data = PropertyData<user_type_name, self, T, Tags...>;  // ? should add TYPE into PropertyData?
     using improvement_of = self<T>;                                        // will act like same type if TYPE and Tags are same
-    // using hold_type = TYPE;  // unused
+    // using hold_type = TYPE;                                                // unused
 
     // template <typename TARGET>
     // using apply = std::conditional_t<
@@ -183,8 +188,6 @@ public:
 
     // MARK: getType
 
-    // TODO: consider replace digging with tags
-
     template <typename RETURN = TYPE, size_t DIG = 0>
     constexpr decltype(auto) getType() & noexcept {
         if constexpr (std::is_same_v<RETURN, TYPE>) {
@@ -194,9 +197,12 @@ public:
                 }
             }
             return (type_);
-        }
-        if constexpr (getType_template_able<T, RETURN>) {
-            return T::template getType<RETURN, DIG>();
+        } else {
+            if constexpr (getType_template_able<T, RETURN>) {
+                return T::template getType<RETURN, DIG>();
+            } else {
+                // static_assert(false, "WARNING: getType method tries to return void type");
+            }
         }
     }
 
@@ -209,10 +215,63 @@ public:
                 }
             }
             return (type_);
+        } else {
+            if constexpr (getType_template_able<T, RETURN>) {
+                return T::template getType<RETURN, DIG>();
+            } else {
+                // static_assert(false, "WARNING: getType method tries to return void type");
+            }
         }
-        if constexpr (getType_template_able<T, RETURN>) {
-            return T::template getType<RETURN, DIG>();
+    }
+
+    // MARK: getTypeTaged
+
+    template <typename RETURN, typename... TTags>
+    constexpr decltype(auto) getTypeTaged() & noexcept {
+        if constexpr (std::same_as<
+                          list<RETURN, TTags...>,
+                          list<TYPE, Tags...>>) {
+            return (type_);
+        } else if constexpr (get_type_taged_able<T, RETURN, TTags...>) {
+            return T::template getTypeTaged<RETURN, TTags...>();
         }
+    }
+
+    // MARK: getTypeLike
+
+    template <
+        typename RETURN,
+        typename... TTags,
+        template <typename, typename...> typename TT = list>
+    constexpr decltype(auto) getTypeLike([[maybe_unused]] TT<RETURN, TTags...> type_structure) & noexcept {
+        return getTypeTaged<RETURN, TTags...>();
+    }
+
+    template <typename TT>
+    constexpr decltype(auto) getTypeLike() & noexcept {
+        return getTypeLike(TT{});
+    }
+
+    // MARK: getTaged
+
+    template <size_t SKIP, typename... TTags>
+    constexpr decltype(auto) getTaged() & noexcept {
+        if constexpr (std::same_as<
+                          list<TTags...>,
+                          list<Tags...>>) {
+            if constexpr (SKIP > 0) {
+                return T::template getTaged<SKIP - 1, TTags...>();  // skip
+            } else {
+                return getTypeTaged<TYPE, TTags...>();  // return by tags and current type
+            }
+        } else {
+            return T::template getTaged<SKIP, TTags...>();  // skip - diffrent tags
+        }
+    }
+
+    template <typename... TTags>
+    constexpr decltype(auto) getTaged() & noexcept {
+        return getTaged<0, TTags...>();
     }
 
 private:
@@ -241,24 +300,13 @@ struct UserPropertyAdapter {
     using type = UserProperty<TYPE, T, Tags...>;
 };
 
-// template <typename TYPE, typename... Tags>
-// struct Prop {
-//     // template <typename T>
-//     // struct then : impl::UserProperty_<TYPE, T, Tags...> {};
-
-//     template <typename T>
-//     using type = impl::UserProperty_<TYPE, T, Tags...>;
-// };
-
 template <typename TYPE, typename... Tags>
 struct AdvanceUserProperty {
-    // template <typename T>
-    // using type = Prop<TYPE, Tags...>::template type<T>;
     template <typename T>
     using type = impl::UserProperty_<TYPE, T, Tags...>;
 
     template <typename T>
-    using order = UserPropertyAdapter<TYPE, Tags...>::template type<T>; // type valid for Property - pass is_property
+    using order = UserPropertyAdapter<TYPE, Tags...>::template type<T>;  // type valid for Property - pass is_property
 };
 
 template <typename TYPE, bool CONCEPT, typename... Tags>
