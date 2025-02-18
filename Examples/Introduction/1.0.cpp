@@ -2,7 +2,7 @@
 
 constexpr auto default_name = "Valid";
 
-// Namingable concepts is valif for types that:
+// Namingable concepts is valid for types that:
 /////////////////////////////////////////////////
 // * type that have public name member convertible to std::string or const std::string
 
