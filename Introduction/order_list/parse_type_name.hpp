@@ -40,11 +40,26 @@ auto type_name(std::string text = name<T>()) {
     what = "impl::UserProperty_<";
     find_and_replace(text, what, into);
 
-    what = "impl::Naming_<";  // FIXME: pattern "impl::****_<"
-    find_and_replace(text, what, "\nimpl::Naming_\n");
+    what = "impl::";  // replace pattern "impl::****_<" with "\nimpl::****_\n" or remove "impl::"
+    for (size_t target = text.find(what); target != std::string::npos; target = text.find(what)) {
+        std::string ender = "_<";
+        auto target_end = text.find(ender, target);
 
-    what = "impl::Damaging_<";  // FIXME:
-    find_and_replace(text, what, "\nimpl::Damaging_\n");
+        if (target_end != std::string::npos) {
+            auto pattern_size = (target_end - target) + ender.size();
+            auto pattern = text.substr(target, pattern_size - 1);  // pattern "impl::****_"
+
+            for (std::string illegal_char : {"<", ">", ","}) {  // end of pattern goes too far
+                if (pattern.contains(illegal_char)) {
+                    text.replace(target, what.size(), "");
+                    continue;
+                }
+            }
+            text.replace(target, pattern_size, "\n" + pattern + "\n");
+        } else {
+            text.replace(target, what.size(), "");
+        }
+    }
 
     what = "main::Base";
     into = "Base";
@@ -122,15 +137,15 @@ auto type_name(std::string text = name<T>()) {
     what = ">>";
     into = ">,[]>";
     find_and_replace(token_text, what, into);
-    
+
     what = "[]";
     into = "[";
     find_and_replace(token_text, what, into);
-    
+
     what = ">,";
     into = "], [";
     find_and_replace(token_text, what, into);
-    
+
     what = ">";
     into = "]";
     find_and_replace(token_text, what, into);
