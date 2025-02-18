@@ -3,7 +3,7 @@
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
 using i_p1 = AdvanceUserProperty<int, struct first_int>;
-using i_p2 = AdvanceUserProperty<int, struct second_int>;
+using i_p2 = AdvanceUserProperty<int, struct second_int, struct int_tag>;
 using i_p3 = AdvanceUserProperty<int, struct third_int>;
 using f_p = UserPropertyAdapter<float>;
 

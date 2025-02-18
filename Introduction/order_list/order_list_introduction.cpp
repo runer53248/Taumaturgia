@@ -1,10 +1,8 @@
 #define CUSTOM_ORDER_LIST
 #define ORDER_LIST_PATH "Introduction/order_list/order_list.hpp"
 
-#include <iostream>
-#include "Examples/PreetyPrint/PrintDamage.hpp"
-#include "Examples/demangle_type_name.hpp"
 #include "Usage/With.hpp"
+#include "parse_type_name.hpp"
 
 struct Base {};
 
@@ -48,59 +46,7 @@ int main() {
     using Type = decltype(type);
     Type type2{5, 15, 3.2f, "text", "title", true, 'a', 'b', Damage{100}};
 
-    auto parse_type_name = [](std::string text) {
-        std::string what = "impl::UserProperty_<";
-        size_t counter = 0;
-        std::string into = "\n";
-        for (
-            auto target = text.find(", " + what);
-            target != std::string::npos;
-            target = text.find(", " + what)) {
-            text.replace(target, what.size() + 2, " : " + std::to_string(counter++) + into);
-        }
-        for (
-            auto target = text.find(what);
-            target != std::string::npos;
-            target = text.find(what)) {
-            text.replace(target, what.size(), into);
-        }
-
-        what = name<std::string>();
-        into = "std::string";
-        for (
-            auto target = text.find(what);
-            target != std::string::npos;
-            target = text.find(what)) {
-            text.replace(target, what.size(), into);
-        }
-
-        size_t after_base = std::string::npos;
-        if (auto target = text.find(", Base>,"); target != std::string::npos) {
-            text.replace(target, 8, " : " + std::to_string(counter++) + "\n-> Base\n");
-            after_base = target;
-        }
-        if (auto target = text.find(", Base, "); target != std::string::npos) {
-            text.replace(target, 8, " : " + std::to_string(counter++) + "\n-> Base\n");
-            after_base = target;
-        }
-
-        if (after_base != std::string::npos) {
-            text.insert(after_base + 13, "Tokens: ");
-        }
-        what = ">";
-        into = "";
-        for (
-            auto target = text.find(what, after_base + 13);
-            target != std::string::npos;
-            target = text.find(what, after_base + 13)) {
-            text.replace(target, what.size(), into);
-        }
-
-        text += '\n';
-        return text;
-    };
-
-    std::cout << "decltype(type) " << parse_type_name(name<decltype(type2)>()) << '\n';
+    std::cout << "decltype(type) " << parse_type_name<decltype(type2)>() << '\n';
     std::cout << "int         " << type2.getType<int, 0>() << '\n';
     std::cout << "int         " << type2.getType<int, 1>() << '\n';
     std::cout << "float       " << type2.getType<float>() << '\n';
@@ -114,7 +60,7 @@ int main() {
     std::cout << "Damage      " << trait<Damage>::get(type2) << '\n';
     std::cout << '\n';
 
-    std::cout << "Type1 " << parse_type_name(name<decltype(type)>()) << '\n';
+    std::cout << "Type1 " << parse_type_name<decltype(type)>() << '\n';
     std::cout << '\n';
 
     using Type2 = add_properties_ordered<Base, i_p2::type, i_p3::type, f_p::type, i_p1::type>;
@@ -124,11 +70,11 @@ int main() {
                       Property<i_p2_t>,
                       Property<i_p3_t>>::value == false);
 
-    std::cout << "Type2 " << parse_type_name(name<Type2>()) << '\n';
-    std::cout << "Type3 " << parse_type_name(name<Type3>()) << '\n';
+    std::cout << "Type2 " << parse_type_name<Type2>() << '\n';
+    std::cout << "Type3 " << parse_type_name<Type3>() << '\n';
     std::cout << '\n';
 
-    std::cout << "add_properties_ordered<Base, i_p2_t, i_p3_t> " << parse_type_name(name<add_properties_ordered<Base, i_p2_t, i_p3_t>>())
+    std::cout << "add_properties_ordered<Base, i_p2_t, i_p3_t> " << parse_type_name<add_properties_ordered<Base, i_p2_t, i_p3_t>>()
               << '\n';
 
     std::cout << Property<i_p1::type>::value << '\n';
