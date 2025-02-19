@@ -1,10 +1,16 @@
 # Traits
 
-### ***`Access traits`*** feature is used to provide universal way for accessing data and restricts single way of access. The ***trait_accessable*** concept confirm that getters return reference as it's also needed as setter.
+### **`Access traits`** feature is used to provide universal way for accessing data and it restrict single way of access. 
 
-Feature check data accessibility by:
+The ***trait_accessable*** concept confirm that getters return reference as it's also needed as setter.
 
-1. it's name (if it's same to build-in ***`access trait`*** or named ***type***)
+## Ways of accessing data checked by **`Access traits`** feature:
+
+<details>
+<summary>
+1. it's name 
+(if it's same to build-in <strong><code>access trait</code></strong> or named <em><strong>type</strong></em>)
+</summary>
 
 ```cpp
 struct Type { Name name; };
@@ -12,8 +18,12 @@ Type type;
 
 type.name;
 ```
-
-2. it's getter (if it's name like build-in ***`access trait`*** for given type or like ***getType***)
+</details>
+<details>
+<summary>
+2. it's getter 
+(if it's name like build-in <strong><code>access trait</code></strong> for given type or like <em><strong>getType</strong></em>)
+</summary>
 
 ```cpp
 class Type { 
@@ -27,10 +37,14 @@ public:
 
 type.getName();
 ```
+</details>
+<details>
+<summary>
+3. build-in getter
+(if it's derived from build-in <strong><code>property</code></strong>)
+</summary>
 
-3. build-in getter - if it's derived from build-in ***`property`***.
-
-```cpp;
+```cpp
 struct Base{};
 auto type = Base{}  //
     | With::Damage  //
@@ -39,8 +53,12 @@ auto type = Base{}  //
 type.getDamage();
 // type.getType(); // if With::Damage is build-in based on UserProperty 
 ```
-
-4. ***getType*** getter - if it's derived from user ***`property`***.
+</details>
+<details>
+<summary>
+4. build-in <em><strong>getType<></strong></em> getter 
+(if it's derived from user <strong><code>property</code></strong>)
+</summary>
 
 ```cpp
 struct Base{};
@@ -50,16 +68,40 @@ auto type = Base{}                      //
 
 type.getType<std::string>();
 ```
-
-5. **traits::CustomAccessType** specialization - for custom getters or public members.
-
-
-### How to access data from custom name, getter or other ways
-
-For data that can be accessed in other ways (or not at all) ***`access traits`*** feature provide struct **traits::CustomAccessType** to implement it's specialization.
+</details>
+<details>
+<summary>
+5. <strong>traits::CustomAccessType</strong> specialization
+(for custom getters or public members)
+</summary>
 
 ```cpp
-struct CustomName { // aggregate with custom type name
+struct Base {
+    Name very_specific_name;
+};
+
+template <typename T>
+    requires std::is_base_of_v<Base, T>
+struct traits::CustomAccessType<Name, T> {
+    static constexpr decltype(auto) get(auto& el) {
+        return (el.very_specific_name);
+    }
+};
+
+Base type;
+traits::CustomAccessType<Name, std::remove_cvref_t<decltype(type)>>::get(type);
+```
+</details>
+
+## How to access data from custom name, getter or other ways
+
+For data that can be accessed in other ways (or not at all) **`access traits`** feature provide struct **traits::CustomAccessType** to implement it's specialization.
+
+<details>
+<summary>example 1</summary>
+
+```cpp
+struct CustomName { // aggregate with custom Name member
     Name other;
 };
 
@@ -70,14 +112,14 @@ struct traits::CustomAccessType<Name, T> {
         return (el.other);
     }
 };
-
-CustomName type{};
-auto value = trait<Name>::get(type);
-auto value_2 = type.other;
 ```
 
+</details>
+<details>
+<summary>example 2</summary>
+
 ```cpp
-struct CustomName { // custom getter
+struct CustomName { // struct with custom Name getter
     decltype(auto) name(this auto& self) { return (self.name); }
 private:
     Name name_;
@@ -90,14 +132,15 @@ struct traits::CustomAccessType<Name, T> {
         return (el.name());
     }
 };
-
-CustomName type{};
-auto value = trait<Name>::get(type);
-auto value_2 = type.name();
 ```
 
+</details>
+
+<details>
+<summary>example 3</summary>
+
 ```cpp
-struct CustomName { // no data stored in type
+struct CustomName { // struct without Name member
     auto name() & { return Name{"t_custom_name"}; }
     auto name() const& { return Name{"const t_custom_name"}; }
 };
@@ -109,67 +152,48 @@ struct traits::CustomAccessType<Name, T> {
         return (el.name());
     }
 };
-
-CustomName type{};
-auto value = trait<Name>::get(type);
-auto value_2 = type.name();
 ```
 
-### Access data using ***`access traits`*** feature
-Regardless of how you normaly access the data, you can also access it using ***`access traits`***.
+</summary>
+</details>
 
 ```cpp
-// direct version 
+// usage
+CustomName type{};
+auto value = trait<Name>::get(type);
+// auto value_2 = type.other; // for example 1
+// auto value_2 = type.name(); // for examples 2-3
+```
+
+## Access data using **`access traits`** feature
+Regardless of how you normaly access the data, you can also access it using **`access traits`**.
+
+```cpp
+// direct version
 traits::accessArmorWear::get(type);
 traits::accessCureHealth::get(type);
 traits::accessDamage::get(type);
-
-// general version
+```
+```cpp
+// user type version 
+traits::accessType<int>::get(type);
+traits::accessType<float>::get(type);
+traits::accessType<std::string>::get(type);
+```
+```cpp
+// universal version
 trait<WearContainer>::get(type);
 trait<CureHealth>::get(type);
 trait<Damage>::get(type);
+
+trait<int>::get(type);
+trait<float>::get(type);
+trait<std::string>::get(type);
 ```
 
-### Check accessability
-Accessibility can be checked using ***trait_accessable*** alias:
+## Universal getter - ***trait<>***
 
-```cpp
-using ENCAPSULATE_TYPE = int;
-// direct version 
-static_assert(traits::accessType<ENCAPSULATE_TYPE>::get(type));
-// generall version
-static_assert(trait<ENCAPSULATE_TYPE>::get(type));
-```
-
-```cpp
-using ENCAPSULATE_TYPE = int;
-bool is_accessable = trait_accessable<decltype(type), WearContainer>;
-bool is_accessable = trait_accessable<decltype(type), ENCAPSULATE_TYPE>;
-```
-
-Basic usage of trait:
-
-- for getter
-
-```cpp
-auto type =                    //
-    Base{}                     //
-    | With::Damage             //
-    | With::user_property<int> //
-    | Create;                  //
-auto dmg = trait<Damage>::get(type);
-auto value = trait<int>::get(type);
-```
-
-- for accessibility check
-
-```cpp
-using Type = decltype(type);
-bool is_damage_accessable = trait_accessable<Type, Damage>;
-bool is_int_accessable = trait_accessable<Type, int>;
-```
-
-### The ***`trait`*** is the alias for ***`trait access`*** struct. Every ***`trait access`*** struct should also implement ***accessable*** member for ***trait_accessable*** alias.
+### The ***trait<>*** is the alias for **`trait access`** struct. 
 
 ```cpp
 // general case
@@ -190,7 +214,32 @@ struct trait_<Damage> {
 
 template <typename T>
 using trait = trait_<T>::type;
+```
+### Basic usage of ***trait<>*** getter:
+```cpp
+auto type =                    //
+    Base{}                     //
+    | With::Damage             //
+    | With::user_property<int> //
+    | Create;                  //
+auto dmg = trait<Damage>::get(type);
+auto value = trait<int>::get(type);
+```
 
+## Check accessability - ***trait_accessable<>***
+
+### Accessibility can be checked using ***trait_accessable*** concept. 
+The ***trait_accessable<>*** is a concept base on **`trait access`** ***accessable*** member. 
+
+Every **`trait access`** struct should implement ***accessable*** member for ***trait_accessable***.
+
+```cpp
 template <typename T, typename TYPE>
 concept trait_accessable = trait<TYPE>::template accessable<T>;
+```
+### Basic usage of ***trait_accessable<>*** for accessibility check:
+```cpp
+using Type = decltype(type);
+bool is_damage_accessable = trait_accessable<Type, Damage>;
+bool is_int_accessable = trait_accessable<Type, int>;
 ```
