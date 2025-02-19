@@ -50,23 +50,40 @@ auto type = Base{}  //
     | With::Damage  //
     | Create;       //
 
-type.getDamage();
-// type.getType(); // if With::Damage is build-in based on UserProperty 
+#ifndef NO_PREMADE_PROPERTIES
+type.getDamage(); // when With::Damage is build-in property
+#else
+type.getType();   // when With::Damage is based on UserProperty
+#endif
 ```
 </details>
 <details>
 <summary>
-4. build-in <em><strong>getType<></strong></em> getter 
+4. build-in 
+<em><strong>getType<></strong></em>, 
+<em><strong>getTypeTaged<></strong></em>, 
+<em><strong>getTypeLike<></strong></em>, 
+<em><strong>getTaged<></strong></em> getters 
 (if it's derived from user <strong><code>property</code></strong>)
 </summary>
 
 ```cpp
 struct Base{};
-auto type = Base{}                      //
-    | With::user_property<std::string>  //
-    | Create;                           //
+auto type = Base{}                             //
+    | With::user_property<int>                 //
+    | With::user_property<std::string>         //
+    | With::user_property<std::string, Base>   //
+    | Create;                                  //
 
-type.getType<std::string>();
+type.getType<>();            // results int - closest getType
+type.getType<std::string>(); // results first std::string
+
+// results second std::string
+type.getType<std::string, 1>();
+type.getTypeTaged<std::string, Base>();
+using build_list = list<std::string, Base>;
+type.getTypeLike<build_list>();
+type.getTaged<Base>();
 ```
 </details>
 <details>
