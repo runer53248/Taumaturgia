@@ -4,7 +4,10 @@
     template <typename T>                                                      \
     struct traits::CustomAccessType<##Type, T> {                               \
         inline static traits::CustomAccessType<##Type, T>* mock = nullptr;     \
-        static constexpr decltype(auto) get(auto& el) {                        \
+                                                                               \
+        template <typename TT>                                                 \
+            requires std::same_as<TestType, std::remove_cvref_t<TT>>           \
+        static constexpr decltype(auto) get(TT& el) {                          \
             if (mock) {                                                        \
                 return mock->get_(el);                                         \
             }                                                                  \

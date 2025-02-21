@@ -10,7 +10,9 @@ struct traits::CustomAccessType {
     MOCK_METHOD(TYPE&, get_, (T & el));
     MOCK_METHOD(const TYPE&, get_, (const T& el));
 
-    static constexpr decltype(auto) get(auto& el) {
+    template <typename TT>
+        requires std::same_as<TestType, std::remove_cvref_t<TT>>
+    static constexpr decltype(auto) get(TT& el) {
         return mock->get_(el);
     }
 };

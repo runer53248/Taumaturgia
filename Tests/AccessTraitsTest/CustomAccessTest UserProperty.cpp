@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
-#include "Usage/DefaultStrategies.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
+#include "Usage/DefaultStrategies.hpp"
 
 using namespace testing;
 
 struct MyType {};
 using UserTestType = UserProperty<Name, MyType>;
+using TestType = UserTestType;
 
 #include "Mocks/MockCustomAccessType.hpp"
 
@@ -34,7 +35,7 @@ protected:
     }
 };
 
- auto& operator<<(std::ostream& stream, const Name& name) {
+auto& operator<<(std::ostream& stream, const Name& name) {
     return stream << std::string(name);
 }
 
