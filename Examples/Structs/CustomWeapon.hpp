@@ -5,7 +5,7 @@
 #ifdef WITH_ADD_PROPERTIES
 struct WithDefaultWeaponVector {
     std::vector<DefaultWeapon> others{
-        // will be used in AttackStrategy_<CustomWeapon>
+        // will be used in AttackStrategy_<CustomWeapon> / UserStrategy_<Damage, CustomWeapon>
         DefaultWeapon{Name{"Light weapon"}, Damage{10}},
         DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
 };
@@ -17,7 +17,7 @@ using CustomWeapon = add_properties_ordered<
 struct CustomWeapon {  // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
     Name name;
     std::vector<DefaultWeapon> others{
-        // will be used in AttackStrategy_<CustomWeapon>
+        // will be used in AttackStrategy_<CustomWeapon> / UserStrategy_<Damage, CustomWeapon>
         DefaultWeapon{Name{"Light weapon"}, Damage{10}},
         DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
 };
@@ -49,10 +49,12 @@ struct AttackStrategy_<T> {
             std::cout << '\n';
         }
 
-        if constexpr (Damagingable<typename decltype(obj.others)::value_type>) {
-            for (auto& other : obj.others) {
-                status = default_attack_behavior(other, suspect);
-                std::cout << "\t\t " << other << '\n';
+        if constexpr (requires { obj.others; }) {
+            if constexpr (Damagingable<typename decltype(obj.others)::value_type>) {
+                for (auto& other : obj.others) {
+                    status = default_attack_behavior(other, suspect);
+                    std::cout << "\t\t " << other << '\n';
+                }
             }
         }
         return status;

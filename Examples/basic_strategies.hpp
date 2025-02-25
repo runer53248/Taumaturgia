@@ -6,12 +6,10 @@
 
 template <typename TYPE>
 struct UserStrategy_<TYPE, Default> {
-    // std::optional<AliveStatus>
     static constexpr std::optional<AliveStatus> operator()(Livingable auto&) {
         return AliveStatus::Living;
     }
 
-    // ActionStatus
     static constexpr ActionStatus operator()(auto&, Object*, Object*) {
         return ActionStatus::Success;
     }
