@@ -142,24 +142,24 @@ int main() {
     std::println("getTypeLike(list<type, tags...>{{}}) - get property by it's building list object");
     std::print(
         seven_types,
-        person.getTypeLike(int_name),
-        person.getTypeLike(float_name),
-        person.getTypeLike(name),
-        person.getTypeLike(name_2),
-        person.getTypeLike(surname),
-        person.getTypeLike(address),
-        person.getTypeLike(info));
+        person.getTypeOf(int_name),
+        person.getTypeOf(float_name),
+        person.getTypeOf(name),
+        person.getTypeOf(name_2),
+        person.getTypeOf(surname),
+        person.getTypeOf(address),
+        person.getTypeOf(info));
 
     std::println("getTypeLike<list<type, tags...>>() - get property by it's building list type");
     std::print(
         seven_types,
-        person.getTypeLike<Int_name>(),
-        person.getTypeLike<Float_name>(),
-        person.getTypeLike<Name>(),
-        person.getTypeLike<Name_2>(),
-        person.getTypeLike<Surname>(),
-        person.getTypeLike<Address>(),
-        person.getTypeLike<Info>());
+        person.getTypeOfSignature<Int_name>(),
+        person.getTypeOfSignature<Float_name>(),
+        person.getTypeOfSignature<Name>(),
+        person.getTypeOfSignature<Name_2>(),
+        person.getTypeOfSignature<Surname>(),
+        person.getTypeOfSignature<Address>(),
+        person.getTypeOfSignature<Info>());
 
     // std::print("{}", ::name<Data>());
     std::print("{}\n\n", parse_type_name<Data>());

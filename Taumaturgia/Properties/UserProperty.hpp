@@ -248,30 +248,26 @@ public:
         }
     }
 
-    // MARK: getTypeLike
+    // MARK: getTypeOf
 
-    template <
-        typename RETURN,
-        typename... TTags,
-        template <typename, typename...> typename TT = list>
-    constexpr decltype(auto) getTypeLike([[maybe_unused]] TT<RETURN, TTags...> type_structure) & noexcept {
+    template <typename RETURN, typename... TTags>
+    constexpr decltype(auto) getTypeOf([[maybe_unused]] list<RETURN, TTags...> signature) & noexcept {
         return getTypeTaged<RETURN, TTags...>();
     }
-    template <
-        typename RETURN,
-        typename... TTags,
-        template <typename, typename...> typename TT = list>
-    constexpr decltype(auto) getTypeLike([[maybe_unused]] TT<RETURN, TTags...> type_structure) const& noexcept {
+    template <typename RETURN, typename... TTags>
+    constexpr decltype(auto) getTypeOf([[maybe_unused]] list<RETURN, TTags...> signature) const& noexcept {
         return getTypeTaged<RETURN, TTags...>();
     }
 
-    template <typename TT>
-    constexpr decltype(auto) getTypeLike() & noexcept {
-        return getTypeLike(TT{});
+    // MARK: getTypeOfSignature
+
+    template <typename Signature>
+    constexpr decltype(auto) getTypeOfSignature() & noexcept {
+        return getTypeOf(Signature{});
     }
-    template <typename TT>
-    constexpr decltype(auto) getTypeLike() const& noexcept {
-        return getTypeLike(TT{});
+    template <typename Signature>
+    constexpr decltype(auto) getTypeOfSignature() const& noexcept {
+        return getTypeOf(Signature{});
     }
 
     // MARK: getTaged
@@ -322,8 +318,49 @@ private:
 
 namespace impl::Test {
 struct UserProperty_Test {};
-static_assert(trait_accessable<UserProperty_<int, UserProperty_Test>, int>);
-static_assert(trait_accessable<UserProperty_<int, tag>, int>);
+using type = int;
+using tested_type = UserProperty_<type, UserProperty_Test>;
+using tested_tag = UserProperty_<type, tag>;
+
+static_assert(trait_accessable<tested_type, type>);
+static_assert(trait_accessable<tested_tag, type>);
+
+static_assert(traits::helpers::trait_accessable<tested_type, traits::accessType<type>, type>);
+static_assert(traits::GetTypeAccessable<tested_type, type>);
+
+static_assert(requires(std::remove_cvref_t<tested_type> x) {  // same as traits::GetTypeAccessable<tested_type, type>
+    { x.getType() } -> std::same_as<type&>;
+    { std::as_const(x).getType() } -> std::same_as<const type&>;
+});
+static_assert(requires(std::remove_cvref_t<tested_type> x) {
+    { x.getType<type>() } -> std::same_as<type&>;
+    { std::as_const(x).getType<type>() } -> std::same_as<const type&>;
+});
+static_assert(requires(std::remove_cvref_t<tested_type> x) {
+    { x.getTypeTaged<type>() } -> std::same_as<type&>;
+    { std::as_const(x).getTypeTaged<type>() } -> std::same_as<const type&>;
+});
+static_assert(requires(std::remove_cvref_t<tested_type> x) {
+    { x.getTypeTaged<type>() } -> std::same_as<type&>;
+    { std::as_const(x).getTypeTaged<type>() } -> std::same_as<const type&>;
+});
+static_assert(requires(std::remove_cvref_t<tested_type> x) {
+    { x.getTaged() } -> std::same_as<type&>;
+    { std::as_const(x).getTaged() } -> std::same_as<const type&>;
+});
+static_assert(requires(std::remove_cvref_t<tested_type> x) {
+    { x.getTaged<0>() } -> std::same_as<type&>;
+    { std::as_const(x).getTaged<0>() } -> std::same_as<const type&>;
+});
+static_assert(requires(std::remove_cvref_t<tested_type> x) {
+    { x.getTypeOf(list<type>{}) } -> std::same_as<type&>;
+    { std::as_const(x).getTypeOf(list<type>{}) } -> std::same_as<const type&>;
+});
+static_assert(requires(std::remove_cvref_t<tested_type> x) {
+    { x.getTypeOfSignature<list<type>>() } -> std::same_as<type&>;
+    { std::as_const(x).getTypeOfSignature<list<type>>() } -> std::same_as<const type&>;
+});
+
 }  // namespace impl::Test
 
 #include "Helpers/derived_from_property.hpp"
