@@ -33,6 +33,10 @@ auto type_name_result(std::string text = name<T>()) {  //! this version assumes 
         }
     };
 
+    what = "main::Base";
+    into = "Base";
+    find_and_replace(text, what, into);
+
     into = "\n";
     what = ",impl::UserProperty_<";
     find_and_replace(text, what, into);
@@ -40,12 +44,12 @@ auto type_name_result(std::string text = name<T>()) {  //! this version assumes 
     what = "impl::UserProperty_<";
     find_and_replace(text, what, into);
 
+    into = "\nimpl::";
+    what = ",impl::";
+    find_and_replace(text, what, into);
+
     what = "impl::";  // replace pattern "impl::****_<" with "\nimpl::****_\n" or remove "impl::"
     for (size_t target = text.find(what); target != std::string::npos; target = text.find(what)) {
-        if (target > 0 and text.at(target - 1) == ',') {  // remove starting ','
-            text.replace(target - 1, 1, "");
-            --target;
-        }
 
         std::string ender = "_<";
         auto target_end = text.find(ender, target);
@@ -65,10 +69,6 @@ auto type_name_result(std::string text = name<T>()) {  //! this version assumes 
             text.replace(target, what.size(), "");
         }
     }
-
-    what = "main::Base";
-    into = "Base";
-    find_and_replace(text, what, into);
 
     if (auto target = text.find_last_of("<", text.find("Base") - 1); target != std::string::npos) {
         size_t limit = text.find_last_of("<", text.find("Base") - 1);
