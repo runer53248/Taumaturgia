@@ -1,7 +1,7 @@
 #pragma once
 #include "Taumaturgia/Traits/TypeConcepts.hpp"
 
-struct Name;
+class Name;
 
 struct CustomName_1 {  // aggregate with custom Name member
     Name other;

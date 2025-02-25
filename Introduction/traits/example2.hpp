@@ -1,7 +1,7 @@
 #pragma once
 #include "Taumaturgia/Traits/TypeConcepts.hpp"
 
-struct Name;
+class Name;
 
 struct CustomName_2 {  // struct with custom Name getter
     decltype(auto) name(this auto& self) { return (self.name_); }

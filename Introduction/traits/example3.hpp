@@ -1,7 +1,7 @@
 #pragma once
 #include "Taumaturgia/Traits/TypeConcepts.hpp"
 
-struct Name;
+class Name;
 
 struct CustomName_3 {  // struct without Name member
     auto name() & { return Name{"t_custom_name"}; }
