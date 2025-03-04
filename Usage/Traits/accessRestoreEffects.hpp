@@ -7,6 +7,8 @@ class EffectTypeContainer;
 
 namespace traits {
 
+namespace helpers {
+
 template <typename T>
 concept RestoreEffectsAccessable = requires(T x) {
     x.restoreEffects;
@@ -19,17 +21,19 @@ concept GetRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
     { std::as_const(x).getRestoreEffects() } -> std::same_as<const EffectTypeContainer&>;
 };
 
+}  // namespace helpers
+
 struct accessRestoreEffects : public impl::accessType<EffectTypeContainer> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessRestoreEffects, EffectTypeContainer>;
 
-    template <RestoreEffectsAccessable T>
+    template <helpers::RestoreEffectsAccessable T>
         requires(not accessType<EffectTypeContainer>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return (el.restoreEffects);
     }
 
-    template <GetRestoreEffectsAccessable T>
+    template <helpers::GetRestoreEffectsAccessable T>
         requires(not accessType<EffectTypeContainer>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getRestoreEffects();

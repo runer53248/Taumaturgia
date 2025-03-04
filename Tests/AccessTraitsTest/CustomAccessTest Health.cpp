@@ -69,7 +69,7 @@ TEST_F(Health_Fixture, Access_by_getHealth) {
 }
 
 TEST_F(Health_Fixture, Access_by_trait_accessHealth_with_CustomAccessHealth) {
-    static_assert(traits::CustomTypeAccessable<TestType, Health>);
+    static_assert(traits::helpers::CustomTypeAccessable<TestType, Health>);
 
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_hp));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_hp));

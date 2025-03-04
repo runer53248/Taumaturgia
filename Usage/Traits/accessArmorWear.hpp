@@ -7,6 +7,8 @@ class WearContainer;
 
 namespace traits {
 
+namespace helpers {
+
 template <typename T>
 concept ArmorWearAccessable = requires(T x) {
     x.armorWear;
@@ -19,17 +21,19 @@ concept GetArmorWearAccessable = requires(std::remove_cvref_t<T> x) {
     { std::as_const(x).getArmorWear() } -> std::same_as<const WearContainer&>;
 };
 
+}  // namespace helpers
+
 struct accessArmorWear : public impl::accessType<WearContainer> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessArmorWear, WearContainer>;
 
-    template <ArmorWearAccessable T>
+    template <helpers::ArmorWearAccessable T>
         requires(not accessType<WearContainer>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return (el.armorWear);
     }
 
-    template <GetArmorWearAccessable T>
+    template <helpers::GetArmorWearAccessable T>
         requires(not accessType<WearContainer>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getArmorWear();

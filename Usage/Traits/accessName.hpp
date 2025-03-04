@@ -7,6 +7,7 @@
 class Name;
 
 namespace traits {
+namespace helpers {
 
 template <typename T>
 concept NameAccessable = requires(T x) {
@@ -20,17 +21,19 @@ concept GetNameAccessable = requires(std::remove_cvref_t<T> x) {
     { std::as_const(x).getName() } -> std::convertible_to<const std::string>;
 };
 
+}  // namespace helpers
+
 struct accessName : public impl::accessType<Name, std::string> {
     template <typename T>
     static const bool accessable = helpers::trait_access_convertable<T, accessName, std::string>;
 
-    template <NameAccessable T>
+    template <helpers::NameAccessable T>
         requires(not accessType<Name, std::string>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return (el.name);
     }
 
-    template <GetNameAccessable T>
+    template <helpers::GetNameAccessable T>
         requires(not accessType<Name, std::string>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getName();

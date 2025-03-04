@@ -73,7 +73,7 @@ TEST_F(ArmorWear_Fixture, Access_by_getArmorWear_or_getType) {
 }
 
 TEST_F(ArmorWear_Fixture, Access_by_trait_accessArmorWear_with_CustomAccessType) {
-    static_assert(traits::CustomTypeAccessable<TestType, WearContainer>);
+    static_assert(traits::helpers::CustomTypeAccessable<TestType, WearContainer>);
 
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_armor));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_armor));

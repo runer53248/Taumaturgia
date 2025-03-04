@@ -69,7 +69,7 @@ TEST_F(RestoreEffects_Fixture, Access_by_getRestoreEffects) {
 }
 
 TEST_F(RestoreEffects_Fixture, Access_by_trait_accessRestoreEffects_with_CustomAccessRestoreEffects) {
-    static_assert(traits::CustomTypeAccessable<TestType, EffectTypeContainer>);
+    static_assert(traits::helpers::CustomTypeAccessable<TestType, EffectTypeContainer>);
 
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_restoreEffects));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_restoreEffects));

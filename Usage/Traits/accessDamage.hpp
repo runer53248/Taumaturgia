@@ -7,6 +7,8 @@ class Damage;
 
 namespace traits {
 
+namespace helpers {
+
 template <typename T>
 concept DamageAccessable = requires(T x) {
     x.dmg;
@@ -19,17 +21,19 @@ concept GetDamageAccessable = requires(std::remove_cvref_t<T> x) {
     { std::as_const(x).getDamage() } -> std::same_as<const Damage&>;
 };
 
+}  // namespace helpers
+
 struct accessDamage : public impl::accessType<Damage> {
     template <typename T>
     static constexpr bool accessable = helpers::trait_accessable<T, accessDamage, Damage>;
 
-    template <DamageAccessable T>
+    template <helpers::DamageAccessable T>
         requires(not accessType<Damage>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return (el.dmg);
     }
 
-    template <GetDamageAccessable T>
+    template <helpers::GetDamageAccessable T>
         requires(not accessType<Damage>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getDamage();
