@@ -136,7 +136,7 @@ int main() {
     std::cout << "list_t:       " << name<Scheme<x_type>::list_t>() << '\n';
     std::cout << '\n';
     using y_type = add_properties_ordered<x_type, Wearing, Restoring>;
-    std::cout << "y_type:       " << name<y_type>() << " Need to be fixed - should be the same as z_type" << '\n';
+    std::cout << "y_type:       " << name<y_type>() << '\n';
     std::cout << "base:         " << name<Scheme<y_type>::base>() << '\n';
     std::cout << "list_helper:  " << name<Scheme<y_type>::list_helper>() << '\n';
     std::cout << "list_t:       " << name<Scheme<y_type>::list_t>() << '\n';
@@ -147,6 +147,7 @@ int main() {
     std::cout << "list_helper:  " << name<Scheme<z_type>::list_helper>() << '\n';
     std::cout << "list_t:       " << name<Scheme<z_type>::list_t>() << '\n';
     std::cout << '\n';
+    static_assert(std::same_as<y_type, z_type>);
 
     using b_type = add_properties_ordered<test_struct, B, Wearing, Restoring, A, A, Protecting, Living, B>;  // correctly ordered type
     std::cout << "b_type:       " << name<b_type>() << '\n';
