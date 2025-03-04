@@ -1,31 +1,42 @@
 #pragma once
+#include <type_traits>
+#include <utility>  // for as_const
 #include "Taumaturgia/Traits/trait.hpp"
-#include "Usage/Types/EffectTypeContainer/RestoreEffectsConcepts.hpp"
+
+class EffectTypeContainer;
 
 namespace traits {
 
-#ifdef ACCESS_TRAIT_MACRO
-CreateAccessTrait(RestoreEffects, restoreEffects, EffectTypeContainer);
-#else
+template <typename T>
+concept RestoreEffectsAccessable = requires(T x) {
+    x.restoreEffects;
+    std::is_same_v<decltype(T::restoreEffects), EffectTypeContainer>;
+};
+
+template <typename T>
+concept GetRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
+    { x.getRestoreEffects() } -> std::same_as<EffectTypeContainer&>;
+    { std::as_const(x).getRestoreEffects() } -> std::same_as<const EffectTypeContainer&>;
+};
+
 struct accessRestoreEffects : public impl::accessType<EffectTypeContainer> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessRestoreEffects, EffectTypeContainer>;
 
     template <RestoreEffectsAccessable T>
-    requires(not accessType<EffectTypeContainer>::accessable<T>)
+        requires(not accessType<EffectTypeContainer>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return (el.restoreEffects);
     }
 
     template <GetRestoreEffectsAccessable T>
-    requires(not accessType<EffectTypeContainer>::accessable<T>)
+        requires(not accessType<EffectTypeContainer>::accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getRestoreEffects();
     }
 
     using accessType<EffectTypeContainer>::get;
 };
-#endif
 
 }  // namespace traits
 

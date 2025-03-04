@@ -38,10 +38,6 @@ add_compile_options(
 
 include_directories(${PROJECT_SOURCE_DIR})
 
-add_compile_definitions(
-  # ACCESS_TRAIT_MACRO
-)
-
 add_subdirectory(Examples/Simple_1)
 
 find_package(GTest REQUIRED)

@@ -1,12 +1,25 @@
 #pragma once
+#include <string>
+#include <type_traits>
+#include <utility>  // for as_const
 #include "Taumaturgia/Traits/trait.hpp"
-#include "Usage/Types/Name/NameConcepts.hpp"
+
+class Name;
 
 namespace traits {
 
-#ifdef ACCESS_TRAIT_MACRO
-CreateAccessTrait(Name, name, Name);
-#else
+template <typename T>
+concept NameAccessable = requires(T x) {
+    x.name;
+    requires std::is_convertible_v<decltype(T::name), std::string>;
+};
+
+template <typename T>
+concept GetNameAccessable = requires(std::remove_cvref_t<T> x) {
+    { x.getName() } -> std::convertible_to<std::string>;
+    { std::as_const(x).getName() } -> std::convertible_to<const std::string>;
+};
+
 struct accessName : public impl::accessType<Name, std::string> {
     template <typename T>
     static const bool accessable = helpers::trait_access_convertable<T, accessName, std::string>;
@@ -25,7 +38,6 @@ struct accessName : public impl::accessType<Name, std::string> {
 
     using accessType<Name, std::string>::get;
 };
-#endif
 
 }  // namespace traits
 

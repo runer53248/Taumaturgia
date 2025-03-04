@@ -1,12 +1,24 @@
 #pragma once
+#include <type_traits>
+#include <utility>  // for as_const
 #include "Taumaturgia/Traits/trait.hpp"
-#include "Usage/Types/Protection/ProtectionConcepts.hpp"
+
+class Protection;
 
 namespace traits {
 
-#ifdef ACCESS_TRAIT_MACRO
-CreateAccessTrait(Protection, protection, Protection);
-#else
+template <typename T>
+concept ProtectionAccessable = requires(T x) {
+    x.protection;
+    std::is_same_v<decltype(T::protection), Protection>;
+};
+
+template <typename T>
+concept GetProtectionAccessable = requires(std::remove_cvref_t<T> x) {
+    { x.getProtection() } -> std::same_as<Protection&>;
+    { std::as_const(x).getProtection() } -> std::same_as<const Protection&>;
+};
+
 struct accessProtection : public impl::accessType<Protection> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessProtection, Protection>;
@@ -25,7 +37,6 @@ struct accessProtection : public impl::accessType<Protection> {
 
     using accessType<Protection>::get;
 };
-#endif
 
 }  // namespace traits
 

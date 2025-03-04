@@ -1,12 +1,24 @@
 #pragma once
+#include <type_traits>
+#include <utility>  // for as_const
 #include "Taumaturgia/Traits/trait.hpp"
-#include "Usage/Types/CureHealth/CureHealthConcepts.hpp"
+
+class CureHealth;
 
 namespace traits {
 
-#ifdef ACCESS_TRAIT_MACRO
-CreateAccessTrait(CureHealth, cureHealth, CureHealth);
-#else
+template <typename T>
+concept CureHealthAccessable = requires(T x) {
+    x.cureHealth;
+    std::is_same_v<decltype(T::cureHealth), CureHealth>;
+};
+
+template <typename T>
+concept GetCureHealthAccessable = requires(std::remove_cvref_t<T> x) {
+    { x.getCureHealth() } -> std::same_as<CureHealth&>;
+    { std::as_const(x).getCureHealth() } -> std::same_as<const CureHealth&>;
+};
+
 struct accessCureHealth : public impl::accessType<CureHealth> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessCureHealth, CureHealth>;
@@ -25,7 +37,6 @@ struct accessCureHealth : public impl::accessType<CureHealth> {
 
     using accessType<CureHealth>::get;
 };
-#endif
 
 }  // namespace traits
 
