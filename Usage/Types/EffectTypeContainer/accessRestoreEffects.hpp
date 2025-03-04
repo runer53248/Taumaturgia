@@ -7,7 +7,7 @@ namespace traits {
 #ifdef ACCESS_TRAIT_MACRO
 CreateAccessTrait(RestoreEffects, restoreEffects, EffectTypeContainer);
 #else
-struct accessRestoreEffects : public accessType<EffectTypeContainer> {
+struct accessRestoreEffects : public impl::accessType<EffectTypeContainer> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessRestoreEffects, EffectTypeContainer>;
 

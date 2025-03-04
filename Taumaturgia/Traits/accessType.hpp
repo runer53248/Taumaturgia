@@ -1,10 +1,9 @@
 #pragma once
 #include "TypeConcepts.hpp"
 
-// TODO: hide accessType in traits::impl namespace as trait<T>::get is more specialized
 // TODO: make accessType::get for tagged access
 
-namespace traits {
+namespace traits::impl {
 
 template <typename TYPE, typename CONVERT_TYPE = void>
 struct accessType {
@@ -37,10 +36,10 @@ struct accessType {
     }
 };
 
-}  // namespace traits
+}  // namespace traits::impl
 
 template <typename T, typename RESULT_TYPE>
-concept accessType_trait_able = traits::helpers::trait_accessable<T, traits::accessType<RESULT_TYPE>, RESULT_TYPE>;
+concept accessType_trait_able = traits::helpers::trait_accessable<T, traits::impl::accessType<RESULT_TYPE>, RESULT_TYPE>;
 
 template <typename T, typename RESULT_TYPE>
 concept getType_template_able = traits::GetTypeTemplateAccessable<T, RESULT_TYPE>;

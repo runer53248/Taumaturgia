@@ -325,7 +325,7 @@ using tested_tag = UserProperty_<type, tag>;
 static_assert(trait_accessable<tested_type, type>);
 static_assert(trait_accessable<tested_tag, type>);
 
-static_assert(traits::helpers::trait_accessable<tested_type, traits::accessType<type>, type>);
+static_assert(traits::helpers::trait_accessable<tested_type, trait<type>, type>);
 static_assert(traits::GetTypeAccessable<tested_type, type>);
 
 static_assert(requires(std::remove_cvref_t<tested_type> x) {  // same as traits::GetTypeAccessable<tested_type, type>

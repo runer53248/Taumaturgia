@@ -7,7 +7,7 @@ namespace traits {
 #ifdef ACCESS_TRAIT_MACRO
 CreateAccessTrait(CureHealth, cureHealth, CureHealth);
 #else
-struct accessCureHealth : public accessType<CureHealth> {
+struct accessCureHealth : public impl::accessType<CureHealth> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessCureHealth, CureHealth>;
 

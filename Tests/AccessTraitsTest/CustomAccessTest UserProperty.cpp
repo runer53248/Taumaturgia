@@ -43,8 +43,8 @@ TEST_F(UserProperty_Fixture, Access_by_trait_accessType_with_CustomAccessType) {
     EXPECT_CALL(customMock, get_(An<UserTestType&>())).Times(1).WillRepeatedly(ReturnRef(default_name));
     EXPECT_CALL(customMock, get_(An<const UserTestType&>())).Times(1).WillRepeatedly(ReturnRef(default_name));
 
-    decltype(auto) name = traits::accessType<Name>::get((*type));
-    decltype(auto) name_const = traits::accessType<Name>::get(std::as_const((*type)));
+    decltype(auto) name = trait<Name>::get((*type));
+    decltype(auto) name_const = trait<Name>::get(std::as_const((*type)));
 
     static_assert(traits::GetTypeTemplateAccessable<decltype((*type)), Name>);
     static_assert(traits::CustomTypeAccessable<decltype((*type)), Name>);

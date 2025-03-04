@@ -23,7 +23,7 @@ using CureHealthType = add_properties_ordered<
 int main() {
     CureHealthType cureHealthType{5, CureValueType::CURRENT_PERCENT, EffectContainer{Effect{EffectType::Burn}, Effect{EffectType::Devour}}};
 
-    std::cout << traits::accessType<int>::get(cureHealthType);
-    std::cout << toString(traits::accessType<CureValueType>::get(cureHealthType));
-    std::cout << traits::accessType<EffectContainer>::get(cureHealthType) << '\n';
+    std::cout << trait<int>::get(cureHealthType);
+    std::cout << toString(trait<CureValueType>::get(cureHealthType));
+    std::cout << trait<EffectContainer>::get(cureHealthType) << '\n';
 }

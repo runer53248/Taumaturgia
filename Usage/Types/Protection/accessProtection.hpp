@@ -7,7 +7,7 @@ namespace traits {
 #ifdef ACCESS_TRAIT_MACRO
 CreateAccessTrait(Protection, protection, Protection);
 #else
-struct accessProtection : public accessType<Protection> {
+struct accessProtection : public impl::accessType<Protection> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessProtection, Protection>;
 

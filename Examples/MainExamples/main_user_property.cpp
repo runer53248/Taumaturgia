@@ -23,7 +23,7 @@ struct name_type2 {
 template <typename TYPE, typename T>
     requires std::is_base_of_v<impl::UserProperty_<TYPE, name_type2>, T>
 struct traits::CustomAccessType<TYPE, T> {
-    static constexpr decltype(auto) get(impl::UserProperty_<TYPE, name_type2>& el) {
+    static constexpr decltype(auto) get(::impl::UserProperty_<TYPE, name_type2>& el) {
         if consteval {
             // if (std::is_constant_evaluated()) {
         } else {
@@ -32,7 +32,7 @@ struct traits::CustomAccessType<TYPE, T> {
         return el.template getType<TYPE>();
     }
 
-    static constexpr decltype(auto) get(const impl::UserProperty_<TYPE, name_type2>& el) {
+    static constexpr decltype(auto) get(const ::impl::UserProperty_<TYPE, name_type2>& el) {
         if consteval {
             // if (std::is_constant_evaluated()) {
         } else {
@@ -74,10 +74,10 @@ struct UserStrategy_<TYPE, Default> {
     static constexpr ActionStatus operator()(accessType_trait_able<TYPE> auto& obj) {
         if consteval {
             // if (std::is_constant_evaluated()) {
-            traits::accessType<TYPE>::get(obj);
+            trait<TYPE>::get(obj);
         } else {
             std::cout << "UserStrategy_ call ";
-            decltype(auto) value = traits::accessType<TYPE>::get(obj);
+            decltype(auto) value = trait<TYPE>::get(obj);
             std::cout << " = " << value << "\n";
         }
         return ActionStatus::Success;
@@ -192,13 +192,13 @@ int main() {
             UserPropertyAdapter<float>::type>;
         UserClass5_1 type1{Name{}, value_i_1, value_f_1};
         std::cout << "default traits::accessType \n";
-        decltype(auto) x = traits::accessType<float>::get(std::as_const(type1));
+        decltype(auto) x = trait<float>::get(std::as_const(type1));
         std::cout << x << '\n';
-        decltype(auto) y = traits::accessType<float>::get(type1);
+        decltype(auto) y = trait<float>::get(type1);
         std::cout << y << '\n';
-        decltype(auto) x2 = traits::accessType<int>::get(std::as_const(type1));
+        decltype(auto) x2 = trait<int>::get(std::as_const(type1));
         std::cout << x2 << '\n';
-        decltype(auto) y2 = traits::accessType<int>::get(type1);
+        decltype(auto) y2 = trait<int>::get(type1);
         std::cout << y2 << '\n';
         std::cout << '\n';
     }
@@ -210,13 +210,13 @@ int main() {
             UserPropertyAdapter<int>::type,
             UserPropertyAdapter<float>::type>;
         UserClass5_2 type2{Name{}, value_i_2, value_f_2};
-        decltype(auto) x = traits::accessType<float>::get(std::as_const(type2));
+        decltype(auto) x = trait<float>::get(std::as_const(type2));
         std::cout << x << '\n';
-        decltype(auto) y = traits::accessType<float>::get(type2);
+        decltype(auto) y = trait<float>::get(type2);
         std::cout << y << '\n';
-        decltype(auto) x2 = traits::accessType<int>::get(std::as_const(type2));
+        decltype(auto) x2 = trait<int>::get(std::as_const(type2));
         std::cout << x2 << '\n';
-        decltype(auto) y2 = traits::accessType<int>::get(type2);
+        decltype(auto) y2 = trait<int>::get(type2);
         std::cout << y2 << '\n';
         std::cout << '\n';
     }
@@ -228,13 +228,13 @@ int main() {
             UserPropertyAdapter<int>::type,
             UserPropertyAdapter<float>::type>;
         UserClass5_3 type3{Name{}, value_i_3, value_f_3};
-        decltype(auto) x = traits::accessType<float>::get(std::as_const(type3));
+        decltype(auto) x = trait<float>::get(std::as_const(type3));
         std::cout << x << '\n';
-        decltype(auto) y = traits::accessType<float>::get(type3);
+        decltype(auto) y = trait<float>::get(type3);
         std::cout << y << '\n';
-        decltype(auto) x2 = traits::accessType<int>::get(std::as_const(type3));
+        decltype(auto) x2 = trait<int>::get(std::as_const(type3));
         std::cout << x2 << '\n';
-        decltype(auto) y2 = traits::accessType<int>::get(type3);
+        decltype(auto) y2 = trait<int>::get(type3);
         std::cout << y2 << '\n';
         std::cout << '\n';
     }

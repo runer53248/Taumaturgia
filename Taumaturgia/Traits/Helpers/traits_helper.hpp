@@ -3,6 +3,7 @@
 #include <utility>  // for as_const
 
 namespace traits::helpers {
+
 template <typename T, typename TRAIT, typename TYPE>
 concept trait_accessable = requires(std::remove_cvref_t<T> x) {
     { TRAIT::get(x) } -> std::same_as<TYPE&>;
@@ -47,6 +48,7 @@ concept get_type_template_convertible = requires(std::remove_cvref_t<T> x) {
     { x.template getType<TYPE>() } -> std::convertible_to<CONVERT_TYPE>;
     { std::as_const(x).template getType<TYPE>() } -> std::convertible_to<const CONVERT_TYPE>;
 };
+
 }  // namespace traits::helpers
 
 #ifdef ACCESS_TRAIT_MACRO

@@ -7,7 +7,7 @@ namespace traits {
 #ifdef ACCESS_TRAIT_MACRO
 CreateAccessTrait(ArmorWear, armorWear, WearContainer);
 #else
-struct accessArmorWear : public accessType<WearContainer> {
+struct accessArmorWear : public impl::accessType<WearContainer> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessArmorWear, WearContainer>;
 

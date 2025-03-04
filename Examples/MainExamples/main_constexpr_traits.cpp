@@ -33,10 +33,10 @@ struct traits::CustomAccessType<TYPE, Type_int> {
 int main() {
     Type_int type_a{/*Name{"name"},*/ 15};
 
-    decltype(auto) x = traits::accessType<int>::get(type_a);
+    decltype(auto) x = trait<int>::get(type_a);
     std::cout << name<decltype(x)>() << ' ';
     std::cout << x << '\n';
-    decltype(auto) x2 = traits::accessType<int>::get(std::as_const(type_a));
+    decltype(auto) x2 = trait<int>::get(std::as_const(type_a));
     std::cout << name<decltype(x2)>() << ' ';
     std::cout << x2 << '\n';
 
@@ -44,13 +44,13 @@ int main() {
 
     constexpr Type_int type_b{/*Name{"name"},*/ 15};
 
-    decltype(auto) x3 = traits::accessType<int>::get(type_b);
+    decltype(auto) x3 = trait<int>::get(type_b);
     std::cout << name<decltype(x3)>() << ' ';
     std::cout << x3 << '\n';
-    decltype(auto) x4 = traits::accessType<int>::get(std::as_const(type_b));
+    decltype(auto) x4 = trait<int>::get(std::as_const(type_b));
     std::cout << name<decltype(x4)>() << ' ';
     std::cout << x4 << '\n';
 
-    static_assert(traits::accessType<int>::get(type_b) == 15);
-    static_assert(traits::accessType<int>::get(std::as_const(type_b)) == 15);
+    static_assert(trait<int>::get(type_b) == 15);
+    static_assert(trait<int>::get(std::as_const(type_b)) == 15);
 }

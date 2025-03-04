@@ -94,8 +94,8 @@ TEST_F(UserType_with_UserProperty_Fixture, Access_by_trait_accessType_with_Custo
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_type_1));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_type_1));
 
-    decltype(auto) userType = traits::accessType<type_1>::get((*type));
-    decltype(auto) userType_const = traits::accessType<type_1>::get(std::as_const((*type)));
+    decltype(auto) userType = trait<type_1>::get((*type));
+    decltype(auto) userType_const = trait<type_1>::get(std::as_const((*type)));
 
     static_assert(not std::is_const_v<std::remove_reference_t<decltype(userType)>>);
     static_assert(std::is_const_v<std::remove_reference_t<decltype(userType_const)>>);
@@ -104,7 +104,7 @@ TEST_F(UserType_with_UserProperty_Fixture, Access_by_trait_accessType_with_Custo
     EXPECT_EQ(userType_const, default_type_1);
 
     userType = default_type_1_change;
-    userType = traits::accessType<type_1>::get((*type));
+    userType = trait<type_1>::get((*type));
 
     EXPECT_EQ(userType, default_type_1_change);
 }

@@ -7,7 +7,7 @@ namespace traits {
 #ifdef ACCESS_TRAIT_MACRO
 CreateAccessTrait(Name, name, Name);
 #else
-struct accessName : public accessType<Name, std::string> {
+struct accessName : public impl::accessType<Name, std::string> {
     template <typename T>
     static const bool accessable = helpers::trait_access_convertable<T, accessName, std::string>;
 

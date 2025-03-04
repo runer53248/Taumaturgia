@@ -2,8 +2,8 @@
 #include <typeinfo>
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/demangle_type_name.hpp"
-#include "Usage/Properties.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
+#include "Usage/Properties.hpp"
 
 struct MyType {
     MyType() noexcept = default;
@@ -26,7 +26,7 @@ using Type_nest_two = add_properties_ordered<Type_nest_one, UserPropertyAdapter<
 
 template <typename T, typename TYPE = Damage, typename C = struct TOKEN>
 using UserProperty2 = UserProperty<TYPE, T, C, struct TEST, void>;
-using Type_complex = add_properties_ordered<MyType, UserProperty2>;  // add_properties allow nest one level at the time
+using Type_complex = add_properties_ordered<MyType, UserProperty2>;          // add_properties allow nest one level at the time
 using Type_complex_2 = add_properties_ordered<Type_complex, UserProperty2>;  // add_properties allow nest one level at the time
 
 template <typename T>
@@ -60,8 +60,7 @@ int main() {
 
     Type_no_nest type_no{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
     std::cout << "Type_no_nest" << '\n';
-    std::cout << ((type_no.getType<Damage>() == trait<Damage>::get(type_no)) and  //
-                  (type_no.getType<Damage>() == traits::accessType<Damage>::get(type_no)))
+    std::cout << ((type_no.getType<Damage>() == trait<Damage>::get(type_no)))
               << '\n';
     std::cout << type_no.getType<Damage>() << '\n';
     std::cout << type_no.getType<Damage, 1>() << '\n';  // dig to deeper type if can
@@ -72,8 +71,7 @@ int main() {
 
     Type_unlimited_nest type_u{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
     std::cout << "Type_unlimited_nest" << '\n';
-    std::cout << ((type_u.getType<Damage>() == trait<Damage>::get(type_u)) and  //
-                  (type_u.getType<Damage>() == traits::accessType<Damage>::get(type_u)))
+    std::cout << ((type_u.getType<Damage>() == trait<Damage>::get(type_u)))
               << '\n';
     std::cout << type_u.getType<Damage>() << '\n';
     std::cout << type_u.getType<Damage, 1>() << '\n';  // dig to deeper type if can
@@ -84,8 +82,7 @@ int main() {
 
     Type_nest_unlimited_one type2{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
     std::cout << "Type_nest_unlimited_one" << '\n';
-    std::cout << ((type2.getType<Damage>() == trait<Damage>::get(type2)) and  //
-                  (type2.getType<Damage>() == traits::accessType<Damage>::get(type2)))
+    std::cout << ((type2.getType<Damage>() == trait<Damage>::get(type2)))
               << '\n';
     std::cout << type2.getType<Damage>() << '\n';
     std::cout << type2.getType<Damage, 1>() << '\n';  // dig to deeper type if can
@@ -96,8 +93,7 @@ int main() {
 
     Type_nest_unlimited_two type3{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
     std::cout << "Type_nest_unlimited_two" << '\n';
-    std::cout << ((type3.getType<Damage>() == trait<Damage>::get(type3)) and  //
-                  (type3.getType<Damage>() == traits::accessType<Damage>::get(type3)))
+    std::cout << ((type3.getType<Damage>() == trait<Damage>::get(type3)))
               << '\n';
     std::cout << type3.getType<Damage>() << '\n';
     std::cout << type3.getType<Damage, 1>() << '\n';  // dig to deeper type if can
@@ -108,8 +104,7 @@ int main() {
 
     Type_complex type4{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
     std::cout << "Type_complex" << '\n';
-    std::cout << ((type4.getType<Damage>() == trait<Damage>::get(type4)) and  //
-                  (type4.getType<Damage>() == traits::accessType<Damage>::get(type4)))
+    std::cout << ((type4.getType<Damage>() == trait<Damage>::get(type4)))
               << '\n';
     std::cout << type4.getType<Damage>() << '\n';
     std::cout << type4.getType<Damage, 1>() << '\n';  // dig to deeper type if can
@@ -120,8 +115,7 @@ int main() {
 
     Type_complex_2 type5{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
     std::cout << "Type_complex_2" << '\n';
-    std::cout << ((type5.getType<Damage>() == trait<Damage>::get(type5)) and  //
-                  (type5.getType<Damage>() == traits::accessType<Damage>::get(type5)))
+    std::cout << ((type5.getType<Damage>() == trait<Damage>::get(type5)))
               << '\n';
     std::cout << type5.getType<Damage>() << '\n';
     std::cout << type5.getType<Damage, 1>() << '\n';  // dig to deeper type if can
@@ -132,8 +126,7 @@ int main() {
 
     Type_tag_complex type6{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
     std::cout << "Type_tag_complex" << '\n';
-    std::cout << ((type6.getType<Damage>() == trait<Damage>::get(type6)) and  //
-                  (type6.getType<Damage>() == traits::accessType<Damage>::get(type6)))
+    std::cout << ((type6.getType<Damage>() == trait<Damage>::get(type6)))
               << '\n';
     std::cout << type6.getType<Damage>() << '\n';
     std::cout << type6.getType<Damage, 1>() << '\n';  // dig to deeper type if can
