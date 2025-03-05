@@ -13,8 +13,8 @@ template <typename T>
 using Living_impl = impl::Living_<T>;
 template <typename T>
 using Wearing_impl = impl::Wearing_<T>;
-template <typename T>
-using Damaging_impl = impl::Damaging_<T>;
+template <typename T, typename... Tags>
+using Damaging_impl = impl::Damaging_<T, Tags...>;
 template <typename T>
 using Protecting_impl = impl::Protecting_<T>;
 template <typename T>

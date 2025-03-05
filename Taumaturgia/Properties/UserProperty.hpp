@@ -24,15 +24,21 @@ template <typename TYPE, typename T, typename... Tags>
 // requires(not std::is_reference_v<T>)
 class UserProperty_;
 
+template <typename TYPE, typename... Tags>
+struct PropertyFor {
+    template <typename TARGET>
+    using type = UserProperty_<TYPE, TARGET, Tags...>;
+};
+
 // MARK: UserProperty_ for tag
 
 template <typename TYPE /*, typename... Tags*/>
 class UserProperty_<TYPE, tag /*, Tags...*/> {
 public:
-    template <typename TAG>
-    using self = UserProperty_<TYPE, TAG /*, Tags...*/>;            // make yourself one template argument type to satisfy PropertyData
-    using property_data = PropertyData<user_type_name, self, tag>;  // ? should add TYPE into PropertyData?
-    using improvement_of = self<tag>;                               // will act like same type if TYPE and Tags are same
+    using property_data = PropertyData<user_type_name,
+                                       PropertyFor<TYPE /*, Tags...*/>::template type,
+                                       tag>;                        // ? should add TYPE into PropertyData?
+    using improvement_of = UserProperty_<TYPE, tag /*, Tags...*/>;  // will act like same type if TYPE and Tags are same
 
     template <typename RETURN = TYPE, size_t DIG = 0>
     constexpr decltype(auto) getType() & noexcept {
@@ -54,11 +60,12 @@ template <typename TYPE, typename T, typename... Tags>
 // requires(not std::is_reference_v<T>)
 class UserProperty_ : public T {
 public:
-    template <typename TARGET>
-    using self = UserProperty_<TYPE, TARGET, Tags...>;                     // make yourself one template argument type to satisfy PropertyData
-    using property_data = PropertyData<user_type_name, self, T, Tags...>;  // ? should add TYPE into PropertyData?
-    using improvement_of = self<T>;                                        // will act like same type if TYPE and Tags are same
-    // using hold_type = TYPE;                                                // unused
+    using property_data = PropertyData<user_type_name,
+                                       PropertyFor<TYPE, Tags...>::template type,
+                                       T,
+                                       Tags...>;             // ? should add TYPE into PropertyData?
+    using improvement_of = UserProperty_<TYPE, T, Tags...>;  // will act like same type if TYPE and Tags are same
+    // using hold_type = TYPE;                       // unused
 
     // template <typename TARGET>
     // using apply = std::conditional_t<
@@ -384,12 +391,6 @@ struct AdvanceUserProperty {
 
     template <typename T>
     using order = UserPropertyAdapter<TYPE, Tags...>::template type<T>;  // type valid for Property - pass is_property
-};
-
-template <typename TYPE, bool CONCEPT, typename... Tags>
-struct UserPropertyConceptAdapter {
-    template <typename T>
-    using type = std::conditional_t<CONCEPT, T, UserProperty<TYPE, T, Tags...>>;
 };
 
 // TODO: check is this needed?

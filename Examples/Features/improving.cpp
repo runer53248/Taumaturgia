@@ -8,10 +8,10 @@
 #include "Usage/Types/Name/Name.hpp"
 
 template <typename TYPE>
-using Living = UserPropertyConceptAdapter<Health, Livingable<TYPE>>::template type<TYPE>;
+using Living = UserPropertyAdapter<Health>::template type<TYPE>;
 
 template <typename TYPE>
-using Naming = UserPropertyConceptAdapter<Name, Namingable<TYPE>>::template type<TYPE>;
+using Naming = UserPropertyAdapter<Name>::template type<TYPE>;
 
 template <typename T>
 using Living_impl = impl::UserProperty_<Health, T>;

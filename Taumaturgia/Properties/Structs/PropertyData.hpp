@@ -1,5 +1,6 @@
 #pragma once
 #include "Taumaturgia/Properties/Helpers/taged_list.hpp"
+#include "PropertyFor.hpp"
 
 template <template <typename...> typename property>
     requires is_property<property>

@@ -11,34 +11,34 @@
 namespace impl {
 inline constinit const char damaging_type_name[] = "Damaging";
 
-// template <typename T>
-// class Damaging_;
+template <typename T, typename... Tags>
+class Damaging_;
 
-// template <>
-// class Damaging_<tag> {
-// public:
-//     using property_data = PropertyData<damaging_type_name, Damaging_, tag>;
+template <typename... Tags>
+struct PropertyFor<Damage, Tags...> {
+    template <typename TARGET>
+    using type = Damaging_<TARGET, Tags...>;
+};
 
-//     template <typename TARGET>
-//     using apply = std::conditional_t<Damagingable<TARGET>, TARGET, impl::Damaging_<TARGET>>;
-
-//     constexpr auto& getDamage(this auto& self) {
-//         return self.dmg_;
-//     }
-
-// private:
-//     Damage dmg_{};
-// };
-
-template <typename T>
+template <typename T, typename... Tags>
 class Damaging_ : public T {
 public:
-    using property_data = PropertyData<damaging_type_name, Damaging_, T>;
+    using property_data = PropertyData<damaging_type_name,
+                                       PropertyFor<Damage, Tags...>::template type,
+                                       T,
+                                       Tags...>;
 
     template <typename TARGET>
-    using apply = std::conditional_t<Damagingable<TARGET>, TARGET, impl::Damaging_<TARGET>>;
+    using apply = std::conditional_t<
+        Damagingable<TARGET>,
+        TARGET,
+        impl::Damaging_<TARGET, Tags...>>;
+
+    // MARK: default C-tor
 
     Damaging_() = default;
+
+    // MARK: tuple C-tors
 
     template <typename... INFO, typename... Args>
     Damaging_(const Name& name, std::tuple<INFO...>&& dmg, Args&&... args)
@@ -65,10 +65,12 @@ public:
 
     // MARK: copy/move C-tors
 
-    template <typename TT>
-        requires(std::derived_from<T, std::remove_cvref_t<TT>>)
-    explicit Damaging_(TT&& t)
-        : T{std::forward<TT>(t)} {}
+    template <typename Arg>
+        requires(std::derived_from<T, std::remove_cvref_t<Arg>>)
+    explicit Damaging_(Arg&& t)
+        : T{std::forward<Arg>(t)} {}
+
+    // MARK: ignore and skip C-tors
 
     Damaging_(const Name& name)
         : T{name} {}
@@ -77,6 +79,8 @@ public:
     Damaging_(const Name& name, [[maybe_unused]] decltype(std::ignore) dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
+    // MARK: type C-tors
+
     template <typename... Args>
     Damaging_(const Name& name, Damage&& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...}, dmg_{std::move(dmg)} {}
@@ -84,6 +88,8 @@ public:
     template <typename... Args>
     Damaging_(const Name& name, const Damage& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...}, dmg_{dmg} {}
+
+    // MARK: variant C-tors
 
     template <typename... V, typename... Args>
         requires contains_type<Damage, V...>
@@ -122,8 +128,5 @@ static_assert(Damagingable<Damaging_<Damaging_Test>>);
 static_assert(Damagingable<Damaging_<tag>>);
 }  // namespace impl::Test
 
-// template <typename T>
-// using Damaging = impl::Damaging_<tag>::apply<T>;
-
-template <typename T>
-using Damaging = std::conditional_t<Damagingable<T>, T, impl::Damaging_<T>>;
+template <typename T, typename... Tags>
+using Damaging = std::conditional_t<Damagingable<T>, T, impl::Damaging_<T, Tags...>>;
