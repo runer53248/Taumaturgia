@@ -172,7 +172,7 @@ int main() {
             ;
         auto create_type_simple4_2 =
             From::base<Simple4>                    //
-            | With::Health                         //
+            | WithUnordered::Health                //
             | WithUnordered::user_property<float>  //
             | WithUnordered::Name                  //
             | WithUnordered::Damage                //
@@ -208,21 +208,5 @@ int main() {
         print(type_simple4_1, 41);
         print(type_simple4_2, 42);
         print(type_simple4_3, 43);
-    }
-
-    {
-        struct Simple5 {};
-        constexpr auto float_value = 50.01f;
-        [[maybe_unused]] auto create_type_simple5 =
-            From::base<Simple5>                    //
-            | WithUnordered::user_property<float>  //
-            | With::Damage                         // order everything to this point
-            | WithUnordered::Health                // leave unordered
-            ;
-        auto type_simple5 = create_type_simple5(
-            Damage{0, Effect{EffectType::Freeze}},
-            float_value,
-            Health{50, 100});
-        print(type_simple5, 5);
     }
 }
