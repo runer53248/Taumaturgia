@@ -17,9 +17,6 @@ public:
     using property_data = PropertyData<wearing_type_name, Wearing_, T>;
     using hold_type = WearContainer;
 
-    template <typename TARGET>
-    using apply = std::conditional_t<Wearingable<TARGET>, TARGET, impl::Wearing_<TARGET>>;
-
     Wearing_() = default;
 
     template <typename... INFO, typename... Args>

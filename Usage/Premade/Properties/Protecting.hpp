@@ -16,9 +16,6 @@ public:
     using property_data = PropertyData<protecting_type_name, Protecting_, T>;
     using hold_type = Protection;
 
-    template <typename TARGET>
-    using apply = std::conditional_t<Protectingable<TARGET>, TARGET, impl::Protecting_<TARGET>>;
-
     Protecting_() = default;
 
     template <typename... INFO, typename... Args>

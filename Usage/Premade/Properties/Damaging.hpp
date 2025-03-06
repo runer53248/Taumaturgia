@@ -29,12 +29,6 @@ public:
                                        Tags...>;
     using hold_type = Damage;
 
-    template <typename TARGET>
-    using apply = std::conditional_t<
-        Damagingable<TARGET>,
-        TARGET,
-        impl::Damaging_<TARGET, Tags...>>;
-
     // MARK: default C-tor
 
     Damaging_() = default;
