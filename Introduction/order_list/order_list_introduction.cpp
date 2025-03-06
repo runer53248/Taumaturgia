@@ -22,11 +22,11 @@ int main() {
         | Property<i_p3::order>{}  // ! only higher order index will be used
         | Property<i_p1::order>{}  // ignored
         // | With::user_property<int, struct second_int>          // ? will not work if order version of <int, second_int> called before
-        | Property<f_p_t>{}                                    //
+        | Property<f_p::type>{}                                    //
         | Property<s_p2::type>{}                               // both added  with correct order
         | Property<s_p1::type>{}                               // both added with correct order
-        | With::user_property_order<bool, struct first_bool>   //
-        | With::user_property_order<bool, struct second_bool>  // ! only last of unordered will be used
+        | With::user_property_once<bool, struct first_bool>   //
+        | With::user_property_once<bool, struct second_bool>  // ! only last of unordered will be used
         | With::user_property<char, struct first_char>         // both char added
         | With::user_property<char, struct second_char>        // both char added
         | With::user_property<float>                           //
@@ -64,17 +64,17 @@ int main() {
     std::cout << '\n';
 
     using Type2 = add_properties_ordered<Base, i_p2::type, i_p3::type, f_p::type, i_p1::type>;
-    using Type3 = add_properties_ordered<Base, f_p_t, i_p3_t, i_p2_t>;
+    using Type3 = add_properties_ordered<Base, f_p::type, i_p3::type, i_p2::type>;
 
     static_assert(helpers::impl::same_priority<
-                      Property<i_p2_t>,
-                      Property<i_p3_t>>::value == false);
+                      Property<i_p2::type>,
+                      Property<i_p3::type>>::value == false);
 
     std::cout << "Type2 " << parse_type_name<Type2>() << '\n';
     std::cout << "Type3 " << parse_type_name<Type3>() << '\n';
     std::cout << '\n';
 
-    std::cout << "add_properties_ordered<Base, i_p2_t, i_p3_t> " << parse_type_name<add_properties_ordered<Base, i_p2_t, i_p3_t>>()
+    std::cout << "add_properties_ordered<Base, i_p2_t, i_p3_t> " << parse_type_name<add_properties_ordered<Base, i_p2::type, i_p3::type>>()
               << '\n';
 
     std::cout << Property<i_p1::type>::value << '\n';
