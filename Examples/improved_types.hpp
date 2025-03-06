@@ -6,13 +6,12 @@ namespace impl {
 constinit const char damaging_type_name[] = "UserDamaging";
 constinit const char protecting_type_name[] = "UserProtecting";
 }
-#else
-#include "Taumaturgia/Traits/accessType.hpp"
 #endif
 
 template <typename T>
 struct DamagingImproved_ : public T {  // example of improving build-in property - may be used as replacement of impl::Damaging_
     using property_data = PropertyData<impl::damaging_type_name, DamagingImproved_, T>;
+    // using hold_type = Damaging_impl<T>::hold_type;
     using improvement_of = Damaging_impl<T>;
 
     DamagingImproved_() noexcept = default;

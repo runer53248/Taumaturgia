@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Properties/Structs/Scheme.hpp"
+#include "Scheme.hpp"
 #include "build_into_t.hpp"
 
 namespace helpers::impl {
