@@ -114,9 +114,9 @@ int main() {
             auto type2 = t2_creator();
             auto type3 = t3_creator();
             std::cout << "Damaging                  =  " << Property<Damaging>::value << '\n';
-            // std::cout << "Damaging<.. Damage_first> =  " << Property<Damaging<tag, struct Damage_first>::template apply>::value << '\n';
+            std::cout << "Damaging<.. Damage_first> =  " << Property<Damaging<tag, struct Damage_first>::property_data::property_type::apply>::value << '\n';
             std::cout << "Damage                    =  " << Property<Damaging_impl>::value << '\n';
-            // std::cout << "Damage<.. Damage_first>   =  " << Property<Damaging_impl<tag, struct Damage_first>::template apply>::value << '\n';
+            std::cout << "Damage<.. Damage_first>   =  " << Property<Damaging_impl<tag, struct Damage_first>::property_data::property_type::apply>::value << '\n';
             std::cout << "1  = " << decltype(With::user_property<Damage, struct Damage_first>)::value << '\n';
             std::cout << "2  = " << decltype(With::Damage)::value << '\n';
             std::cout << "3  = " << decltype(With::taged_property<Damaging>)::value << '\n';
