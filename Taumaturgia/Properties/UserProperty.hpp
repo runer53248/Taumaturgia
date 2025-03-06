@@ -30,6 +30,8 @@ struct PropertyFor {
     using type = UserProperty_<TYPE, TARGET, Tags...>;
 };
 
+struct none {};
+
 // MARK: UserProperty_ for tag
 
 template <typename TYPE /*, typename... Tags*/>
@@ -39,6 +41,7 @@ public:
                                        PropertyFor<TYPE /*, Tags...*/>::template type,
                                        tag>;                        // ? should add TYPE into PropertyData?
     using improvement_of = UserProperty_<TYPE, tag /*, Tags...*/>;  // will act like same type if TYPE and Tags are same
+    using hold_type = TYPE;
 
     template <typename RETURN = TYPE, size_t DIG = 0>
     constexpr decltype(auto) getType() & noexcept {
@@ -65,7 +68,7 @@ public:
                                        T,
                                        Tags...>;             // ? should add TYPE into PropertyData?
     using improvement_of = UserProperty_<TYPE, T, Tags...>;  // will act like same type if TYPE and Tags are same
-    // using hold_type = TYPE;                       // unused
+    using hold_type = TYPE;
 
     // template <typename TARGET>
     // using apply = std::conditional_t<

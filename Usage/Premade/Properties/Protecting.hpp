@@ -14,6 +14,7 @@ template <typename T>
 class Protecting_ : public T {
 public:
     using property_data = PropertyData<protecting_type_name, Protecting_, T>;
+    using hold_type = Protection;
 
     template <typename TARGET>
     using apply = std::conditional_t<Protectingable<TARGET>, TARGET, impl::Protecting_<TARGET>>;

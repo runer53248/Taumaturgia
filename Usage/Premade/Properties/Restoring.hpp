@@ -15,6 +15,7 @@ template <typename T>
 class Restoring_ : public T {
 public:
     using property_data = PropertyData<restoring_type_name, Restoring_, T>;
+    using hold_type = EffectTypeContainer;
 
     template <typename TARGET>
     using apply = std::conditional_t<Restoringable<TARGET>, TARGET, impl::Restoring_<TARGET>>;

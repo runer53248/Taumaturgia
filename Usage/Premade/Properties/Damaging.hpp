@@ -27,6 +27,7 @@ public:
                                        PropertyFor<Damage, Tags...>::template type,
                                        T,
                                        Tags...>;
+    using hold_type = Damage;
 
     template <typename TARGET>
     using apply = std::conditional_t<

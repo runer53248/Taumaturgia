@@ -11,6 +11,7 @@ template <typename T>
 class Naming_ : public T {
 public:
     using property_data = PropertyData<naming_type_name, Naming_, T>;
+    using hold_type = Name;
 
     template <typename TARGET>
     using apply = std::conditional_t<Namingable<TARGET>, TARGET, impl::Naming_<TARGET>>;

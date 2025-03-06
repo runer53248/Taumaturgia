@@ -15,6 +15,7 @@ template <typename T>
 class Living_ : public T {
 public:
     using property_data = PropertyData<living_type_name, Living_, T>;
+    using hold_type = Health;
 
     template <typename TARGET>
     using apply = std::conditional_t<Livingable<TARGET>, TARGET, impl::Living_<TARGET>>;
