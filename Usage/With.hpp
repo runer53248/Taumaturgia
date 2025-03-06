@@ -3,6 +3,18 @@
 
 namespace With {
 
+template <template <typename, typename...> typename P, typename... Tags>
+struct ApplyTag {
+    template <typename T>
+    using apply = P<T, Tags...>;
+
+    template <typename T>
+    using apply_order = std::conditional_t<
+        trait_accessable<T, typename P<T, Tags...>::hold_type>,
+        T,
+        P<T, Tags...>>;
+};
+
 // * forced version - will not be removed by taged versions - but be added even when trait in base is accessable
 [[maybe_unused]] constexpr Property<Naming_impl> Name{};
 [[maybe_unused]] constexpr Property<Damaging_impl> Damage{};
@@ -23,8 +35,16 @@ namespace With {
 
 template <template <typename> typename P>
 [[maybe_unused]] constexpr Property<P> property{};
+
+template <template <typename, typename> typename P, typename... Tags>
+[[maybe_unused]] constexpr Property<ApplyTag<P, Tags...>::template apply> taged_property{};
+
+template <template <typename, typename> typename P, typename... Tags>
+[[maybe_unused]] constexpr Property<ApplyTag<P, Tags...>::template apply_order> taged_property_once{};
+
 template <typename T, typename... Tags>
 [[maybe_unused]] constexpr Property<AdvanceUserProperty<T, Tags...>::template type> user_property{};
+
 template <typename T, typename... Tags>
 [[maybe_unused]] constexpr Property<AdvanceUserProperty<T, Tags...>::template order> user_property_once{};
 

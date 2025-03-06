@@ -2,6 +2,9 @@
 
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
+using d_p1 = AdvanceUserProperty<double, struct first_double>;
+using d_p2 = AdvanceUserProperty<double, struct second_double>;
+
 using i_p1 = AdvanceUserProperty<int, struct first_int>;
 using i_p2 = AdvanceUserProperty<int, struct second_int, struct int_tag>;
 using i_p3 = AdvanceUserProperty<int, struct third_int>;
@@ -12,6 +15,8 @@ using s_p1 = AdvanceUserProperty<std::string, struct first_string>;
 using s_p2 = AdvanceUserProperty<std::string, struct second_string>;
 
 using order_list = taged_list<
+    d_p1::order,
+    d_p2::order,
     i_p1::order,
     i_p2::order,
     i_p3::order,
