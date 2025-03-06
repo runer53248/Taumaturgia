@@ -4,7 +4,14 @@ namespace impl {
 
 template <typename T, typename... Props>
 constexpr auto pipe_helper(T&& t, Props...) {
-    using result = add_properties<std::remove_cvref_t<T>, Props...>;
+    using result = add_properties<
+        std::remove_cvref_t<T>,
+        std::conditional_t<
+            trait_accessable<std::remove_cvref_t<T>, typename Props::template apply<tag>::hold_type>,
+            Property<UserPropertyAdapter<none>::template type>,  // TODO: autoremove none properties from add_properties list
+            Props>...>;
+
+    // using result = add_properties<std::remove_cvref_t<T>, Props...>;
     return result(std::forward<T>(t));
 }
 

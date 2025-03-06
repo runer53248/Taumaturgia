@@ -47,7 +47,12 @@ template <
     template <template <typename...> typename> typename P,
     template <typename...> typename Prop>
     requires is_property_type<P>
-constexpr auto operator|(From::BaseType<T>, P<Prop>) -> impl::Creator<::add_properties<T, P<Prop>>> {
+constexpr auto operator|(From::BaseType<T>, P<Prop>)
+    -> impl::Creator<
+        std::conditional_t<
+            trait_accessable<T, typename Prop<tag>::hold_type>,
+            T,
+            ::add_properties<T, P<Prop>>>> {
     return {};
 }
 
@@ -56,6 +61,11 @@ template <
     template <template <typename...> typename> typename P,
     template <typename...> typename Prop>
     requires is_property_type<P>
-constexpr auto operator|(impl::Creator<T>, P<Prop>) -> impl::Creator<::add_properties<T, P<Prop>>> {
+constexpr auto operator|(impl::Creator<T>, P<Prop>)
+    -> impl::Creator<
+        std::conditional_t<
+            trait_accessable<T, typename Prop<tag>::hold_type>,
+            T,
+            ::add_properties<T, P<Prop>>>> {
     return {};
 }
