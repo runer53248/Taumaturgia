@@ -1,4 +1,5 @@
 #pragma once
+#include "pipeing_result.hpp"
 
 namespace impl {
 
@@ -17,15 +18,11 @@ struct DataAndPropertiesList {
 // create from DataAndPropertiesList
 template <typename T, typename... Props>
 constexpr decltype(auto) create_from_DAPL(T&& data) {
-    using result = add_properties<
-        std::remove_cvref_t<T>,
-        std::conditional_t<
-            trait_accessable<std::remove_cvref_t<T>, typename Props::template apply<tag>::hold_type>,
-            Property<UserPropertyAdapter<none>::template type>,  // TODO: autoremove none properties from add_properties list
-            Props>...>;
+    static_assert(
+        helpers::all_properties_type_ordered<Props...> or helpers::none_properties_type_ordered<Props...>,
+        "All properties must be of one type: ordered or unordered.");
 
-    return (result{std::forward<T>(data)});
-    // return (add_properties<std::remove_cvref_t<T>, Props...>{std::forward<T>(data)});
+    return pipeing_result<T, Props...>{std::forward<T>(data)};
 }
 
 }  // namespace impl

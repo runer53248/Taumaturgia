@@ -14,12 +14,14 @@ namespace helpers {
 
 template <typename... PROPERTY_LISTS>
 using append_and_order_property_lists =
-    boost::mp11::mp_sort<
-        boost::mp11::mp_unique_if<  //
-            boost::mp11::mp_append<
-                PROPERTY_LISTS...>,
-            impl::same_priority>,
-        boost::mp11::mp_less>;
+    boost::mp11::mp_filter<
+        impl::not_none,
+        boost::mp11::mp_sort<
+            boost::mp11::mp_unique_if<  //
+                boost::mp11::mp_append<
+                    PROPERTY_LISTS...>,
+                impl::same_priority>,
+            boost::mp11::mp_less>>;
 
 template <template <template <typename...> typename> typename Property_type,
           template <typename...> typename... properties>

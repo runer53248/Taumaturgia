@@ -60,7 +60,6 @@ int main() {
     std::cout << "property_type 2:       " << name<test_new_2::property_data::property_type>() << '\n';
     std::cout << "property_type 3:       " << name<test_new_3::property_data::property_type>() << '\n';
 
-    // return 0;
     std::cout << "Compare 2 ways of creating new type by adding properties:\n\n";
 
     using test_type_bad = Damaging<Living<Naming<test_struct>>>;

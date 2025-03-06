@@ -1,10 +1,15 @@
 #pragma once
+#include "pipeing_result.hpp"
 
 namespace impl {
 
-template <typename T>
+template <typename T, typename... Props>
 struct Creator {
-    using result_type = T;
+    static_assert(
+        helpers::all_properties_type_ordered<Props...> or helpers::none_properties_type_ordered<Props...>,
+        "All properties must be of one type: ordered or unordered.");
+
+    using result_type = pipeing_result<T, Props...>;
 
     constexpr auto operator()() const {
         static_assert(std::constructible_from<result_type>, "Creator can't create result_type from default C-tor!");
@@ -47,25 +52,16 @@ template <
     template <template <typename...> typename> typename P,
     template <typename...> typename Prop>
     requires is_property_type<P>
-constexpr auto operator|(From::BaseType<T>, P<Prop>)
-    -> impl::Creator<
-        std::conditional_t<
-            trait_accessable<T, typename Prop<tag>::hold_type>,
-            T,
-            ::add_properties<T, P<Prop>>>> {
+constexpr auto operator|(From::BaseType<T>, P<Prop>) -> impl::Creator<T, P<Prop>> {
     return {};
 }
 
 template <
     typename T,
+    typename... Props,
     template <template <typename...> typename> typename P,
     template <typename...> typename Prop>
     requires is_property_type<P>
-constexpr auto operator|(impl::Creator<T>, P<Prop>)
-    -> impl::Creator<
-        std::conditional_t<
-            trait_accessable<T, typename Prop<tag>::hold_type>,
-            T,
-            ::add_properties<T, P<Prop>>>> {
+constexpr auto operator|(impl::Creator<T, Props...>, P<Prop>) -> impl::Creator<T, Props..., P<Prop>> {
     return {};
 }

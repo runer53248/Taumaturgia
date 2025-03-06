@@ -30,8 +30,6 @@ struct PropertyFor {
     using type = UserProperty_<TYPE, TARGET, Tags...>;
 };
 
-struct none {};
-
 // MARK: UserProperty_ for tag
 
 template <typename TYPE /*, typename... Tags*/>
@@ -69,12 +67,6 @@ public:
                                        Tags...>;             // ? should add TYPE into PropertyData?
     using improvement_of = UserProperty_<TYPE, T, Tags...>;  // will act like same type if TYPE and Tags are same
     using hold_type = TYPE;
-
-    // template <typename TARGET>
-    // using apply = std::conditional_t<
-    //     trait_accessable<TARGET, TYPE>,
-    //     TARGET,
-    //     UserProperty_<TYPE, TARGET, Tags...>>;  // will act like same type if TYPE and Tags are same
 
     // MARK: Namingable tuple C-tors
 

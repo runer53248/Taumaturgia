@@ -20,6 +20,10 @@ public:
     static constexpr size_t value = (properties_counter > index) ? index + 1 : std::numeric_limits<size_t>::max();  // index of property starting from 1 (or max if not found)
     template <typename T>
     using apply = property<T>;
+
+    template <template <typename...> typename P>
+        requires is_property<P>
+    using property_type = Property<P>;
 };
 
 template <template <typename...> typename property>
@@ -34,6 +38,10 @@ public:
     static constexpr size_t value = (unordered_properties_counter > index) ? index + 1 : std::numeric_limits<size_t>::max();  // index of property starting from 1 (or max if not found)
     template <typename T>
     using apply = property<T>;
+
+    template <template <typename...> typename P>
+        requires is_property<P>
+    using property_type = Property_unordered<P>;
 };
 
 template <template <template <typename...> typename> typename PROP_TYPE>

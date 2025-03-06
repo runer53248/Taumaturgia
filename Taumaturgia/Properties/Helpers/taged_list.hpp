@@ -20,6 +20,8 @@ concept have_property_data = requires {
     typename T::property_data;
 };
 
+class empty_type {};
+
 template <typename T>
 struct empty_property : public T {
     using property_data = void;
@@ -35,5 +37,5 @@ template <template <typename...> typename T>
 concept is_proper_property = is_property<T> and have_inner_reduction_feature<T>;
 
 template <template <typename...> typename... T>
-    // requires(is_proper_property<T> and ...) // TODO: fix this
+// requires(is_proper_property<T> and ...) // TODO: fix this
 using taged_list = list<T<tag>...>;
