@@ -1,19 +1,37 @@
 #pragma once
-
-#ifdef WITH_ADD_PROPERTIES
-
 #include "Empty.hpp"
 
 using Tile_list = properties_list<
     Naming,
     Damaging>;
 using Tile_base = Empty<>;
-using Tile = Tile_list::apply_ordered_properties_to<Tile_base>;
+using TileBuild = Tile_list::apply_ordered_properties_to<Tile_base>;
 
-// using Tile = add_properties_ordered<
+// using TileBuild = add_properties_ordered<
 //     Empty<>,
 //     Naming,
 //     Damaging>;
+
+struct TileClass {
+    Name name;
+    Damage dmg;
+};
+
+#ifdef WITH_ADD_PROPERTIES
+
+static_assert(std::same_as<
+              TileBuild,
+              add_properties_ordered<
+                  Empty<>,
+                  Naming,
+                  Damaging>>);
+static_assert(std::same_as<
+              TileBuild,
+              properties_list<
+                  Naming,
+                  Damaging>::apply_ordered_properties_to<TileBuild>>);
+
+using Tile = TileBuild;
 
 template <typename T>
 concept is_from_Tile =
@@ -22,34 +40,16 @@ concept is_from_Tile =
             T,
             Tile_list::apply_ordered_properties_to<T>>;
 
-static_assert(std::same_as<
-              Tile,
-              add_properties_ordered<
-                  Empty<>,
-                  Naming,
-                  Damaging>>);
-static_assert(std::same_as<
-              Tile,
-              properties_list<
-                  Naming,
-                  Damaging
-                >::apply_ordered_properties_to<Tile>>);
-
-static_assert(is_from_Tile<Tile>);
-
 #else
 
-struct Tile {
-    Name name;
-    Damage dmg;
-};
+using Tile = TileClass;
 
 template <typename T>
 concept is_from_Tile = std::is_base_of_v<Tile, T>;
 
-static_assert(is_from_Tile<Tile>);
-
 #endif
+
+static_assert(is_from_Tile<Tile>);
 
 // MARK: AliveStrategy_<T>
 

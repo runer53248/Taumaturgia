@@ -1,25 +1,21 @@
 #pragma once
+#include "EmptyType.hpp"
 #include "Usage/Types/Name/Name.hpp"
 #include "Usage/Types/Protection/Protection.hpp"
 
-#ifdef WITH_ADD_PROPERTIES
-#include "EmptyType.hpp"
-using Armor = add_properties_ordered<
+using ArmorBuild = add_properties_ordered<
     Type,
     Naming,
     Protecting>;
-#else
 
-// struct Armor {
+// struct Armor_Class {
 //     Name name;
 //     Protection protection{};
 // };
 
-class Armor {
+class Armor_Class {
 public:
-    Name name;
-
-    Armor(std::string name, Protection protection)
+    Armor_Class(std::string name, Protection protection)
         : name{name}, protection{protection} {}
 
     auto& getProtection() noexcept {
@@ -30,8 +26,14 @@ public:
         return protection;
     }
 
+    Name name;
+
 private:
     Protection protection;
 };
 
+#ifdef WITH_ADD_PROPERTIES
+using Armor = ArmorBuild;
+#else
+using Armor = Armor_Class;
 #endif

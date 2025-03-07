@@ -1,15 +1,17 @@
 #pragma once
+#include "EmptyType.hpp"
 #include "Usage/Types/Damage/Damage.hpp"
 
-#ifdef WITH_ADD_PROPERTIES
-#include "EmptyType.hpp"
-using NoNameWeapon = add_properties_ordered<
+using NoNameWeaponBuild = add_properties_ordered<
     Type,
     Damaging>;
-#else
 
-struct NoNameWeapon {
+struct NoNameWeaponClass {
     Damage dmg{};
 };
 
+#ifdef WITH_ADD_PROPERTIES
+using NoNameWeapon = NoNameWeaponBuild;
+#else
+using NoNameWeapon = NoNameWeaponClass;
 #endif

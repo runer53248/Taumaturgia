@@ -1,15 +1,17 @@
 #pragma once
+#include "EmptyType.hpp"
 #include "Usage/Types/Name/Name.hpp"
 
-#ifdef WITH_ADD_PROPERTIES
-#include "EmptyType.hpp"
-using Enemy = add_properties_ordered<
+using EnemyBuild = add_properties_ordered<
     Type,
     Naming>;
-#else
 
-struct Enemy {
+struct EnemyClass {
     Name name;
 };
 
+#ifdef WITH_ADD_PROPERTIES
+using Enemy = EnemyBuild;
+#else
+using Enemy = EnemyClass;
 #endif

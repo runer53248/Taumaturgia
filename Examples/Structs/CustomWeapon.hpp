@@ -2,26 +2,28 @@
 #include "DefaultWeapon.hpp"
 #include "Usage/DefaultStrategies.hpp"
 
-#ifdef WITH_ADD_PROPERTIES
 struct WithDefaultWeaponVector {
     std::vector<DefaultWeapon> others{
-        // will be used in AttackStrategy_<CustomWeapon> / UserStrategy_<Damage, CustomWeapon>
+        // will be used in AttackStrategy_<CustomWeaponBuild> / UserStrategy_<Damage, CustomWeaponBuild>
         DefaultWeapon{Name{"Light weapon"}, Damage{10}},
         DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
 };
-using CustomWeapon = add_properties_ordered<
+using CustomWeaponBuild = add_properties_ordered<
     WithDefaultWeaponVector,
     Naming>;
-#else
 
-struct CustomWeapon {  // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
+struct CustomWeaponClass {  // is not Damagingable but still counts as AttackStrategable because have custom AttackStrategy_
     Name name;
     std::vector<DefaultWeapon> others{
-        // will be used in AttackStrategy_<CustomWeapon> / UserStrategy_<Damage, CustomWeapon>
+        // will be used in AttackStrategy_<CustomWeaponClass> / UserStrategy_<Damage, CustomWeaponClass>
         DefaultWeapon{Name{"Light weapon"}, Damage{10}},
         DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
 };
 
+#ifdef WITH_ADD_PROPERTIES
+using CustomWeapon = CustomWeaponBuild;
+#else
+using CustomWeapon = CustomWeaponClass;
 #endif
 
 static_assert(Damagingable<DefaultWeapon>);

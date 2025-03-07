@@ -1,15 +1,17 @@
 #pragma once
+#include "EmptyType.hpp"
 #include "Usage/Types/Health/Health.hpp"
 
-#ifdef WITH_ADD_PROPERTIES
-#include "EmptyType.hpp"
-using Npc = add_properties_ordered<
+using NpcBuild = add_properties_ordered<
     Type,
     Living>;
-#else
 
-struct Npc {       // don't have name
-    Health hp{5};  // TODO: default values
+struct NpcClass {
+    Health hp{5};
 };
 
+#ifdef WITH_ADD_PROPERTIES
+using Npc = NpcBuild;
+#else
+using Npc = NpcClass;
 #endif

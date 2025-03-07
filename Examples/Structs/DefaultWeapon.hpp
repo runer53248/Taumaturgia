@@ -1,18 +1,20 @@
 #pragma once
 #include <string>
+#include "EmptyType.hpp"
 #include "Usage/Types/Damage/Damage.hpp"
 
-#ifdef WITH_ADD_PROPERTIES
-#include "EmptyType.hpp"
-using DefaultWeapon = add_properties_ordered<
+using DefaultWeaponBuild = add_properties_ordered<
     Type,
     Naming,
     Damaging>;
-#else
 
-struct DefaultWeapon {
+struct DefaultWeaponClass {
     std::string name;  // string used as name
     Damage dmg{};
 };
 
+#ifdef WITH_ADD_PROPERTIES
+using DefaultWeapon = DefaultWeaponBuild;
+#else
+using DefaultWeapon = DefaultWeaponClass;
 #endif

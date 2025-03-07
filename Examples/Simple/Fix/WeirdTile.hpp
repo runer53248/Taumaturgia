@@ -1,25 +1,23 @@
 #pragma once
-
+#include "Empty.hpp"
 #include "Tile.hpp"
 #include "Weird.hpp"
 
-#ifdef WITH_ADD_PROPERTIES
-
-#include "Empty.hpp"
-
-using WeirdTile = add_properties_ordered<
+using WeirdTileBuild = add_properties_ordered<
     Tile,
     Weird>;
 
+struct WeirdTileClass : Tile {};
+
+#ifdef WITH_ADD_PROPERTIES
+using WeirdTile = WeirdTileBuild;
 #else
-
-struct WeirdTile : Tile {};
-
+using WeirdTile = WeirdTileClass;
 #endif
 
 static_assert(Gettingable<WeirdTile>);
 
-//TODO: add some alternative for is_base_of_v - something that check base and all of its properties  
+// TODO: add some alternative for is_base_of_v - something that check base and all of its properties
 
 // ! assertions false because new type edit order of Tile type
 // ! custom strategies of Tile uses concept like:  requires std::is_base_of_v<Tile, T>

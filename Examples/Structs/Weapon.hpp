@@ -1,28 +1,24 @@
 #pragma once
+#include "EmptyType.hpp"
 #include "Usage/Types/Damage/Damage.hpp"
 #include "Usage/Types/Name/Name.hpp"
 
-#ifdef WITH_ADD_PROPERTIES
-#include "EmptyType.hpp"
-using Weapon = add_properties_ordered<
+using WeaponBuild = add_properties_ordered<
     Type,
     Naming,
     Damaging>;
-#else
 
-// struct Weapon {
+// struct WeaponClass {
 //     Name name;
 //     Damage dmg{};
 // };
 
-class Weapon {
+class WeaponClass {
 public:
-    Name name;
-
-    Weapon() noexcept = default;
-    Weapon(const Name& name) noexcept
+    WeaponClass() noexcept = default;
+    WeaponClass(const Name& name) noexcept
         : name{name} {}
-    Weapon(const Name& name, Damage dmg) noexcept
+    WeaponClass(const Name& name, Damage dmg) noexcept
         : name{name}, dmg{dmg} {}
 
     auto& Dmg() noexcept {
@@ -33,16 +29,22 @@ public:
         return dmg;
     }
 
+    Name name;
+
 private:
     Damage dmg{};
 };
 
 template <typename T>
-    requires std::is_base_of_v<Weapon, T>
+    requires std::is_base_of_v<WeaponClass, T>
 struct traits::CustomAccessType<Damage, T> {
     static constexpr decltype(auto) get(auto& el) {
         return el.Dmg();
     }
 };
 
+#ifdef WITH_ADD_PROPERTIES
+using Weapon = WeaponBuild;
+#else
+using Weapon = WeaponClass;
 #endif

@@ -1,23 +1,22 @@
 #pragma once
-
-#ifdef WITH_ADD_PROPERTIES
-
 #include "Empty.hpp"
 
-using Item = add_properties_ordered<
+using ItemBuild = add_properties_ordered<
     Empty<struct ItemTag>,
     Naming,
     Living,
     Damaging>;
 
-#else
-
-struct Item {
+struct ItemClass {
     std::string name;
     Health hp;
     Damage dmg;
 };
 
+#ifdef WITH_ADD_PROPERTIES
+using Item = ItemBuild;
+#else
+using Item = ItemClass;
 #endif
 
 // MARK: GetterStrategy_<Item>

@@ -1,15 +1,17 @@
 #pragma once
+#include "EmptyType.hpp"
 #include "Usage/Types/Name/Name.hpp"
 
-#ifdef WITH_ADD_PROPERTIES
-#include "EmptyType.hpp"
-using Potion = add_properties_ordered<
+using PotionBuild = add_properties_ordered<
     Type,
     Naming>;
-#else
 
-struct Potion {
+struct PotionClass {
     Name name;
 };
 
+#ifdef WITH_ADD_PROPERTIES
+using Potion = PotionBuild;
+#else
+using Potion = PotionClass;
 #endif
