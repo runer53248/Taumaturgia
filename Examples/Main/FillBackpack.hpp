@@ -22,35 +22,12 @@ void fillBackpack(auto& backpack) {
         Name{"Default_BATTLE_SWORD"},
         Damage{32}});
 
-#ifdef WITH_ADD_PROPERTIES
-    auto gustav_2 = weapon_6(
+    backpack.emplace_back(weapon_6{
+        unordered,
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},
-        /*dmg*/ Damage{32},  // ? move damage here (it's it correct place)
-        /*cureHealth*/ CureHealth{30});
-    backpack.emplace_back(gustav_2);
-
-    weapon_7(
-        Name{"INCOGNITO SWORD"},
-        /*hp*/ Health{20},
-        /*dmg*/ Damage{32},  // ? move damage here (it's it correct place)
-        /*cureHealth*/ CureHealth{30});
-#else
-    // Weapon_6 and weapon_7 are build from struct holding damage - blocked it's move to correct position
-
-    auto gustav_2 = weapon_6(
-        Name{"GUSTAV_INTELIGENT_SWORD"},
-        /*hp*/ Health{20},
-        /*cureHealth*/ CureHealth{30},
-        /*dmg*/ Damage{32});
-    backpack.emplace_back(gustav_2);
-
-    weapon_7(
-        Name{"INCOGNITO SWORD"},
-        /*hp*/ Health{20},
-        /*cureHealth*/ CureHealth{30},
-        /*dmg*/ Damage{32});
-#endif
+        /*dmg*/ Damage{32},
+        /*cureHealth*/ CureHealth{30}});
 
     backpack.emplace_back(armor_1{
         Name{"CHAIN_MAIL"},
