@@ -19,8 +19,7 @@ add_executable(main_token_${addons}
 
 add_subdirectory(Pipe)
 
-add_executable(main_ignore_order_Ap_${addons}
+add_executable(main_ignore_order_${addons}
     main_ignore_order.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
-target_compile_definitions(main_ignore_order_Ap_${addons} PUBLIC WITH_ADD_PROPERTIES)
