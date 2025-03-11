@@ -113,20 +113,26 @@ struct traits::CustomAccessType<Name, T> {
 // MARK: main
 
 int main() {
-    std::vector<Object> container;
-
-    Object weapon = Damaging<Weapon_C>{
-        Name{"Sword"},
+    Object weaponA = Damaging<Weapon_A>{
+        Name{"Sword A"},
+        Damage{1,
+               Effect{EffectType::Infection}}};
+    Object weaponB = Damaging<Weapon_B>{
+        Name{"Sword B"},
+        Damage{5,
+               Effect{EffectType::Infection}}};
+    Object weaponC = Damaging<Weapon_C>{
+        Name{"Sword C"},
         Damage{50,
                Effect{EffectType::Infection}}};
 
     // ! if Weapon_C was not Damagable then order of argument in c-tor will be different
-    Object weapon_2 = Damaging<Living<Weapon_C>>{
+    Object weapon_c2 = Damaging<Living<Weapon_C>>{
         Name{"Sword 2"},
         Health{100},
-        Damage{50,
+        Damage{10,
                Effect{
-                   EffectType::Stun,
+                   EffectType::Bleed,
                    Duration{5, DurationType::Round},
                    EffectState::Active}}};
 
@@ -149,23 +155,21 @@ int main() {
         ArmorClass{
             4,
             BodyLocation::Arms,
-            {EffectType::Bleed}}};  // will protect against Bleed effects
+            {EffectType::Bleed}}};
 
     Object chaimail = Armor{
         Name{"Chaimail"},
         ArmorClass{
             8,
             BodyLocation::Body,
-            {EffectType::Daze}}};  // will protect against Daze effects
+            {EffectType::Daze}}};
 
     Object shield_2 = Armor{
         Name{"Shield 2"},
         ArmorClass{
             6,
             BodyLocation::Arms,
-            {EffectType::Burn}}};  // will protect against Burn effects
-
-    container.push_back(Item{});
+            {EffectType::Burn}}};
 
     auto print_info = [](auto& obj) {
         std::cout << obj.name() << " ";
@@ -185,24 +189,40 @@ int main() {
     print_info(warior);
     std::cout << "\n";
 
-    std::cout << "Paladin wear armor:\n";
-    defend(shield, &paladin);
-    defend(shield_2, &paladin);
-    defend(shield, &paladin);
-    defend(chaimail, &paladin);
-    print_info(paladin);
+    std::cout << "Warior wear armor:\n";
+    defend(shield, &warior);
+    defend(shield_2, &warior);
+    defend(shield, &warior);
+    defend(chaimail, &warior);
+    print_info(warior);
     std::cout << "\n";
 
-    std::cout << "weapon attack both:\n";
-    attack(weapon, &weapon, &paladin);
-    attack(weapon, &weapon, &warior);
+    std::cout << "- weapon A attack both:\n";
+    print_object(weaponA);
+    attack(weaponA, &weaponA, &paladin);
+    attack(weaponA, &weaponA, &warior);
+    print_info(paladin);
+    print_info(warior);
+    std::cout << "\n";
+    std::cout << "- weapon B attack both:\n";
+    print_object(weaponB);
+    attack(weaponB, &weaponB, &paladin);
+    attack(weaponB, &weaponB, &warior);
+    print_info(paladin);
+    print_info(warior);
+    std::cout << "\n";
+    std::cout << "- weapon C attack both:\n";
+    print_object(weaponC);
+    attack(weaponC, &weaponC, &paladin);
+    attack(weaponC, &weaponC, &warior);
     print_info(paladin);
     print_info(warior);
     std::cout << "\n";
 
-    std::cout << "weapon 2 attack both:\n";
-    attack(weapon_2, &paladin);
-    attack(weapon_2, &warior);
+    std::cout << "- weapon 2 attack both:\n";
+    print_object(weapon_c2);
+    attack(weapon_c2, &paladin);
+    attack(weapon_c2, &warior);
     print_info(paladin);
     print_info(warior);
     std::cout << "\n";
@@ -247,19 +267,8 @@ int main() {
     print_info(paladin);
     std::cout << '\n';
 
-    print_object_properties(paladin);
-    print_object(paladin);
-
-    print_object_properties(warior);
-    print_object(warior);
-
-    print_object_properties(shield);
-    print_object(shield);
-
-    print_object_properties(weapon);
-    print_object(weapon);
-
-    print_object(weapon_2);
-
-    print_object(potion);
+    for (const auto* entity : std::array{&paladin, &warior, &shield, &weaponA, &weaponB, &weaponC, &weapon_c2, &potion}) {
+        print_object_properties(*entity);
+        print_object(*entity);
+    }
 }
