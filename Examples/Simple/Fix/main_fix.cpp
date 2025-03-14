@@ -1,5 +1,3 @@
-#define IGNORE_ORDER_LIST
-
 #include <vector>
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/demangle_type_name.hpp"
@@ -28,16 +26,19 @@ int main() {
         Name{"Tile"},
         Damage{3}};
 
+#ifdef ARGUMENTS_REORDERED
+    std::cout << "\nARGUMENTS REORDERED\n\n";
     const auto living_tile = LivingTile{
         Name{"LivingTile"},
-#ifdef ARGUMENTS_REORDERED
         Health{160},
-        Damage{0, Effect{EffectType::Burn}}
+        Damage{0, Effect{EffectType::Burn}}};
 #else
+    std::cout << "\nARGUMENTS AS GIVEN\n\n";
+    const auto living_tile = LivingTile{
+        Name{"LivingTile"},
         Damage{0, Effect{EffectType::Burn}},  // ! Damage is part of Tile struct and cant't be reordered in layout
-        Health{60}                            // ! or IGNORE_ORDER_LIST is defined and Living property is added last
+        Health{60}};                          // ! or IGNORE_ORDER_LIST is defined and Living property is added last
 #endif
-    };
 
     const auto weird_tile = WeirdTile{
         Name{"Grass"},
