@@ -19,3 +19,7 @@ add_executable(5_default_values_${addons}
     default_values/default_values.cpp
 )
 target_link_libraries(5_default_values_${addons} PRIVATE "-lstdc++exp")
+
+add_executable(6_general_features_${addons}
+    general_features/general_features.cpp
+)
