@@ -1,6 +1,7 @@
 #pragma once
 #include <boost/mp11.hpp>
 #include <variant>
+#include "Features.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
 #include "Taumaturgia/Properties/unordered_token.hpp"
@@ -12,22 +13,22 @@ namespace impl {
 inline constinit const char restoring_type_name[] = "Restoring";
 
 template <typename T>
-class Restoring_ : public T {
+class RestoringSimple_ : public T {
 public:
-    using property_data = PropertyData<restoring_type_name, Restoring_, T>;
+    using property_data = PropertyData<restoring_type_name, RestoringSimple_, T>;
     using hold_type = EffectTypeContainer;
 
-    Restoring_() = default;
+    RestoringSimple_() = default;
 
     template <typename... INFO, typename... Args>
-    Restoring_(const Name& name, std::tuple<INFO...>&& restoreEffects, Args&&... args)
+    RestoringSimple_(const Name& name, std::tuple<INFO...>&& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           restoreEffects_{std::make_from_tuple<EffectTypeContainer>(std::move(restoreEffects))} {
         static_assert(constructible_from_args<EffectTypeContainer, INFO...>, "Can't create EffectTypeContainer from given tuple.");
     }
 
     template <typename... INFO, typename... Args>
-    Restoring_(const Name& name, const std::tuple<INFO...>& restoreEffects, Args&&... args)
+    RestoringSimple_(const Name& name, const std::tuple<INFO...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           restoreEffects_{std::make_from_tuple<EffectTypeContainer>(restoreEffects)} {
         static_assert(constructible_from_args<EffectTypeContainer, INFO...>, "Can't create EffectTypeContainer from given tuple.");
@@ -37,7 +38,7 @@ public:
 
     template <typename... Args>
         requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
-    Restoring_(const Token&, Args&&... args)
+    RestoringSimple_(const Token&, Args&&... args)
         : T{} {
         ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
     }
@@ -46,31 +47,31 @@ public:
 
     template <typename TT>
         requires(std::derived_from<T, std::remove_cvref_t<TT>>)
-    explicit Restoring_(TT&& t)
+    explicit RestoringSimple_(TT&& t)
         : T{std::forward<TT>(t)} {}
 
-    Restoring_(const Name& name)
+    RestoringSimple_(const Name& name)
         : T{name} {}
 
     template <typename... Args>
-    Restoring_(const Name& name, [[maybe_unused]] decltype(std::ignore) restoreEffects, Args&&... args)
+    RestoringSimple_(const Name& name, [[maybe_unused]] decltype(std::ignore) restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
     template <typename... Args>
-    Restoring_(const Name& name, EffectTypeContainer&& restoreEffects, Args&&... args)
+    RestoringSimple_(const Name& name, EffectTypeContainer&& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...}, restoreEffects_{std::move(restoreEffects)} {}
 
     template <typename... Args>
-    Restoring_(const Name& name, const EffectTypeContainer& restoreEffects, Args&&... args)
+    RestoringSimple_(const Name& name, const EffectTypeContainer& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...}, restoreEffects_{restoreEffects} {}
 
     template <typename... Args>
-    Restoring_(const Name& name, std::initializer_list<EffectType> restoreEffects, Args&&... args)
+    RestoringSimple_(const Name& name, std::initializer_list<EffectType> restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...}, restoreEffects_{restoreEffects} {}
 
     template <typename... V, typename... Args>
         requires contains_type<EffectTypeContainer, V...>
-    Restoring_(const Name& name, const std::variant<V...>& restoreEffects, Args&&... args)
+    RestoringSimple_(const Name& name, const std::variant<V...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           restoreEffects_{std::get_if<EffectTypeContainer>(&restoreEffects)
                               ? std::get<EffectTypeContainer>(restoreEffects)
@@ -78,13 +79,13 @@ public:
 
     template <typename... V, typename... Args>
         requires not_contains_type<EffectTypeContainer, V...>
-    Restoring_(const Name& name, [[maybe_unused]] const std::variant<V...>& restoreEffects, Args&&... args)
+    RestoringSimple_(const Name& name, [[maybe_unused]] const std::variant<V...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
     // MARK: nameless C-tor
 
     template <typename... Args>
-    Restoring_(EffectTypeContainer&& restoreEffects, Args&&... args)
+    RestoringSimple_(EffectTypeContainer&& restoreEffects, Args&&... args)
         : T{std::forward<Args>(args)...}, restoreEffects_{std::move(restoreEffects)} {}
 
     // MARK: getRestoreEffects
@@ -95,6 +96,16 @@ public:
 
 private:
     EffectTypeContainer restoreEffects_ = buildin_defaults<EffectTypeContainer>::get();
+};
+
+template <typename T>
+class Restoring_ : public Features_<RestoringSimple_<T>> {
+public:
+    using property_data = PropertyData<restoring_type_name, Restoring_, T>;
+    using child = Features_<RestoringSimple_<T>>;
+    using typename child::hold_type;
+
+    using child::child;
 };
 
 }  // namespace impl

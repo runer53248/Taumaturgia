@@ -1,5 +1,6 @@
 #pragma once
 #include <variant>
+#include "Features.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
 #include "Taumaturgia/Properties/unordered_token.hpp"
@@ -11,22 +12,22 @@ namespace impl {
 inline constinit const char protecting_type_name[] = "Protecting";
 
 template <typename T>
-class Protecting_ : public T {
+class ProtectingSimple_ : public T {
 public:
-    using property_data = PropertyData<protecting_type_name, Protecting_, T>;
+    using property_data = PropertyData<protecting_type_name, ProtectingSimple_, T>;
     using hold_type = Protection;
 
-    Protecting_() = default;
+    ProtectingSimple_() = default;
 
     template <typename... INFO, typename... Args>
-    constexpr Protecting_(const Name& name, std::tuple<INFO...>&& protection, Args&&... args)
+    constexpr ProtectingSimple_(const Name& name, std::tuple<INFO...>&& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           protection_{std::make_from_tuple<Protection>(std::move(protection))} {
         static_assert(constructible_from_args<Protection, INFO...>, "Can't create Protection from given tuple.");
     }
 
     template <typename... INFO, typename... Args>
-    constexpr Protecting_(const Name& name, const std::tuple<INFO...>& protection, Args&&... args)
+    constexpr ProtectingSimple_(const Name& name, const std::tuple<INFO...>& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           protection_{std::make_from_tuple<Protection>(protection)} {
         static_assert(constructible_from_args<Protection, INFO...>, "Can't create Protection from given tuple.");
@@ -36,7 +37,7 @@ public:
 
     template <typename... Args>
         requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
-    Protecting_(const Token&, Args&&... args)
+    ProtectingSimple_(const Token&, Args&&... args)
         : T{} {
         ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
     }
@@ -45,27 +46,27 @@ public:
 
     template <typename TT>
         requires(std::derived_from<T, std::remove_cvref_t<TT>>)
-    explicit Protecting_(TT&& t)  // explicit is important
+    explicit ProtectingSimple_(TT&& t)  // explicit is important
         : T{std::forward<TT>(t)} {}
 
-    Protecting_(const Name& name)
+    ProtectingSimple_(const Name& name)
         : T{name} {}
 
     template <typename... Args>
-    Protecting_(const Name& name, [[maybe_unused]] decltype(std::ignore) protection, Args&&... args)
+    ProtectingSimple_(const Name& name, [[maybe_unused]] decltype(std::ignore) protection, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
     template <typename... Args>
-    Protecting_(const Name& name, Protection&& protection, Args&&... args)
+    ProtectingSimple_(const Name& name, Protection&& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...}, protection_{std::move(protection)} {}
 
     template <typename... Args>
-    Protecting_(const Name& name, const Protection& protection, Args&&... args)
+    ProtectingSimple_(const Name& name, const Protection& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...}, protection_{protection} {}
 
     template <typename... V, typename... Args>
         requires contains_type<Protection, V...>
-    Protecting_(const Name& name, const std::variant<V...>& protection, Args&&... args)
+    ProtectingSimple_(const Name& name, const std::variant<V...>& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           protection_{std::get_if<Protection>(&protection)
                           ? std::get<Protection>(protection)
@@ -73,13 +74,13 @@ public:
 
     template <typename... V, typename... Args>
         requires not_contains_type<Protection, V...>
-    Protecting_(const Name& name, [[maybe_unused]] const std::variant<V...>& protection, Args&&... args)
+    ProtectingSimple_(const Name& name, [[maybe_unused]] const std::variant<V...>& protection, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
     // MARK: nameless C-tor
 
     template <typename... Args>
-    Protecting_(Protection&& protection, Args&&... args)
+    ProtectingSimple_(Protection&& protection, Args&&... args)
         : T{std::forward<Args>(args)...}, protection_{std::move(protection)} {}
 
     // MARK: getProtection
@@ -90,6 +91,16 @@ public:
 
 private:
     Protection protection_ = buildin_defaults<Protection>::get();
+};
+
+template <typename T>
+class Protecting_ : public Features_<ProtectingSimple_<T>> {
+public:
+    using property_data = PropertyData<protecting_type_name, Protecting_, T>;
+    using child = Features_<ProtectingSimple_<T>>;
+    using typename child::hold_type;
+
+    using child::child;
 };
 
 }  // namespace impl

@@ -1,6 +1,7 @@
 #pragma once
 #include <boost/mp11.hpp>
 #include <variant>
+#include "Features.hpp"
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
 #include "Taumaturgia/Properties/unordered_token.hpp"
@@ -12,22 +13,22 @@ namespace impl {
 inline constinit const char living_type_name[] = "Living";
 
 template <typename T>
-class Living_ : public T {
+class LivingSimple_ : public T {
 public:
-    using property_data = PropertyData<living_type_name, Living_, T>;
+    using property_data = PropertyData<living_type_name, LivingSimple_, T>;
     using hold_type = Health;
 
-    Living_() = default;
+    LivingSimple_() = default;
 
     template <typename... INFO, typename... Args>
-    Living_(const Name& name, std::tuple<INFO...>&& hp, Args&&... args)
+    LivingSimple_(const Name& name, std::tuple<INFO...>&& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           hp_{std::make_from_tuple<Health>(std::move(hp))} {
         static_assert(constructible_from_args<Health, INFO...>, "Can't create Health from given tuple.");
     }
 
     template <typename... INFO, typename... Args>
-    Living_(const Name& name, const std::tuple<INFO...>& hp, Args&&... args)
+    LivingSimple_(const Name& name, const std::tuple<INFO...>& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           hp_{std::make_from_tuple<Health>(hp)} {
         static_assert(constructible_from_args<Health, INFO...>, "Can't create Health from given tuple.");
@@ -37,7 +38,7 @@ public:
 
     template <typename... Args>
         requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
-    Living_(const Token&, Args&&... args)
+    LivingSimple_(const Token&, Args&&... args)
         : T{} {
         ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
     }
@@ -46,27 +47,27 @@ public:
 
     template <typename TT>
         requires(std::derived_from<T, std::remove_cvref_t<TT>>)
-    explicit Living_(TT&& t)
+    explicit LivingSimple_(TT&& t)
         : T{std::forward<TT>(t)} {}
 
-    Living_(const Name& name)
+    LivingSimple_(const Name& name)
         : T{name} {}
 
     template <typename... Args>
-    Living_(const Name& name, [[maybe_unused]] decltype(std::ignore) hp, Args&&... args)
+    LivingSimple_(const Name& name, [[maybe_unused]] decltype(std::ignore) hp, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
     template <typename... Args>
-    Living_(const Name& name, Health&& hp, Args&&... args)
+    LivingSimple_(const Name& name, Health&& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...}, hp_{std::move(hp)} {}
 
     template <typename... Args>
-    Living_(const Name& name, const Health& hp, Args&&... args)
+    LivingSimple_(const Name& name, const Health& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...}, hp_{hp} {}
 
     template <typename... V, typename... Args>
         requires contains_type<Health, V...>
-    Living_(const Name& name, const std::variant<V...>& hp, Args&&... args)
+    LivingSimple_(const Name& name, const std::variant<V...>& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...},
           hp_{std::get_if<Health>(&hp)
                   ? std::get<Health>(hp)
@@ -74,13 +75,13 @@ public:
 
     template <typename... V, typename... Args>
         requires not_contains_type<Health, V...>
-    Living_(const Name& name, [[maybe_unused]] const std::variant<V...>& hp, Args&&... args)
+    LivingSimple_(const Name& name, [[maybe_unused]] const std::variant<V...>& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
     // MARK: nameless C-tor
 
     template <typename... Args>
-    Living_(Health&& hp, Args&&... args)
+    LivingSimple_(Health&& hp, Args&&... args)
         : T{std::forward<Args>(args)...}, hp_{std::move(hp)} {}
 
     // MARK: getHealth
@@ -91,6 +92,16 @@ public:
 
 private:
     Health hp_ = buildin_defaults<Health>::get();
+};
+
+template <typename T>
+class Living_ : public Features_<LivingSimple_<T>> {
+public:
+    using property_data = PropertyData<living_type_name, Living_, T>;
+    using child = Features_<LivingSimple_<T>>;
+    using typename child::hold_type;
+
+    using child::child;
 };
 
 }  // namespace impl
