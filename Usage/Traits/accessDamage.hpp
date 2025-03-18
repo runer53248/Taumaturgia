@@ -23,23 +23,35 @@ concept GetDamageAccessable = requires(std::remove_cvref_t<T> x) {
 
 }  // namespace helpers
 
-struct accessDamage : public impl::accessType<Damage> {
+struct accessDamage /*: public impl::accessType<Damage>*/ {
+    using general_access_type = impl::accessType<Damage>;
     template <typename T>
-    static constexpr bool accessable = helpers::trait_accessable<T, accessDamage, Damage>;
+    static const bool general_accessable = general_access_type::accessable<T>;
+
+    template <typename T>
+    static constexpr bool accessable = helpers::trait_accessable<T, accessDamage, Damage> or general_accessable<T>;
 
     template <helpers::DamageAccessable T>
-        requires(not accessType<Damage>::accessable<T>)
+        // requires(not accessType<Damage>::accessable<T>)
+        requires(not (helpers::GetDamageAccessable<T> or helpers::CustomTypeAccessable<T, Damage>))  // prefer getDamage() when both dmg and getDamage() are visible
     static constexpr decltype(auto) get(T& el) noexcept {
         return (el.dmg);
     }
 
     template <helpers::GetDamageAccessable T>
-        requires(not accessType<Damage>::accessable<T>)
+        // requires(not accessType<Damage>::accessable<T>)
+        requires(not helpers::CustomTypeAccessable<T, Damage>)  // prefer custom access more
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getDamage();
     }
 
-    using accessType<Damage>::get;
+    // using accessType<Damage>::get;
+
+    template <typename T>
+        requires(not(helpers::DamageAccessable<T> or helpers::GetDamageAccessable<T>) and general_accessable<T> or helpers::CustomTypeAccessable<T, Damage>)
+    static constexpr decltype(auto) get(T& el) noexcept {
+        return general_access_type::get(el);
+    }
 };
 
 }  // namespace traits

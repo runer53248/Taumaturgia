@@ -23,23 +23,35 @@ concept GetNameAccessable = requires(std::remove_cvref_t<T> x) {
 
 }  // namespace helpers
 
-struct accessName : public impl::accessType<Name, std::string> {
+struct accessName /*: public impl::accessType<Name, std::string>*/ {
+    using general_access_type = impl::accessType<Name, std::string>;
     template <typename T>
-    static const bool accessable = helpers::trait_access_convertable<T, accessName, std::string>;
+    static const bool general_accessable = general_access_type::accessable<T>;
+
+    template <typename T>
+    static const bool accessable = helpers::trait_access_convertable<T, accessName, std::string> or general_accessable<T>;
 
     template <helpers::NameAccessable T>
-        requires(not accessType<Name, std::string>::accessable<T>)
+    // requires(not general_accessable<T>)
+        requires(not (helpers::GetNameAccessable<T> or helpers::CustomTypeAccessable<T, Name, std::string>))  // prefer getName() when both name and getName() are visible
     static constexpr decltype(auto) get(T& el) noexcept {
         return (el.name);
     }
 
     template <helpers::GetNameAccessable T>
-        requires(not accessType<Name, std::string>::accessable<T>)
+    // requires(not general_accessable<T>)
+        requires(not helpers::CustomTypeAccessable<T, Name, std::string>)  // prefer custom access more
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getName();
     }
 
-    using accessType<Name, std::string>::get;
+    // using accessType<Name, std::string>::get;
+
+    template <typename T>
+        requires(not(helpers::NameAccessable<T> or helpers::GetNameAccessable<T>) and general_accessable<T> or helpers::CustomTypeAccessable<T, Name, std::string>)
+    static constexpr decltype(auto) get(T& el) noexcept {
+        return general_access_type::get(el);
+    }
 };
 
 }  // namespace traits
