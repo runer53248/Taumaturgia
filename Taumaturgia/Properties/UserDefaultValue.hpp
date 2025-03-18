@@ -27,7 +27,11 @@ private:
 
 template <typename... Args>
 struct prepare_buildin_defaults {  // instantiate after specializations of UserDefaultValue
-    prepare_buildin_defaults() {
+    constexpr prepare_buildin_defaults() {
+        (buildin_defaults<Args>::setAsUserDefault(), ...);
+    }
+
+    static void operator ()() {
         (buildin_defaults<Args>::setAsUserDefault(), ...);
     }
 };
