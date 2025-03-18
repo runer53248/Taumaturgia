@@ -18,28 +18,22 @@ concept get_taged_able = requires {
     T::template getTaged<SKIP, Tags...>();
 };
 
+using types_ptr = std::variant<
+    std::nullptr_t,
+    Name*,
+    EffectTypeContainer*,
+    CureHealth*,
+    Protection*,
+    Damage*,
+    WearContainer*,
+    Health*>;
+
 // MARK: GeneralFeatures_
-
-template <typename T>
-// requires(not std::is_reference_v<T>)
-class GeneralFeatures_;
-
-struct FeaturesFor {
-    template <typename TARGET>
-    using type = GeneralFeatures_<TARGET>;
-};
-
-// MARK: GeneralFeatures_ for T
 
 template <typename T>
 // requires(not std::is_reference_v<T>)
 class GeneralFeatures_ : public T {
 public:
-    using property_data = PropertyData<general_features_name,
-                                       FeaturesFor::template type,
-                                       T>;       // ? should add TYPE into PropertyData?
-    using improvement_of = GeneralFeatures_<T>;  // will act like same type if TYPE and Tags are same
-
     // MARK: default and Args C-tors
 
     constexpr GeneralFeatures_() = default;
@@ -88,25 +82,15 @@ public:
     // MARK: getType
 
     template <typename RETURN, size_t DIG = 0>
+        requires(trait<RETURN>::template accessable<T>)
     constexpr decltype(auto) getType() & noexcept {
-        if constexpr (trait<RETURN>::template accessable<T>) {
-            return trait<RETURN>::get(static_cast<T&>(*this));
-        } else if constexpr (getType_template_able<T, RETURN>) {
-            return T::template getType<RETURN, DIG>();
-        } else {
-            static_assert(false, "WARNING: getType method tries to return void type");
-        }
+        return trait<RETURN>::get(static_cast<T&>(*this));
     }
 
     template <typename RETURN, size_t DIG = 0>
+        requires(trait<RETURN>::template accessable<T>)
     constexpr decltype(auto) getType() const& noexcept {
-        if constexpr (trait<RETURN>::template accessable<T>) {
-            return trait<RETURN>::get(static_cast<const T&>(*this));
-        } else if constexpr (getType_template_able<T, RETURN>) {
-            return T::template getType<RETURN, DIG>();
-        } else {
-            static_assert(false, "WARNING: getType method tries to return void type");
-        }
+        return trait<RETURN>::get(static_cast<const T&>(*this));
     }
 
     // MARK: getTypeTaged
@@ -156,12 +140,16 @@ public:
     constexpr decltype(auto) getTaged() & noexcept {
         if constexpr (get_taged_able<T, SKIP, TTags...>) {
             return T::template getTaged<SKIP, TTags...>();  // skip - diffrent tags
+        } else if constexpr (std::same_as<list<>, list<TTags...>>) {
+            return getBuildinTypes<SKIP>(types_ptr{});
         }
     }
     template <size_t SKIP, typename... TTags>
     constexpr decltype(auto) getTaged() const& noexcept {
         if constexpr (get_taged_able<T, SKIP, TTags...>) {
             return T::template getTaged<SKIP, TTags...>();  // skip - diffrent tags
+        } else if constexpr (std::same_as<list<>, list<TTags...>>) {
+            return getBuildinTypes<SKIP>(types_ptr{});
         }
     }
 
@@ -172,6 +160,46 @@ public:
     template <typename... TTags>
     constexpr decltype(auto) getTaged() const& noexcept {
         return getTaged<0, TTags...>();
+    }
+
+private:
+    template <size_t SKIP, typename TYPE_P, typename... REST_P>
+    constexpr decltype(auto) getBuildinTypes() & noexcept {
+        if constexpr (trait<std::remove_pointer_t<TYPE_P>>::template accessable<T>) {
+            if constexpr (SKIP > 0) {
+                return getBuildinTypes<SKIP - 1, REST_P...>();
+            } else {
+                return trait<std::remove_pointer_t<TYPE_P>>::get(static_cast<T&>(*this));
+            }
+        } else {
+            return getBuildinTypes<SKIP, REST_P...>();
+        }
+    }
+    template <size_t SKIP, typename TYPE_P, typename... REST_P>
+    constexpr decltype(auto) getBuildinTypes() const& noexcept {
+        if constexpr (trait<std::remove_pointer_t<TYPE_P>>::template accessable<T>) {
+            if constexpr (SKIP > 0) {
+                return getBuildinTypes<SKIP - 1, REST_P...>();
+            } else {
+                return trait<std::remove_pointer_t<TYPE_P>>::get(static_cast<const T&>(*this));
+            }
+        } else {
+            return getBuildinTypes<SKIP, REST_P...>();
+        }
+    }
+    template <size_t SKIP>
+    constexpr decltype(auto) getBuildinTypes() & noexcept {}
+    template <size_t SKIP>
+    constexpr decltype(auto) getBuildinTypes() const& noexcept {}
+
+    template <size_t SKIP, typename... TYPES_P>
+    constexpr decltype(auto) getBuildinTypes(std::variant<TYPES_P...>) & noexcept {
+        return getBuildinTypes<SKIP, TYPES_P...>();
+    }
+
+    template <size_t SKIP, typename... TYPES_P>
+    constexpr decltype(auto) getBuildinTypes(std::variant<TYPES_P...>) const& noexcept {
+        return getBuildinTypes<SKIP, TYPES_P...>();
     }
 };
 

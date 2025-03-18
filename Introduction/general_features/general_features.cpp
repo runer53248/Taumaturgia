@@ -1,27 +1,46 @@
-#include "Usage/With.hpp"
-
 #include <iostream>
 #include "Examples/demangle_type_name.hpp"
+#include "Usage/With.hpp"
+
+#include "Introduction/parse_type_name.hpp"
 #include "Taumaturgia/Properties/GeneralFeatures.hpp"
 
-struct Type {
-    Name name;
+struct Base {
+    Name name{"Name c"};  // default in base
     Damage dmg;
     Health hp;
 };
 
-int main() {
-    static_assert(trait<Name>::accessable<Type>);
-    static_assert(trait<Damage>::accessable<Type>);
-    static_assert(trait<Health>::accessable<Type>);
+struct name_t {};
 
-    using general_type = impl::GeneralFeatures_<Type>;
+template <>
+struct UserDefaultValue<Name> {  // default in ordered property
+    static constexpr auto value = [] { return Name{"Name a"}; };
+};
+template <>
+struct UserDefaultValue<Name, name_t> {  // default in unordered property
+    static constexpr auto value = [] { return Name{"Name b"}; };
+};
+
+int main() {
+    prepare_buildin_defaults<Name>();  // sets default for buildin properties
+
+    static_assert(trait<Name>::accessable<Base>);
+    static_assert(trait<Damage>::accessable<Base>);
+    static_assert(trait<Health>::accessable<Base>);
+
+    using general_type = GeneralFeatures<Base>;
 
     static_assert(trait<Name>::accessable<general_type>);
     static_assert(trait<Damage>::accessable<general_type>);
     static_assert(trait<Health>::accessable<general_type>);
 
     general_type type;
+
+    static_assert(std::same_as<decltype(type.getTaged<0>()), Name&>);
+    static_assert(std::same_as<decltype(type.getTaged<1>()), Damage&>);
+    static_assert(std::same_as<decltype(type.getTaged<2>()), Health&>);
+    static_assert(std::same_as<decltype(type.getTaged<3>()), void>);
 
     static_assert(std::same_as<decltype(type.getType<Name>()), Name&>);
     static_assert(std::same_as<decltype(std::as_const(type).getType<Name>()), const Name&>);
@@ -37,50 +56,74 @@ int main() {
 
     using general_type2 = add_properties_ordered<general_type,
                                                  AdvanceUserProperty<Health, struct x>::type,
-                                                 AdvanceUserProperty<Protection>::type>;
+                                                 AdvanceUserProperty<Name, name_t>::type,
+                                                 //  AdvanceUserProperty<Name>::type, // order depends Naming_impl
+                                                 //  AdvanceUserProperty<Protection>::type // order depends of Protecting_impl
+                                                 Naming_impl,
+                                                 Protecting_impl>;
 
     static_assert(std::same_as<decltype(type.getTaged<x>()), void>);
     static_assert(std::same_as<decltype(std::as_const(type).getTaged<x>()), void>);
+    static_assert(std::same_as<decltype(type.getTaged()), Name&>);
+    static_assert(std::same_as<decltype(std::as_const(type).getTaged()), const Name&>);
 
     general_type2 type2;
 
-    type.getType<Name, 1>() = Name{"Name 2"};
-    type.getType<Name, 0>() = Name{"Name 1"};
+    std::cout << "type2 0 = " << (std::string)type2.getType<Name, 0>() << '\n';
+    std::cout << "type2 1 = " << (std::string)type2.getType<Name, 1>() << '\n';
+    std::cout << "type2 2 = " << (std::string)type2.getType<Name, 2>() << '\n'
+              << '\n';
 
-    type2.getType<Name, 1>() = Name{"Name 2"};
     type2.getType<Name, 0>() = Name{"Name 1"};
+    type2.getType<Name, 1>() = Name{"Name 2"};
+    type2.getType<Name, 2>() = Name{"Name 3"};
 
-    std::cout << (std::string) type.getType<Name, 0>() << '\n';
-    std::cout << (std::string) type.getType<Name, 1>() << '\n';
+    std::cout << "type2 0 = " << (std::string)type2.getType<Name, 0>() << '\n';
+    std::cout << "type2 1 = " << (std::string)type2.getType<Name, 1>() << '\n';
+    std::cout << "type2 2 = " << (std::string)type2.getType<Name, 2>() << '\n'
+              << '\n';
 
-    std::cout << (std::string) type2.getType<Name, 0>() << '\n';
-    std::cout << (std::string) type2.getType<Name, 1>() << '\n';
+    std::cout << "taged 1 = " << (std::string)type2.getTaged<1>() << '\n';
+    std::cout << "taged 2 = " << (std::string)type2.getTaged<2>() << '\n';
+
+    {
+        using featured_general_type2 = GeneralFeatures<general_type2>;
+
+        featured_general_type2 feature_type2;
+        feature_type2.getType<Protection, 0>() = Protection{10};
+
+        std::cout << parse_type_name<featured_general_type2>() << '\n';
+        type2.getType<Protection, 0>() = Protection{10};
+        feature_type2.getType<Protection, 0>() = Protection{10};
+    }
 
     static_assert(std::same_as<decltype(type2.getType<Name, 1>()), Name&>);
     static_assert(std::same_as<decltype(std::as_const(type2).getType<Name, 1>()), const Name&>);
 
     static_assert(std::same_as<decltype(type2.getTaged<struct x>()), Health&>);
     static_assert(std::same_as<decltype(std::as_const(type2).getTaged<struct x>()), const Health&>);
-    static_assert(std::same_as<decltype(type2.getTaged()), Protection&>);
-    static_assert(std::same_as<decltype(std::as_const(type2).getTaged()), const Protection&>);
 
-    std::cout << name<general_type>() << '\n';
-    std::cout << name<general_type2>() << '\n';
+    static_assert(std::same_as<decltype(type2.getTaged()), Protection&>);
+    static_assert(std::same_as<decltype(type2.getTaged<1>()), Name&>);
+    static_assert(std::same_as<decltype(type2.getTaged<2>()), Name&>);
+    static_assert(std::same_as<decltype(type2.getTaged<3>()), Damage&>);
+    static_assert(std::same_as<decltype(type2.getTaged<4>()), Health&>);
+    static_assert(std::same_as<decltype(type2.getTaged<5>()), void>);
+
+    static_assert(std::same_as<decltype(std::as_const(type2).getTaged()), const Protection&>);
+    static_assert(std::same_as<decltype(std::as_const(type2).getTaged<1>()), const Name&>);
+    static_assert(std::same_as<decltype(std::as_const(type2).getTaged<2>()), const Name&>);
+    static_assert(std::same_as<decltype(std::as_const(type2).getTaged<3>()), const Damage&>);
+    static_assert(std::same_as<decltype(std::as_const(type2).getTaged<4>()), const Health&>);
+    static_assert(std::same_as<decltype(std::as_const(type2).getTaged<5>()), void>);
+
+    std::cout << parse_type_name<general_type>() << '\n';
+    std::cout << parse_type_name<general_type2>() << '\n';
 
     std::cout << name<decltype(type2.getTaged<struct x>())>() << '\n';
     std::cout << name<decltype(std::as_const(type2).getTaged<struct x>())>() << '\n';
     std::cout << name<decltype(type2.getTaged())>() << '\n';
     std::cout << name<decltype(std::as_const(type2).getTaged())>() << '\n';
 
-    using general_type3 = add_properties_ordered<Type,
-                                                 AdvanceUserProperty<Health, struct x>::type,
-                                                 impl::GeneralFeatures_,
-                                                 AdvanceUserProperty<Protection>::type>;
-    // using general_type4 = add_properties_ordered<Type,
-    //                                              impl::GeneralFeatures_,
-    //                                              AdvanceUserProperty<Health, struct x>::type,
-    //                                              AdvanceUserProperty<Protection>::type>;
-
-    std::cout << name<general_type3>() << '\n';
-    // std::cout << name<general_type4>() << '\n';
+    static_assert(not is_property<GeneralFeatures>);
 }
