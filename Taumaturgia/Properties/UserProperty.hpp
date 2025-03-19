@@ -28,7 +28,7 @@ template <typename TYPE, typename... Tags>
 struct PropertyFor {
     template <typename TARGET>
     using type = UserProperty_<TYPE, TARGET, Tags...>;
-};
+};  // may be specialized to replacing UserProperty_
 
 // MARK: UserProperty_ for tag
 

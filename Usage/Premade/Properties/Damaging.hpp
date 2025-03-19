@@ -119,12 +119,6 @@ private:
 template <typename T, typename... Tags>
 class Damaging_;
 
-// template <typename... Tags>
-// struct PropertyFor<Damage, Tags...> {  // add_properties_ordered rely on it when calapsing nested base type (Type_unlimited_nest_collapse in examples)
-//     template <typename TARGET>
-//     using type = Damaging_<TARGET, Tags...>;
-// };
-
 template <typename... Tags>
 struct Damaging_For {
     template <typename TARGET>
