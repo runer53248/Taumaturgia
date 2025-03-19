@@ -37,10 +37,8 @@ int main() {
 
     AccessInt::get<0>(type) = 100;
     AccessInt::get<1>(type) = 200;
-    AccessInt::get<2>(type) = 300;  // same as above - get<1> == 300
     std::cout << type.getType<int, 0>() << '\n';
     std::cout << type.getType<int, 1>() << '\n';
-    std::cout << type.getType<int, 2>() << '\n';  // same as type.getType<int, 1>
     std::cout << '\n';
 
     using Type = decltype(type);

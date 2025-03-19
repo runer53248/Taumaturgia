@@ -232,7 +232,9 @@ public:
     template <size_t DIG>
     constexpr decltype(auto) getType() & noexcept {
         if constexpr (DIG) {
-            return T::template getType<DIG - 1>();
+            if constexpr (requires { T::template getType<DIG - 1>(); }) {
+                return T::template getType<DIG - 1>();
+            }
         } else {
             return (type_);
         }
@@ -241,7 +243,9 @@ public:
     template <size_t DIG>
     constexpr decltype(auto) getType() const& noexcept {
         if constexpr (DIG) {
-            return T::template getType<DIG - 1>();
+            if constexpr (requires { T::template getType<DIG - 1>(); }) {
+                return T::template getType<DIG - 1>();
+            }
         } else {
             return (type_);
         }

@@ -63,10 +63,6 @@ int main() {
     std::cout << ((type_no.getType<Damage>() == trait<Damage>::get(type_no)))
               << '\n';
     std::cout << type_no.getType<Damage>() << '\n';
-    std::cout << type_no.getType<Damage, 1>() << '\n';  // dig to deeper type if can
-    std::cout << type_no.getType<Damage, 2>() << '\n';  // dig to even deeper type if can
-    std::cout << type_no.getType<Damage, 3>() << '\n';  // dig to even deeper type if can
-    std::cout << type_no.getType<Damage, 4>() << '\n';  // dig to even deeper type if can
     std::cout << '\n';
 
     Type_unlimited_nest type_u{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
@@ -76,8 +72,8 @@ int main() {
     std::cout << type_u.getType<Damage>() << '\n';
     std::cout << type_u.getType<Damage, 1>() << '\n';  // dig to deeper type if can
     std::cout << type_u.getType<Damage, 2>() << '\n';  // dig to even deeper type if can
-    std::cout << type_u.getType<Damage, 3>() << '\n';  // dig to even deeper type if can
-    std::cout << type_u.getType<Damage, 4>() << '\n';  // dig to even deeper type if can
+    static_assert(&type_u.getType<Damage, 1>() == &type_u.getType<1>());
+    static_assert(&type_u.getType<Damage, 2>() == &type_u.getType<2>());
     std::cout << '\n';
 
     Type_nest_unlimited_one type2{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
@@ -85,10 +81,6 @@ int main() {
     std::cout << ((type2.getType<Damage>() == trait<Damage>::get(type2)))
               << '\n';
     std::cout << type2.getType<Damage>() << '\n';
-    std::cout << type2.getType<Damage, 1>() << '\n';  // dig to deeper type if can
-    std::cout << type2.getType<Damage, 2>() << '\n';  // dig to even deeper type if can
-    std::cout << type2.getType<Damage, 3>() << '\n';  // dig to even deeper type if can
-    std::cout << type2.getType<Damage, 4>() << '\n';  // dig to even deeper type if can
     std::cout << '\n';
 
     Type_nest_unlimited_two type3{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
@@ -96,10 +88,6 @@ int main() {
     std::cout << ((type3.getType<Damage>() == trait<Damage>::get(type3)))
               << '\n';
     std::cout << type3.getType<Damage>() << '\n';
-    std::cout << type3.getType<Damage, 1>() << '\n';  // dig to deeper type if can
-    std::cout << type3.getType<Damage, 2>() << '\n';  // dig to even deeper type if can
-    std::cout << type3.getType<Damage, 3>() << '\n';  // dig to even deeper type if can
-    std::cout << type3.getType<Damage, 4>() << '\n';  // dig to even deeper type if can
     std::cout << '\n';
 
     Type_complex type4{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
@@ -107,10 +95,6 @@ int main() {
     std::cout << ((type4.getType<Damage>() == trait<Damage>::get(type4)))
               << '\n';
     std::cout << type4.getType<Damage>() << '\n';
-    std::cout << type4.getType<Damage, 1>() << '\n';  // dig to deeper type if can
-    std::cout << type4.getType<Damage, 2>() << '\n';  // dig to even deeper type if can
-    std::cout << type4.getType<Damage, 3>() << '\n';  // dig to even deeper type if can
-    std::cout << type4.getType<Damage, 4>() << '\n';  // dig to even deeper type if can
     std::cout << '\n';
 
     Type_complex_2 type5{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
@@ -118,10 +102,6 @@ int main() {
     std::cout << ((type5.getType<Damage>() == trait<Damage>::get(type5)))
               << '\n';
     std::cout << type5.getType<Damage>() << '\n';
-    std::cout << type5.getType<Damage, 1>() << '\n';  // dig to deeper type if can
-    std::cout << type5.getType<Damage, 2>() << '\n';  // dig to even deeper type if can
-    std::cout << type5.getType<Damage, 3>() << '\n';  // dig to even deeper type if can
-    std::cout << type5.getType<Damage, 4>() << '\n';  // dig to even deeper type if can
     std::cout << '\n';
 
     Type_tag_complex type6{Damage{5}, Damage{10}, Damage{15}, Damage{20}, Damage{25}};
@@ -130,10 +110,30 @@ int main() {
               << '\n';
     std::cout << type6.getType<Damage>() << '\n';
     std::cout << type6.getType<Damage, 1>() << '\n';  // dig to deeper type if can
-    std::cout << type6.getType<Damage, 2>() << '\n';  // dig to even deeper type if can
-    std::cout << type6.getType<Damage, 3>() << '\n';  // dig to even deeper type if can
-    std::cout << type6.getType<Damage, 4>() << '\n';  // dig to even deeper type if can
+    static_assert(&type6.getType<Damage, 1>() == &type6.getType<1>());
     std::cout << '\n';
+
+    using unlimited_nest_1 = impl::UserProperty_<Name, impl::UserProperty_<Name, MyType, int>, int>;
+    using unlimited_nest_2 = impl::UserProperty_<Damage, impl::UserProperty_<Damage, MyType, int>, int>;
+
+    std::cout << "unlimited_nest_1            = " << name<unlimited_nest_1>() << '\n';
+    std::cout << "unlimited_nest_2            = " << name<unlimited_nest_2>() << '\n';
+    std::cout << "unlimited_nest_1 collapse   = " << name<add_properties_ordered<unlimited_nest_1>>() << '\n';
+    std::cout << "unlimited_nest_2 collapse   = " << name<add_properties_ordered<unlimited_nest_2>>() << '\n';
+    std::cout << '\n';
+    static_assert(std::same_as<add_properties_ordered<unlimited_nest_1>, impl::UserProperty_<Name, MyType, int>>);
+    static_assert(std::same_as<add_properties_ordered<unlimited_nest_2>, impl::UserProperty_<Damage, MyType, int>>);
+
+#ifndef NO_PREMADE_PROPERTIES
+    using unlimited_nest_3 = impl::Naming_<impl::Naming_<MyType>>;
+    using unlimited_nest_4 = impl::Damaging_<impl::Damaging_<MyType, int>, int>;
+    std::cout << "unlimited_nest_3            = " << name<unlimited_nest_3>() << '\n';
+    std::cout << "unlimited_nest_4            = " << name<unlimited_nest_4>() << '\n';
+    std::cout << "unlimited_nest_3 collapse   = " << name<add_properties_ordered<unlimited_nest_3>>() << '\n';
+    std::cout << "unlimited_nest_4 collapse   = " << name<add_properties_ordered<unlimited_nest_4>>() << '\n';
+    static_assert(std::same_as<add_properties_ordered<unlimited_nest_3>, impl::Naming_<MyType>>);
+    static_assert(std::same_as<add_properties_ordered<unlimited_nest_4>, impl::Damaging_<MyType, int>>);
+#endif
 
     return 0;
 }

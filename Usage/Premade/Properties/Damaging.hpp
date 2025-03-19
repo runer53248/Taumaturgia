@@ -16,7 +16,7 @@ template <typename T, typename... Tags>
 class DamagingSimple_;
 
 template <typename... Tags>
-struct PropertyFor<Damage, Tags...> {
+struct DamagingFor {
     template <typename TARGET>
     using type = DamagingSimple_<TARGET, Tags...>;
 };
@@ -25,7 +25,7 @@ template <typename T, typename... Tags>
 class DamagingSimple_ : public T {
 public:
     using property_data = PropertyData<damaging_type_name,
-                                       PropertyFor<Damage, Tags...>::template type,
+                                       DamagingFor<Tags...>::template type,
                                        T,
                                        Tags...>;
     using hold_type = Damage;
@@ -119,8 +119,14 @@ private:
 template <typename T, typename... Tags>
 class Damaging_;
 
+// template <typename... Tags>
+// struct PropertyFor<Damage, Tags...> {  // add_properties_ordered rely on it when calapsing nested base type (Type_unlimited_nest_collapse in examples)
+//     template <typename TARGET>
+//     using type = Damaging_<TARGET, Tags...>;
+// };
+
 template <typename... Tags>
-struct DamagingFor {
+struct Damaging_For {
     template <typename TARGET>
     using type = Damaging_<TARGET, Tags...>;
 };
@@ -129,7 +135,7 @@ template <typename T, typename... Tags>
 class Damaging_ : public Features_<DamagingSimple_<T, Tags...>> {
 public:
     using property_data = PropertyData<damaging_type_name,
-                                       DamagingFor<Tags...>::template type,
+                                       Damaging_For<Tags...>::template type,
                                        T,
                                        Tags...>;
     using child = Features_<DamagingSimple_<T, Tags...>>;
