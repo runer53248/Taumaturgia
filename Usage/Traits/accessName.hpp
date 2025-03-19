@@ -33,7 +33,7 @@ struct accessName /*: public impl::accessType<Name, std::string>*/ {
 
     template <helpers::NameAccessable T>
     // requires(not general_accessable<T>)
-        requires(not (helpers::GetNameAccessable<T> or helpers::CustomTypeAccessable<T, Name, std::string>))  // prefer getName() when both name and getName() are visible
+        requires(not(helpers::GetNameAccessable<T> or helpers::CustomTypeAccessable<T, Name, std::string>))  // prefer getName() when both name and getName() are visible
     static constexpr decltype(auto) get(T& el) noexcept {
         return (el.name);
     }
@@ -48,7 +48,7 @@ struct accessName /*: public impl::accessType<Name, std::string>*/ {
     // using accessType<Name, std::string>::get;
 
     template <typename T>
-        requires(not(helpers::NameAccessable<T> or helpers::GetNameAccessable<T>) and general_accessable<T> or helpers::CustomTypeAccessable<T, Name, std::string>)
+        requires((not(helpers::NameAccessable<T> or helpers::GetNameAccessable<T>) and general_accessable<T>) or helpers::CustomTypeAccessable<T, Name, std::string>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return general_access_type::get(el);
     }
