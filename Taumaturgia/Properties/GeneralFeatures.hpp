@@ -99,9 +99,19 @@ public:
 
     template <size_t DIG>
     constexpr decltype(auto) getType() & noexcept {
-        using L = list<Name, Damage, Health>;
         using boost::mp11::mp_at_c;
+        using boost::mp11::mp_filter;
         using boost::mp11::mp_size;
+        using L = boost::mp11::mp_filter<
+            trait_accessable,
+            // list_of_types,
+            list<Name,
+                 EffectTypeContainer,
+                 CureHealth,
+                 Protection,
+                 Damage,
+                 WearContainer,
+                 Health>>;
         if constexpr (DIG >= mp_size<L>::value) {
             return;
         } else {
@@ -111,9 +121,19 @@ public:
 
     template <size_t DIG>
     constexpr decltype(auto) getType() const& noexcept {
-        using L = list<Name, Damage, Health>;
         using boost::mp11::mp_at_c;
+        using boost::mp11::mp_filter;
         using boost::mp11::mp_size;
+        using L = boost::mp11::mp_filter<
+            trait_accessable,
+            // list_of_types,
+            list<Name,
+                 EffectTypeContainer,
+                 CureHealth,
+                 Protection,
+                 Damage,
+                 WearContainer,
+                 Health>>;
         if constexpr (DIG >= mp_size<L>::value) {
             return;
         } else {
@@ -191,6 +211,9 @@ public:
     }
 
 private:
+    template <class T1>
+    using trait_accessable = boost::mp11::mp_bool<trait<T1>::template accessable<T>>;
+
     template <size_t SKIP, typename TYPE_P, typename... REST_P>
     constexpr decltype(auto) getBuildinTypes() & noexcept {
         if constexpr (trait<std::remove_pointer_t<TYPE_P>>::template accessable<T>) {
