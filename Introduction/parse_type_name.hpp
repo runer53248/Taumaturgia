@@ -1,10 +1,11 @@
 #pragma once
-#include <iostream>
 #include "Examples/PreetyPrint/PrintDamage.hpp"
 #include "Examples/demangle_type_name.hpp"
 
+#include "Usage/With.hpp"  // for some includes to Scheme, traits and types
+
 template <typename T>
-auto type_name_result(std::string text = name<T>()) {  //! this version assumes that base type is named "Base" or "main::Base"
+auto type_name_result(std::string text = name<T>()) {
     struct Data {
         std::string type;
         std::string num;
@@ -33,7 +34,10 @@ auto type_name_result(std::string text = name<T>()) {  //! this version assumes 
         }
     };
 
-    what = "main::Base";
+    using base_type = typename helpers::Scheme<T>::base;
+    std::string base_name = name<base_type>();
+
+    what = base_name;
     into = "Base";
     find_and_replace(text, what, into);
 
@@ -50,7 +54,6 @@ auto type_name_result(std::string text = name<T>()) {  //! this version assumes 
 
     what = "impl::";  // replace pattern "impl::****_<" with "\nimpl::****_\n" or remove "impl::"
     for (size_t target = text.find(what); target != std::string::npos; target = text.find(what)) {
-
         std::string ender = "_<";
         auto target_end = text.find(ender, target);
 
@@ -129,13 +132,17 @@ auto type_name_result(std::string text = name<T>()) {  //! this version assumes 
 
     into = "-> Base";  // tag base type
     std::string token_text;
-    for (std::string what : {"Base>,", "Base>", "Base,"}) {
-        if (auto target = text.find(what); target != std::string::npos) {
-            text.replace(target, what.size(), into);
+    if (text.size() < 6) {
+        text = into;
+    } else {
+        for (std::string what : {"Base>,", "Base>", "Base,"}) {
+            if (auto target = text.find(what); target != std::string::npos) {
+                text.replace(target, what.size(), into);
 
-            size_t after_base = target + into.size();
-            token_text = "Tokens: [" + text.substr(after_base);
-            text = text.substr(0, after_base);
+                size_t after_base = target + into.size();
+                token_text = "Tokens: [" + text.substr(after_base);
+                text = text.substr(0, after_base);
+            }
         }
     }
 
@@ -182,21 +189,33 @@ auto type_name_result(std::string text = name<T>()) {  //! this version assumes 
         offset = finish + 1;
     }
 
-    // text += '\n';
-    result.base = text + '\n';
+    result.base = text;
+    result.base += " == " + base_name + '\n';
+    if constexpr (trait<Name>::accessable<base_type>)
+        result.base += "  : Name\n";
+    if constexpr (trait<CureHealth>::accessable<base_type>)
+        result.base += "  : CureHealth\n";
+    if constexpr (trait<Protection>::accessable<base_type>)
+        result.base += "  : Protection\n";
+    if constexpr (trait<Damage>::accessable<base_type>)
+        result.base += "  : Damage\n";
+    if constexpr (trait<EffectContainer>::accessable<base_type>)
+        result.base += "  : EffectContainer\n";
+    if constexpr (trait<WearContainer>::accessable<base_type>)
+        result.base += "  : WearContainer\n";
+    if constexpr (trait<Health>::accessable<base_type>)
+        result.base += "  : Health\n";
+
     return result;
 };
 
 template <typename T>
 auto parse_type_name() {
+    std::string result;
     auto data = type_name_result<T>();
-
     for (auto [type, pos, tokens] : data.properties) {
-        std::cout << '\n'
-                  << pos
-                  << " : " << type
-                  << " : " << tokens;
+        result += '\n' + pos + " : " + type + " : " + tokens;
     }
-
-    return data.base;
+    result += data.base;
+    return result;
 }
