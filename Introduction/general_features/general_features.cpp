@@ -77,6 +77,9 @@ int main() {
     type2.getType<Name, 0>() = Name{"Name 1"};
     type2.getType<Name, 1>() = Name{"Name 2"};
     type2.getType<Name, 2>() = Name{"Name 3"};
+    type2.getType<Protection, 0>() = Protection{10};
+    type2.getType<Health, 0>() = Health{100};
+    type2.getType<Health, 1>() = Health{200};
 
     std::cout << "type2 0 = " << (std::string)type2.getType<Name, 0>() << '\n';
     std::cout << "type2 1 = " << (std::string)type2.getType<Name, 1>() << '\n';
@@ -84,7 +87,14 @@ int main() {
               << '\n';
 
     std::cout << "taged 1 = " << (std::string)type2.getTaged<1>() << '\n';
-    std::cout << "taged 2 = " << (std::string)type2.getTaged<2>() << '\n';
+    std::cout << "taged 2 = " << (std::string)type2.getTaged<2>() << '\n'
+              << '\n';
+
+    std::cout << "TypeTaged p = " << type2.getTypeTaged<Protection>().armorClass() << '\n';
+    std::cout << "TypeTaged h1 = " << type2.getTypeTaged<Health, x>().value() << '\n';
+    std::cout << "TypeTaged h2 = " << type2.getTypeTaged<Health>().value() << '\n';
+    std::cout << "TypeTaged 1 = " << (std::string)type2.getTypeTaged<Name>() << '\n';
+    std::cout << "TypeTaged 2 = " << (std::string)type2.getTypeTaged<Name, name_t>() << '\n';
 
     {
         using featured_general_type2 = GeneralFeatures<general_type2>;
@@ -93,7 +103,6 @@ int main() {
         feature_type2.getType<Protection, 0>() = Protection{10};
 
         std::cout << parse_type_name<featured_general_type2>() << '\n';
-        type2.getType<Protection, 0>() = Protection{10};
         feature_type2.getType<Protection, 0>() = Protection{10};
     }
 
