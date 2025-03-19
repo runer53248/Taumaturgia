@@ -84,13 +84,41 @@ public:
     template <typename RETURN, size_t DIG = 0>
         requires(trait<RETURN>::template accessable<T>)
     constexpr decltype(auto) getType() & noexcept {
-        return trait<RETURN>::get(static_cast<T&>(*this));
+        if constexpr (DIG == 0) {
+            return trait<RETURN>::get(static_cast<T&>(*this));
+        }
     }
 
     template <typename RETURN, size_t DIG = 0>
         requires(trait<RETURN>::template accessable<T>)
     constexpr decltype(auto) getType() const& noexcept {
-        return trait<RETURN>::get(static_cast<const T&>(*this));
+        if constexpr (DIG == 0) {
+            return trait<RETURN>::get(static_cast<const T&>(*this));
+        }
+    }
+
+    template <size_t DIG>
+    constexpr decltype(auto) getType() & noexcept {
+        using L = list<Name, Damage, Health>;
+        using boost::mp11::mp_at_c;
+        using boost::mp11::mp_size;
+        if constexpr (DIG >= mp_size<L>::value) {
+            return;
+        } else {
+            return trait<mp_at_c<L, DIG>>::get(static_cast<T&>(*this));
+        }
+    }
+
+    template <size_t DIG>
+    constexpr decltype(auto) getType() const& noexcept {
+        using L = list<Name, Damage, Health>;
+        using boost::mp11::mp_at_c;
+        using boost::mp11::mp_size;
+        if constexpr (DIG >= mp_size<L>::value) {
+            return;
+        } else {
+            return trait<mp_at_c<L, DIG>>::get(static_cast<const T&>(*this));
+        }
     }
 
     // MARK: getTypeTaged

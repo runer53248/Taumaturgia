@@ -19,24 +19,43 @@ public:
             std::is_const_v<std::remove_reference_t<Self>>,
             const base_type&,
             base_type&>;
+        using type = std::conditional_t<
+            std::is_const_v<std::remove_reference_t<Self>>,
+            const T&,
+            T&>;
 
         if constexpr (std::is_same_v<RETURN, hold_type>) {
             if constexpr (DIG) {
                 if constexpr (getType_template_able<base_type, RETURN>) {
                     return static_cast<base>(self).template getType<RETURN, DIG - 1>();
                 }
+            } else {
+                return trait<RETURN>::get(static_cast<type>(self));
             }
-            using type = std::conditional_t<
-                std::is_const_v<std::remove_reference_t<Self>>,
-                const T&,
-                T&>;
-            return trait<RETURN>::get(static_cast<type>(self));
         } else {
             if constexpr (getType_template_able<base_type, RETURN>) {
                 return static_cast<base>(self).template getType<RETURN, DIG>();
             } else {
                 // static_assert(false, "WARNING: getType method tries to return void type");
             }
+        }
+    }
+
+    template <size_t DIG, typename Self>
+    constexpr decltype(auto) getType(this Self&& self) noexcept {
+        using base = std::conditional_t<
+            std::is_const_v<std::remove_reference_t<Self>>,
+            const base_type&,
+            base_type&>;
+        using type = std::conditional_t<
+            std::is_const_v<std::remove_reference_t<Self>>,
+            const T&,
+            T&>;
+
+        if constexpr (DIG) {
+            return static_cast<base>(self).template getType<DIG - 1>();
+        } else {
+            return trait<hold_type>::get(static_cast<type>(self));
         }
     }
 
@@ -71,15 +90,15 @@ public:
             std::is_const_v<std::remove_reference_t<Self>>,
             const base_type&,
             base_type&>;
+        using type = std::conditional_t<
+            std::is_const_v<std::remove_reference_t<Self>>,
+            const T&,
+            T&>;
 
         if constexpr (std::same_as<list<TTags...>, list<>>) {
             if constexpr (SKIP > 0) {
                 return static_cast<base>(self).template getTaged<SKIP - 1>();  // skip
             } else {
-                using type = std::conditional_t<
-                    std::is_const_v<std::remove_reference_t<Self>>,
-                    const T&,
-                    T&>;
                 return trait<hold_type>::get(static_cast<type>(self));
             }
         } else {
@@ -90,6 +109,20 @@ public:
     template <typename... TTags, typename Self>
     constexpr decltype(auto) getTaged(this Self&& self) noexcept {
         return self.template getTaged<0, TTags...>();
+    }
+
+    // MARK: getTypeOf
+
+    template <typename RETURN, typename... TTags, typename Self>
+    constexpr decltype(auto) getTypeOf(this Self&& self, [[maybe_unused]] list<RETURN, TTags...> signature) noexcept {
+        return self.template getTypeTaged<RETURN, TTags...>();
+    }
+
+    // MARK: getTypeOfSignature
+
+    template <typename Signature, typename Self>
+    constexpr decltype(auto) getTypeOfSignature(this Self&& self) noexcept {
+        return self.template getTypeOf(Signature{});
     }
 };
 

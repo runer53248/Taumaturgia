@@ -198,8 +198,9 @@ public:
                 if constexpr (getType_template_able<T, RETURN>) {
                     return T::template getType<RETURN, DIG - 1>();
                 }
+            } else {
+                return (type_);
             }
-            return (type_);
         } else {
             if constexpr (getType_template_able<T, RETURN>) {
                 return T::template getType<RETURN, DIG>();
@@ -216,14 +217,33 @@ public:
                 if constexpr (getType_template_able<T, RETURN>) {
                     return T::template getType<RETURN, DIG - 1>();
                 }
+            } else {
+                return (type_);
             }
-            return (type_);
         } else {
             if constexpr (getType_template_able<T, RETURN>) {
                 return T::template getType<RETURN, DIG>();
             } else {
                 // static_assert(false, "WARNING: getType method tries to return void type");
             }
+        }
+    }
+
+    template <size_t DIG>
+    constexpr decltype(auto) getType() & noexcept {
+        if constexpr (DIG) {
+            return T::template getType<DIG - 1>();
+        } else {
+            return (type_);
+        }
+    }
+
+    template <size_t DIG>
+    constexpr decltype(auto) getType() const& noexcept {
+        if constexpr (DIG) {
+            return T::template getType<DIG - 1>();
+        } else {
+            return (type_);
         }
     }
 
