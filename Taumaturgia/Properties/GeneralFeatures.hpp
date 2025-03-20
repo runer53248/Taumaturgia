@@ -81,24 +81,19 @@ public:
 
     // MARK: getType
 
-    template <typename RETURN, size_t DIG = 0>
+    template <typename RETURN, size_t DIG = 0, typename Self>
         requires(trait<RETURN>::template accessable<T>)
-    constexpr decltype(auto) getType() & noexcept {
+    constexpr decltype(auto) getType(this Self& self) noexcept {
+        using TT = std::conditional_t<
+            std::is_const_v<std::remove_reference_t<Self>>,
+            const T&, T&>;
         if constexpr (DIG == 0) {
-            return trait<RETURN>::get(static_cast<T&>(*this));
+            return trait<RETURN>::get(static_cast<TT>(self));
         }
     }
 
-    template <typename RETURN, size_t DIG = 0>
-        requires(trait<RETURN>::template accessable<T>)
-    constexpr decltype(auto) getType() const& noexcept {
-        if constexpr (DIG == 0) {
-            return trait<RETURN>::get(static_cast<const T&>(*this));
-        }
-    }
-
-    template <size_t DIG>
-    constexpr decltype(auto) getType() & noexcept {
+    template <size_t DIG = 0, typename Self>
+    constexpr decltype(auto) getType(this Self& self) noexcept {
         using boost::mp11::mp_at_c;
         using boost::mp11::mp_filter;
         using boost::mp11::mp_size;
@@ -112,32 +107,11 @@ public:
                  Damage,
                  WearContainer,
                  Health>>;
-        if constexpr (DIG >= mp_size<L>::value) {
-            return;
-        } else {
-            return trait<mp_at_c<L, DIG>>::get(static_cast<T&>(*this));
-        }
-    }
-
-    template <size_t DIG>
-    constexpr decltype(auto) getType() const& noexcept {
-        using boost::mp11::mp_at_c;
-        using boost::mp11::mp_filter;
-        using boost::mp11::mp_size;
-        using L = boost::mp11::mp_filter<
-            trait_accessable,
-            // list_of_types,
-            list<Name,
-                 EffectTypeContainer,
-                 CureHealth,
-                 Protection,
-                 Damage,
-                 WearContainer,
-                 Health>>;
-        if constexpr (DIG >= mp_size<L>::value) {
-            return;
-        } else {
-            return trait<mp_at_c<L, DIG>>::get(static_cast<const T&>(*this));
+        using TT = std::conditional_t<
+            std::is_const_v<std::remove_reference_t<Self>>,
+            const T&, T&>;
+        if constexpr (DIG < mp_size<L>::value) {
+            return trait<mp_at_c<L, DIG>>::get(static_cast<TT>(self));
         }
     }
 
@@ -253,6 +227,26 @@ private:
         return getBuildinTypes<SKIP, TYPES_P...>();
     }
 };
+
+namespace impl::Test {
+using general_type = int;
+using general_type2 = Name;
+
+struct test_general_base {
+    general_type type;
+};
+
+struct test_general_base2 {
+    general_type2 type;
+};
+
+using tested_general_type = GeneralFeatures_<test_general_base>;
+using tested_general_type2 = GeneralFeatures_<test_general_base2>;
+
+static_assert(not have_get_features<tested_general_type, general_type>);  // ! general_type is not on list_of_types
+static_assert(have_get_features<tested_general_type2, general_type2>);
+
+}  // namespace impl::Test
 
 }  // namespace impl
 
