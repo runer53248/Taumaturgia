@@ -126,4 +126,28 @@ public:
     }
 };
 
+namespace impl::Test {
+using type = int;
+
+struct test_base {};
+
+template <template <typename...> typename property, typename T>
+struct test_metadata {
+    using base_type = T;
+};
+
+template <typename T>
+struct test_property : public T {
+    using property_data = test_metadata<test_property, T>;
+    using hold_type = type;
+    
+    hold_type type;
+};
+
+using tested_type = Features_<test_property<test_base>>;
+
+static_assert(have_get_features<tested_type, type>);
+
+}  // namespace impl::Test
+
 }  // namespace impl
