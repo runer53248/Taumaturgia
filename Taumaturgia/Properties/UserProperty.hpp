@@ -4,6 +4,7 @@
 #include <variant>
 #include "Helpers/constructible_from_args.hpp"
 #include "Structs/PropertyData.hpp"
+#include "Taumaturgia/Properties/Helpers/have_get_features.hpp"
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
 #include "Taumaturgia/Traits/trait.hpp"
 #include "Usage/Types/Name/Name.hpp"
@@ -354,38 +355,7 @@ static_assert(trait_accessable<tested_tag, type>);
 static_assert(traits::helpers::trait_accessable<tested_type, trait<type>, type>);
 static_assert(traits::helpers::GetTypeAccessable<tested_type, type>);
 
-static_assert(requires(std::remove_cvref_t<tested_type> x) {  // same as traits::GetTypeAccessable<tested_type, type>
-    { x.getType() } -> std::same_as<type&>;
-    { std::as_const(x).getType() } -> std::same_as<const type&>;
-});
-static_assert(requires(std::remove_cvref_t<tested_type> x) {
-    { x.getType<type>() } -> std::same_as<type&>;
-    { std::as_const(x).getType<type>() } -> std::same_as<const type&>;
-});
-static_assert(requires(std::remove_cvref_t<tested_type> x) {
-    { x.getTypeTaged<type>() } -> std::same_as<type&>;
-    { std::as_const(x).getTypeTaged<type>() } -> std::same_as<const type&>;
-});
-static_assert(requires(std::remove_cvref_t<tested_type> x) {
-    { x.getTypeTaged<type>() } -> std::same_as<type&>;
-    { std::as_const(x).getTypeTaged<type>() } -> std::same_as<const type&>;
-});
-static_assert(requires(std::remove_cvref_t<tested_type> x) {
-    { x.getTaged() } -> std::same_as<type&>;
-    { std::as_const(x).getTaged() } -> std::same_as<const type&>;
-});
-static_assert(requires(std::remove_cvref_t<tested_type> x) {
-    { x.getTaged<0>() } -> std::same_as<type&>;
-    { std::as_const(x).getTaged<0>() } -> std::same_as<const type&>;
-});
-static_assert(requires(std::remove_cvref_t<tested_type> x) {
-    { x.getTypeOf(list<type>{}) } -> std::same_as<type&>;
-    { std::as_const(x).getTypeOf(list<type>{}) } -> std::same_as<const type&>;
-});
-static_assert(requires(std::remove_cvref_t<tested_type> x) {
-    { x.getTypeOfSignature<list<type>>() } -> std::same_as<type&>;
-    { std::as_const(x).getTypeOfSignature<list<type>>() } -> std::same_as<const type&>;
-});
+static_assert(have_get_features<tested_type, type>);
 
 }  // namespace impl::Test
 

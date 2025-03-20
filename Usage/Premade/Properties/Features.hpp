@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Properties/Helpers/taged_list.hpp"
+#include "Taumaturgia/Properties/Helpers/have_get_features.hpp"
 
 namespace impl {
 
@@ -122,7 +122,7 @@ public:
 
     template <typename Signature, typename Self>
     constexpr decltype(auto) getTypeOfSignature(this Self&& self) noexcept {
-        return self.template getTypeOf(Signature{});
+        return self.getTypeOf(Signature{});
     }
 };
 
