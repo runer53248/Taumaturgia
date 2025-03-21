@@ -2,11 +2,9 @@
 #include "Examples/demangle_type_name.hpp"
 #include "Usage/Properties.hpp"
 
-constinit const char PlainProperty_name[] = "PlainProperty";
-
 template <typename T>
 struct PlainProperty : public T {
-    using property_data = PropertyData<PlainProperty_name, PlainProperty, T>;
+    using property_data = PropertyData<PlainProperty, T>;
 };
 
 // order in order_list

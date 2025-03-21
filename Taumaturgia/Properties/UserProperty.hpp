@@ -12,7 +12,6 @@
 #include "unordered_token.hpp"
 
 namespace impl {
-inline constinit const char user_type_name[] = "UserProperty";
 
 template <typename T, typename TYPE, typename... Tags>
 concept get_type_taged_able = requires {
@@ -36,8 +35,7 @@ struct PropertyFor {
 template <typename TYPE /*, typename... Tags*/>
 class UserProperty_<TYPE, tag /*, Tags...*/> {
 public:
-    using property_data = PropertyData<user_type_name,
-                                       PropertyFor<TYPE /*, Tags...*/>::template type,
+    using property_data = PropertyData<PropertyFor<TYPE /*, Tags...*/>::template type,
                                        tag>;                        // ? should add TYPE into PropertyData?
     using improvement_of = UserProperty_<TYPE, tag /*, Tags...*/>;  // will act like same type if TYPE and Tags are same
     using hold_type = TYPE;
@@ -62,8 +60,7 @@ template <typename TYPE, typename T, typename... Tags>
 // requires(not std::is_reference_v<T>)
 class UserProperty_ : public T {
 public:
-    using property_data = PropertyData<user_type_name,
-                                       PropertyFor<TYPE, Tags...>::template type,
+    using property_data = PropertyData<PropertyFor<TYPE, Tags...>::template type,
                                        T,
                                        Tags...>;             // ? should add TYPE into PropertyData?
     using improvement_of = UserProperty_<TYPE, T, Tags...>;  // will act like same type if TYPE and Tags are same

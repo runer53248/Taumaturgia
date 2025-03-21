@@ -1,16 +1,9 @@
 #pragma once
 #include "Usage/Properties.hpp"
 
-#ifdef NO_PREMADE_PROPERTIES
-namespace impl {
-constinit const char damaging_type_name[] = "UserDamaging";
-constinit const char protecting_type_name[] = "UserProtecting";
-}
-#endif
-
 template <typename T>
 struct DamagingImproved_ : public T {  // example of improving build-in property - may be used as replacement of impl::Damaging_
-    using property_data = PropertyData<impl::damaging_type_name, DamagingImproved_, T>;
+    using property_data = PropertyData<DamagingImproved_, T>;
     // using hold_type = Damaging_impl<T>::hold_type;
     using improvement_of = Damaging_impl<T>;
 
@@ -25,7 +18,7 @@ using DamagingImproved = std::conditional_t<Damagingable<T>,
 
 template <typename T>
 struct UserProtectingImproved_ : public T {  // example of improving user property
-    using property_data = PropertyData<impl::protecting_type_name, UserProtectingImproved_, T>;
+    using property_data = PropertyData<UserProtectingImproved_, T>;
     using improvement_of = Protecting_impl<T>;
 
     UserProtectingImproved_() noexcept = default;
@@ -37,7 +30,7 @@ using UserProtectingImproved = std::conditional_t<trait_accessable<T, Protection
 
 template <typename T>
 struct UserProtectingImproved_2_ : public T {  // example of improving use property
-    using property_data = PropertyData<impl::protecting_type_name, UserProtectingImproved_2_, T>;
+    using property_data = PropertyData<UserProtectingImproved_2_, T>;
     using improvement_of = Protecting_impl<T>;
 
     UserProtectingImproved_2_() noexcept = default;

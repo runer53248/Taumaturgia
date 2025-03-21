@@ -4,12 +4,10 @@
 
 namespace impl {
 
-constinit const char a_type_name[] = "A";
-
 template <typename T>
 class A_ : public T {
 public:
-    using property_data = PropertyData<a_type_name, A_, T>;
+    using property_data = PropertyData<A_, T>;
 };
 
 }  // namespace impl

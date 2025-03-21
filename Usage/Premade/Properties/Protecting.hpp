@@ -9,12 +9,11 @@
 #include "buildin_defaults.hpp"
 
 namespace impl {
-inline constinit const char protecting_type_name[] = "Protecting";
 
 template <typename T>
 class ProtectingSimple_ : public T {
 public:
-    using property_data = PropertyData<protecting_type_name, ProtectingSimple_, T>;
+    using property_data = PropertyData<ProtectingSimple_, T>;
     using hold_type = Protection;
 
     ProtectingSimple_() = default;
@@ -96,7 +95,7 @@ private:
 template <typename T>
 class Protecting_ : public Features_<ProtectingSimple_<T>> {
 public:
-    using property_data = PropertyData<protecting_type_name, Protecting_, T>;
+    using property_data = PropertyData<Protecting_, T>;
     using child = Features_<ProtectingSimple_<T>>;
     using typename child::hold_type;
 

@@ -10,12 +10,11 @@
 #include "buildin_defaults.hpp"
 
 namespace impl {
-inline constinit const char wearing_type_name[] = "Wearing";
 
 template <typename T>
 class WearingSimple_ : public T {
 public:
-    using property_data = PropertyData<wearing_type_name, WearingSimple_, T>;
+    using property_data = PropertyData<WearingSimple_, T>;
     using hold_type = WearContainer;
 
     WearingSimple_() = default;
@@ -97,7 +96,7 @@ private:
 template <typename T>
 class Wearing_ : public Features_<WearingSimple_<T>> {
 public:
-    using property_data = PropertyData<wearing_type_name, Wearing_, T>;
+    using property_data = PropertyData<Wearing_, T>;
     using child = Features_<WearingSimple_<T>>;
     using typename child::hold_type;
 

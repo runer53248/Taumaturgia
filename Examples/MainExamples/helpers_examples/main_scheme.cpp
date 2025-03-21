@@ -6,19 +6,15 @@
 struct test_struct {};
 struct test_struct_2 {};
 
-constinit const char a_type_name[] = "A";
-
 template <typename T>
 struct A : public T {
-    using property_data = PropertyData<a_type_name, A, T>;
+    using property_data = PropertyData<A, T>;
 };
-
-constinit const char b_type_name[] = "B";
 
 template <typename T>
 class B : public T {
 public:
-    using property_data = PropertyData<b_type_name, B, T>;
+    using property_data = PropertyData<B, T>;
 };
 
 using WearingIndex = typename Wearing<test_struct>::property_data::property_type;
@@ -114,44 +110,6 @@ int main() {
                                      test_type2_bad>);  // ! incorect order
     static_assert(std::is_same_v<test_type_new,
                                  test_type2_new>);  // add_properties can handle ordering
-
-    std::cout << "Check literals pointers of property_data::name():\n\n";
-
-    static_assert(Naming<test_struct>::property_data::name() == Naming<test_struct_2>::property_data::name());
-    std::cout << (long long*)Naming<test_struct>::property_data::name() << '\n';
-    std::cout << (long long*)Naming<test_struct_2>::property_data::name() << '\n';
-    std::cout << Naming<test_struct_2>::property_data::name() << '\n';
-    std::cout << '\n';
-    static_assert(Living<test_struct>::property_data::name() == Living<test_struct_2>::property_data::name());
-    std::cout << (long long*)Living<test_struct>::property_data::name() << '\n';
-    std::cout << (long long*)Living<test_struct_2>::property_data::name() << '\n';
-    std::cout << Living<test_struct_2>::property_data::name() << '\n';
-    std::cout << '\n';
-    static_assert(Damaging<test_struct>::property_data::name() == Damaging<test_struct_2>::property_data::name());
-    std::cout << (long long*)Damaging<test_struct>::property_data::name() << '\n';
-    std::cout << (long long*)Damaging<test_struct_2>::property_data::name() << '\n';
-    std::cout << Damaging<test_struct_2>::property_data::name() << '\n';
-    std::cout << '\n';
-    static_assert(Protecting<test_struct>::property_data::name() == Protecting<test_struct_2>::property_data::name());
-    std::cout << (long long*)Protecting<test_struct>::property_data::name() << '\n';
-    std::cout << (long long*)Protecting<test_struct_2>::property_data::name() << '\n';
-    std::cout << Protecting<test_struct_2>::property_data::name() << '\n';
-    std::cout << '\n';
-    static_assert(Healing<test_struct>::property_data::name() == Healing<test_struct_2>::property_data::name());
-    std::cout << (long long*)Healing<test_struct>::property_data::name() << '\n';
-    std::cout << (long long*)Healing<test_struct_2>::property_data::name() << '\n';
-    std::cout << Healing<test_struct_2>::property_data::name() << '\n';
-    std::cout << '\n';
-    static_assert(Restoring<test_struct>::property_data::name() == Restoring<test_struct_2>::property_data::name());
-    std::cout << (long long*)Restoring<test_struct>::property_data::name() << '\n';
-    std::cout << (long long*)Restoring<test_struct_2>::property_data::name() << '\n';
-    std::cout << Restoring<test_struct_2>::property_data::name() << '\n';
-    std::cout << '\n';
-    static_assert(Wearing<test_struct>::property_data::name() == Wearing<test_struct_2>::property_data::name());
-    std::cout << (long long*)Wearing<test_struct>::property_data::name() << '\n';
-    std::cout << (long long*)Wearing<test_struct_2>::property_data::name() << '\n';
-    std::cout << Wearing<test_struct_2>::property_data::name() << '\n';
-    std::cout << '\n';
 
     using x_type = add_properties_ordered<test_struct, Protecting, Living>;
     std::cout << "x_type:       " << name<x_type>() << '\n';

@@ -10,12 +10,11 @@
 #include "buildin_defaults.hpp"
 
 namespace impl {
-inline constinit const char restoring_type_name[] = "Restoring";
 
 template <typename T>
 class RestoringSimple_ : public T {
 public:
-    using property_data = PropertyData<restoring_type_name, RestoringSimple_, T>;
+    using property_data = PropertyData<RestoringSimple_, T>;
     using hold_type = EffectTypeContainer;
 
     RestoringSimple_() = default;
@@ -101,7 +100,7 @@ private:
 template <typename T>
 class Restoring_ : public Features_<RestoringSimple_<T>> {
 public:
-    using property_data = PropertyData<restoring_type_name, Restoring_, T>;
+    using property_data = PropertyData<Restoring_, T>;
     using child = Features_<RestoringSimple_<T>>;
     using typename child::hold_type;
 

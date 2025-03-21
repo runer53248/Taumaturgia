@@ -8,12 +8,11 @@
 // #include "Usage/Traits/accessName.hpp"
 
 namespace impl {
-inline constinit const char naming_type_name[] = "Naming";
 
 template <typename T>
 class NamingSimple_ : public T {
 public:
-    using property_data = PropertyData<naming_type_name, NamingSimple_, T>;
+    using property_data = PropertyData<NamingSimple_, T>;
     using hold_type = Name;
 
     NamingSimple_() = default;
@@ -49,7 +48,7 @@ private:
 template <typename T>
 class Naming_ : public Features_<NamingSimple_<T>> {
 public:
-    using property_data = PropertyData<naming_type_name, Naming_, T>;
+    using property_data = PropertyData<Naming_, T>;
     using child = Features_<NamingSimple_<T>>;
     using typename child::hold_type;
 

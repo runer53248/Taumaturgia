@@ -10,12 +10,11 @@
 #include "buildin_defaults.hpp"
 
 namespace impl {
-inline constinit const char living_type_name[] = "Living";
 
 template <typename T>
 class LivingSimple_ : public T {
 public:
-    using property_data = PropertyData<living_type_name, LivingSimple_, T>;
+    using property_data = PropertyData<LivingSimple_, T>;
     using hold_type = Health;
 
     LivingSimple_() = default;
@@ -97,7 +96,7 @@ private:
 template <typename T>
 class Living_ : public Features_<LivingSimple_<T>> {
 public:
-    using property_data = PropertyData<living_type_name, Living_, T>;
+    using property_data = PropertyData<Living_, T>;
     using child = Features_<LivingSimple_<T>>;
     using typename child::hold_type;
 

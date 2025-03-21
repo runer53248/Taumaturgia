@@ -41,11 +41,10 @@ using order_list = taged_list<
 ///////////////////////////////////////////
 
 namespace impl {
-constexpr const char new_living_type_name[] = "NewLiving";
 
 template <typename T>
 struct LivingImproved_1_ : public T {
-    using property_data = PropertyData<new_living_type_name, LivingImproved_1_, T>;
+    using property_data = PropertyData<LivingImproved_1_, T>;
     using improvement_of = Living_impl<T>;
 
     LivingImproved_1_() noexcept = default;
@@ -59,7 +58,7 @@ struct LivingImproved_1_ : public T {
 
 template <typename T, typename... Tags>
 struct LivingImproved_2_ : public T {
-    using property_data = PropertyData<new_living_type_name, LivingImproved_2_, T, Tags...>;
+    using property_data = PropertyData<LivingImproved_2_, T, Tags...>;
     using improvement_of = Living_impl<T>;
 
     LivingImproved_2_() noexcept = default;
@@ -78,7 +77,7 @@ private:
 
 template <typename T>
 struct Improved_LivingImproved_3_ : public T {
-    using property_data = PropertyData<new_living_type_name, Improved_LivingImproved_3_, T>;
+    using property_data = PropertyData<Improved_LivingImproved_3_, T>;
     using improvement_of = LivingImproved_2_<T>;
 
     Improved_LivingImproved_3_() noexcept = default;
@@ -97,7 +96,7 @@ private:
 
 template <typename T>
 struct Improved_LivingImproved_4_ : public T {
-    using property_data = PropertyData<new_living_type_name, Improved_LivingImproved_4_, T>;
+    using property_data = PropertyData<Improved_LivingImproved_4_, T>;
     using improvement_of = Improved_LivingImproved_3_<T>;
 
     Improved_LivingImproved_4_() noexcept = default;
@@ -116,7 +115,7 @@ private:
 
 template <typename T>
 struct Improved_ : public T {
-    using property_data = PropertyData<new_living_type_name, Improved_, T>;
+    using property_data = PropertyData<Improved_, T>;
     using improvement_of = void;
 
     Improved_() noexcept = default;

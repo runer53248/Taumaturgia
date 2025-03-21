@@ -10,7 +10,6 @@
 #include "buildin_defaults.hpp"
 
 namespace impl {
-inline constinit const char damaging_type_name[] = "Damaging";
 
 template <typename T, typename... Tags>
 class DamagingSimple_;
@@ -24,10 +23,7 @@ struct DamagingFor {
 template <typename T, typename... Tags>
 class DamagingSimple_ : public T {
 public:
-    using property_data = PropertyData<damaging_type_name,
-                                       DamagingFor<Tags...>::template type,
-                                       T,
-                                       Tags...>;
+    using property_data = PropertyData<DamagingFor<Tags...>::template type, T, Tags...>;
     using hold_type = Damage;
 
     // MARK: default C-tor
@@ -128,10 +124,7 @@ struct Damaging_For {
 template <typename T, typename... Tags>
 class Damaging_ : public Features_<DamagingSimple_<T, Tags...>> {
 public:
-    using property_data = PropertyData<damaging_type_name,
-                                       Damaging_For<Tags...>::template type,
-                                       T,
-                                       Tags...>;
+    using property_data = PropertyData<Damaging_For<Tags...>::template type, T, Tags...>;
     using child = Features_<DamagingSimple_<T, Tags...>>;
     using typename child::hold_type;
 
