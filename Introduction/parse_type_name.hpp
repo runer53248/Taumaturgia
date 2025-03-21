@@ -205,6 +205,11 @@ auto type_name_result(std::string text = name<T>()) {
         result.base += "  : WearContainer\n";
     if constexpr (trait<Health>::accessable<base_type>)
         result.base += "  : Health\n";
+    if constexpr (trait<int>::accessable<base_type>)
+        result.base += "  : int\n";
+    if constexpr (requires { typename base_type::base_type; })
+        if constexpr (trait<int>::accessable<typename base_type::base_type>)
+            result.base += "  : : int\n";
 
     return result;
 };

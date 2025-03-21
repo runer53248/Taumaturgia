@@ -9,9 +9,11 @@ struct Type {
     Name name{"Name c"};  // default in base
     Damage dmg;
     Health hp;
+    int type;
 };
 
 struct name_t {};
+struct int_t {};
 
 template <>
 struct UserDefaultValue<Name> {  // default in ordered property
@@ -28,11 +30,13 @@ int main() {
     static_assert(trait<Name>::accessable<Type>);
     static_assert(trait<Damage>::accessable<Type>);
     static_assert(trait<Health>::accessable<Type>);
+    static_assert(trait<int>::accessable<Type>);
 
     using general_type = GeneralFeatures<Type>;
     using general_type2 = add_properties_ordered<general_type,
                                                  AdvanceUserProperty<Health, struct x>::type,
                                                  AdvanceUserProperty<Name, name_t>::type,
+                                                 AdvanceUserProperty<int, int_t>::type,
                                                  Naming_impl,
                                                  Protecting_impl>;
 
@@ -94,10 +98,12 @@ int main() {
     static_assert(std::same_as<decltype(type2.getType<1>()), Name&>);
     static_assert(std::same_as<decltype(type2.getType<2>()), Health&>);
     static_assert(std::same_as<decltype(type2.getType<3>()), Name&>);
-    static_assert(std::same_as<decltype(type2.getType<4>()), Name&>);
-    static_assert(std::same_as<decltype(type2.getType<5>()), Damage&>);
-    static_assert(std::same_as<decltype(type2.getType<6>()), Health&>);
-    static_assert(std::same_as<decltype(type2.getType<7>()), void>);
+    static_assert(std::same_as<decltype(type2.getType<4>()), int&>);
+    static_assert(std::same_as<decltype(type2.getType<5>()), Name&>);
+    static_assert(std::same_as<decltype(type2.getType<6>()), Damage&>);
+    static_assert(std::same_as<decltype(type2.getType<7>()), Health&>);
+    static_assert(std::same_as<decltype(type2.getType<8>()), int&>);
+    static_assert(std::same_as<decltype(type2.getType<9>()), void>);
 
     static_assert(&type2.getType<0>() == &type2.getTypeTaged<Protection>());
     static_assert(&type2.getType<1>() == &type2.getTypeTaged<Name>());
@@ -106,9 +112,10 @@ int main() {
     static_assert(&type2.getType<2>() == &type2.getType<Health, 0>());
     static_assert(&type2.getType<3>() == &type2.getTypeTaged<Name, name_t>());
     static_assert(&type2.getType<3>() == &type2.getType<Name, 1>());
-    static_assert(&type2.getType<4>() == &type2.getType<Name, 2>());
-    static_assert(&type2.getType<5>() == &type2.getType<Damage>());
-    static_assert(&type2.getType<6>() == &type2.getType<Health, 1>());
+    static_assert(&type2.getType<4>() == &type2.getType<int, 0>());
+    static_assert(&type2.getType<5>() == &type2.getType<Name, 2>());
+    static_assert(&type2.getType<6>() == &type2.getType<Damage>());
+    static_assert(&type2.getType<7>() == &type2.getType<Health, 1>());
 
     // GeneralFeatures_<>::getTypeTaged
     static_assert(std::same_as<decltype(type.getTypeTaged<Damage>()), Damage&>);
@@ -181,9 +188,7 @@ int main() {
 
         featured_general_type2 feature_type2;
         feature_type2.getType<Protection, 0>() = Protection{10};
-
-        std::cout << parse_type_name<featured_general_type2>() << '\n';
-        feature_type2.getType<Protection, 0>() = Protection{10};
+        // std::cout << parse_type_name<featured_general_type2>() << '\n';
     }
 
     static_assert(not is_property<GeneralFeatures>);

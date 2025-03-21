@@ -34,6 +34,8 @@ template <typename T>
 // requires(not std::is_reference_v<T>)
 class GeneralFeatures_ : public T {
 public:
+    using base_type = T;
+
     // MARK: default and Args C-tors
 
     constexpr GeneralFeatures_() = default;
@@ -99,14 +101,15 @@ public:
         using boost::mp11::mp_size;
         using L = boost::mp11::mp_filter<
             trait_accessable,
-            // list_of_types,
+            // list_of_types, //TODO: order_list -> extract property::hold_type
             list<Name,
                  EffectTypeContainer,
                  CureHealth,
                  Protection,
                  Damage,
                  WearContainer,
-                 Health>>;
+                 Health,
+                 int>>;  // ! extra type int
         using TT = std::conditional_t<
             std::is_const_v<std::remove_reference_t<Self>>,
             const T&, T&>;
@@ -185,8 +188,8 @@ public:
     }
 
 private:
-    template <class T1>
-    using trait_accessable = boost::mp11::mp_bool<trait<T1>::template accessable<T>>;
+    template <class TT>
+    using trait_accessable = boost::mp11::mp_bool<trait<TT>::template accessable<T>>;
 
     template <size_t SKIP, typename TYPE_P, typename... REST_P>
     constexpr decltype(auto) getBuildinTypes() & noexcept {
