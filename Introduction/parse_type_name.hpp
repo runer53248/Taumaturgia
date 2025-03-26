@@ -29,6 +29,9 @@ auto type_name_result(std::string text = name<T>()) {
     text.erase(std::remove(text.begin(), text.end(), ' '), text.end());
 
     auto find_and_replace = [](auto& text, const auto& what, const auto& into) {
+        if (what == into) {
+            return;
+        }
         for (size_t target = text.find(what); target != std::string::npos; target = text.find(what)) {
             text.replace(target, what.size(), into);
         }
