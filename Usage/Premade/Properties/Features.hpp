@@ -3,6 +3,8 @@
 
 namespace impl {
 
+// MARK: Features_
+
 template <typename T>
 class Features_ : public T {
 public:
