@@ -1,15 +1,15 @@
 #pragma once
+#include "Constructors.hpp"
 #include "Features.hpp"
 #include "Implementation/Healing.hpp"
-
 
 namespace impl {
 
 template <typename T>
-class Healing_ : public Features_<HealingSimple_<T>> {
+class Healing_ : public Features_<Constructors_<HealingSimple_<T>>> {
 public:
     using property_data = PropertyData<Healing_, T>;
-    using child = Features_<HealingSimple_<T>>;
+    using child = Features_<Constructors_<HealingSimple_<T>>>;
     using typename child::hold_type;
 
     using child::child;

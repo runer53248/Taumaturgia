@@ -1,16 +1,15 @@
 #pragma once
+#include "Constructors.hpp"
 #include "Features.hpp"
 #include "Implementation/Living.hpp"
 
 namespace impl {
 
-// MARK: Living_
-
 template <typename T>
-class Living_ : public Features_<LivingSimple_<T>> {
+class Living_ : public Features_<Constructors_<LivingSimple_<T>>> {
 public:
     using property_data = PropertyData<Living_, T>;
-    using child = Features_<LivingSimple_<T>>;
+    using child = Features_<Constructors_<LivingSimple_<T>>>;
     using typename child::hold_type;
 
     using child::child;
