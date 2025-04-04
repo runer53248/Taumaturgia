@@ -3,10 +3,10 @@
 #include <variant>
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
+#include "Taumaturgia/Properties/UserDefaultValue.hpp"
 #include "Taumaturgia/Properties/unordered_token.hpp"
 #include "Usage/Types/Damage/Damage.hpp"
 #include "Usage/Types/Name/Name.hpp"
-#include "Taumaturgia/Properties/UserDefaultValue.hpp"
 
 namespace impl {
 
@@ -36,15 +36,15 @@ public:
     template <typename... INFO, typename... Args>
     DamagingSimple_(const Name& name, std::tuple<INFO...>&& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          dmg_{std::make_from_tuple<Damage>(std::move(dmg))} {
-        static_assert(constructible_from_args<Damage, INFO...>, "Can't create Damage from given tuple.");
+          dmg_{std::make_from_tuple<hold_type>(std::move(dmg))} {
+        static_assert(constructible_from_args<hold_type, INFO...>, "Can't create Damage from given tuple.");
     }
 
     template <typename... INFO, typename... Args>
     DamagingSimple_(const Name& name, const std::tuple<INFO...>& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          dmg_{std::make_from_tuple<Damage>(dmg)} {
-        static_assert(constructible_from_args<Damage, INFO...>, "Can't create Damage from given tuple.");
+          dmg_{std::make_from_tuple<hold_type>(dmg)} {
+        static_assert(constructible_from_args<hold_type, INFO...>, "Can't create Damage from given tuple.");
     }
 
     // MARK: Token C-tors
@@ -75,32 +75,32 @@ public:
     // MARK: type C-tors
 
     template <typename... Args>
-    DamagingSimple_(const Name& name, Damage&& dmg, Args&&... args)
+    DamagingSimple_(const Name& name, hold_type&& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...}, dmg_{std::move(dmg)} {}
 
     template <typename... Args>
-    DamagingSimple_(const Name& name, const Damage& dmg, Args&&... args)
+    DamagingSimple_(const Name& name, const hold_type& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...}, dmg_{dmg} {}
 
     // MARK: variant C-tors
 
     template <typename... V, typename... Args>
-        requires contains_type<Damage, V...>
+        requires contains_type<hold_type, V...>
     DamagingSimple_(const Name& name, const std::variant<V...>& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          dmg_{std::get_if<Damage>(&dmg)
-                   ? std::get<Damage>(dmg)
-                   : Damage{}} {}
+          dmg_{std::get_if<hold_type>(&dmg)
+                   ? std::get<hold_type>(dmg)
+                   : hold_type{}} {}
 
     template <typename... V, typename... Args>
-        requires not_contains_type<Damage, V...>
+        requires not_contains_type<hold_type, V...>
     DamagingSimple_(const Name& name, [[maybe_unused]] const std::variant<V...>& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
     // MARK: nameless C-tor
 
     template <typename... Args>
-    DamagingSimple_(Damage&& dmg, Args&&... args)
+    DamagingSimple_(hold_type&& dmg, Args&&... args)
         : T{std::forward<Args>(args)...}, dmg_{std::move(dmg)} {}
 
     // MARK: getDamage
@@ -110,7 +110,7 @@ public:
     }
 
 private:
-    Damage dmg_ = buildin_defaults<Damage>::get();
+    hold_type dmg_ = buildin_defaults<hold_type>::get();
 };
 
 }  // namespace impl

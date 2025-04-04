@@ -33,7 +33,7 @@ public:
         : T{std::forward<TT>(t)} {}
 
     template <typename... Args>
-    NamingSimple_(const Name& name, Args&&... args)
+    NamingSimple_(const hold_type& name, Args&&... args)
         : T{std::forward<Args>(args)...}, name_{name} {}
 
     constexpr decltype(auto) getName(this auto& self) {
@@ -41,7 +41,7 @@ public:
     }
 
 private:
-    Name name_ = buildin_defaults<Name>::get();
+    hold_type name_ = buildin_defaults<hold_type>::get();
 };
 
 }  // namespace impl

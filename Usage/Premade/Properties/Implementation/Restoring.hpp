@@ -3,10 +3,10 @@
 #include <variant>
 #include "Taumaturgia/Properties/Helpers/constructible_from_args.hpp"
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
+#include "Taumaturgia/Properties/UserDefaultValue.hpp"
 #include "Taumaturgia/Properties/unordered_token.hpp"
 #include "Usage/Types/EffectTypeContainer/EffectTypeContainer.hpp"
 #include "Usage/Types/Name/Name.hpp"
-#include "Taumaturgia/Properties/UserDefaultValue.hpp"
 
 namespace impl {
 
@@ -23,15 +23,15 @@ public:
     template <typename... INFO, typename... Args>
     RestoringSimple_(const Name& name, std::tuple<INFO...>&& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          restoreEffects_{std::make_from_tuple<EffectTypeContainer>(std::move(restoreEffects))} {
-        static_assert(constructible_from_args<EffectTypeContainer, INFO...>, "Can't create EffectTypeContainer from given tuple.");
+          restoreEffects_{std::make_from_tuple<hold_type>(std::move(restoreEffects))} {
+        static_assert(constructible_from_args<hold_type, INFO...>, "Can't create EffectTypeContainer from given tuple.");
     }
 
     template <typename... INFO, typename... Args>
     RestoringSimple_(const Name& name, const std::tuple<INFO...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          restoreEffects_{std::make_from_tuple<EffectTypeContainer>(restoreEffects)} {
-        static_assert(constructible_from_args<EffectTypeContainer, INFO...>, "Can't create EffectTypeContainer from given tuple.");
+          restoreEffects_{std::make_from_tuple<hold_type>(restoreEffects)} {
+        static_assert(constructible_from_args<hold_type, INFO...>, "Can't create EffectTypeContainer from given tuple.");
     }
 
     // MARK: Token C-tors
@@ -58,11 +58,11 @@ public:
         : T{name, std::forward<Args>(args)...} {}
 
     template <typename... Args>
-    RestoringSimple_(const Name& name, EffectTypeContainer&& restoreEffects, Args&&... args)
+    RestoringSimple_(const Name& name, hold_type&& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...}, restoreEffects_{std::move(restoreEffects)} {}
 
     template <typename... Args>
-    RestoringSimple_(const Name& name, const EffectTypeContainer& restoreEffects, Args&&... args)
+    RestoringSimple_(const Name& name, const hold_type& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...}, restoreEffects_{restoreEffects} {}
 
     template <typename... Args>
@@ -70,22 +70,22 @@ public:
         : T{name, std::forward<Args>(args)...}, restoreEffects_{restoreEffects} {}
 
     template <typename... V, typename... Args>
-        requires contains_type<EffectTypeContainer, V...>
+        requires contains_type<hold_type, V...>
     RestoringSimple_(const Name& name, const std::variant<V...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          restoreEffects_{std::get_if<EffectTypeContainer>(&restoreEffects)
-                              ? std::get<EffectTypeContainer>(restoreEffects)
-                              : EffectTypeContainer{}} {}
+          restoreEffects_{std::get_if<hold_type>(&restoreEffects)
+                              ? std::get<hold_type>(restoreEffects)
+                              : hold_type{}} {}
 
     template <typename... V, typename... Args>
-        requires not_contains_type<EffectTypeContainer, V...>
+        requires not_contains_type<hold_type, V...>
     RestoringSimple_(const Name& name, [[maybe_unused]] const std::variant<V...>& restoreEffects, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
     // MARK: nameless C-tor
 
     template <typename... Args>
-    RestoringSimple_(EffectTypeContainer&& restoreEffects, Args&&... args)
+    RestoringSimple_(hold_type&& restoreEffects, Args&&... args)
         : T{std::forward<Args>(args)...}, restoreEffects_{std::move(restoreEffects)} {}
 
     // MARK: getRestoreEffects
@@ -95,7 +95,7 @@ public:
     }
 
 private:
-    EffectTypeContainer restoreEffects_ = buildin_defaults<EffectTypeContainer>::get();
+    hold_type restoreEffects_ = buildin_defaults<hold_type>::get();
 };
 
 }  // namespace impl
