@@ -1,14 +1,10 @@
 #pragma once
 #include <boost/mp11.hpp>
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
-#include "Taumaturgia/Properties/unordered_token.hpp"
 #include "Taumaturgia/Properties/UserDefaultValue.hpp"
-
-// #include "Usage/Traits/accessName.hpp"
+#include "Taumaturgia/Properties/unordered_token.hpp"
 
 namespace impl {
-
-// MARK: NamingSimple_
 
 template <typename T>
 class NamingSimple_ : public T {
@@ -21,7 +17,9 @@ public:
     // MARK: Token C-tors
 
     template <typename... Args>
-        requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
+        requires std::same_as<
+            boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>,
+            list<std::remove_cvref_t<Args>...>>  // every argument have unique type
     NamingSimple_(const Token&, Args&&... args)
         : T{} {
         ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
@@ -35,7 +33,7 @@ public:
         : T{std::forward<TT>(t)} {}
 
     template <typename... Args>
-    NamingSimple_(const Name& name, Args&&... args)
+    NamingSimple_(const hold_type& name, Args&&... args)
         : T{std::forward<Args>(args)...}, name_{name} {}
 
     constexpr decltype(auto) getName(this auto& self) {
@@ -43,7 +41,7 @@ public:
     }
 
 private:
-    Name name_ = buildin_defaults<Name>::get();
+    hold_type name_ = buildin_defaults<hold_type>::get();
 };
 
 }  // namespace impl

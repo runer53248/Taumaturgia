@@ -4,9 +4,9 @@
 
 template <char Open, char Close>
 auto& print_in_braces(std::ostream& out, std::string_view name, auto&& func) {
-    std::cout << Open << name << ": ";
+    out << Open << name << ": ";
     func();
-    std::cout << Close;
+    out << Close;
     return out;
 };
 

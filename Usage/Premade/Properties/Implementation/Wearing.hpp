@@ -23,15 +23,15 @@ public:
     template <typename... INFO, typename... Args>
     WearingSimple_(const Name& name, std::tuple<INFO...>&& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          armorWear_{std::make_from_tuple<WearContainer>(std::move(armorWear))} {
-        static_assert(constructible_from_args<WearContainer, INFO...>, "Can't create WearContainer from given tuple.");
+          armorWear_{std::make_from_tuple<hold_type>(std::move(armorWear))} {
+        static_assert(constructible_from_args<hold_type, INFO...>, "Can't create WearContainer from given tuple.");
     }
 
     template <typename... INFO, typename... Args>
     WearingSimple_(const Name& name, const std::tuple<INFO...>& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          armorWear_{std::make_from_tuple<WearContainer>(armorWear)} {
-        static_assert(constructible_from_args<WearContainer, INFO...>, "Can't create WearContainer from given tuple.");
+          armorWear_{std::make_from_tuple<hold_type>(armorWear)} {
+        static_assert(constructible_from_args<hold_type, INFO...>, "Can't create WearContainer from given tuple.");
     }
 
     // MARK: Token C-tors
@@ -58,30 +58,30 @@ public:
         : T{name, std::forward<Args>(args)...} {}
 
     template <typename... Args>
-    WearingSimple_(const Name& name, WearContainer&& armorWear, Args&&... args)
+    WearingSimple_(const Name& name, hold_type&& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...}, armorWear_{std::move(armorWear)} {}
 
     template <typename... Args>
-    WearingSimple_(const Name& name, const WearContainer& armorWear, Args&&... args)
+    WearingSimple_(const Name& name, const hold_type& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...}, armorWear_{armorWear} {}
 
     template <typename... V, typename... Args>
-        requires contains_type<WearContainer, V...>
+        requires contains_type<hold_type, V...>
     WearingSimple_(const Name& name, const std::variant<V...>& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...},
-          armorWear_{std::get_if<WearContainer>(&armorWear)
-                         ? std::get<WearContainer>(armorWear)
-                         : WearContainer{}} {}
+          armorWear_{std::get_if<hold_type>(&armorWear)
+                         ? std::get<hold_type>(armorWear)
+                         : hold_type{}} {}
 
     template <typename... V, typename... Args>
-        requires not_contains_type<WearContainer, V...>
+        requires not_contains_type<hold_type, V...>
     WearingSimple_(const Name& name, [[maybe_unused]] const std::variant<V...>& armorWear, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
     // MARK: nameless C-tor
 
     template <typename... Args>
-    WearingSimple_(WearContainer&& armorWear, Args&&... args)
+    WearingSimple_(hold_type&& armorWear, Args&&... args)
         : T{std::forward<Args>(args)...}, armorWear_{std::move(armorWear)} {}
 
     // MARK: getArmorWear
@@ -91,7 +91,7 @@ public:
     }
 
 private:
-    WearContainer armorWear_ = buildin_defaults<WearContainer>::get();
+    hold_type armorWear_ = buildin_defaults<hold_type>::get();
 };
 
 }  // namespace impl
