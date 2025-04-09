@@ -3,7 +3,7 @@
 
 // TODO: make accessType::get for tagged access
 
-namespace traits::impl {
+namespace traits {
 
 template <typename TYPE, typename CONVERT_TYPE = void>
 struct accessType {
@@ -36,10 +36,10 @@ struct accessType {
     }
 };
 
-}  // namespace traits::impl
+}  // namespace traits
 
 template <typename T, typename RESULT_TYPE>
-concept accessType_trait_able = traits::helpers::trait_accessable<T, traits::impl::accessType<RESULT_TYPE>, RESULT_TYPE>;
+concept accessType_trait_able = traits::helpers::trait_accessable<T, traits::accessType<RESULT_TYPE>, RESULT_TYPE>;
 
-template <typename T, typename RESULT_TYPE>
-concept getType_template_able = traits::helpers::GetTypeTemplateAccessable<T, RESULT_TYPE>;
+template <typename T, typename RESULT_TYPE, size_t DIG = 0>
+concept getType_template_able = traits::helpers::GetTypeTemplateAccessable<T, RESULT_TYPE, DIG>;

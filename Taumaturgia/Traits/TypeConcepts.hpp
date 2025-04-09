@@ -25,7 +25,7 @@ concept GetTypeAccessable = requires(std::remove_cvref_t<T> x) {
 template <typename T, typename TYPE, typename CONVERT_TYPE = void>
 concept CustomTypeAccessable = helpers::custom_type_trait_accessable<T, CustomAccessType, TYPE, CONVERT_TYPE>;
 
-template <typename T, typename TYPE>
-concept GetTypeTemplateAccessable = helpers::get_type_template_accessable<T, TYPE>;
+template <typename T, typename TYPE, size_t DIG = 0>
+concept GetTypeTemplateAccessable = helpers::get_type_template_accessable<T, TYPE, DIG>;
 
 }  // namespace traits::helpers

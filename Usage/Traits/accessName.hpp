@@ -23,8 +23,8 @@ concept GetNameAccessable = requires(std::remove_cvref_t<T> x) {
 
 }  // namespace helpers
 
-struct accessName /*: public impl::accessType<Name, std::string>*/ {
-    using general_access_type = impl::accessType<Name, std::string>;
+struct accessName /*: public accessType<Name, std::string>*/ {
+    using general_access_type = accessType<Name, std::string>;
     template <typename T>
     static const bool general_accessable = general_access_type::accessable<T>;
 

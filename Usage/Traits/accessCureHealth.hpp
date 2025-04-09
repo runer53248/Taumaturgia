@@ -23,7 +23,7 @@ concept GetCureHealthAccessable = requires(std::remove_cvref_t<T> x) {
 
 }  // namespace helpers
 
-struct accessCureHealth : public impl::accessType<CureHealth> {
+struct accessCureHealth : public accessType<CureHealth> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessCureHealth, CureHealth>;
 

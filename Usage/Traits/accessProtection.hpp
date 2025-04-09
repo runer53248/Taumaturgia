@@ -22,7 +22,7 @@ concept GetProtectionAccessable = requires(std::remove_cvref_t<T> x) {
 
 }  // namespace helpers
 
-struct accessProtection : public impl::accessType<Protection> {
+struct accessProtection : public accessType<Protection> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessProtection, Protection>;
 

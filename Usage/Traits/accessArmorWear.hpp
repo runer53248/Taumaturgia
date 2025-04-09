@@ -23,7 +23,7 @@ concept GetArmorWearAccessable = requires(std::remove_cvref_t<T> x) {
 
 }  // namespace helpers
 
-struct accessArmorWear : public impl::accessType<WearContainer> {
+struct accessArmorWear : public accessType<WearContainer> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessArmorWear, WearContainer>;
 

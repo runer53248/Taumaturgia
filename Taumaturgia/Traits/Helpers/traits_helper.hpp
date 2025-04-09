@@ -1,4 +1,5 @@
 #pragma once
+#include <cstddef>  // for std::size_t
 #include <type_traits>
 #include <utility>  // for as_const
 
@@ -37,10 +38,10 @@ concept custom_type_trait_accessable = requires(std::remove_cvref_t<T> x) {
     { CUSTOM_ACCESS<TYPE, std::remove_cvref_t<T>>::get(std::as_const(x)) } -> same_type_or_convertible_to<const TYPE&, const CONVERT_TYPE>;
 };
 
-template <typename T, typename TYPE>
+template <typename T, typename TYPE, size_t DIG = 0>
 concept get_type_template_accessable = requires(std::remove_cvref_t<T> x) {
-    { x.template getType<TYPE>() } -> std::same_as<TYPE&>;
-    { std::as_const(x).template getType<TYPE>() } -> std::same_as<const TYPE&>;
+    { x.template getType<TYPE, DIG>() } -> std::same_as<TYPE&>;
+    { std::as_const(x).template getType<TYPE, DIG>() } -> std::same_as<const TYPE&>;
 };
 
 template <typename T, typename TYPE, typename CONVERT_TYPE>

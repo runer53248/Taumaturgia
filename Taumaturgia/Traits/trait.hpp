@@ -3,7 +3,7 @@
 
 template <typename T>
 struct trait_ {
-    using type = traits::impl::accessType<T>;
+    using type = traits::accessType<T>;
 };
 
 template <typename T>

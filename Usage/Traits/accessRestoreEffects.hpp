@@ -23,7 +23,7 @@ concept GetRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
 
 }  // namespace helpers
 
-struct accessRestoreEffects : public impl::accessType<EffectTypeContainer> {
+struct accessRestoreEffects : public accessType<EffectTypeContainer> {
     template <typename T>
     static const bool accessable = helpers::trait_accessable<T, accessRestoreEffects, EffectTypeContainer>;
 
