@@ -1,7 +1,5 @@
 #pragma once
 #include <string>
-#include <type_traits>
-#include <utility>  // for as_const
 #include "Taumaturgia/Traits/trait.hpp"
 
 class Name;
