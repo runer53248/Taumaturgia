@@ -47,11 +47,7 @@ int main() {
 
         std::cout << '\n';
         std::cout << gustav_obj.name() << '\n';
-        get_print_const_ref(gustav_obj);
-        std::cout << '\n';
-        get_print_ref_with_cure_health_as_const(gustav_obj);
-        std::cout << '\n';
-        get_print_ref_with_health_and_damage_as_const(gustav_obj);
+        getOpt_print(gustav_obj);
         std::cout << '\n';
     }
 
