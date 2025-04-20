@@ -1,23 +1,17 @@
 #pragma once
-#include "Taumaturgia/Object/Object.hpp"
+#include "Taumaturgia/Object/Enums/ActionStatus.hpp"
+#include "Usage/Traits.hpp"
 
-inline constexpr ActionStatus default_restore_behavior(Restoringable auto& obj, Object* target) {
-    auto is_success = getOpt<Properties::Health>(*target).and_then([&](auto&& ref_wrap) {
-        Health& hp_ref = ref_wrap;
+inline constexpr ActionStatus default_restore_behavior(Restoringable auto& obj, auto* target) {
+    auto is_success = getOpt<Properties::Health>(*target).and_then([&](auto&& ref_wrap) -> std::optional<ActionStatus> {
+        /*Health*/ auto& hp_ref = ref_wrap.get();
 
         if (auto& target_effects = hp_ref.effects(); not target_effects.empty()) {
             for (const auto& restoreEffect : trait<EffectTypeContainer>::get(obj)) {
                 target_effects.removeEffectType(restoreEffect);
             }
         }
-        return std::optional{true};
+        return ActionStatus::Success;
     });
-
-    if (is_success.has_value()) {
-        if (is_success.value()) {
-            return ActionStatus::Success;
-        }
-        return ActionStatus::Interrupted;
-    }
-    return ActionStatus::Fail;
+    return is_success.value_or(ActionStatus::Fail);
 }

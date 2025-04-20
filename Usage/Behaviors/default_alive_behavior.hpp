@@ -1,6 +1,7 @@
 #pragma once
 #include <optional>
 #include "Usage/Enums/AliveStatus.hpp"
+#include "Usage/Traits.hpp"
 
 inline constexpr std::optional<AliveStatus> default_alive_behavior(Livingable auto& obj) {
     auto hp = trait<Health>::get(obj).value();

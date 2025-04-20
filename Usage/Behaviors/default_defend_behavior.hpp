@@ -1,18 +1,12 @@
 #pragma once
-#include "Taumaturgia/Object/Object.hpp"
+#include "Taumaturgia/Object/Enums/ActionStatus.hpp"
+#include "Usage/Traits.hpp"
 
-inline constexpr ActionStatus default_defend_behavior(Protectingable auto& obj, Object* target) {
-    auto is_success = getOpt<Properties::Wear>(*target).and_then([&](auto&& ref_wrap) {
-        WearContainer& target_protection = ref_wrap;
+inline constexpr ActionStatus default_defend_behavior(Protectingable auto& obj, auto* target) {
+    auto is_success = getOpt<Properties::Wear>(*target).and_then([&](auto&& ref_wrap) -> std::optional<ActionStatus> {
+        /*WearContainer*/ auto& target_protection = ref_wrap.get();
         target_protection.wearProtection(trait<Protection>::get(obj));
-        return std::optional{true};
+        return ActionStatus::Success;
     });
-
-    if (is_success.has_value()) {
-        if (is_success.value()) {
-            return ActionStatus::Success;
-        }
-        return ActionStatus::Interrupted;
-    }
-    return ActionStatus::Fail;
+    return is_success.value_or(ActionStatus::Fail);
 }
