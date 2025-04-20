@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include "Redirect.hpp"
 #include "Taumaturgia/Object/Object.hpp"
 #include "preety_print_types.hpp"
