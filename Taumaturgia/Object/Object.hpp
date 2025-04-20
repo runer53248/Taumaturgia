@@ -11,9 +11,6 @@
 enum class Actions;
 class CommandConcept;
 
-template <typename T, typename TYPE>
-concept type_of = std::same_as<std::remove_const_t<T>, TYPE>;
-
 class Object {
 private:
     class ObjectConcept {  // TODO: implement copy
@@ -81,9 +78,5 @@ ActionStatus wear(const Object& object, Object* owner, Object* target = nullptr)
 ActionStatus heal(const Object& object, Object* owner, Object* target = nullptr);
 ActionStatus restore(const Object& object, Object* owner, Object* target = nullptr);
 
-template <Properties param>
-decltype(auto) getOpt(type_of<Object> auto& object) {
-    return object.template getOpt<param>();
-}
-
 #include "ObjectModel.hpp"
+#include "getOpt.hpp"
