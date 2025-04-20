@@ -7,7 +7,6 @@ struct Living_type {
 };
 
 #include "Examples/structs.hpp"
-#include "Examples/Structs/EmptyType.hpp"
 
 using ArmorSet = add_properties_ordered<Type, Naming, Wearing>;
 

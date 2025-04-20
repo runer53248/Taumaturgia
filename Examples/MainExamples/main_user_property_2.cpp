@@ -3,7 +3,6 @@
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
-#include "Usage/Properties.hpp"
 
 struct MyType {
     // std::string name{};

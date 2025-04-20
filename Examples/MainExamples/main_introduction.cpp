@@ -1,5 +1,4 @@
 #include "Examples/Benchmark.hpp"
-#include "Taumaturgia/Object/Object.hpp"
 #include "Usage/DefaultStrategies.hpp"
 
 struct BaseType {

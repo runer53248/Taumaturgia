@@ -1,6 +1,5 @@
 #pragma once
 #include <boost/mp11.hpp>
-#include <type_traits>
 #include "Taumaturgia/Properties/Helpers/taged_list.hpp"
 #include "Taumaturgia/Traits/trait.hpp"
 

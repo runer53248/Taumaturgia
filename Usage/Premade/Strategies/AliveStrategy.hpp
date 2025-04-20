@@ -1,5 +1,4 @@
 #pragma once
-#include <concepts>
 #include <optional>
 #include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
 

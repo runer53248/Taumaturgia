@@ -1,4 +1,5 @@
 #pragma once
+#include <boost/mp11.hpp>
 #include <type_traits>
 
 template <typename... T>

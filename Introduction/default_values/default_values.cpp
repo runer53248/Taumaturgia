@@ -1,7 +1,6 @@
 #include <print>
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Introduction/parse_type_name.hpp"
-#include "Usage/With.hpp"
 
 struct Base {};
 struct int_tag;

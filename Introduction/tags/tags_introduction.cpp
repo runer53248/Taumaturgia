@@ -1,6 +1,5 @@
 #include <print>
 #include "Introduction/parse_type_name.hpp"
-#include "Usage/With.hpp"
 
 struct Base {};
 

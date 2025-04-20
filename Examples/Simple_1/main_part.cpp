@@ -1,7 +1,6 @@
 #include <vector>
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
-#include "Usage/Properties.hpp"
 
 struct base {};
 

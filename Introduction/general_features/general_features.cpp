@@ -1,7 +1,4 @@
 #include <iostream>
-#include "Examples/demangle_type_name.hpp"
-#include "Usage/With.hpp"
-
 #include "Introduction/parse_type_name.hpp"
 #include "Taumaturgia/Properties/GeneralFeatures.hpp"
 

@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Examples/PreetyPrint/PrintDamage.hpp"
 #include "Examples/PreetyPrint/PrintHealth.hpp"
 #include "Examples/PreetyPrint/PrintName.hpp"

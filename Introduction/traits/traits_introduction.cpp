@@ -1,6 +1,8 @@
 #undef NO_PREMADE_PROPERTIES
 // #define NO_PREMADE_PROPERTIES
 
+#include <iostream>
+
 #include "Examples/PreetyPrint/PrintDamage.hpp"
 #include "Examples/PreetyPrint/PrintName.hpp"
 #include "Usage/With.hpp"

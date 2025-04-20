@@ -1,6 +1,6 @@
 #pragma once
-#include <iostream>
-#include <string>
+#include <ostream>
+#include <string_view>
 
 template <char Open, char Close>
 auto& print_in_braces(std::ostream& out, std::string_view name, auto&& func) {

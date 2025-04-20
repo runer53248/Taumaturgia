@@ -1,6 +1,4 @@
 #pragma once
-#include <limits>
-#include "Usage/Types/Structs/EffectContainer.hpp"
 #include "Usage/Types/Health/Health.hpp"
 #include "Usage/Enums/CureValueType.hpp"
 

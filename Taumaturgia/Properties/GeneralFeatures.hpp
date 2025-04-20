@@ -1,5 +1,4 @@
 #pragma once
-#include <boost/mp11.hpp>
 #include <stdexcept>
 #include <variant>
 #include "Helpers/constructible_from_args.hpp"
