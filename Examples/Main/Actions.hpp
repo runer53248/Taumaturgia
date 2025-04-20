@@ -25,7 +25,7 @@ void attack(auto& backpack, auto& player, auto& enemy) {
 
 // MARK: wear
 
-void wear(auto& backpack, auto& player) {
+void wear(std::ranges::range auto& backpack, auto& player) {
     std::cout << "Items I can wear on:  //////////////////////////////\n";
     std::cout << "(armor protection protect against effect from attack)\n";
     std::cout << "(armor protection don't protect against ongoing effect)\n\n";
@@ -53,7 +53,7 @@ void wear(auto& backpack, auto& player) {
 
 // MARK: defend
 
-void defend(auto& backpack, auto& player) {
+void defend(std::ranges::range auto& backpack, auto& player) {
     std::cout << "Items I can defend with:  //////////////////////////////\n\n";
     for (const auto& item : backpack) {
         if (not item.hasStrategyFor(Properties::Protection)) {
@@ -78,7 +78,7 @@ void defend(auto& backpack, auto& player) {
 
 // MARK: enemy_defend
 
-void enemy_defend(auto& backpack, auto& enemy) {
+void enemy_defend(std::ranges::range auto& backpack, auto& enemy) {
     std::cout << "Items enemy try wear on:  //////////////////////////////\n";
     std::cout << "(enemy don't have wearingable property)\n\n";
 
@@ -105,7 +105,7 @@ void enemy_defend(auto& backpack, auto& enemy) {
 
 // MARK: restore
 
-void restore(auto& backpack, auto& player) {
+void restore(std::ranges::range auto& backpack, auto& player) {
     std::cout << "Items I can restore with:  //////////////////////////////\n\n";
     for (const auto& item : backpack) {
         if (not item.hasStrategyFor(Properties::Restore) ) {
@@ -126,7 +126,7 @@ void restore(auto& backpack, auto& player) {
 
 // MARK: heal
 
-void heal(auto& backpack, auto& player) {
+void heal(std::ranges::range auto& backpack, auto& player) {
     std::cout << "Items I can heal with:  //////////////////////////////\n\n";
     for (const auto& item : backpack) {
         if (not item.hasStrategyFor(Properties::CureHealth)) {
