@@ -1,4 +1,8 @@
 #pragma once
+#include "Taumaturgia/Object/Enums/ActionStatus.hpp"
+#include "Usage/Enums/AliveStatus.hpp"
+#include "Usage/Premade/PremadeStrategies.hpp"
+class Object;
 
 template <>
 struct AliveStrategy_<Default> {

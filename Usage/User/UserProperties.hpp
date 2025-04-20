@@ -1,4 +1,6 @@
 #pragma once
+#include "Usage/Traits.hpp"
+
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
 #include "Usage/Types/CureHealth/CureHealth.hpp"

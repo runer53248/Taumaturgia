@@ -1,5 +1,6 @@
 #pragma once
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
+#include "Usage/Properties.hpp"
 
 class Object;
 enum class ActionStatus;

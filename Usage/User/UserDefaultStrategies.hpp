@@ -1,4 +1,9 @@
 #pragma once
+#include "Taumaturgia/Object/Enums/ActionStatus.hpp"
+#include "Taumaturgia/Strategies/UserStrategy.hpp"
+#include "Usage/Enums/AliveStatus.hpp"
+#include "Usage/Traits.hpp"
+class Object;
 
 template <>
 struct UserStrategy_<Health, Default> {
@@ -10,7 +15,7 @@ struct UserStrategy_<Health, Default> {
 template <>
 struct UserStrategy_<Damage, Default> {
     static constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object* target) {
-        auto* suspect = Whom(owner, target);
+        Object* suspect = Whom(owner, target);
         return default_attack_behavior(obj, suspect);
     }
 };
@@ -18,7 +23,7 @@ struct UserStrategy_<Damage, Default> {
 template <>
 struct UserStrategy_<Protection, Default> {
     static constexpr ActionStatus operator()(Protectingable auto& obj, Object* owner, Object* target) {
-        auto* suspect = Whom(owner, target);
+        Object* suspect = Whom(owner, target);
         return default_defend_behavior(obj, suspect);
     }
 };
@@ -26,7 +31,7 @@ struct UserStrategy_<Protection, Default> {
 template <>
 struct UserStrategy_<CureHealth, Default> {
     static constexpr ActionStatus operator()(Healingable auto& obj, Object* owner, Object* target) {
-        auto* suspect = Whom(owner, target);
+        Object* suspect = Whom(owner, target);
         return default_heal_behavior(obj, suspect);
     }
 };
@@ -34,7 +39,7 @@ struct UserStrategy_<CureHealth, Default> {
 template <>
 struct UserStrategy_<EffectTypeContainer, Default> {
     static constexpr ActionStatus operator()(Restoringable auto& obj, Object* owner, Object* target) {
-        auto* suspect = Whom(owner, target);
+        Object* suspect = Whom(owner, target);
         return default_restore_behavior(obj, suspect);
     }
 };
@@ -42,7 +47,7 @@ struct UserStrategy_<EffectTypeContainer, Default> {
 template <>
 struct UserStrategy_<WearContainer, Default> {
     static constexpr ActionStatus operator()(Wearingable auto& obj, Object* owner, Object* target) {
-        auto* suspect = Whom(owner, target);
+        Object* suspect = Whom(owner, target);
         return default_wear_behavior(obj, suspect);
     }
 };

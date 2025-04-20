@@ -1,14 +1,7 @@
 #pragma once
 #include <unordered_map>
-#include "Usage/Properties.hpp"
 
-#ifdef NO_PREMADE_STRATEGIES
-#include "Usage/User/UserStrategies.hpp"
-#else
-#include "Usage/Premade/PremadeStrategies.hpp"
-#endif
-
-#include "Taumaturgia/Strategies/GetterStrategy.hpp"  //
+#include "Taumaturgia/Strategies/GetterStrategy.hpp"
 
 template <typename T>
 concept is_alive_strategy = Strategable<AliveStrategy, T, std::optional<AliveStatus>>;

@@ -1,4 +1,6 @@
 #pragma once
+#include "Usage/Properties.hpp"
+
 #include "Strategies/AliveStrategy.hpp"
 #include "Strategies/AttackStrategy.hpp"
 #include "Strategies/DefendStrategy.hpp"

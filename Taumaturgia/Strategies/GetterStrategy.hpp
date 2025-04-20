@@ -1,6 +1,6 @@
 #pragma once
 #include "Taumaturgia/Strategies/Helpers/StrategyConditional.hpp"
-#include "Usage/Types/Helpers/extract_optional_type.hpp"
+#include "Usage/Helpers/extract_optional_type.hpp"
 
 template <typename T>
 struct GetterStrategy_ {};
