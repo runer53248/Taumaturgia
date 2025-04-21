@@ -268,7 +268,7 @@ int main() {
     std::cout << '\n';
 
     for (const auto* entity : std::array{&paladin, &warior, &shield, &weaponA, &weaponB, &weaponC, &weapon_c2, &potion}) {
-        print_object_properties(*entity);
+        print_properties(*entity);
         print_object(*entity);
     }
 }

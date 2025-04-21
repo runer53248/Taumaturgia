@@ -54,16 +54,13 @@ int main() {
               << name<decltype(weird_tile)>() << '\n'
               << '\n';
 
-    print_object_properties(item);
-    print_customized_properties(item);
+    print_properties(item);
     print_object(item);
 
-    print_object_properties(tile);
-    print_customized_properties(tile);
+    print_properties(tile);
     print_object(tile);
 
-    print_object_properties(living_tile);
-    print_customized_properties(living_tile);
+    print_properties(living_tile);
     print_object(living_tile);
 
     std::cout << '\n';

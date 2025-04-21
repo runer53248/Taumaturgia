@@ -115,27 +115,36 @@ int main(int, char** argv) {
                                      Duration{5, DurationType::Round},
                                      EffectState::Active}};
 
-    Object weapon_a = Weapon_A{Name{"Sword A"}, default_damage};
-    Object weapon_b = Weapon_B{Name{"Sword B"}, default_damage};
-    Object weapon_c = Weapon_C{Name{"Sword C"}, default_damage};
-    Object weapon_d = Weapon_D{Name{"Sword D"}, default_damage};
+    auto type_a = Weapon_A{Name{"Sword A"}, default_damage};
+    auto type_b = Weapon_B{Name{"Sword B"}, default_damage};
+    auto type_c = Weapon_C{Name{"Sword C"}, default_damage};
+    auto type_d = Weapon_D{Name{"Sword D"}, default_damage};
+
+    Object weapon_a = type_a;
+    Object weapon_b = type_b;
+    Object weapon_c = type_c;
+    Object weapon_d = type_d;
 
     std::cout << "weapon attack:\n";
 
     attack(weapon_a, &weapon_a);
-    // print_object_properties(weapon_a);
+    // print_properties(weapon_a);
+    print_properties(type_a);
     print_object(weapon_a);
 
     attack(weapon_b, &weapon_b);
-    // print_object_properties(weapon_b);
+    // print_properties(weapon_b);
+    print_properties(type_b);
     print_object(weapon_b);
 
     attack(weapon_c, &weapon_c);
-    // print_object_properties(weapon_c);
+    // print_properties(weapon_c);
+    print_properties(type_c);
     print_object(weapon_c);
 
     attack(weapon_d, &weapon_d);
-    // print_object_properties(weapon_d);
+    // print_properties(weapon_d);
+    print_properties(type_d);
     print_object(weapon_d);
     std::cout << "\n";
 

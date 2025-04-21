@@ -51,13 +51,8 @@ int main() {
         std::cout << '\n';
     }
 
-    Object franco{gustav};
-
-    print_object_properties(franco);
-    std::cout << '\n';
-
-    std::cout << "print franco:\n";
-    print_object(franco);
+    print_properties(gustav);
+    print_object(gustav);
 
     return 0;
 }

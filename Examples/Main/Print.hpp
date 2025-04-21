@@ -3,7 +3,7 @@
 
 // MARK: getOpt_print
 
-void getOpt_print(const Object& obj) {
+void getOpt_print(Object& obj) {
     std::cout << "get_print_const_ref:\n";
     getOpt<Properties::Health>(obj)  // getOpt as function
         .and_then(print_hp)

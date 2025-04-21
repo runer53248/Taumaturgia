@@ -71,7 +71,7 @@ int main() {
 
     try {
         for (auto&& el : elements) {
-            // print_object_properties(el);
+            // print_properties(el);
             print_object(el);
         }
     } catch (const std::exception& err) {

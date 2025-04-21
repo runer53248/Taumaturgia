@@ -74,8 +74,8 @@ int main() {
         .and_then(print_new_line);
     std::cout << '\n';
 
-    print_object_properties(restore_potion);
-    print_object_properties(player);
+    print_properties(restore_potion);
+    print_properties(player);
     std::cout << '\n';
 
     // MARK: print Health

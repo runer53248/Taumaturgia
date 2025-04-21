@@ -113,41 +113,40 @@ inline void print_person(const Object& person) {
     std::cout << '\n';
 };
 
-inline void print_object_properties(const Object& obj) {
-    std::cout << "Name: " << obj.name() << '\n';
-
+inline void print_properties(const auto& type) {
     std::vector properties_enums = {std::pair<std::string, Properties>  //
-                                    {" [can get] ", Properties::Get},
-                                    {" [can alive] ", Properties::Health},
-                                    {" [can attack] ", Properties::Damage},
-                                    {" [can defend] ", Properties::Protection},
-                                    {" [can heal] ", Properties::CureHealth},
-                                    {" [can restore] ", Properties::Restore},
-                                    {" [can wear] ", Properties::Wear}};
+                                    {"get] ", Properties::Get},
+                                    {"alive] ", Properties::Health},
+                                    {"attack] ", Properties::Damage},
+                                    {"defend] ", Properties::Protection},
+                                    {"heal] ", Properties::CureHealth},
+                                    {"restore] ", Properties::Restore},
+                                    {"wear] ", Properties::Wear}};
 
-    for (auto [text, prop] : properties_enums) {
-        if (auto value = obj.hasStrategyFor(prop)) {
-            std::cout << text << value << '\n';
+    if constexpr (std::same_as<Object, std::remove_cvref_t<decltype(type)>>) {
+        std::cout << "Name: " << type.name() << '\n';
+
+        for (auto [text, prop] : properties_enums) {
+            if (auto value = type.hasStrategyFor(prop)) {
+                std::cout << " [can " << text << value << '\n';
+            }
         }
-    }
-    std::cout << '\n';
-};
+    } else {
+        Object obj = type;
+        std::cout << "Name: " << obj.name() << '\n';
+        const auto map = propertiesCustomizationMap<std::remove_cvref_t<decltype(type)>>();
 
-inline void print_customized_properties(const auto& type) {
-    const auto map = propertiesCustomizationMap<std::remove_cvref_t<decltype(type)>>();
-
-    std::vector properties_enums = {std::pair<std::string, Properties>  //
-                                    {" [custom get] ", Properties::Get},
-                                    {" [custom alive] ", Properties::Health},
-                                    {" [custom attack] ", Properties::Damage},
-                                    {" [custom defend] ", Properties::Protection},
-                                    {" [custom heal] ", Properties::CureHealth},
-                                    {" [custom restore] ", Properties::Restore},
-                                    {" [custom wear] ", Properties::Wear}};
-
-    for (auto [text, prop] : properties_enums) {
-        if (auto value = map.at(prop)) {
-            std::cout << text << value << '\n';
+        for (auto [text, prop] : properties_enums) {
+            if (auto value = map.at(prop)) {
+                std::cout << " [custom " << text << value << '\n';
+                if (not obj.hasStrategyFor(prop)) {
+                    throw std::logic_error("Having custom strategy should implies that object have it.");
+                }
+                continue;
+            }
+            if (auto value = obj.hasStrategyFor(prop)) {
+                std::cout << " [can " << text << value << '\n';
+            }
         }
     }
     std::cout << '\n';
