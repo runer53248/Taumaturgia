@@ -55,6 +55,8 @@ auto type_name_result(std::string text = name<T>()) {
     what = ",impl::";
     find_and_replace(text, what, into);
 
+    size_t prop_index = 0;  // index of property
+
     what = "impl::";  // replace pattern "impl::****_<" with "\nimpl::****_\n" or remove "impl::"
     for (size_t target = text.find(what); target != std::string::npos; target = text.find(what)) {
         std::string ender = "_<";
@@ -111,14 +113,14 @@ auto type_name_result(std::string text = name<T>()) {
     into = "\n";
     find_and_replace(text, what, into);
 
-    for (size_t start = 0, index = 0, target = text.find("\n", start); target != std::string::npos; target = text.find("\n", start)) {
+    for (size_t start = 0, target = text.find("\n", start); target != std::string::npos; target = text.find("\n", start)) {
         auto target_end = text.find("\n", target + 1);
         if (target_end != std::string::npos) {
             auto name = text.substr(target + 1, target_end - target - 1);
             if (auto e = name.find("<"); e != std::string::npos) {
                 name.replace(e, 1, "");
             }
-            auto pos = std::to_string(index++);
+            auto pos = std::to_string(prop_index++);
             result.properties.emplace_back(
                 name,
                 pos);
@@ -194,25 +196,44 @@ auto type_name_result(std::string text = name<T>()) {
 
     result.base = text;
     result.base += " == " + base_name + '\n';
-    if constexpr (trait<Name>::accessable<base_type>)
+    if constexpr (trait<Name>::accessable<base_type>) {
+        result.base += std::to_string(prop_index++);
         result.base += "  : Name\n";
-    if constexpr (trait<CureHealth>::accessable<base_type>)
+    }
+    if constexpr (trait<CureHealth>::accessable<base_type>) {
+        result.base += std::to_string(prop_index++);
         result.base += "  : CureHealth\n";
-    if constexpr (trait<Protection>::accessable<base_type>)
+    }
+    if constexpr (trait<Protection>::accessable<base_type>) {
+        result.base += std::to_string(prop_index++);
         result.base += "  : Protection\n";
-    if constexpr (trait<Damage>::accessable<base_type>)
+    }
+    if constexpr (trait<Damage>::accessable<base_type>) {
+        result.base += std::to_string(prop_index++);
         result.base += "  : Damage\n";
-    if constexpr (trait<EffectContainer>::accessable<base_type>)
+    }
+    if constexpr (trait<EffectContainer>::accessable<base_type>) {
+        result.base += std::to_string(prop_index++);
         result.base += "  : EffectContainer\n";
-    if constexpr (trait<WearContainer>::accessable<base_type>)
+    }
+    if constexpr (trait<WearContainer>::accessable<base_type>) {
+        result.base += std::to_string(prop_index++);
         result.base += "  : WearContainer\n";
-    if constexpr (trait<Health>::accessable<base_type>)
+    }
+    if constexpr (trait<Health>::accessable<base_type>) {
+        result.base += std::to_string(prop_index++);
         result.base += "  : Health\n";
-    if constexpr (trait<int>::accessable<base_type>)
+    }
+    if constexpr (trait<int>::accessable<base_type>) {
+        result.base += std::to_string(prop_index++);
         result.base += "  : int\n";
-    if constexpr (requires { typename base_type::base_type; })
-        if constexpr (trait<int>::accessable<typename base_type::base_type>)
+    }
+    if constexpr (requires { typename base_type::base_type; }) {
+        if constexpr (trait<int>::accessable<typename base_type::base_type>) {
+            result.base += std::to_string(prop_index++);
             result.base += "  : : int\n";
+        }
+    }
 
     return result;
 };
