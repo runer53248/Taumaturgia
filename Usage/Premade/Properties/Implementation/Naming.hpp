@@ -22,7 +22,15 @@ public:
             list<std::remove_cvref_t<Args>...>>  // every argument have unique type
     NamingSimple_(const Token&, Args&&... args)
         : T{} {
-        ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
+        auto fn = []<typename A>(auto* th, [[maybe_unused]] A& arg) {
+            if constexpr (std::same_as<std::remove_cvref_t<A>, hold_type>) {
+                th->getType() = std::forward<A>(arg);
+            } else {
+                trait<std::remove_cvref_t<A>>::get(static_cast<T&>(*th)) = std::forward<A>(arg);
+            }
+        };
+
+        ((fn(this, args)), ...);
     }
 
     // MARK: copy/move C-tors
@@ -37,6 +45,10 @@ public:
         : T{std::forward<Args>(args)...}, name_{name} {}
 
     constexpr decltype(auto) getName(this auto& self) {
+        return (self.name_);
+    }
+
+    constexpr decltype(auto) getType(this auto& self) {  //? this fix accessibility
         return (self.name_);
     }
 

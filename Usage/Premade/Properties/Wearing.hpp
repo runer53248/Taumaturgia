@@ -4,8 +4,6 @@
 
 namespace impl {
 
-// MARK: Wearing_
-
 template <typename T>
 class Wearing_ : public Features_<WearingSimple_<T>> {
 public:

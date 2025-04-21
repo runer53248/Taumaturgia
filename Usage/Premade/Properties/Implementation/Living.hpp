@@ -48,6 +48,10 @@ public:
         return self.hp_;
     }
 
+    constexpr auto& getType(this auto& self) {  //? this fix accessibility
+        return self.hp_;
+    }
+
 private:
     hold_type hp_ = buildin_defaults<hold_type>::get();
 };

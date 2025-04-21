@@ -4,8 +4,6 @@
 
 namespace impl {
 
-// MARK: Protecting_
-
 template <typename T>
 class Protecting_ : public Features_<ProtectingSimple_<T>> {
 public:

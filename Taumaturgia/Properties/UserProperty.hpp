@@ -39,11 +39,13 @@ public:
     using hold_type = TYPE;
 
     template <typename RETURN = TYPE, size_t DIG = 0>
+    // requires std::is_same_v<RETURN, TYPE>
     constexpr decltype(auto) getType() & noexcept {
         return (type_);
     }
 
     template <typename RETURN = TYPE, size_t DIG = 0>
+    // requires std::is_same_v<RETURN, TYPE>
     constexpr decltype(auto) getType() const& noexcept {
         return (type_);
     }
@@ -99,7 +101,12 @@ public:
         requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
     constexpr UserProperty_(const Token&, Args&&... args)
         : T{} {
-        ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
+        constexpr bool have_all_types_from_args = (trait<std::remove_cvref_t<Args>>::template accessable<UserProperty_<TYPE, T, Tags...>> and ...);
+        if constexpr (have_all_types_from_args) {
+            ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
+        } else {
+            static_assert(have_all_types_from_args, "Unordered c-tor arguments contains type not accessable by traits.");
+        }
     }
 
     // MARK: copy/move C-tors
@@ -244,6 +251,30 @@ public:
             }
         } else {
             return (type_);
+        }
+    }
+
+    // MARK: haveTypeNum
+
+    template <typename RETURN = TYPE, size_t NUM = 0>
+    static consteval bool haveTypeNum() noexcept {
+        if constexpr (requires {
+                          { UserProperty_<TYPE, T, Tags...>{}.getType<RETURN, NUM>() } -> std::same_as<void>;
+                      }) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    template <size_t NUM>
+    static consteval bool haveTypeNum() noexcept {
+        if constexpr (requires {
+                          { UserProperty_<TYPE, T, Tags...>{}.getType<NUM>() } -> std::same_as<void>;
+                      }) {
+            return false;
+        } else {
+            return true;
         }
     }
 

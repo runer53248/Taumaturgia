@@ -1,6 +1,8 @@
 #pragma once
 #include "Taumaturgia/Properties/Helpers/have_get_features.hpp"
 
+#include "Taumaturgia/Traits/TypeConcepts.hpp"  // for helpers::TypeAccessable
+
 namespace impl {
 
 // MARK: Features_
@@ -10,7 +12,6 @@ class Features_ : public T {
 public:
     using base_type = typename T::property_data::base_type;
     using typename T::hold_type;
-
     using T::T;
 
     // MARK: getType
@@ -37,7 +38,11 @@ public:
         } else {
             if constexpr (getType_template_able<base_type, RETURN>) {
                 return static_cast<base>(self).template getType<RETURN, DIG>();
-            } else {
+            } 
+            // else if constexpr (traits::helpers::GetTypeAccessable<base_type, RETURN>) {
+            //     return static_cast<base>(self).template getType();
+            // } 
+            else {
                 // static_assert(false, "WARNING: getType method tries to return void type");
             }
         }
@@ -61,6 +66,30 @@ public:
         }
     }
 
+    // MARK: haveTypeNum
+
+    template <typename RETURN, size_t NUM = 0>
+    static consteval bool haveTypeNum() noexcept {
+        if constexpr (requires {
+                          { Features_<T>{}.getType<RETURN, NUM>() } -> std::same_as<void>;
+                      }) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    template <size_t NUM = 0>
+    static consteval bool haveTypeNum() noexcept {
+        if constexpr (requires {
+                          { Features_<T>{}.getType<NUM>() } -> std::same_as<void>;
+                      }) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     // MARK: getTypeTaged
 
     template <typename RETURN, typename... TTags, typename Self>
@@ -75,7 +104,11 @@ public:
             base_type&>;
 
         if constexpr (std::same_as<list<>, list<TTags...>> and std::same_as<RETURN, hold_type>) {
-            return self.template getType<RETURN>();
+            if constexpr (::traits::helpers::GetTypeAccessable<type, RETURN>) {
+                return static_cast<type>(self).getType();
+            } else {
+                return trait<RETURN>::get(static_cast<type>(self));
+            }
         } else if constexpr (std::same_as<typename T::property_data::tags_list, list<TTags...>> and
                              requires { T{}.template getTypeTaged<RETURN, TTags...>(); }) {
             return static_cast<type>(self).template getTypeTaged<RETURN, TTags...>();
@@ -142,7 +175,7 @@ template <typename T>
 struct test_property : public T {
     using property_data = test_metadata<test_property, T>;
     using hold_type = type;
-    
+
     hold_type type;
 };
 

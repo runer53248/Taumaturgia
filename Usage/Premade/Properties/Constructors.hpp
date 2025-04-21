@@ -38,7 +38,15 @@ public:
         requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
     Constructors_(const Token&, Args&&... args)
         : T{} {
-        ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
+        auto fn = []<typename A>(auto* th, [[maybe_unused]] A& arg) {
+            if constexpr (std::same_as<std::remove_cvref_t<A>, hold_type>) {
+                th->getType() = std::forward<A>(arg);
+            } else {
+                trait<std::remove_cvref_t<A>>::get(static_cast<property_data::base_type&>(*th)) = std::forward<A>(arg);
+            }
+        };
+
+        ((fn(this, args)), ...);
     }
 
     // MARK: Namingable default

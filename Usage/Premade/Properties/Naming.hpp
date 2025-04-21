@@ -2,11 +2,7 @@
 #include "Features.hpp"
 #include "Implementation/Naming.hpp"
 
-// #include "Usage/Traits/accessName.hpp"
-
 namespace impl {
-
-// MARK: Naming_
 
 template <typename T>
 class Naming_ : public Features_<NamingSimple_<T>> {
