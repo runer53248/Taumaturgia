@@ -1,12 +1,15 @@
 #include <iostream>
+#include <print>
 #include "Introduction/parse_type_name.hpp"
 #include "Taumaturgia/Properties/GeneralFeatures.hpp"
+
+#include "Examples/PreetyPrint/preety_print.hpp"
 
 struct Type {
     Name name{"Name c"};  // default in base
     Damage dmg;
     Health hp;
-    int type;
+    int type{500};
 };
 
 struct name_t {};
@@ -179,6 +182,26 @@ int main() {
 
     std::cout << parse_type_name<general_type>() << '\n';
     std::cout << parse_type_name<general_type2>() << '\n';
+
+    {
+        auto print_num = []<size_t NUM, typename T>(T& t) {
+            if constexpr (T::template haveTypeNum<NUM>()) {
+                auto value = t.template getType<NUM>();
+                std::print("type[{}] = [{}] {}\n", NUM, name<decltype(value)>(), value);
+            }
+        };
+
+        print_num.operator()<0>(type2);
+        print_num.operator()<1>(type2);
+        print_num.operator()<2>(type2);
+        print_num.operator()<3>(type2);
+        print_num.operator()<4>(type2);
+        print_num.operator()<5>(type2);
+        print_num.operator()<6>(type2);
+        print_num.operator()<7>(type2);
+        print_num.operator()<8>(type2);
+        print_num.operator()<9>(type2);
+    }
 
     {
         using featured_general_type2 = GeneralFeatures<general_type2>;
