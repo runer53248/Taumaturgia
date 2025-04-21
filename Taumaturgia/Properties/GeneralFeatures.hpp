@@ -99,7 +99,7 @@ public:
         using boost::mp11::mp_filter;
         using boost::mp11::mp_size;
         using L = boost::mp11::mp_filter<
-            trait_accessable,
+            trait_accessable_fn,
             // list_of_types, //TODO: order_list -> extract property::hold_type
             list<Name,
                  EffectTypeContainer,
@@ -188,7 +188,7 @@ public:
 
 private:
     template <class TT>
-    using trait_accessable = boost::mp11::mp_bool<trait<TT>::template accessable<T>>;
+    using trait_accessable_fn = boost::mp11::mp_bool<trait<TT>::template accessable<T>>;
 
     template <size_t SKIP, typename TYPE_P, typename... REST_P>
     constexpr decltype(auto) getBuildinTypes() & noexcept {
