@@ -8,7 +8,7 @@
 struct Empty {};
 
 int main() {
-    using all_properties_type = add_properties_ordered<
+    using type_with_all_buildin_properties = add_properties_ordered<
         Empty,
         Living,
         Wearing,
@@ -18,7 +18,7 @@ int main() {
         Restoring,
         Naming>;
 
-    Object obj = all_properties_type{
+    Object obj = type_with_all_buildin_properties{
         Name("ultimate"),
         Health{24},
         WearContainer{10},
@@ -52,8 +52,17 @@ int main() {
 
     print_object(obj);
 
-    print_protection(getOpt<Properties::Protection>(obj).value());
-    std::cout << '\n';
-    print_wear(getOpt<Properties::Wear>(obj).value());
-    print_dmg(getOpt<Properties::Damage>(obj).value());
+    getOpt<Properties::Protection>(obj)
+        .and_then(print_protection)
+        .and_then(print_new_line)
+        .and_then(print_new_line);
+
+    getOpt<Properties::Damage>(obj)
+        .and_then(print_dmg)
+        .and_then(print_new_line)
+        .and_then(print_new_line);
+
+    getOpt<Properties::Wear>(obj)
+        .and_then(print_wear)
+        .and_then(print_new_line);
 }
