@@ -1,8 +1,9 @@
 #include <vector>
 #include "Actions.hpp"
-#include "FillBackpack.hpp"
+#include "Introduction/parse_type_name.hpp"
 #include "Print.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
+#include "structs.hpp"
 
 int main() {
     using gustav_weapon = add_properties_ordered<
@@ -57,6 +58,11 @@ int main() {
 
     print_properties(gustav);
     print_object(gustav);
+
+    std::cout << "type gustav_weapon: \n"
+              << parse_type_name<gustav_weapon>() << '\n';
+    std::cout << "builded from type Weapon: \n"
+              << parse_type_name<Weapon>() << '\n';
 
     return 0;
 }
