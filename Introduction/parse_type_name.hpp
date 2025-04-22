@@ -242,8 +242,12 @@ template <typename T>
 auto parse_type_name() {
     std::string result;
     auto data = type_name_result<T>();
-    for (auto [type, pos, tokens] : data.properties) {
-        result += '\n' + pos + " : " + type + " : " + tokens;
+    if (data.properties.empty()) {
+        result += '\n';
+    } else {
+        for (auto [type, pos, tokens] : data.properties) {
+            result += '\n' + pos + " : " + type + " : " + tokens;
+        }
     }
     result += data.base;
     return result;
