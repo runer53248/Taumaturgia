@@ -51,6 +51,15 @@ struct UserDefaultValue<Protection, protection_tag> {
 // UserDefaultValue<Protection, protection_tag>::func
 //     UserDefaultValue<Protection, protection_tag>::value = [] { return default_protection_tag; };
 
+template <size_t NUM, typename T>
+auto print_property_info(T& type) {
+    if constexpr (T::template haveTypeNum<NUM>()) {
+        auto address = (void*)&(type.template getType<NUM>());
+        std::print("{} ", (void*)address);
+        std::print("type[{}] = {}\n", NUM, type.template getType<NUM>());
+    }
+};
+
 int main() {
     prepare_buildin_defaults<Health, Damage, Protection>();  // ! it will overide set values
     buildin_defaults<Protection>::set(default_protecting);
@@ -90,20 +99,14 @@ int main() {
     }
     std::println();
 
-    auto print_num = []<size_t NUM, typename T>(T& t) {
-        if constexpr (T::template haveTypeNum<NUM>()) {
-            std::print("{} ", (void*)&(t.template getType<NUM>()));
-            std::print("type[{}] = {}\n", NUM, t.template getType<NUM>());
-        }
-    };
-
-    print_num.operator()<0>(test);
-    print_num.operator()<1>(test);
-    print_num.operator()<2>(test);
-    print_num.operator()<3>(test);
-    print_num.operator()<4>(test);
-    print_num.operator()<5>(test);
-    print_num.operator()<6>(test);
+    print_property_info<0>(test);
+    print_property_info<1>(test);
+    print_property_info<2>(test);
+    print_property_info<3>(test);
+    print_property_info<4>(test);
+    print_property_info<5>(test);
+    print_property_info<6>(test);
+    print_property_info<7>(test);
 
     constexpr bool have_idx_5 = decltype(test)::haveTypeNum<5>();
     constexpr bool have_idx_6 = decltype(test)::haveTypeNum<6>();
