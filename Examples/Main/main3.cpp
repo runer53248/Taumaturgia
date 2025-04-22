@@ -19,12 +19,16 @@ int main() {
                       Healing>>);
 
 #ifdef WITH_ADD_PROPERTIES
+    std::cout << "example: with add_properties\n";
+
     auto gustav = gustav_weapon{
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},
         /*dmg*/ std::ignore,       // can be ignored but not ommited if later is present
         /*healHp*/ CureHealth{}};  // can be ommited
 #else
+    std::cout << "example: classic\n";
+
     auto gustav = gustav_weapon{
         Name{"GUSTAV_INTELIGENT_SWORD"},
         /*hp*/ Health{20},
@@ -34,7 +38,7 @@ int main() {
 
     // universal access by trait
     trait<Name>::get(gustav) = Name{"Franco The Inteligent Sword"};
-    trait<Health>::get(gustav) = Health{75};  
+    trait<Health>::get(gustav) = Health{75};
     trait<CureHealth>::get(gustav) = CureHealth{30};
     trait<Damage>::get(gustav) = Damage{100,
                                         DamageType::Magical,
