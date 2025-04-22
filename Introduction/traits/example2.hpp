@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Traits/TypeConcepts.hpp"
+#include "Taumaturgia/Traits/Helpers/CustomAccessType.hpp"
 
 class Name;
 

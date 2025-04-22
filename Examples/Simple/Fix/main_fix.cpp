@@ -78,8 +78,8 @@ int main() {
     static_assert(is_properties_accessable<Properties::Name, Tile>);
     static_assert(is_properties_accessable<Properties::Name, LivingTile>);
 
-    static_assert(properties_trait<Properties::Name>::template accessable<Tile>);
-    static_assert(properties_trait<Properties::Name>::template accessable<LivingTile>);
+    static_assert(properties_trait<Properties::Name>::template is_accessable<Tile>);
+    static_assert(properties_trait<Properties::Name>::template is_accessable<LivingTile>);
 
     std::optional health_result = action_impl::get_impl(tile, DeduceProperties::Health);
     std::cout << '\n';

@@ -69,7 +69,7 @@ TEST_F(Damage_Fixture, Access_by_getDamage) {
 }
 
 TEST_F(Damage_Fixture, Access_by_trait_accessDamage_with_CustomAccessDamage) {
-    static_assert(traits::helpers::CustomTypeAccessable<TestType, Damage>);
+    static_assert(CustomAccessType_able<TestType, Damage>);
 
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_damage));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_damage));

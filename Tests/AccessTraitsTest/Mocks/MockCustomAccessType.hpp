@@ -1,7 +1,7 @@
 #pragma once
 #include <gmock/gmock.h>
 #include "MockCustomAccess.hpp"
-#include "Taumaturgia/Traits/TypeConcepts.hpp"
+#include "Taumaturgia/Traits/Helpers/CustomAccessType.hpp"
 
 template <typename TYPE, typename T>
 struct traits::CustomAccessType {

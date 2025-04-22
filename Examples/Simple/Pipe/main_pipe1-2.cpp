@@ -52,7 +52,7 @@ int main() {
         std::cout << "int        = " << trait<int>::get(type_2) << '\n';
         std::cout << "string     = " << trait<std::string>::get(type_2) << '\n';
 
-        std::cout << "float acces= " << trait<float>::accessable<decltype(type_2)> << '\n';
+        std::cout << "float acces= " << trait_accessable<decltype(type_2), float> << '\n';
 
 #ifndef NO_PREMADE_PROPERTIES
         std::cout << "Name       = " << type_2.getName() << '\n';
@@ -119,7 +119,7 @@ int main() {
         std::cout << "int        = " << trait<int>::get(type_2) << '\n';
         std::cout << "string     = " << trait<std::string>::get(type_2) << '\n';
 
-        std::cout << "float acces= " << trait<float>::accessable<decltype(type_2)> << '\n';
+        std::cout << "float acces= " << trait_accessable<decltype(type_2), float> << '\n';
 
 #ifndef NO_PREMADE_PROPERTIES
         std::cout << "Name       = " << type_2.getName() << '\n';

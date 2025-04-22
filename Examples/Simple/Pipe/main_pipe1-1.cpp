@@ -70,7 +70,7 @@ int main() {
         std::cout << "float      = " << trait<float>::get(type) << '\n';
         std::cout << "string     = " << trait<std::string>::get(type) << '\n';
 
-        std::cout << "float acces= " << trait<float>::accessable<decltype(type)> << '\n';
+        std::cout << "float acces= " << trait_accessable<decltype(type), float> << '\n';
 
         std::cout << "float 0    = " << type.getType<float, 0>() << '\n';
         std::cout << "float 1    = " << type.getType<float, 1>() << '\n';
@@ -140,7 +140,7 @@ int main() {
         std::cout << "float      = " << trait<float>::get(type) << '\n';
         std::cout << "string     = " << trait<std::string>::get(type) << '\n';
 
-        std::cout << "float acces= " << trait<float>::accessable<decltype(type)> << '\n';
+        std::cout << "float acces= " << trait_accessable<decltype(type), float> << '\n';
 
         std::cout << "float 0    = " << type.getType<float, 0>() << '\n';
         std::cout << "float 1    = " << type.getType<float, 1>() << '\n';

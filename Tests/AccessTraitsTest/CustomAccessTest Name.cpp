@@ -41,8 +41,8 @@ protected:
         static_assert(traits::helpers::GetNameAccessable<decltype(*type)>);
         static_assert(traits::helpers::GetNameAccessable<decltype(std::as_const(*type))>);
 #endif
-        static_assert(traits::helpers::CustomTypeAccessable<decltype(*type), Name>);
-        static_assert(traits::helpers::CustomTypeAccessable<decltype(std::as_const(*type)), Name>);
+        static_assert(CustomAccessType_able<decltype(*type), Name>);
+        static_assert(CustomAccessType_able<decltype(std::as_const(*type)), Name>);
 
         CustomAccessNameMock<TestType>::mock = &customMock;
     }
@@ -78,7 +78,7 @@ TEST_F(Name_Fixture, Access_by_getName) {
 }
 
 TEST_F(Name_Fixture, Access_by_trait_accessName_with_CustomAccessName) {
-    static_assert(traits::helpers::CustomTypeAccessable<TestType, Name>);
+    static_assert(CustomAccessType_able<TestType, Name>);
 
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_name));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_name));

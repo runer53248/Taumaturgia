@@ -27,7 +27,7 @@ struct traits::CustomAccessType<Name, T> {
     }
 };
 
-static_assert(traits::helpers::CustomTypeAccessable<TestType, Name>);
+static_assert(CustomAccessType_able<TestType, Name>);
 
 template <typename T>
 using CustomAccessNameMock = traits::CustomAccessType<Name, T>;

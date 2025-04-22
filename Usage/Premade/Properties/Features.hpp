@@ -1,8 +1,6 @@
 #pragma once
 #include "Taumaturgia/Properties/Helpers/have_get_features.hpp"
 
-#include "Taumaturgia/Traits/TypeConcepts.hpp"  // for helpers::TypeAccessable
-
 namespace impl {
 
 // MARK: Features_
@@ -11,8 +9,8 @@ template <typename T>
 class Features_ : public T {
 public:
     using base_type = typename T::property_data::base_type;
-    using typename T::hold_type;
     using T::T;
+    using typename T::hold_type;
 
     // MARK: getType
 
@@ -38,11 +36,7 @@ public:
         } else {
             if constexpr (getType_template_able<base_type, RETURN>) {
                 return static_cast<base>(self).template getType<RETURN, DIG>();
-            } 
-            // else if constexpr (traits::helpers::GetTypeAccessable<base_type, RETURN>) {
-            //     return static_cast<base>(self).template getType();
-            // } 
-            else {
+            } else {
                 // static_assert(false, "WARNING: getType method tries to return void type");
             }
         }
@@ -104,7 +98,7 @@ public:
             base_type&>;
 
         if constexpr (std::same_as<list<>, list<TTags...>> and std::same_as<RETURN, hold_type>) {
-            if constexpr (::traits::helpers::GetTypeAccessable<type, RETURN>) {
+            if constexpr (getType_able<type, RETURN>) {
                 return static_cast<type>(self).getType();
             } else {
                 return trait<RETURN>::get(static_cast<type>(self));

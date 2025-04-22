@@ -71,7 +71,7 @@ struct traits::CustomAccessType<TYPE, T> {
 
 template <typename TYPE>
 struct UserStrategy_<TYPE, Default> {
-    static constexpr ActionStatus operator()(accessType_trait_able<TYPE> auto& obj) {
+    static constexpr ActionStatus operator()(trait_accessable<TYPE> auto& obj) {
         if consteval {
             // if (std::is_constant_evaluated()) {
             trait<TYPE>::get(obj);

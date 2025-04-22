@@ -101,7 +101,7 @@ public:
         requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
     constexpr UserProperty_(const Token&, Args&&... args)
         : T{} {
-        constexpr bool have_all_types_from_args = (trait<std::remove_cvref_t<Args>>::template accessable<UserProperty_<TYPE, T, Tags...>> and ...);
+        constexpr bool have_all_types_from_args = (trait_accessable<UserProperty_<TYPE, T, Tags...>, std::remove_cvref_t<Args>> and ...);
         if constexpr (have_all_types_from_args) {
             ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
         } else {
@@ -378,8 +378,7 @@ using tested_tag = UserProperty_<type, tag>;
 static_assert(trait_accessable<tested_type, type>);
 static_assert(trait_accessable<tested_tag, type>);
 
-static_assert(traits::helpers::trait_accessable<tested_type, trait<type>, type>);
-static_assert(traits::helpers::GetTypeAccessable<tested_type, type>);
+static_assert(getType_able<tested_type, type>);
 
 static_assert(have_get_features<tested_type, type>);
 

@@ -27,10 +27,10 @@ struct UserDefaultValue<Name, name_t> {  // default in unordered property
 int main() {
     prepare_buildin_defaults<Name>();  // sets default for buildin properties
 
-    static_assert(trait<Name>::accessable<Type>);
-    static_assert(trait<Damage>::accessable<Type>);
-    static_assert(trait<Health>::accessable<Type>);
-    static_assert(trait<int>::accessable<Type>);
+    static_assert(trait_accessable<Type, Name>);
+    static_assert(trait_accessable<Type, Damage>);
+    static_assert(trait_accessable<Type, Health>);
+    static_assert(trait_accessable<Type, int>);
 
     using general_type = GeneralFeatures<Type>;
     using general_type2 = add_properties_ordered<general_type,
@@ -40,15 +40,15 @@ int main() {
                                                  Naming_impl,
                                                  Protecting_impl>;
 
-    static_assert(trait<Name>::accessable<general_type>);
-    static_assert(trait<Damage>::accessable<general_type>);
-    static_assert(trait<Health>::accessable<general_type>);
+    static_assert(trait_accessable<general_type, Name>);
+    static_assert(trait_accessable<general_type, Damage>);
+    static_assert(trait_accessable<general_type, Health>);
 
-    static_assert(trait<Name>::accessable<general_type2>);
-    static_assert(trait<Damage>::accessable<general_type2>);
-    static_assert(trait<Health>::accessable<general_type2>);
-    static_assert(trait<Protection>::accessable<general_type2>);
-    static_assert(not trait<CureHealth>::accessable<general_type2>);
+    static_assert(trait_accessable<general_type2, Name>);
+    static_assert(trait_accessable<general_type2, Damage>);
+    static_assert(trait_accessable<general_type2, Health>);
+    static_assert(trait_accessable<general_type2, Protection>);
+    static_assert(not trait_accessable<general_type2, CureHealth>);
 
     general_type type;
     general_type2 type2;

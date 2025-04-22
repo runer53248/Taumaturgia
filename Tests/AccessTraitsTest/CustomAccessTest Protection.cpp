@@ -69,7 +69,7 @@ TEST_F(Protection_Fixture, Access_by_getProtection) {
 }
 
 TEST_F(Protection_Fixture, Access_by_trait_accessProtection_with_CustomAccessProtection) {
-    static_assert(traits::helpers::CustomTypeAccessable<TestType, Protection>);
+    static_assert(CustomAccessType_able<TestType, Protection>);
 
     EXPECT_CALL(customMock, get_(An<TestType&>())).Times(2).WillRepeatedly(ReturnRef(default_protection));
     EXPECT_CALL(customMock, get_(An<const TestType&>())).Times(1).WillRepeatedly(ReturnRef(default_protection));

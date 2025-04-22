@@ -22,7 +22,7 @@ int main() {
         std::cout << "int    = " << trait<int>::get(type) << '\n';
         std::cout << "float  = " << trait<float>::get(type) << '\n';
         std::cout << "double = " << trait<double>::get(type) << '\n';
-        if constexpr (trait<std::string>::accessable<decltype(type)>) {
+        if constexpr (trait_accessable<decltype(type), std::string>) {
             std::cout << "string = " << trait<std::string>::get(type) << '\n';
         }
         std::cout << '\n';

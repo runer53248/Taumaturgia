@@ -3,8 +3,7 @@
 
 class Protection;
 
-namespace traits {
-namespace helpers {
+namespace traits::helpers {
 
 template <typename T>
 concept ProtectionAccessable = requires(T x) {
@@ -18,20 +17,22 @@ concept GetProtectionAccessable = requires(std::remove_cvref_t<T> x) {
     { std::as_const(x).getProtection() } -> std::same_as<const Protection&>;
 };
 
-}  // namespace helpers
+}  // namespace traits::helpers
 
-struct accessProtection : public accessType<Protection> {
+namespace traits {
+
+struct accessProtection : public accessType<Protection> {  // inheritance
     template <typename T>
-    static const bool accessable = helpers::trait_accessable<T, accessProtection, Protection>;
+    static const bool is_accessable = helpers::accessable<T, accessProtection, Protection>;
 
     template <helpers::ProtectionAccessable T>
-        requires(not accessType<Protection>::accessable<T>)
+        requires(not accessType<Protection>::is_accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return (el.protection);
     }
 
     template <helpers::GetProtectionAccessable T>
-        requires(not accessType<Protection>::accessable<T>)
+        requires(not accessType<Protection>::is_accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getProtection();
     }

@@ -83,7 +83,7 @@ public:
     // MARK: getType
 
     template <typename RETURN, size_t DIG = 0, typename Self>
-        requires(trait<RETURN>::template accessable<T>)
+        requires(trait_accessable<T, RETURN>)
     constexpr decltype(auto) getType(this Self& self) noexcept {
         using TT = std::conditional_t<
             std::is_const_v<std::remove_reference_t<Self>>,
@@ -188,11 +188,11 @@ public:
 
 private:
     template <class TT>
-    using trait_accessable_fn = boost::mp11::mp_bool<trait<TT>::template accessable<T>>;
+    using trait_accessable_fn = boost::mp11::mp_bool<trait_accessable<T, TT>>;
 
     template <size_t SKIP, typename TYPE_P, typename... REST_P>
     constexpr decltype(auto) getBuildinTypes() & noexcept {
-        if constexpr (trait<std::remove_pointer_t<TYPE_P>>::template accessable<T>) {
+        if constexpr (trait_accessable<T, std::remove_pointer_t<TYPE_P>>) {
             if constexpr (SKIP > 0) {
                 return getBuildinTypes<SKIP - 1, REST_P...>();
             } else {
@@ -204,7 +204,7 @@ private:
     }
     template <size_t SKIP, typename TYPE_P, typename... REST_P>
     constexpr decltype(auto) getBuildinTypes() const& noexcept {
-        if constexpr (trait<std::remove_pointer_t<TYPE_P>>::template accessable<T>) {
+        if constexpr (trait_accessable<T, std::remove_pointer_t<TYPE_P>>) {
             if constexpr (SKIP > 0) {
                 return getBuildinTypes<SKIP - 1, REST_P...>();
             } else {

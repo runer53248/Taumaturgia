@@ -3,8 +3,7 @@
 
 class Health;
 
-namespace traits {
-namespace helpers {
+namespace traits::helpers {
 
 template <typename T>
 concept HealthAccessable = requires(T x) {
@@ -18,20 +17,22 @@ concept GetHealthAccessable = requires(std::remove_cvref_t<T> x) {
     { std::as_const(x).getHealth() } -> std::same_as<const Health&>;
 };
 
-}  // namespace helpers
+}  // namespace traits::helpers
 
-struct accessHealth : public accessType<Health> {
+namespace traits {
+
+struct accessHealth : public accessType<Health> {  // inheritance
     template <typename T>
-    static const bool accessable = helpers::trait_accessable<T, accessHealth, Health>;
+    static const bool is_accessable = helpers::accessable<T, accessHealth, Health>;
 
     template <helpers::HealthAccessable T>
-        requires(not accessType<Health>::accessable<T>)
+        requires(not accessType<Health>::is_accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return (el.hp);
     }
 
     template <helpers::GetHealthAccessable T>
-        requires(not accessType<Health>::accessable<T>)
+        requires(not accessType<Health>::is_accessable<T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getHealth();
     }

@@ -196,40 +196,40 @@ auto type_name_result(std::string text = name<T>()) {
 
     result.base = text;
     result.base += " == " + base_name + '\n';
-    if constexpr (trait<Name>::accessable<base_type>) {
+    if constexpr (trait_accessable<base_type, Name>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : Name\n";
     }
-    if constexpr (trait<CureHealth>::accessable<base_type>) {
+    if constexpr (trait_accessable<base_type, CureHealth>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : CureHealth\n";
     }
-    if constexpr (trait<Protection>::accessable<base_type>) {
+    if constexpr (trait_accessable<base_type, Protection>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : Protection\n";
     }
-    if constexpr (trait<Damage>::accessable<base_type>) {
+    if constexpr (trait_accessable<base_type, Damage>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : Damage\n";
     }
-    if constexpr (trait<EffectContainer>::accessable<base_type>) {
+    if constexpr (trait_accessable<base_type, EffectContainer>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : EffectContainer\n";
     }
-    if constexpr (trait<WearContainer>::accessable<base_type>) {
+    if constexpr (trait_accessable<base_type, WearContainer>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : WearContainer\n";
     }
-    if constexpr (trait<Health>::accessable<base_type>) {
+    if constexpr (trait_accessable<base_type, Health>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : Health\n";
     }
-    if constexpr (trait<int>::accessable<base_type>) {
+    if constexpr (trait_accessable<base_type, int>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : int\n";
     }
     if constexpr (requires { typename base_type::base_type; }) {
-        if constexpr (trait<int>::accessable<typename base_type::base_type>) {
+        if constexpr (trait_accessable<typename base_type::base_type, int>) {
             result.base += std::to_string(prop_index++);
             result.base += "  : : int\n";
         }

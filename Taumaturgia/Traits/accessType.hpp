@@ -1,5 +1,5 @@
 #pragma once
-#include "TypeConcepts.hpp"
+#include "Helpers/traits_helper.hpp"
 
 // TODO: make accessType::get for tagged access
 
@@ -8,38 +8,40 @@ namespace traits {
 template <typename TYPE, typename CONVERT_TYPE = void>
 struct accessType {
     template <typename T>
-    static constexpr bool accessable = (std::is_same_v<CONVERT_TYPE, void>)
-                                           ? helpers::trait_accessable<T, accessType<TYPE>, TYPE>
-                                           : helpers::trait_access_convertable<T, accessType<TYPE, CONVERT_TYPE>, CONVERT_TYPE>;
+    static constexpr bool is_accessable = helpers::accessable<T, accessType<TYPE, CONVERT_TYPE>, TYPE, CONVERT_TYPE>;
 
-    template <helpers::TypeAccessable<TYPE> T>
+    template <type_able<TYPE> T>
     static constexpr decltype(auto) get(T& el) noexcept {
         return (el.type);
     }
 
-    template <helpers::GetTypeAccessable<TYPE> T>
-        requires(not(helpers::CustomTypeAccessable<T, TYPE, CONVERT_TYPE> or helpers::GetTypeTemplateAccessable<T, TYPE>))
+    template <getType_able<TYPE> T>
+        requires(not(CustomAccessType_able<T, TYPE, CONVERT_TYPE> or getType_template_able<T, TYPE>))
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getType();
     }
 
-    template <helpers::GetTypeTemplateAccessable<TYPE> T>
-        requires(not helpers::CustomTypeAccessable<T, TYPE, CONVERT_TYPE>)  // prefer custom access getters
+    template <getType_template_able<TYPE> T>
+        requires(not CustomAccessType_able<T, TYPE, CONVERT_TYPE>)  // prefer custom access getters
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.template getType<TYPE>();
     }
 
-    template <helpers::CustomTypeAccessable<TYPE, CONVERT_TYPE> T>
-        requires(not helpers::GetTypeTemplateAccessable<TYPE, T>)
+    template <CustomAccessType_able<TYPE, CONVERT_TYPE> T>
+        requires(not getType_template_able<TYPE, T>)
     static constexpr decltype(auto) get(T& el) noexcept {
         return CustomAccessType<TYPE, std::remove_cvref_t<T>>::get(el);
     }
+
+    //
+
+    // template <typename... TTags, typename T>
+    //     requires requires {
+    //         T::template getTypeTaged<TYPE, TTags...>();
+    //     }
+    // static constexpr decltype(auto) getTypeTaged(T& el) noexcept {
+    //     return T::template getTypeTaged<TYPE, TTags...>();
+    // }
 };
 
 }  // namespace traits
-
-template <typename T, typename RESULT_TYPE>
-concept accessType_trait_able = traits::helpers::trait_accessable<T, traits::accessType<RESULT_TYPE>, RESULT_TYPE>;
-
-template <typename T, typename RESULT_TYPE, size_t DIG = 0>
-concept getType_template_able = traits::helpers::GetTypeTemplateAccessable<T, RESULT_TYPE, DIG>;

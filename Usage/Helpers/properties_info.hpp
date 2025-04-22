@@ -89,7 +89,7 @@ struct properties_strategy {
 };
 
 template <Properties PROPERTY, typename T>
-concept is_properties_accessable = properties_trait<PROPERTY>::template accessable<std::remove_reference_t<T>>;
+concept is_properties_accessable = properties_trait<PROPERTY>::template is_accessable<std::remove_reference_t<T>>;
 
 template <typename T>
 using add_optional_ref_wrapper = std::optional<std::reference_wrapper<T>>;
