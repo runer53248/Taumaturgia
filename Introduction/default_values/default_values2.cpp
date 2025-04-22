@@ -92,7 +92,7 @@ int main() {
 
     auto print_num = []<size_t NUM, typename T>(T& t) {
         if constexpr (T::template haveTypeNum<NUM>()) {
-            std::cout << &(t.template getType<NUM>()) << ' ';
+            std::print("{} ", (void*)&(t.template getType<NUM>()));
             std::print("type[{}] = {}\n", NUM, t.template getType<NUM>());
         }
     };
@@ -116,7 +116,7 @@ int main() {
     std::print("{}\n", parse_type_name<decltype(test)>());
     std::print("{}\n\n", ::name<decltype(test)>());
 
-    std::cout << "size of test type = " << sizeof(decltype(test)) << '\n';
+    std::print("size of test type  = {}\n", sizeof(decltype(test)));
     auto sum_of_prop = sizeof(Health)         //
                        + sizeof(Damage)       //
                        + sizeof(Protection)   //
@@ -126,22 +126,33 @@ int main() {
     if constexpr (have_idx_6) {
         sum_of_prop += sizeof(Protection);
     }
-    std::cout << "SUM of prop        = " << sum_of_prop << '\n';
-    std::cout << "size of Health     = " << sizeof(Health) << " = " << (ptrdiff_t)(sizeof(decltype(test)))    // size of type
-                                                                           - (ptrdiff_t)(                     //
-                                                                                 (char*)(&test.getType<0>())  // position of last property data
-                                                                                 - (char*)(&test))            // begining of type
-              << '\n';
-    std::cout << "size of Damage     = " << sizeof(Damage) << " = " << (ptrdiff_t)((char*)(&test.getType<0>()) - (char*)(&test.getType<1>())) << '\n';
-    std::cout << "size of Protection = " << sizeof(Protection) << " = " << (ptrdiff_t)((char*)(&test.getType<1>()) - (char*)(&test.getType<2>())) << '\n';
-    std::cout << "size of int        = " << sizeof(int) << " = " << (ptrdiff_t)((char*)(&test.getType<2>()) - (char*)(&test.getType<3>())) << '\n';
-    std::cout << "size of int        = " << sizeof(int) << " = " << (ptrdiff_t)((char*)(&test.getType<3>()) - (char*)(&test.getType<4>())) << '\n';
-    std::cout << "size of Protection = " << sizeof(Protection) << " = " << (ptrdiff_t)((char*)(&test.getType<4>()) - (char*)(&test.getType<5>())) << '\n';
+    std::print("SUM of prop        = {}\n", sum_of_prop);
+    std::print("size of Health     = {} = {}\n",
+               sizeof(Health),
+               (ptrdiff_t)(sizeof(decltype(test)))    // size of type
+                   - (ptrdiff_t)(                     //
+                         (char*)(&test.getType<0>())  // position of last property data
+                         - (char*)(&test))            // begining of type
+    );
+
+    auto address_of_property_0 = (char*)&test.getType<0>();
+    auto address_of_property_1 = (char*)&test.getType<1>();
+    auto address_of_property_2 = (char*)&test.getType<2>();
+    auto address_of_property_3 = (char*)&test.getType<3>();
+    auto address_of_property_4 = (char*)&test.getType<4>();
+    auto address_of_property_5 = (char*)&test.getType<5>();
+
+    std::print("size of Damage     = {} = {}\n", sizeof(Damage), (ptrdiff_t)(address_of_property_0 - address_of_property_1));
+    std::print("size of Protection = {} = {}\n", sizeof(Protection), (ptrdiff_t)(address_of_property_1 - address_of_property_2));
+    std::print("size of int        = {} = {}\n", sizeof(int), (ptrdiff_t)(address_of_property_2 - address_of_property_3));
+    std::print("size of int        = {} = {}\n", sizeof(int), (ptrdiff_t)(address_of_property_3 - address_of_property_4));
+    std::print("size of Protection = {} = {}\n", sizeof(Protection), (ptrdiff_t)(address_of_property_4 - address_of_property_5));
+
     if constexpr (have_idx_6) {
-        std::cout << "size of Protection = " << sizeof(Protection) << " = " << (ptrdiff_t)((char*)(&test.getType<5>()) - (char*)(&test.getType<have_idx_6 * 6>())) << '\n';
+        auto address_of_property_6 = (char*)&test.getType<have_idx_6 * 6>();
+        std::print("size of Protection = {} = {}\n", sizeof(Protection), (ptrdiff_t)(address_of_property_5 - address_of_property_6));
     }
-    std::cout << '\n';
-    // std::cout << "size of bool = " << sizeof(bool) << '\n';
+    std::println();
 }
 
 // Living_<
