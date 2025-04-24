@@ -10,7 +10,7 @@
 
 struct Simple3 {
     Simple3() = default;
-    Simple3(Damage dmg)
+    explicit Simple3(Damage dmg)
         : dmg{dmg} {}
 
     decltype(auto) Dmg(this auto& self) { return (self.dmg); }
@@ -119,7 +119,7 @@ int main() {
 
     {
         struct Simple2 {
-            Simple2(int v)
+            explicit Simple2(int v)
                 : dmg{v}, i{v + 5} {}
 
             decltype(auto) Dmg() { return (dmg); }
