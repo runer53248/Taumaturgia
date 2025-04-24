@@ -1,5 +1,6 @@
 #pragma once
-#include "Features.hpp"
+#include "Helpers/Features.hpp"
+#include "Helpers/apply_property.hpp"
 #include "Implementation/Restoring.hpp"
 
 namespace impl {
@@ -24,4 +25,4 @@ static_assert(Restoringable<Restoring_<Restoring_Test>>);
 }  // namespace impl::Test
 
 template <typename T>
-using Restoring = std::conditional_t<Restoringable<T>, T, impl::Restoring_<T>>;
+using Restoring = apply_property<T, impl::Restoring_>;

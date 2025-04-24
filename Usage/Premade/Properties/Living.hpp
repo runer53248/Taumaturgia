@@ -1,6 +1,7 @@
 #pragma once
-#include "Constructors.hpp"
-#include "Features.hpp"
+#include "Helpers/Constructors.hpp"
+#include "Helpers/Features.hpp"
+#include "Helpers/apply_property.hpp"
 #include "Implementation/Living.hpp"
 
 namespace impl {
@@ -23,4 +24,4 @@ static_assert(Livingable<Living_<Living_Test>>);
 }  // namespace impl::Test
 
 template <typename T>
-using Living = std::conditional_t<Livingable<T>, T, impl::Living_<T>>;
+using Living = apply_property<T, impl::Living_>;

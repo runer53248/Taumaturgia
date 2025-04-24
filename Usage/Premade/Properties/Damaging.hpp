@@ -1,5 +1,6 @@
 #pragma once
-#include "Features.hpp"
+#include "Helpers/Features.hpp"
+#include "Helpers/apply_property.hpp"
 #include "Implementation/Damaging.hpp"
 
 namespace impl {
@@ -32,4 +33,4 @@ static_assert(Damagingable<Damaging_<tag>>);
 }  // namespace impl::Test
 
 template <typename T, typename... Tags>
-using Damaging = std::conditional_t<Damagingable<T>, T, impl::Damaging_<T, Tags...>>;
+using Damaging = apply_property<T, impl::Damaging_>;

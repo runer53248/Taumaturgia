@@ -1,5 +1,6 @@
 #pragma once
-#include "Features.hpp"
+#include "Helpers/Features.hpp"
+#include "Helpers/apply_property.hpp"
 #include "Implementation/Wearing.hpp"
 
 namespace impl {
@@ -22,4 +23,4 @@ static_assert(Wearingable<Wearing_<Wearing_Test>>);
 }  // namespace impl::Test
 
 template <typename T>
-using Wearing = std::conditional_t<Wearingable<T>, T, impl::Wearing_<T>>;
+using Wearing = apply_property<T, impl::Wearing_>;

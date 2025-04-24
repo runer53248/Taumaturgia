@@ -1,5 +1,6 @@
 #pragma once
-#include "Features.hpp"
+#include "Helpers/Features.hpp"
+#include "Helpers/apply_property.hpp"
 #include "Implementation/Protecting.hpp"
 
 namespace impl {
@@ -22,4 +23,4 @@ static_assert(Protectingable<Protecting_<Protecting_Test>>);
 }  // namespace impl::Test
 
 template <typename T>
-using Protecting = std::conditional_t<Protectingable<T>, T, impl::Protecting_<T>>;
+using Protecting = apply_property<T, impl::Protecting_>;

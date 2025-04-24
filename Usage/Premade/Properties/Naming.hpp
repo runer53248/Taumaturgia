@@ -1,5 +1,6 @@
 #pragma once
-#include "Features.hpp"
+#include "Helpers/Features.hpp"
+#include "Helpers/apply_property.hpp"
 #include "Implementation/Naming.hpp"
 
 namespace impl {
@@ -22,4 +23,4 @@ static_assert(Namingable<Naming_<Naming_Test>>);
 }  // namespace impl::Test
 
 template <typename T>
-using Naming = std::conditional_t<Namingable<T>, T, impl::Naming_<T>>;
+using Naming = apply_property<T, impl::Naming_>;

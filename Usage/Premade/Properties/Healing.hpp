@@ -1,6 +1,7 @@
 #pragma once
-#include "Constructors.hpp"
-#include "Features.hpp"
+#include "Helpers/Constructors.hpp"
+#include "Helpers/Features.hpp"
+#include "Helpers/apply_property.hpp"
 #include "Implementation/Healing.hpp"
 
 namespace impl {
@@ -23,4 +24,4 @@ static_assert(Healingable<Healing_<Healing_Test>>);
 }  // namespace impl::Test
 
 template <typename T>
-using Healing = std::conditional_t<Healingable<T>, T, impl::Healing_<T>>;
+using Healing = apply_property<T, impl::Healing_>;
