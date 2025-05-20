@@ -1,9 +1,13 @@
 #pragma once
 #include "taged_list.hpp"
 
+template <typename T>
+concept not_void = not std::same_as<T, void>;
+
 template <typename T, size_t NUM>
 concept have_getType_num = requires(T t) {
     { t.template getType<NUM>() };
+    { t.template getType<NUM>() } -> not_void;
 };
 
 template <typename T, typename TYPE, size_t NUM>
