@@ -15,34 +15,7 @@ public:
     // MARK: getType
 
     template <typename RETURN = hold_type, size_t DIG = 0, typename Self>
-    constexpr decltype(auto) getType(this Self&& self) noexcept {
-        using base = std::conditional_t<
-            std::is_const_v<std::remove_reference_t<Self>>,
-            const base_type&,
-            base_type&>;
-        using type = std::conditional_t<
-            std::is_const_v<std::remove_reference_t<Self>>,
-            const T&,
-            T&>;
-
-        if constexpr (std::is_same_v<RETURN, hold_type>) {
-            if constexpr (DIG) {
-                if constexpr (getType_template_able<base_type, RETURN>) {
-                    return static_cast<base>(self).template getType<RETURN, DIG - 1>();
-                }
-            } else {
-                return trait<RETURN>::get(static_cast<type>(self));
-            }
-        } else {
-            if constexpr (getType_template_able<base_type, RETURN>) {
-                return static_cast<base>(self).template getType<RETURN, DIG>();
-            } else {
-                // static_assert(false, "WARNING: getType method tries to return void type");
-            }
-        }
-    }
-
-    template <size_t DIG, typename Self>
+        requires std::is_same_v<RETURN, hold_type>
     constexpr decltype(auto) getType(this Self&& self) noexcept {
         using base = std::conditional_t<
             std::is_const_v<std::remove_reference_t<Self>>,
@@ -54,34 +27,74 @@ public:
             T&>;
 
         if constexpr (DIG) {
-            return static_cast<base>(self).template getType<DIG - 1>();
+            if constexpr (getType_template_able<base_type, RETURN>) {
+                return static_cast<base>(self).template getType<RETURN, DIG - 1>();
+            }
         } else {
-            return trait<hold_type>::get(static_cast<type>(self));
+            return trait<RETURN>::get(static_cast<type>(self));
         }
     }
+
+    template <typename RETURN = hold_type, size_t DIG = 0, typename Self>
+    constexpr decltype(auto) getType(this Self&& self) noexcept {
+        using base = std::conditional_t<
+            std::is_const_v<std::remove_reference_t<Self>>,
+            const base_type&,
+            base_type&>;
+
+        // if constexpr (trait_accessable<base_type, RETURN>) {
+        //     return trait<RETURN>::get(static_cast<base>(self));
+        // } else 
+        if constexpr (getType_template_able<base_type, RETURN>) {
+            return static_cast<base>(self).template getType<RETURN, DIG>();
+        } else {
+            // static_assert(false, "WARNING: getType method tries to return void type");
+        }
+    }
+
+    template <size_t DIG, typename Self>
+        requires(DIG == 0)
+    constexpr decltype(auto) getType(this Self&& self) noexcept {
+        using type = std::conditional_t<
+            std::is_const_v<std::remove_reference_t<Self>>,
+            const T&,
+            T&>;
+
+        return trait<hold_type>::get(static_cast<type>(self));
+    }
+    template <size_t DIG, typename Self>
+    constexpr decltype(auto) getType(this Self&& self) noexcept {
+        using base = std::conditional_t<
+            std::is_const_v<std::remove_reference_t<Self>>,
+            const base_type&,
+            base_type&>;
+
+        return static_cast<base>(self).template getType<DIG - 1>();
+    }
+    template <size_t DIG, typename Self>
+        requires(DIG > 0 and not requires(base_type t) { t.template getType<DIG - 1>(); })
+    constexpr decltype(auto) getType(this Self& self) noexcept = delete;
 
     // MARK: haveTypeNum
 
     template <typename RETURN, size_t NUM = 0>
+        requires have_getType_type_num<Features_<T>, RETURN, NUM>
     static consteval bool haveTypeNum() noexcept {
-        if constexpr (requires {
-                          { Features_<T>{}.getType<RETURN, NUM>() } -> std::same_as<void>;
-                      }) {
-            return false;
-        } else {
-            return true;
-        }
+        return true;
+    }
+    template <typename RETURN, size_t NUM = 0>
+    static consteval bool haveTypeNum() noexcept {
+        return false;
     }
 
     template <size_t NUM = 0>
+        requires have_getType_num<Features_<T>, NUM>
     static consteval bool haveTypeNum() noexcept {
-        if constexpr (requires {
-                          { Features_<T>{}.getType<NUM>() } -> std::same_as<void>;
-                      }) {
-            return false;
-        } else {
-            return true;
-        }
+        return true;
+    }
+    template <size_t NUM = 0>
+    static consteval bool haveTypeNum() noexcept {
+        return false;
     }
 
     // MARK: getTypeTaged
@@ -104,9 +117,9 @@ public:
                 return trait<RETURN>::get(static_cast<type>(self));
             }
         } else if constexpr (std::same_as<typename T::property_data::tags_list, list<TTags...>> and
-                             requires { T{}.template getTypeTaged<RETURN, TTags...>(); }) {
+                             requires { static_cast<type>(self).template getTypeTaged<RETURN, TTags...>(); }) {
             return static_cast<type>(self).template getTypeTaged<RETURN, TTags...>();
-        } else if constexpr (requires { base_type{}.template getTypeTaged<RETURN, TTags...>(); }) {
+        } else if constexpr (requires { static_cast<base>(self).template getTypeTaged<RETURN, TTags...>(); }) {
             return static_cast<base>(self).template getTypeTaged<RETURN, TTags...>();
         }
     }
