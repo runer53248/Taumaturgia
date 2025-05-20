@@ -4,7 +4,7 @@
 
 #include "Usage/With.hpp"  // for some includes to Scheme, traits and types
 
-template <typename T>
+template <typename T, typename... Args>
 auto type_name_result(std::string text = name<T>()) {
     struct Data {
         std::string type;
@@ -235,13 +235,29 @@ auto type_name_result(std::string text = name<T>()) {
         }
     }
 
+    auto extra = [&]<typename A>() {
+        if constexpr (trait_accessable<base_type, A>) {
+            result.base += std::to_string(prop_index++);
+            result.base += "  : " + name<A>() + "\n";
+        }
+
+        if constexpr (requires { typename base_type::base_type; }) {
+            if constexpr (trait_accessable<typename base_type::base_type, A>) {
+                result.base += std::to_string(prop_index++);
+                result.base += "  : : " + name<A>() + "\n";
+            }
+        }
+    };
+
+    (extra.template operator()<Args>(), ...);
+
     return result;
 };
 
-template <typename T>
+template <typename T, typename... Args>
 auto parse_type_name() {
     std::string result;
-    auto data = type_name_result<T>();
+    auto data = type_name_result<T, Args...>();
     if (data.properties.empty()) {
         result += '\n';
     } else {
