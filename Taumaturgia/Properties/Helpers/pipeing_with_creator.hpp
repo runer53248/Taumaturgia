@@ -11,22 +11,21 @@ struct Creator {
 
     using result_type = pipeing_result<T, Props...>;
 
-    constexpr auto operator()() const {
+    static constexpr auto operator()() {
         static_assert(std::constructible_from<result_type>, "Creator can't create result_type from default C-tor!");
         return result_type{};
     }
 
     template <typename Arg, typename... Args>
-    constexpr auto operator()(Arg&& arg, Args&&... args) const {
+    static constexpr auto operator()(Arg&& arg, Args&&... args) {
         constexpr bool arg_signals_unordered_args = std::is_same_v<std::remove_cvref_t<Arg>, decltype(unordered)>;
 
         if constexpr (arg_signals_unordered_args) {                              // token was introduced
             if constexpr (std::constructible_from<result_type, Arg, Args...>) {  // can be constructed with Arg
                 return result_type(std::forward<Arg>(arg), std::forward<Args>(args)...);
-            } else if constexpr (std::constructible_from<result_type, Args...>) {  // can be constructed without Arg
+            } else {  // can be constructed without Arg
+                static_assert(std::constructible_from<result_type, Args...>, "Creator with unordered args can't create result_type from given arguments!");
                 return result_type(std::forward<Args>(args)...);
-            } else {
-                static_assert(false, "Creator with unordered args can't create result_type from given arguments!");
             }
         } else {  // token not introduced
             static_assert(std::constructible_from<result_type, Arg, Args...>, "Creator can't create result_type from given arguments!");
