@@ -80,38 +80,46 @@ int main() {
         // | With::user_property_t<Int_name>  //! don't have trait access
         | Create;
 
-    std::print("test.Health     = {}\n", traits::accessHealth::get(test));
-    std::print("test.Damage     = {}\n", traits::accessDamage::get(test));
-    std::print("test.Protection = {}\n", traits::accessProtection::get(test));
-    std::print("test.int        = {}\n\n", traits::accessType<int>::get(test));
-
-    std::print("test.Health     = {}\n", trait<Health>::get(test));
-    std::print("test.Damage     = {}\n", trait<Damage>::get(test));
-    std::print("test.Protection = {}\n", trait<Protection>::get(test));
-    std::print("test.Protection2= {}\n", test.getTypeTaged<Protection, protection_tag>());
-    std::print("test.int        = {}\n", trait<int>::get(test));
-    std::print("test.int2       = {}\n\n", test.getTypeTaged<int, int_tag>());
-
-    std::print("test.Protection[0] = {}\n", test.getType<Protection, 0>());
-    std::print("test.Protection[1] = {}\n", test.getType<Protection, 1>());
-    if constexpr (constexpr bool have = decltype(test)::haveTypeNum<Protection, 2>()) {
-        std::print("test.Protection[2] = {}\n", test.getType<Protection, have * 2>());
+    {
+        std::print("test.Health     = {}\n", traits::accessHealth::get(test));
+        std::print("test.Damage     = {}\n", traits::accessDamage::get(test));
+        std::print("test.Protection = {}\n", traits::accessProtection::get(test));
+        std::print("test.int        = {}\n\n", traits::accessType<int>::get(test));
     }
-    std::println();
 
-    print_property_info<0>(test);
-    print_property_info<1>(test);
-    print_property_info<2>(test);
-    print_property_info<3>(test);
-    print_property_info<4>(test);
-    print_property_info<5>(test);
-    print_property_info<6>(test);
-    print_property_info<7>(test);
+    {
+        std::print("test.Health     = {}\n", trait<Health>::get(test));
+        std::print("test.Damage     = {}\n", trait<Damage>::get(test));
+        std::print("test.Protection = {}\n", trait<Protection>::get(test));
+        std::print("test.Protection2= {}\n", test.getTypeTaged<Protection, protection_tag>());
+        std::print("test.int        = {}\n", trait<int>::get(test));
+        std::print("test.int2       = {}\n\n", test.getTypeTaged<int, int_tag>());
+    }
+
+    {
+        std::print("test.Protection[0]    = {}\n", test.getType<Protection, 0>());
+        std::print("test.Protection[1]    = {}\n", test.getType<Protection, 1>());
+        if constexpr (constexpr bool have = decltype(test)::haveTypeNum<Protection, 2>()) {
+            std::print("test.Protection[2][{}] = {}\n", have, test.getType<Protection, have * 2>());
+        }
+        std::println();
+    }
 
     constexpr bool have_idx_5 = decltype(test)::haveTypeNum<5>();
     constexpr bool have_idx_6 = decltype(test)::haveTypeNum<6>();
-    std::print("idx 5  = {}\n", have_idx_5);
-    std::print("idx 6  = {}\n", have_idx_6);
+
+    {
+        print_property_info<0>(test);
+        print_property_info<1>(test);
+        print_property_info<2>(test);
+        print_property_info<3>(test);
+        print_property_info<4>(test);
+        print_property_info<5>(test);
+        print_property_info<6>(test);
+        print_property_info<7>(test);
+        std::print("idx 5  = {}\n", have_idx_5);
+        std::print("idx 6  = {}\n", have_idx_6);
+    }
 
     // std::print("test p = {}\n", test.getProtection());  // ! not accessable otherwise
     // TODO: fix it
