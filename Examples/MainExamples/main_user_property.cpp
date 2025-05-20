@@ -2,6 +2,7 @@
 #include "Taumaturgia/Object/Enums/ActionStatus.hpp"
 #include "Taumaturgia/Properties/Helpers/taged_list.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
+#include "Taumaturgia/Strategies/UserStrategy.hpp"
 
 using order_list = taged_list<
     UserPropertyAdapter<int>::type,
