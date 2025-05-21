@@ -53,6 +53,11 @@ private:
     TYPE type_{};
 };
 
+template <typename T, typename Base, size_t DIG>
+concept parent_digingable = requires(T t) {
+    static_cast<const Base&>(t).template getType<DIG - 1>();
+};
+
 // MARK: UserProperty_ for T
 
 template <typename TYPE, typename T, typename... Tags>
@@ -219,7 +224,7 @@ public:
 
         // if constexpr (trait_accessable<T, RETURN>) {
         //     return trait<RETURN>::get(static_cast<base>(self));
-        // } else 
+        // } else
         if constexpr (getType_template_able<T, RETURN>) {
             return static_cast<base>(self).template getType<RETURN, DIG>();
         } else {
@@ -236,17 +241,17 @@ public:
     }
 
     template <size_t DIG, typename Self>
+        requires((DIG > 0) and parent_digingable<Self, T, DIG>)
     constexpr decltype(auto) getType(this Self& self) noexcept {
         using base = std::conditional_t<
             std::is_const_v<Self>,
-            const T,
-            T>;
+            const T&,
+            T&>;
 
-        return static_cast<base&>(self).template getType<DIG - 1>();
+        return static_cast<base>(self).template getType<DIG - 1>();
     }
 
     template <size_t DIG, typename Self>
-        requires(DIG > 0 and not requires(T t) { t.template getType<DIG - 1>(); })
     constexpr decltype(auto) getType(this Self& self) noexcept = delete;
 
     // MARK: haveTypeNum
