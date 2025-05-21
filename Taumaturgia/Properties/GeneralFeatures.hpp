@@ -31,6 +31,22 @@ using types_ptr = std::variant<
 template <typename T>
 // requires(not std::is_reference_v<T>)
 class GeneralFeatures_ : public T {
+private:
+    template <class TT>
+    using trait_accessable_fn = boost::mp11::mp_bool<trait_accessable<T, TT>>;
+    using L = boost::mp11::mp_filter<
+        trait_accessable_fn,
+        // list_of_types, //TODO: order_list -> extract property::hold_type
+        list<Name,
+             EffectTypeContainer,
+             CureHealth,
+             Protection,
+             Damage,
+             WearContainer,
+             Health,
+             int,
+             float>>;
+
 public:
     using base_type = T;
 
@@ -93,28 +109,18 @@ public:
     }
 
     template <size_t DIG = 0, typename Self>
+        requires(DIG < boost::mp11::mp_size<L>::value)
     constexpr decltype(auto) getType(this Self& self) noexcept {
         using boost::mp11::mp_at_c;
-        using boost::mp11::mp_filter;
-        using boost::mp11::mp_size;
-        using L = boost::mp11::mp_filter<
-            trait_accessable_fn,
-            // list_of_types, //TODO: order_list -> extract property::hold_type
-            list<Name,
-                 EffectTypeContainer,
-                 CureHealth,
-                 Protection,
-                 Damage,
-                 WearContainer,
-                 Health,
-                 int, float>>;  // ! extra type int
-        using TT = std::conditional_t<
+        using base = std::conditional_t<
             std::is_const_v<std::remove_reference_t<Self>>,
             const T&, T&>;
-        if constexpr (DIG < mp_size<L>::value) {
-            return trait<mp_at_c<L, DIG>>::get(static_cast<TT>(self));
-        }
+
+        return trait<mp_at_c<L, DIG>>::get(static_cast<base>(self));
     }
+
+    template <size_t DIG = 0, typename Self>
+    constexpr decltype(auto) getType(this Self& self) noexcept = delete;
 
     // MARK: haveTypeNum
 
@@ -190,11 +196,8 @@ public:
     }
 
 private:
-    template <class TT>
-    using trait_accessable_fn = boost::mp11::mp_bool<trait_accessable<T, TT>>;
-
     template <size_t SKIP, typename TYPE_P, typename... REST_P, typename Self>
-    constexpr decltype(auto) getBuildinTypes(this Self& self)  noexcept {
+    constexpr decltype(auto) getBuildinTypes(this Self& self) noexcept {
         using type = std::conditional_t<
             std::is_const_v<std::remove_reference_t<Self>>,
             const T&,
