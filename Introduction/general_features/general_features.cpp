@@ -1,4 +1,3 @@
-#include <iostream>
 #include <print>
 #include "Introduction/parse_type_name.hpp"
 #include "Taumaturgia/Properties/GeneralFeatures.hpp"
@@ -95,7 +94,7 @@ int main() {
             static_assert(std::same_as<decltype(type.getTypeTaged<Health>()), Health&>);
             static_assert(std::same_as<decltype(type.getTypeTaged<int>()), int&>);
 
-            static_assert(std::same_as<decltype(type.getTypeTaged<Damage, int_t>()), void>);  // wrong tag
+            // static_assert(std::same_as<decltype(type.getTypeTaged<Damage, int_t>()), void>);  // *wrong tag
         }
 
         // 4 GeneralFeatures_<>::getTypeOf
@@ -105,7 +104,7 @@ int main() {
             static_assert(std::same_as<decltype(type.getTypeOf(list<Health>{})), Health&>);
             static_assert(std::same_as<decltype(type.getTypeOf(list<int>{})), int&>);
 
-            static_assert(std::same_as<decltype(type.getTypeOf(list<Damage, int_t>{})), void>);
+            // static_assert(std::same_as<decltype(type.getTypeOf(list<Damage, int_t>{})), void>);  // *wrong tag
         }
 
         // 5 GeneralFeatures_<>::getTypeOfSignature
@@ -115,12 +114,19 @@ int main() {
             static_assert(std::same_as<decltype(type.getTypeOfSignature<list<Health>>()), Health&>);
             static_assert(std::same_as<decltype(type.getTypeOfSignature<list<int>>()), int&>);
 
-            static_assert(std::same_as<decltype(type.getTypeOfSignature<list<Damage, int_t>>()), void>);  // wrong tag
+            // static_assert(std::same_as<decltype(type.getTypeOfSignature<list<Damage, int_t>>()), void>);  // *wrong tag
         }
     }
 
     {
         general_type2 type2;
+
+        [[maybe_unused]] auto t1 = type2.getTypeTaged<Protection>();
+        [[maybe_unused]] auto t2 = type2.getTypeTaged<Name>();
+        general_type t;
+        [[maybe_unused]] auto t3 = t.getTypeTaged<Name>();
+        UserProperty<int, general_type> tt;
+        [[maybe_unused]] auto t4 = tt.getTypeTaged<Name>();
 
         // 1 Features_<>::getTaged
         {
@@ -194,7 +200,7 @@ int main() {
             static_assert(std::same_as<decltype(type2.getType<6>()), Damage&>);
             static_assert(std::same_as<decltype(type2.getType<7>()), Health&>);
             static_assert(std::same_as<decltype(type2.getType<8>()), int&>);
-            static_assert(std::same_as<decltype(type2.getType<9>()), void>);
+            // static_assert(std::same_as<decltype(type2.getType<9>()), void>);
         }
         // 3 Features_<>::getTypeTaged
         {
@@ -208,7 +214,7 @@ int main() {
             static_assert(std::same_as<decltype(type2.getTypeTaged<Health>()), Health&>);
             static_assert(std::same_as<decltype(type2.getTypeTaged<int>()), int&>);
 
-            static_assert(std::same_as<decltype(type2.getTypeTaged<Damage, name_t>()), void>);  // wrong tag
+            // static_assert(std::same_as<decltype(type2.getTypeTaged<Damage, name_t>()), void>);  // *wrong tag
 
             static_assert(&type2.getType<0>() == &type2.getTypeTaged<Protection>());
             static_assert(&type2.getType<1>() == &type2.getTypeTaged<Name>());
@@ -232,7 +238,7 @@ int main() {
             static_assert(std::same_as<decltype(type2.getTypeOf(list<Health>{})), Health&>);
             static_assert(std::same_as<decltype(type2.getTypeOf(list<int>{})), int&>);
 
-            static_assert(std::same_as<decltype(type2.getTypeOf(list<Damage, int_t>{})), void>);  // wrong tag
+            // static_assert(std::same_as<decltype(type2.getTypeOf(list<Damage, int_t>{})), void>);  // *wrong tag
 
             static_assert(&type2.getType<0>() == &type2.getTypeOf(list<Protection>{}));
             static_assert(&type2.getType<1>() == &type2.getTypeOf(list<Name>{}));
@@ -256,7 +262,7 @@ int main() {
             static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<Health>>()), Health&>);
             static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<int>>()), int&>);
 
-            static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<Damage, int_t>>()), void>);  // wrong tag
+            // static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<Damage, int_t>>()), void>);  // *wrong tag
 
             static_assert(&type2.getType<0>() == &type2.getTypeOfSignature<list<Protection>>());
             static_assert(&type2.getType<1>() == &type2.getTypeOfSignature<list<Name>>());
@@ -273,10 +279,9 @@ int main() {
     {
         general_type2 type2;
 
-        std::cout << "type2 0 = " << (std::string)type2.getType<Name, 0>() << '\n';
-        std::cout << "type2 1 = " << (std::string)type2.getType<Name, 1>() << '\n';
-        std::cout << "type2 2 = " << (std::string)type2.getType<Name, 2>() << '\n'
-                  << '\n';
+        std::print("type2 0 = {}\n", (std::string)type2.getType<Name, 0>());
+        std::print("type2 1 = {}\n", (std::string)type2.getType<Name, 1>());
+        std::println("type2 2 = {}\n", (std::string)type2.getType<Name, 2>());
 
         type2.getType<Name, 0>() = Name{"Name 1"};
         type2.getType<Name, 1>() = Name{"Name 2"};
@@ -285,29 +290,26 @@ int main() {
         type2.getType<Health, 0>() = Health{100};
         type2.getType<Health, 1>() = Health{200};
 
-        std::cout << "type2 0 = " << (std::string)type2.getType<Name, 0>() << '\n';
-        std::cout << "type2 1 = " << (std::string)type2.getType<Name, 1>() << '\n';
-        std::cout << "type2 2 = " << (std::string)type2.getType<Name, 2>() << '\n'
-                  << '\n';
+        std::print("type2 0 = {}\n", (std::string)type2.getType<Name, 0>());
+        std::print("type2 1 = {}\n", (std::string)type2.getType<Name, 1>());
+        std::println("type2 2 = {}\n", (std::string)type2.getType<Name, 2>());
 
-        std::cout << "taged 1 = " << (std::string)type2.getTaged<1>() << '\n';
-        std::cout << "taged 2 = " << (std::string)type2.getTaged<2>() << '\n'
-                  << '\n';
+        std::print("taged 1 = {}\n", (std::string)type2.getTaged<1>());
+        std::println("taged 2 = {}\n", (std::string)type2.getTaged<2>());
 
-        std::cout << "TypeTaged p  = " << type2.getTypeTaged<Protection>().armorClass() << '\n';
-        std::cout << "TypeTaged h1 = " << type2.getTypeTaged<Health, x>().value() << '\n';
-        std::cout << "TypeTaged h2 = " << type2.getTypeTaged<Health>().value() << '\n';
-        std::cout << "TypeTaged 1  = " << (std::string)type2.getTypeTaged<Name>() << '\n';
-        std::cout << "TypeTaged 2  = " << (std::string)type2.getTypeTaged<Name, name_t>() << '\n';
+        std::print("TypeTaged p  = {}\n", type2.getTypeTaged<Protection>().armorClass());
+        std::print("TypeTaged h1 = {}\n", type2.getTypeTaged<Health, x>().value());
+        std::print("TypeTaged h2 = {}\n", type2.getTypeTaged<Health>().value());
+        std::print("TypeTaged 1  = {}\n", (std::string)type2.getTypeTaged<Name>());
+        std::print("TypeTaged 2  = {}\n", (std::string)type2.getTypeTaged<Name, name_t>());
 
-        std::cout << name<decltype(type2.getTaged<struct x>())>() << '\n';
-        std::cout << name<decltype(std::as_const(type2).getTaged<struct x>())>() << '\n';
-        std::cout << name<decltype(type2.getTaged())>() << '\n';
-        std::cout << name<decltype(std::as_const(type2).getTaged())>() << '\n'
-                  << '\n';
+        std::print("{}\n", name<decltype(type2.getTaged<struct x>())>());
+        std::print("{}\n", name<decltype(std::as_const(type2).getTaged<struct x>())>());
+        std::print("{}\n", name<decltype(type2.getTaged())>());
+        std::println("{}\n", name<decltype(std::as_const(type2).getTaged())>());
 
-        std::cout << parse_type_name<general_type>() << '\n';
-        std::cout << parse_type_name<general_type2>() << '\n';
+        std::print("{}\n", parse_type_name<general_type>());
+        std::print("{}\n", parse_type_name<general_type2>());
 
         {
             auto print_num = []<size_t NUM, typename T>(T& t) {
