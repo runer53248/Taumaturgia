@@ -115,8 +115,6 @@ public:
         }
     }
     template <typename RETURN, typename... TTags, typename Self>
-    // requires(requires(T t) { t.template getTypeTaged<RETURN, TTags...>(); }  //
-    //          or requires(base_type b) { b.template getTypeTaged<RETURN, TTags...>(); })
     constexpr decltype(auto) getTypeTaged(this Self&& self) noexcept {
         using type = std::conditional_t<
             std::is_const_v<std::remove_reference_t<Self>>,
@@ -130,9 +128,7 @@ public:
         if constexpr (std::same_as<typename T::property_data::tags_list, list<TTags...>> and
                       requires { static_cast<type>(self).template getTypeTaged<RETURN, TTags...>(); }) {
             return static_cast<type>(self).template getTypeTaged<RETURN, TTags...>();
-        } else
-        // if constexpr (requires { static_cast<base>(self).template getTypeTaged<RETURN, TTags...>(); })
-        {
+        } else {
             return static_cast<base>(self).template getTypeTaged<RETURN, TTags...>();
         }
     }
