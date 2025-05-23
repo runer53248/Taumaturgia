@@ -16,6 +16,24 @@ concept have_getType_type_num = requires(T t) {
     { t.template getType<TYPE, NUM>() } -> std::same_as<TYPE&>;
 };
 
+template <typename T, typename TYPE, typename... Tags>
+concept get_type_taged_able = requires(T t) {
+    t.template getTypeTaged<TYPE, Tags...>();
+    { t.template getTypeTaged<TYPE, Tags...>() } -> not_void;
+};
+
+template <typename T, size_t SKIP, typename... Tags>
+concept get_taged_able = requires(T t) {
+    t.template getTaged<SKIP, Tags...>();
+    { t.template getTaged<SKIP, Tags...>() } -> not_void;
+};
+
+template <typename T, typename Signature>
+concept get_type_of_able = requires(T t, Signature s) {
+    t.getTypeOf(s);
+    { t.getTypeOf(s) } -> not_void;
+};
+
 template <typename T, typename type>
 concept have_get_features = requires(std::remove_cvref_t<T> x) {
     { x.getType() } -> std::same_as<type&>;

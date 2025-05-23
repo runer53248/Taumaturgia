@@ -10,11 +10,6 @@
 
 namespace impl {
 
-template <typename T, typename TYPE, typename... Tags>
-concept get_type_taged_able = requires {
-    T::template getTypeTaged<TYPE, Tags...>();
-};
-
 // MARK: UserProperty_
 
 template <typename TYPE, typename T, typename... Tags>
@@ -201,14 +196,14 @@ public:
     template <typename RETURN = TYPE, size_t DIG = 0, typename Self>
         requires std::same_as<RETURN, TYPE>
     constexpr decltype(auto) getType(this Self& self) noexcept {
-        using base = std::conditional_t<
+        using type = std::conditional_t<
             std::is_const_v<Self>,
             const T&,
             T&>;
 
         if constexpr (DIG) {
             if constexpr (getType_template_able<T, RETURN>) {
-                return static_cast<base>(self).template getType<RETURN, DIG - 1>();
+                return static_cast<type>(self).template getType<RETURN, DIG - 1>();
             }
         } else {
             return (self.type_);
@@ -217,16 +212,16 @@ public:
 
     template <typename RETURN, size_t DIG = 0, typename Self>
     constexpr decltype(auto) getType(this Self& self) noexcept {
-        using base = std::conditional_t<
+        using type = std::conditional_t<
             std::is_const_v<Self>,
             const T&,
             T&>;
 
         // if constexpr (trait_accessable<T, RETURN>) {
-        //     return trait<RETURN>::get(static_cast<base>(self));
+        //     return trait<RETURN>::get(static_cast<type>(self));
         // } else
         if constexpr (getType_template_able<T, RETURN>) {
-            return static_cast<base>(self).template getType<RETURN, DIG>();
+            return static_cast<type>(self).template getType<RETURN, DIG>();
         } else {
             // static_assert(false, "WARNING: getType method tries to return void type");
         }
@@ -243,12 +238,12 @@ public:
     template <size_t DIG, typename Self>
         requires((DIG > 0) and parent_digingable<Self, T, DIG>)
     constexpr decltype(auto) getType(this Self& self) noexcept {
-        using base = std::conditional_t<
+        using type = std::conditional_t<
             std::is_const_v<Self>,
             const T&,
             T&>;
 
-        return static_cast<base>(self).template getType<DIG - 1>();
+        return static_cast<type>(self).template getType<DIG - 1>();
     }
 
     template <size_t DIG, typename Self>
@@ -286,49 +281,67 @@ public:
 
     template <typename RETURN, typename... TTags, typename Self>
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept {
-        using base = std::conditional_t<
+        using type = std::conditional_t<
             std::is_const_v<Self>,
-            const T,
-            T>;
+            const T&,
+            T&>;
 
-        return static_cast<base&>(self).template getTypeTaged<RETURN, TTags...>();
+        return static_cast<type>(self).template getTypeTaged<RETURN, TTags...>();
     }
+
+    template <typename RETURN, typename... TTags, typename Self>
+        requires(not get_type_taged_able<T, RETURN, TTags...>  //
+                 and not std::same_as<list<RETURN, TTags...>, list<TYPE, Tags...>>)
+    constexpr decltype(auto) getTypeTaged(this Self& self) noexcept = delete;
 
     // MARK: getTypeOf
 
     template <typename RETURN, typename... TTags, typename Self>
+        requires get_type_taged_able<Self, RETURN, TTags...>
     constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTags...> signature) noexcept {
         return self.template getTypeTaged<RETURN, TTags...>();
     }
 
+    template <typename RETURN, typename... TTags, typename Self>
+    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTags...> signature) noexcept = delete;
+
     // MARK: getTypeOfSignature
 
     template <typename Signature, typename Self>
+        requires requires(Self s) { s.getTypeOf(Signature{}); }
     constexpr decltype(auto) getTypeOfSignature(this Self& self) noexcept {
         return self.getTypeOf(Signature{});
     }
+    template <typename Signature, typename Self>
+    constexpr decltype(auto) getTypeOfSignature(this Self& self) noexcept = delete;
 
-    // MARK: getTaged
+    // MARK: getTaged<SKIP, TTags>
 
     template <size_t SKIP, typename... TTags, typename Self>
+        requires std::same_as<list<TTags...>, list<Tags...>>
     constexpr decltype(auto) getTaged(this Self& self) noexcept {
-        using base = std::conditional_t<
+        using type = std::conditional_t<
             std::is_const_v<Self>,
-            const T,
-            T>;
+            const T&,
+            T&>;
 
-        if constexpr (std::same_as<
-                          list<TTags...>,
-                          list<Tags...>>) {
-            if constexpr (SKIP > 0) {
-                return static_cast<base&>(self).template getTaged<SKIP - 1, TTags...>();  // skip
-            } else {
-                return self.template getTypeTaged<TYPE, TTags...>();  // return by tags and current type
-            }
-        } else {
-            return static_cast<base&>(self).template getTaged<SKIP, TTags...>();  // skip - diffrent tags
+        if constexpr (SKIP > 0) {
+            return static_cast<type>(self).template getTaged<SKIP - 1, TTags...>();  // skip
+        } else if constexpr (get_type_taged_able<Self, TYPE, TTags...>) {
+            return self.template getTypeTaged<TYPE, TTags...>();  // return by tags and current type
         }
     }
+    template <size_t SKIP, typename... TTags, typename Self>
+    constexpr decltype(auto) getTaged(this Self& self) noexcept {
+        using type = std::conditional_t<
+            std::is_const_v<Self>,
+            const T&,
+            T&>;
+
+        return static_cast<type>(self).template getTaged<SKIP, TTags...>();  // skip - diffrent tags
+    }
+
+    // MARK: getTaged<TTags...>
 
     template <typename... TTags, typename Self>
     constexpr decltype(auto) getTaged(this Self& self) noexcept {

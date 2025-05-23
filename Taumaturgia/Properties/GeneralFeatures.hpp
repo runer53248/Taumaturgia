@@ -11,11 +11,6 @@
 namespace impl {
 inline constinit const char general_features_name[] = "GeneralFeatures";
 
-template <typename T, size_t SKIP, typename... Tags>
-concept get_taged_able = requires {
-    T::template getTaged<SKIP, Tags...>();
-};
-
 using types_ptr = std::variant<
     std::nullptr_t,
     Name*,
@@ -147,32 +142,47 @@ public:
     // MARK: getTypeTaged
 
     template <typename RETURN, typename... TTags, typename Self>
+        requires(std::same_as<list<>, list<TTags...>> and
+                 requires(Self s) { s.template getType<RETURN>(); })
+    constexpr decltype(auto) getTypeTaged(this Self& self) noexcept {
+        return self.template getType<RETURN>();
+    }
+
+    template <typename RETURN, typename... TTags, typename Self>
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept {
         using type = std::conditional_t<
             std::is_const_v<std::remove_reference_t<Self>>,
             const T&,
             T&>;
 
-        if constexpr (std::same_as<list<>, list<TTags...>>) {
-            return self.template getType<RETURN>();
-        } else if constexpr (get_type_taged_able<T, RETURN, TTags...>) {
-            return static_cast<type>(self).template getTypeTaged<RETURN, TTags...>();
-        }
+        return static_cast<type>(self).template getTypeTaged<RETURN, TTags...>();
     }
+    template <typename RETURN, typename... TTags, typename Self>
+        requires(not get_type_taged_able<T, RETURN, TTags...>      //
+                 and not(std::same_as<list<>, list<TTags...>> and  //
+                         requires(Self s) { s.template getType<RETURN>(); }))
+    constexpr decltype(auto) getTypeTaged(this Self& self) noexcept = delete;
 
     // MARK: getTypeOf
 
     template <typename RETURN, typename... TTags, typename Self>
+        requires(get_type_taged_able<Self, RETURN, TTags...>)
     constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTags...> signature) noexcept {
         return self.template getTypeTaged<RETURN, TTags...>();
     }
 
+    template <typename RETURN, typename... TTags, typename Self>
+    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTags...> signature) noexcept = delete;
+
     // MARK: getTypeOfSignature
 
     template <typename Signature, typename Self>
+        requires requires(Self s) { s.getTypeOf(Signature{}); }
     constexpr decltype(auto) getTypeOfSignature(this Self& self) noexcept {
         return self.getTypeOf(Signature{});
     }
+    template <typename Signature, typename Self>
+    constexpr decltype(auto) getTypeOfSignature(this Self& self) noexcept = delete;
 
     // MARK: getTaged
 
@@ -213,19 +223,12 @@ private:
             return self.template getBuildinTypes<SKIP, REST_P...>();
         }
     }
-    template <size_t SKIP>
-    constexpr decltype(auto) getBuildinTypes() & noexcept {}
-    template <size_t SKIP>
-    constexpr decltype(auto) getBuildinTypes() const& noexcept {}
+    template <size_t SKIP, typename Self>
+    constexpr decltype(auto) getBuildinTypes(this Self&) noexcept {}
 
-    template <size_t SKIP, typename... TYPES_P>
-    constexpr decltype(auto) getBuildinTypes(std::variant<TYPES_P...>) & noexcept {
-        return getBuildinTypes<SKIP, TYPES_P...>();
-    }
-
-    template <size_t SKIP, typename... TYPES_P>
-    constexpr decltype(auto) getBuildinTypes(std::variant<TYPES_P...>) const& noexcept {
-        return getBuildinTypes<SKIP, TYPES_P...>();
+    template <size_t SKIP, typename... TYPES_P, typename Self>
+    constexpr decltype(auto) getBuildinTypes(this Self& self, std::variant<TYPES_P...>) noexcept {
+        return self.template getBuildinTypes<SKIP, TYPES_P...>();
     }
 };
 
