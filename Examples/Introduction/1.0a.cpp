@@ -19,10 +19,6 @@ int main() {
     auto type1 = t_simple_name{"t_simple_name"};
 
     std::cout << '\n';
-    std::cout << "Take name from member:" << '\n';
-    std::cout << "type1.name = " << type1.name << '\n';
-
-    std::cout << '\n';
     std::cout << "Take name from by access trait:" << '\n';
     std::cout << "trait<Name>::get(type1) = " << trait<Name>::get(type1) << '\n';
     return 0;

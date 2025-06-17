@@ -35,11 +35,6 @@ int main() {
     auto type6 = t_custom_name{};
 
     std::cout << '\n';
-    std::cout << "Take name by custom method:" << '\n';
-    std::cout << "type5.name() = " << type6.name() << '\n';
-    std::cout << "std::as_const(type6).name() = " << std::as_const(type6).name() << '\n';
-
-    std::cout << '\n';
     std::cout << "Take name from by access trait:" << '\n';
     std::cout << "trait<Name>::get(type6) = " << trait<Name>::get(type6) << '\n';
     std::cout << "trait<Name>::get(std::as_const(type6)) = " << trait<Name>::get(std::as_const(type6)) << '\n';

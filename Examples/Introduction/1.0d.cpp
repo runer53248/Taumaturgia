@@ -46,12 +46,6 @@ int main() {
     auto type4_3 = t_getName_property<t_empty, Name>{Name{"t_getName_Name"}};
 
     std::cout << '\n';
-    std::cout << "Take name from member by method:" << '\n';
-    std::cout << "type4_1.getName() = " << type4_1.getName() << '\n';
-    std::cout << "type4_2.getName() = " << type4_2.getName() << '\n';
-    std::cout << "type4_3.getName() = " << type4_3.getName() << '\n';
-
-    std::cout << '\n';
     std::cout << "Take name from by access trait:" << '\n';
     std::cout << "trait<Name>::get(type4_1) = " << trait<Name>::get(type4_1) << '\n';
     std::cout << "trait<Name>::get(type4_2) = " << trait<Name>::get(type4_2) << '\n';

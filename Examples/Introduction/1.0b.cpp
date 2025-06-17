@@ -28,11 +28,6 @@ int main() {
     auto type2b = t_const_string_name{"t_const_string_name"};
 
     std::cout << '\n';
-    std::cout << "Take name from member:" << '\n';
-    std::cout << "type2a.name = " << type2a.name << '\n';
-    std::cout << "type2b.name = " << type2b.name << '\n';
-
-    std::cout << '\n';
     std::cout << "Take name from by access trait:" << '\n';
     std::cout << "trait<Name>::get(type2) = " << trait<Name>::get(type2a) << '\n';
     std::cout << "trait<Name>::get(type2) = " << trait<Name>::get(type2b) << '\n';
