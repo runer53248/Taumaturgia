@@ -81,34 +81,49 @@ int main() {
         | Create;
 
     {
-        std::print("test.Health     = {}\n", traits::accessHealth::get(test));
-        std::print("test.Damage     = {}\n", traits::accessDamage::get(test));
-        std::print("test.Protection = {}\n", traits::accessProtection::get(test));
-        std::print("test.int        = {}\n\n", traits::accessType<int>::get(test));
+        decltype(auto) health = traits::accessHealth::get(test);
+        decltype(auto) damage = traits::accessDamage::get(test);
+        decltype(auto) protection = traits::accessProtection::get(test);
+        decltype(auto) integer = traits::accessType<int>::get(test);
+
+        std::print("test.Health     = {}\n", health);
+        std::print("test.Damage     = {}\n", damage);
+        std::print("test.Protection = {}\n", protection);
+        std::print("test.int        = {}\n\n", integer);
     }
 
     {
-        std::print("test.Health     = {}\n", trait<Health>::get(test));
-        std::print("test.Damage     = {}\n", trait<Damage>::get(test));
-        std::print("test.Protection = {}\n", trait<Protection>::get(test));
-        std::print("test.Protection2= {}\n", test.getTypeTaged<Protection, protection_tag>());
-        std::print("test.int        = {}\n", trait<int>::get(test));
-        std::print("test.int2       = {}\n\n", test.getTypeTaged<int, int_tag>());
+        decltype(auto) health = trait<Health>::get(test);
+        decltype(auto) damage = trait<Damage>::get(test);
+        decltype(auto) protecton = trait<Protection>::get(test);
+        decltype(auto) protection_2 = test.getTypeTaged<Protection, protection_tag>();
+        decltype(auto) integer = trait<int>::get(test);
+        decltype(auto) integer_2 = test.getTypeTaged<int, int_tag>();
+
+        std::print("test.Health     = {}\n", health);
+        std::print("test.Damage     = {}\n", damage);
+        std::print("test.Protection = {}\n", protecton);
+        std::print("test.Protection2= {}\n", protection_2);
+        std::print("test.int        = {}\n", integer);
+        std::print("test.int2       = {}\n\n", integer_2);
     }
 
     {
-        std::print("test.Protection[0]    = {}\n", test.getType<Protection, 0>());
-        std::print("test.Protection[1]    = {}\n", test.getType<Protection, 1>());
+        decltype(auto) protecton_0 = test.getType<Protection, 0>();
+        decltype(auto) protecton_1 = test.getType<Protection, 1>();
+
+        std::print("test.Protection[0]    = {}\n", protecton_0);
+        std::print("test.Protection[1]    = {}\n", protecton_1);
         if constexpr (constexpr bool have = decltype(test)::haveTypeNum<Protection, 2>()) {
-            std::print("test.Protection[2][{}] = {}\n", have, test.getType<Protection, have * 2>());
+            decltype(auto) protecton_2 = test.getType<Protection, have * 2>();
+            std::print("test.Protection[2][{}] = {}\n", have, protecton_2);
         }
         std::println();
     }
 
-    constexpr bool have_idx_5 = decltype(test)::haveTypeNum<5>();
     constexpr bool have_idx_6 = decltype(test)::haveTypeNum<6>();
-
     {
+        constexpr bool have_idx_5 = decltype(test)::haveTypeNum<5>();
         print_property_info<0>(test);
         print_property_info<1>(test);
         print_property_info<2>(test);
