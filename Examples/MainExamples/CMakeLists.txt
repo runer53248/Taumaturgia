@@ -36,5 +36,8 @@ add_executable(main_user_property3_${addons}
 )
 
 add_executable(main_constexpr_traits_${addons}
-main_constexpr_traits.cpp
+    main_constexpr_traits.cpp
 )
+
+add_executable(main_project_advancing_${addons}
+    main_project_advancing.cpp)
