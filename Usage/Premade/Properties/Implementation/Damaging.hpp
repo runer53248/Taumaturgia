@@ -55,7 +55,11 @@ public:
             if constexpr (std::same_as<std::remove_cvref_t<A>, hold_type>) {
                 th->getType() = std::forward<A>(arg);
             } else {
-                trait<std::remove_cvref_t<A>>::get(static_cast<T&>(*th)) = std::forward<A>(arg);
+                if constexpr (requires { trait<std::remove_cvref_t<A>>::get(static_cast<T&>(*th)); }) {
+                    trait<std::remove_cvref_t<A>>::get(static_cast<T&>(*th)) = std::forward<A>(arg);
+                } else {
+                    // static_assert(false, "Ambiguous get trait");
+                }
             }
         };
 
