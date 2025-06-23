@@ -11,41 +11,20 @@
 
 #include "Taumaturgia/Properties/GeneralFeatures.hpp"
 
-struct y;
+struct ignored_y;
 struct empty {};
+struct empty_next {};
 struct other {};
 
-struct Strenght : public impl::UserProperty_<int, empty, struct y> {};  // ? ignore sub tokens
+struct Strenght : public impl::UserProperty_<int, empty, struct ignored_y> {};            // ? ignore sub tokens
+struct Strenght_next : public impl::UserProperty_<int, empty_next, struct ignored_y> {};  // ? ignore sub tokens - other base
 struct Dexterity : public impl::UserProperty_<float, empty> {};
 struct Constitution {};
 struct Inteligence {};
 struct Wisdom {};
 struct Charisma {};
 
-namespace With {
-[[maybe_unused]] constexpr auto integer = user_property<int, struct y>;
-
-[[maybe_unused]] constexpr auto Strenght = user_property<::Strenght>;
-[[maybe_unused]] constexpr auto Strenght2 = user_property<::Strenght, struct other>;
-[[maybe_unused]] constexpr auto Dexterity = user_property<::Dexterity>;
-[[maybe_unused]] constexpr auto Constitution = user_property<::Constitution>;
-[[maybe_unused]] constexpr auto Inteligence = user_property<::Inteligence>;
-[[maybe_unused]] constexpr auto Wisdom = user_property<::Wisdom>;
-[[maybe_unused]] constexpr auto Charisma = user_property<::Charisma>;
-}  // namespace With
-
-template <typename T>
-using Ta = decltype(From::base<T>         //
-                    | With::Strenght      //
-                    | With::Strenght2     //
-                    | With::Dexterity     //
-                    | With::Constitution  //
-                    | With::Inteligence   //
-                    | With::Wisdom        //
-                    | With::Charisma      //
-                    )::result_type;       //
-
-struct Attrib_ {
+struct Attrib {
 private:
     using idx = std::tuple<
         Strenght,
@@ -75,25 +54,50 @@ public:
     constexpr decltype(auto) getType(this auto& self) = delete;
 };
 
-using Attrib = impl::UserProperty_<Strenght, Attrib_, other>; // ? forced version
+template <typename T>
+concept have_some_getters = requires(T t) {
+    t.template getType<Dexterity>();
+    t.template getTypeTaged<Strenght, other>();
+    t.template getType<0>();
+};
+
+namespace With {
+[[maybe_unused]] constexpr auto integer = user_property<int, struct y>;
+
+[[maybe_unused]] constexpr auto Strenght = user_property<::Strenght>;
+[[maybe_unused]] constexpr auto Strenght2 = user_property<::Strenght, struct other>;
+[[maybe_unused]] constexpr auto Strenght2_once = user_property_once<::Strenght, struct other>;
+[[maybe_unused]] constexpr auto Strenght_next_other = user_property<::Strenght_next, struct other>;
+[[maybe_unused]] constexpr auto Dexterity = user_property<::Dexterity>;
+[[maybe_unused]] constexpr auto Constitution = user_property<::Constitution>;
+[[maybe_unused]] constexpr auto Inteligence = user_property<::Inteligence>;
+[[maybe_unused]] constexpr auto Wisdom = user_property<::Wisdom>;
+[[maybe_unused]] constexpr auto Charisma = user_property<::Charisma>;
+}  // namespace With
+
+template <typename T>
+using Ta = decltype(From::base<T>         //
+                    | With::Strenght      //
+                    | With::Strenght2     //
+                    | With::Dexterity     //
+                    | With::Constitution  //
+                    | With::Inteligence   //
+                    | With::Wisdom        //
+                    | With::Charisma      //
+                    )::result_type;       //
 
 int main() {
     using namespace std;
 
-    Ta<Attrib> type{};
-    type.getType<Strenght>() = {15};
-    type.getType<Dexterity>() = {18.1f};
-
-    {
-        auto gt0_ = type.getType<Dexterity>();
-        auto gt1_ = type.getType<Strenght>();
-        auto gt2_ = type.getType<Constitution>();
-        auto gt3_ = type.getType<Inteligence>();
-        auto gt4_ = type.getType<Wisdom>();
-        auto gt5_ = type.getType<Charisma>();
-        
-        auto gt6_ = type.getTypeTaged<Strenght, other>();
-        auto gt7_ = type.getType<int>();
+    auto print_get_by_type = [](have_some_getters auto& type) {
+        auto gt0_ = type.template getType<Dexterity>();
+        auto gt1_ = type.template getType<Strenght>();
+        auto gt2_ = type.template getType<Constitution>();
+        auto gt3_ = type.template getType<Inteligence>();
+        auto gt4_ = type.template getType<Wisdom>();
+        auto gt5_ = type.template getType<Charisma>();
+        auto gt6_ = type.template getTypeTaged<Strenght, other>();
+        auto gt7_ = type.template getType<int>();
 
         std::println("[] {} {}", name<decltype(gt0_)>(), gt0_.getType());
         std::println("[] {} {}", name<decltype(gt1_)>(), gt1_.getType());
@@ -105,17 +109,17 @@ int main() {
         std::println("[] {}", name<decltype(gt6_)>());
         std::println("[] {}", name<decltype(gt7_)>());
         std::println();
-    }
+    };
 
-    {
-        auto gt0 = type.getType<0>();
-        auto gt1 = type.getType<1>();
-        auto gt2 = type.getType<2>();
-        auto gt3 = type.getType<3>();
-        auto gt4 = type.getType<4>();
-        auto gt5 = type.getType<5>();
-        auto gt6 = type.getType<6>();
-        auto gt7 = type.getType<7>();
+    auto print_get_by_index = [](have_some_getters auto& type) {
+        auto gt0 = type.template getType<0>();
+        auto gt1 = type.template getType<1>();
+        auto gt2 = type.template getType<2>();
+        auto gt3 = type.template getType<3>();
+        auto gt4 = type.template getType<4>();
+        auto gt5 = type.template getType<5>();
+        auto gt6 = type.template getType<6>();
+        auto gt7 = type.template getType<7>();
 
         std::println("[0] {}", name<decltype(gt0)>());
         std::println("[1] {}", name<decltype(gt1)>());
@@ -125,14 +129,103 @@ int main() {
         std::println("[5] {}", name<decltype(gt5)>());
         std::println("[6] {}", name<decltype(gt6)>());
         std::println("[7] {}", name<decltype(gt7)>());
-    }
+    };
 
-    cout << parse_type_name<decltype(type),
-                            Strenght,
-                            Dexterity,
-                            Constitution,
-                            Inteligence,
-                            Wisdom,
-                            Charisma>()
-         << '\n';
+    {
+        cout << "[Strenght::improvement_of]"
+             << parse_type_name<Strenght::improvement_of,
+                                Strenght,
+                                Dexterity,
+                                Constitution,
+                                Inteligence,
+                                Wisdom,
+                                Charisma>()
+             << '\n';
+        cout << "[Strenght_next::improvement_of]"
+             << parse_type_name<Strenght_next::improvement_of,
+                                Strenght,
+                                Dexterity,
+                                Constitution,
+                                Inteligence,
+                                Wisdom,
+                                Charisma>()
+             << '\n';
+    }
+    {
+        cout << "[Attrib]"
+             << parse_type_name<Attrib,
+                                Strenght,
+                                Dexterity,
+                                Constitution,
+                                Inteligence,
+                                Wisdom,
+                                Charisma>()
+             << '\n';
+    }
+    {
+        cout << "[Ta<Attrib>]"
+             << parse_type_name<Ta<Attrib>,
+                                Strenght,
+                                Dexterity,
+                                Constitution,
+                                Inteligence,
+                                Wisdom,
+                                Charisma>()
+             << '\n';
+    }
+    {
+        using Attrib_updated = impl::UserProperty_<Strenght, Attrib, other>;                                 // ? introduce <Strenght, token>
+        using Attrib_updated2 = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght, other>::type>;  // ? introduce <Strenght, token>
+
+        using Attrib_updated3 = decltype(From::base<Attrib> | With::Strenght2)::result_type;  // ! fail to introduce <Strenght, token>
+
+        using Attrib_updated4 = decltype(From::base<Attrib> | With::Strenght2_once)::result_type;             // * not introduce <Strenght, token>
+        using Attrib_updated5 = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght, other>::order>;  // * not introduce <Strenght, token>
+
+        static_assert(std::same_as<Attrib_updated, Attrib_updated2>);
+
+        static_assert(not std::same_as<Attrib_updated, Attrib_updated3>);
+
+        static_assert(std::same_as<Attrib_updated3, Attrib_updated4>);
+        static_assert(std::same_as<Attrib_updated3, Attrib_updated5>);
+
+        {
+            // if base of Strenght is diffrent
+            using Attrib_updated_a = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght_next, other>::type>;  // ? introduce Strenght3
+            using Attrib_updated_b = decltype(From::base<Attrib> | With::Strenght_next_other)::result_type;            // ? introduce Strenght3
+
+            static_assert(std::same_as<Attrib_updated_a, Attrib_updated_b>);
+        }
+
+        cout << "[Attrib_updated]"
+             << parse_type_name<Attrib_updated,
+                                Strenght,
+                                Dexterity,
+                                Constitution,
+                                Inteligence,
+                                Wisdom,
+                                Charisma>()
+             << '\n';
+        cout << "[Attrib_updated3]"
+             << parse_type_name<Attrib_updated3,
+                                Strenght,
+                                Dexterity,
+                                Constitution,
+                                Inteligence,
+                                Wisdom,
+                                Charisma>()
+             << '\n';
+
+        Ta<Attrib_updated> type{};
+
+        type.getType<Strenght>() = {15};
+        type.getType<Dexterity>() = {18.1f};
+
+        print_get_by_type(type);
+        print_get_by_index(type);
+
+        // type.getType<8>(); //? call of deleted function
+        // type.getType<long>();  //! return void
+        // type.getTypeTaged<Strenght, long>();  //? call of deleted function
+    }
 }

@@ -41,3 +41,6 @@ add_executable(main_constexpr_traits_${addons}
 
 add_executable(main_project_advancing_${addons}
     main_project_advancing.cpp)
+
+add_executable(1_main-example_${addons} main-example.cpp)
+target_link_libraries(1_main-example_${addons} PRIVATE "-lstdc++exp")
