@@ -42,13 +42,12 @@ public:
             const base_type&,
             base_type&>;
 
-        // if constexpr (trait_accessable<base_type, RETURN>) {
-        //     return trait<RETURN>::get(static_cast<base>(self));
-        // } else
         if constexpr (getType_template_able<base_type, RETURN>) {
             return static_cast<base>(self).template getType<RETURN, DIG>();
+        } else if constexpr (trait_accessable<base_type, RETURN>) {
+            return trait<RETURN>::get(static_cast<base>(self));
         } else {
-            // static_assert(false, "WARNING: getType method tries to return void type");
+            //     static_assert(false, "WARNING: getType method tries to return void type");
         }
     }
 
