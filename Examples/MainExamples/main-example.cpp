@@ -16,8 +16,8 @@ struct empty {};
 struct empty_next {};
 struct other {};
 
-struct Strenght : public impl::UserProperty_<int, empty, struct ignored_y> {};            // ? ignore sub tokens
-struct Strenght_next : public impl::UserProperty_<int, empty_next, struct ignored_y> {};  // ? ignore sub tokens - other base
+struct Strenght : public impl::UserProperty_<int, empty, struct ignored_y> {};            // ? ignore ignored_y token
+struct Strenght_next : public impl::UserProperty_<int, empty_next, struct ignored_y> {};  // ? ignore ignored_y token , empty_next as base
 struct Dexterity : public impl::UserProperty_<float, empty> {};
 struct Constitution {};
 struct Inteligence {};
@@ -174,25 +174,26 @@ int main() {
              << '\n';
     }
     {
-        using Attrib_updated = impl::UserProperty_<Strenght, Attrib, other>;                                 // ? introduce <Strenght, token>
-        using Attrib_updated2 = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght, other>::type>;  // ? introduce <Strenght, token>
-
-        using Attrib_updated3 = decltype(From::base<Attrib> | With::Strenght2)::result_type;  // ! fail to introduce <Strenght, token>
-
-        using Attrib_updated4 = decltype(From::base<Attrib> | With::Strenght2_once)::result_type;             // * not introduce <Strenght, token>
-        using Attrib_updated5 = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght, other>::order>;  // * not introduce <Strenght, token>
+        using Attrib_updated = impl::UserProperty_<Strenght, Attrib, other>;                                 // ? introduce <Strenght, other>
+        using Attrib_updated2 = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght, other>::type>;  // ? introduce <Strenght, other>
+        using Attrib_updated3 = decltype(From::base<Attrib> | With::Strenght2)::result_type;                 // ! fail to introduce <Strenght, token>
+        using Attrib_updated3b = decltype(Attrib{} | With::Strenght2);                                       // ! fail to introduce <Strenght, token>
 
         static_assert(std::same_as<Attrib_updated, Attrib_updated2>);
+        static_assert(not std::same_as<Attrib_updated, Attrib_updated3>);   // !
+        static_assert(not std::same_as<Attrib_updated, Attrib_updated3b>);  // !
 
-        static_assert(not std::same_as<Attrib_updated, Attrib_updated3>);
+        using Attrib_updated4 = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght, other>::order>;  // * not introduce <Strenght, other>
+        using Attrib_updated5 = decltype(From::base<Attrib> | With::Strenght2_once)::result_type;             // * not introduce <Strenght, other>
 
-        static_assert(std::same_as<Attrib_updated3, Attrib_updated4>);
+        static_assert(std::same_as<Attrib_updated4, Attrib_updated5>);
+
         static_assert(std::same_as<Attrib_updated3, Attrib_updated5>);
 
         {
             // if base of Strenght is diffrent
-            using Attrib_updated_a = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght_next, other>::type>;  // ? introduce Strenght3
-            using Attrib_updated_b = decltype(From::base<Attrib> | With::Strenght_next_other)::result_type;            // ? introduce Strenght3
+            using Attrib_updated_a = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght_next, other>::type>;  // ? introduce <Strenght_next, other>
+            using Attrib_updated_b = decltype(From::base<Attrib> | With::Strenght_next_other)::result_type;            // ? introduce <Strenght_next, other>
 
             static_assert(std::same_as<Attrib_updated_a, Attrib_updated_b>);
         }
@@ -224,8 +225,8 @@ int main() {
         print_get_by_type(type);
         print_get_by_index(type);
 
-        // type.getType<8>(); //? call of deleted function
-        // type.getType<long>();  //! return void
+        // type.getType<8>();                    //? call of deleted function
+        // type.getType<long>();                 //? call of deleted function
         // type.getTypeTaged<Strenght, long>();  //? call of deleted function
     }
 }
