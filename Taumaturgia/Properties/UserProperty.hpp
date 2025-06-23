@@ -211,6 +211,7 @@ public:
     }
 
     template <typename RETURN, size_t DIG = 0, typename Self>
+        requires(not std::same_as<RETURN, TYPE> and getType_template_able<T, RETURN>)
     constexpr decltype(auto) getType(this Self& self) noexcept {
         using type = std::conditional_t<
             std::is_const_v<Self>,
@@ -226,6 +227,9 @@ public:
             // static_assert(false, "WARNING: getType method tries to return void type");
         }
     }
+
+    template <typename RETURN, size_t DIG = 0, typename Self>
+    constexpr decltype(auto) getType(this Self& self) noexcept = delete;
 
     // MARK: getType<size_t>
 
