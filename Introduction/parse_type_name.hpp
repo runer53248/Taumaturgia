@@ -235,7 +235,7 @@ auto type_name_result(std::string text = name<T>()) {
         }
     }
 
-    auto extra = [&]<typename A>() {
+    [[maybe_unused]] auto extra = [&]<typename A>() {
         if constexpr (trait_accessable<base_type, A>) {
             result.base += std::to_string(prop_index++);
             result.base += "  : " + name<A>() + "\n";
