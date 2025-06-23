@@ -10,15 +10,19 @@ struct accessType {
     template <typename T>
     static constexpr bool is_accessable = helpers::accessable<T, accessType<TYPE, CONVERT_TYPE>, TYPE, CONVERT_TYPE>;
 
-    template <type_able<TYPE> T>
-    static constexpr decltype(auto) get(T& el) noexcept {
-        return (el.type);
-    }
+    // template <type_able<TYPE> T>
+    // static constexpr decltype(auto) get(T& el) noexcept {
+    //     return (el.type);
+    // }
 
-    template <getType_able<TYPE> T>
+    template <type_or_getType_able<TYPE> T>
         requires(not(CustomAccessType_able<T, TYPE, CONVERT_TYPE> or getType_template_able<T, TYPE>))
     static constexpr decltype(auto) get(T& el) noexcept {
-        return el.getType();
+        if constexpr (getType_able<T, TYPE>) {
+            return el.getType();
+        } else {
+            return (el.type);
+        }
     }
 
     template <getType_template_able<TYPE> T>

@@ -50,6 +50,9 @@ concept type_able = traits::helpers::type_accessable<T, TYPE>;
 template <typename T, typename TYPE>
 concept getType_able = traits::helpers::get_type_accessable<T, TYPE>;
 
+template <typename T, typename TYPE>
+concept type_or_getType_able = type_able<T, TYPE> or getType_able<T, TYPE>;
+
 template <typename T, typename TYPE, typename CONVERT_TYPE = void>
 concept getType_template_able = traits::helpers::get_type_template_accessable<T, TYPE, CONVERT_TYPE>;
 
