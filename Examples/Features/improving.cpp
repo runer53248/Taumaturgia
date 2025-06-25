@@ -46,6 +46,7 @@ template <typename T>
 struct LivingImproved_1_ : public T {
     using property_data = PropertyData<LivingImproved_1_, T>;
     using improvement_of = Living_impl<T>;
+    using hold_type = void;
 
     LivingImproved_1_() noexcept = default;
 
@@ -60,6 +61,7 @@ template <typename T, typename... Tags>
 struct LivingImproved_2_ : public T {
     using property_data = PropertyData<LivingImproved_2_, T, Tags...>;
     using improvement_of = Living_impl<T>;
+    using hold_type = void;
 
     LivingImproved_2_() noexcept = default;
 
@@ -79,6 +81,7 @@ template <typename T>
 struct Improved_LivingImproved_3_ : public T {
     using property_data = PropertyData<Improved_LivingImproved_3_, T>;
     using improvement_of = LivingImproved_2_<T>;
+    using hold_type = void;
 
     Improved_LivingImproved_3_() noexcept = default;
 
@@ -98,6 +101,7 @@ template <typename T>
 struct Improved_LivingImproved_4_ : public T {
     using property_data = PropertyData<Improved_LivingImproved_4_, T>;
     using improvement_of = Improved_LivingImproved_3_<T>;
+    using hold_type = void;
 
     Improved_LivingImproved_4_() noexcept = default;
 
@@ -117,6 +121,7 @@ template <typename T>
 struct Improved_ : public T {
     using property_data = PropertyData<Improved_, T>;
     using improvement_of = void;
+    using hold_type = void;
 
     Improved_() noexcept = default;
 

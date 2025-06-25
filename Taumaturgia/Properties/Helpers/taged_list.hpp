@@ -18,6 +18,7 @@ list(const Prop<property>&) -> list<Prop<property>>;
 template <typename T>
 concept have_property_data = requires {
     typename T::property_data;
+    // typename T::hold_type;
 };
 
 class empty_type {};

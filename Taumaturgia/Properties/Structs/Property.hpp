@@ -20,9 +20,13 @@ public:
     template <typename T>
     using apply = property<T>;
 
+    using hold_type = property<tag>::hold_type;
+    using property_data = property<tag>::property_data;
+    using tags_list = property<tag>::property_data::tags_list;
+
     template <template <typename...> typename P>
         requires is_property<P>
-    using property_type = Property<P>;
+    using property_type = Property<P>;  // use same Property or Property_unordered
 };
 
 template <template <typename...> typename property>
@@ -33,9 +37,12 @@ public:
     template <typename T>
     using apply = property<T>;
 
+    using hold_type = property<tag>::hold_type;
+    using tags_list = property<tag>::property_data::tags_list;
+
     template <template <typename...> typename P>
         requires is_property<P>
-    using property_type = Property_unordered<P>;
+    using property_type = Property_unordered<P>;  // use same Property or Property_unordered
 };
 
 template <template <template <typename...> typename> typename PROP_TYPE>

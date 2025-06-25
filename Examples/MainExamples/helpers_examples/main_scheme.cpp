@@ -9,12 +9,14 @@ struct test_struct_2 {};
 template <typename T>
 struct A : public T {
     using property_data = PropertyData<A, T>;
+    using hold_type = void;
 };
 
 template <typename T>
 class B : public T {
 public:
     using property_data = PropertyData<B, T>;
+    using hold_type = void;
 };
 
 using WearingIndex = typename Wearing<test_struct>::property_data::property_type;

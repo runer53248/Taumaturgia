@@ -174,21 +174,21 @@ int main() {
              << '\n';
     }
     {
-        using Attrib_updated = impl::UserProperty_<Strenght, Attrib, other>;                                 // ? introduce <Strenght, other>
-        using Attrib_updated2 = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght, other>::type>;  // ? introduce <Strenght, other>
-        using Attrib_updated3 = decltype(From::base<Attrib> | With::Strenght2)::result_type;                 // ! fail to introduce <Strenght, token>
-        using Attrib_updated3b = decltype(Attrib{} | With::Strenght2);                                       // ! fail to introduce <Strenght, token>
+        using Attrib_updated = impl::UserProperty_<Strenght, Attrib, other>;                                   // ? introduce <Strenght, other>
+        using Attrib_updated2 = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght, other>::type>;    // ? introduce <Strenght, other>
+        using Attrib_updated3 = decltype(From::base<Attrib> | With::Strenght2 | With::Strenght)::result_type;  // ? introduce <Strenght, other>
+        using Attrib_updated3b = decltype(Attrib{} | With::Strenght2 | With::Strenght | Create);               // ? introduce <Strenght, other>
 
         static_assert(std::same_as<Attrib_updated, Attrib_updated2>);
-        static_assert(not std::same_as<Attrib_updated, Attrib_updated3>);   // !
-        static_assert(not std::same_as<Attrib_updated, Attrib_updated3b>);  // !
+        static_assert(std::same_as<Attrib_updated, Attrib_updated3>);
+        static_assert(std::same_as<Attrib_updated, Attrib_updated3b>);
 
         using Attrib_updated4 = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght, other>::order>;  // * not introduce <Strenght, other>
         using Attrib_updated5 = decltype(From::base<Attrib> | With::Strenght2_once)::result_type;             // * not introduce <Strenght, other>
 
         static_assert(std::same_as<Attrib_updated4, Attrib_updated5>);
 
-        static_assert(std::same_as<Attrib_updated3, Attrib_updated5>);
+        // static_assert(std::same_as<Attrib_updated3, Attrib_updated5>);
 
         {
             // if base of Strenght is diffrent

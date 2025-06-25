@@ -8,6 +8,7 @@ template <typename T>
 class Weird_ : public T {
 public:
     using property_data = PropertyData<Weird_, T>;
+    using hold_type = void;
 };
 
 }  // namespace impl

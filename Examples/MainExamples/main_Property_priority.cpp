@@ -5,6 +5,7 @@
 template <typename T>
 struct PlainProperty : public T {
     using property_data = PropertyData<PlainProperty, T>;
+    using hold_type = void;
 };
 
 // order in order_list
