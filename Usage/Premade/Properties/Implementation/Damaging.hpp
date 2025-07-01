@@ -107,11 +107,15 @@ public:
     DamagingSimple_(const Name& name, [[maybe_unused]] const std::variant<V...>& dmg, Args&&... args)
         : T{name, std::forward<Args>(args)...} {}
 
-    // MARK: nameless C-tor
+    // MARK: hold_type C-tor
 
     template <typename... Args>
     DamagingSimple_(hold_type&& dmg, Args&&... args)
         : T{std::forward<Args>(args)...}, dmg_{std::move(dmg)} {}
+
+    template <typename... Args>
+    DamagingSimple_(hold_type& dmg, Args&&... args)
+        : T{std::forward<Args>(args)...}, dmg_{dmg} {}
 
     // MARK: getDamage
 
