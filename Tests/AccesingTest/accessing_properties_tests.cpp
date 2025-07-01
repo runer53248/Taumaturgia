@@ -114,19 +114,34 @@ protected:
 // MARK: tests
 
 TEST(add_two_kind_of_property_to_same_type, test) {
-    using type1 = add_properties_ordered<empty, Damaging, Living>;
-    using type2 = add_properties_ordered<type1, MyDamaging, MyLiving>;  // ? taged added on untaged
-
-    using typea = add_properties_ordered<empty, MyDamaging, MyLiving>;
-    using typeb = add_properties_ordered<typea, Damaging, Living>;  // ! taged blocked by untaged
-
     using type = add_properties_ordered<empty, Damaging, Living, MyDamaging, MyLiving>;
 
     static_assert(std::same_as<
                   add_properties_ordered<empty, Damaging, MyDamaging>,
                   add_properties_ordered<empty, MyDamaging, Damaging>>);
 
+    using type1 = add_properties_ordered<empty, Damaging, Living>;
+    using type2 = add_properties_ordered<type1, MyDamaging, MyLiving>;  // ? taged added on untaged
+
+    std::cout << "empty -> Damaging, Living:\n"
+              << name<type1>() << '\n'
+              << '\n';
+    std::cout << "empty -> Damaging, Living -> MyDamaging, MyLiving:\n"
+              << name<type2>() << '\n'
+              << '\n';
+              
     EXPECT_TRUE((std::same_as<type2, type>));
+
+    using typea = add_properties_ordered<empty, MyDamaging, MyLiving>;
+    using typeb = add_properties_ordered<typea, Damaging, Living>;  // ! taged block untaged
+
+    std::cout << "empty -> MyDamaging, MyLiving:\n"
+              << name<typea>() << '\n'
+              << '\n';
+    std::cout << "empty -> MyDamaging, MyLiving -> Damaging, Living:\n"
+              << name<typeb>() << '\n'
+              << '\n';
+
     EXPECT_TRUE((std::same_as<typeb, type>));
 
     std::cout << "empty -> Damaging, Living     -> MyDamaging, MyLiving" << parse_type_name<type2>() << '\n';
