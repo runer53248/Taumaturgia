@@ -33,4 +33,4 @@ static_assert(Damagingable<Damaging_<tag>>);
 }  // namespace impl::Test
 
 template <typename T, typename... Tags>
-using Damaging = apply_property<T, impl::Damaging_>;
+using Damaging = apply_property<T, impl::Damaging_, Tags...>;

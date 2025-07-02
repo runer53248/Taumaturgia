@@ -36,6 +36,12 @@ concept get_type_accessable = requires(std::remove_cvref_t<T> x) {
     { std::as_const(x).getType() } -> std::same_as<const TYPE&>;
 };
 
+template <typename T, typename TYPE>
+concept get_type_taged_accessable = requires(std::remove_cvref_t<T> x) {
+    { x.template getTypeTaged<TYPE>() } -> std::same_as<TYPE&>;
+    { std::as_const(x).template getTypeTaged<TYPE>() } -> std::same_as<const TYPE&>;
+};
+
 template <typename T, typename TYPE, typename CONVERT_TYPE, size_t DIG = 0>
 concept get_type_template_accessable = requires(std::remove_cvref_t<T> x) {
     { x.template getType<TYPE, DIG>() } -> same_as_or_convertible_to<TYPE&, CONVERT_TYPE>;

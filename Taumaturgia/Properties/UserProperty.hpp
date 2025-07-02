@@ -377,7 +377,8 @@ static_assert(have_get_features<tested_type, type>);
 
 template <typename TYPE, typename T, typename... Tags>
 using UserProperty = std::conditional_t<
-    trait_accessable<T, TYPE>,
+    (trait_accessable<T, TYPE> and  //
+     (is_getTypeTags_valid<T, TYPE, Tags...>)),
     T,
     impl::UserProperty_<TYPE, T, Tags...>>;
 
@@ -393,7 +394,8 @@ struct AdvanceUserProperty {
     using type = impl::UserProperty_<TYPE, T, Tags...>;
 
     template <typename T>
-    using order = UserPropertyAdapter<TYPE, Tags...>::template type<T>;  // type valid for Property - pass is_property
+    // using order = UserPropertyAdapter<TYPE, Tags...>::template type<T>;  // type valid for Property - pass is_property
+    using order = UserProperty<TYPE, T, Tags...>;  // type valid for Property - pass is_property
 };
 
 // TODO: check is this needed?

@@ -196,35 +196,35 @@ auto type_name_result(std::string text = name<T>()) {
 
     result.base = text;
     result.base += " == " + base_name + '\n';
-    if constexpr (trait_accessable<base_type, Name>) {
+    if constexpr (trait_accessable<base_type, Name> or traits::helpers::get_type_taged_accessable<base_type, Name>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : Name\n";
     }
-    if constexpr (trait_accessable<base_type, CureHealth>) {
+    if constexpr (trait_accessable<base_type, CureHealth> or traits::helpers::get_type_taged_accessable<base_type, CureHealth>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : CureHealth\n";
     }
-    if constexpr (trait_accessable<base_type, Protection>) {
+    if constexpr (trait_accessable<base_type, Protection> or traits::helpers::get_type_taged_accessable<base_type, Protection>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : Protection\n";
     }
-    if constexpr (trait_accessable<base_type, Damage>) {
+    if constexpr (trait_accessable<base_type, Damage> or traits::helpers::get_type_taged_accessable<base_type, Damage>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : Damage\n";
     }
-    if constexpr (trait_accessable<base_type, EffectContainer>) {
+    if constexpr (trait_accessable<base_type, EffectContainer> or traits::helpers::get_type_taged_accessable<base_type, EffectContainer>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : EffectContainer\n";
     }
-    if constexpr (trait_accessable<base_type, WearContainer>) {
+    if constexpr (trait_accessable<base_type, WearContainer> or traits::helpers::get_type_taged_accessable<base_type, WearContainer>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : WearContainer\n";
     }
-    if constexpr (trait_accessable<base_type, Health>) {
+    if constexpr (trait_accessable<base_type, Health> or traits::helpers::get_type_taged_accessable<base_type, Health>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : Health\n";
     }
-    if constexpr (trait_accessable<base_type, int>) {
+    if constexpr (trait_accessable<base_type, int> or traits::helpers::get_type_taged_accessable<base_type, int>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : int\n";
     }

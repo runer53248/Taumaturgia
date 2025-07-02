@@ -12,10 +12,13 @@ constexpr decltype(auto) getType(T&& el) noexcept
 }
 template <size_t S, typename T>
 constexpr decltype(auto) getType(T&& el) noexcept
-    requires(not requires { el.template getType<S>(); } and (S == 0 or requires { el.template getType<S - 1>(); }))
+    requires(
+        requires { typename helpers::Scheme<std::remove_cvref_t<T>>::base::hold_type; }  //
+        and not requires { el.template getType<S>(); }                                   //
+        and (S == 0 or requires { el.template getType<S - 1>(); }))
 {
-    using hold_type = typename std::remove_cvref_t<T>::hold_type;
     using base_type = helpers::Scheme<std::remove_cvref_t<T>>::base;  // most base type
+    using hold_type = typename std::remove_cvref_t<base_type>::hold_type;
 
     return trait<hold_type>::get(static_cast<base_type&>(el));
 }
