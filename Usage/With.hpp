@@ -5,12 +5,18 @@ namespace With {
 
 template <template <typename, typename...> typename P, typename... Tags>
 struct ApplyTag {
+private:
+    template <typename T>
+    using hold_type = typename P<T, Tags...>::hold_type;
+
+public:
     template <typename T>
     using apply = P<T, Tags...>;
 
     template <typename T>
     using apply_order = std::conditional_t<
-        trait_accessable<T, typename P<T, Tags...>::hold_type>,
+        (trait_accessable<T, hold_type<T>> and  //
+         (is_getTypeTags_valid<T, hold_type<T>, Tags...>)),
         T,
         P<T, Tags...>>;
 };
