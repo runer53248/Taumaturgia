@@ -375,12 +375,22 @@ static_assert(have_get_features<tested_type, type>);
 
 #include "Helpers/derived_from_property.hpp"
 
-template <typename TYPE, typename T, typename... Tags>
-using UserProperty = std::conditional_t<
+// template <typename TYPE, typename T, typename... Tags>
+// using UserProperty = std::conditional_t<
+//     (trait_accessable<T, TYPE> and  //
+//      (is_getTypeTags_valid<T, TYPE, Tags...>)),
+//     T,
+//     impl::UserProperty_<TYPE, T, Tags...>>;
+
+template <typename T, template <typename...> typename PropImpl, typename TYPE, typename... Tags>
+using apply_property2 = std::conditional_t<
     (trait_accessable<T, TYPE> and  //
      (is_getTypeTags_valid<T, TYPE, Tags...>)),
     T,
-    impl::UserProperty_<TYPE, T, Tags...>>;
+    PropImpl<TYPE, T, Tags...>>;
+
+template <typename TYPE, typename T, typename... Tags>
+using UserProperty = apply_property2<T, impl::UserProperty_, TYPE, Tags...>;
 
 template <typename TYPE, typename... Tags>
 struct UserPropertyAdapter {

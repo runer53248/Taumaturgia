@@ -42,8 +42,8 @@ int main() {
             | With::user_property<double, struct second_double>       // 0  : double - (aka. d_p2::type)
             | With::user_property<double, struct first_double>        // 1  : double - (aka. d_p1::type)
             | With::user_property<Damage, struct Damage_first>        // 12 : Damage added
-            | With::taged_property<Damaging, struct Damage_first>     // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
-            | With::taged_property<Damaging>                          // !  : Damage / impl::Damaging_ - duplication
+            | With::taged_property<Damaging_impl, struct Damage_first>     // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
+            | With::taged_property<Damaging_impl>                          // !  : Damage / impl::Damaging_ - duplication
             ;
         auto type1 = Base{} | list_1;
 
@@ -63,8 +63,8 @@ int main() {
             | With::user_property<double, struct second_double>       // 0  : double - because its on order_list (aka. d_p2::type)
             | With::user_property<double, struct first_double>        // 1  : double - because its on order_list (aka. d_p1::type)
             | With::user_property<Damage, struct Damage_first>        // 12 : Damage added
-            | With::taged_property<Damaging, struct Damage_first>     // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
-            | With::taged_property<Damaging>                          // !  : Damage / impl::Damaging_ - duplication
+            | With::taged_property<Damaging_impl, struct Damage_first>     // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
+            | With::taged_property<Damaging_impl>                          // !  : Damage / impl::Damaging_ - duplication
             | Create;
 
         // types build with creator
@@ -83,8 +83,8 @@ int main() {
             | With::user_property<double, struct second_double>       // 0  : double - because its on order_list (aka. d_p2::type)
             | With::user_property<double, struct first_double>        // 1  : double - because its on order_list (aka. d_p1::type)
             | With::user_property<Damage, struct Damage_first>        // 12 : Damage added
-            | With::taged_property<Damaging, struct Damage_first>     // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
-            | With::taged_property<Damaging>                          // !  : Damage / impl::Damaging_ - duplication
+            | With::taged_property<Damaging_impl, struct Damage_first>     // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
+            | With::taged_property<Damaging_impl>                          // !  : Damage / impl::Damaging_ - duplication
             ;
         auto type3 = type3_creator();
 
@@ -119,12 +119,12 @@ int main() {
             std::cout << "Damage<.. Damage_first>   =  " << Property<Damaging_impl<tag, struct Damage_first>::property_data::property_type::apply>::value << '\n';
             std::cout << "1  = " << decltype(With::user_property<Damage, struct Damage_first>)::value << '\n';
             std::cout << "2  = " << decltype(With::Damage)::value << '\n';
-            std::cout << "3  = " << decltype(With::taged_property<Damaging>)::value << '\n';
-            std::cout << "4  = " << decltype(With::taged_property<Damaging, struct Damage_first>)::value << '\n';
+            std::cout << "3  = " << decltype(With::taged_property<Damaging_impl>)::value << '\n';
+            std::cout << "4  = " << decltype(With::taged_property<Damaging_impl, struct Damage_first>)::value << '\n';
             std::cout << "1  = " << name<decltype(With::user_property<Damage, struct Damage_first>)>() << '\n';
             std::cout << "2  = " << name<decltype(With::Damage)>() << '\n';
-            std::cout << "3  = " << name<decltype(With::taged_property<Damaging>)>() << '\n';
-            std::cout << "4  = " << name<decltype(With::taged_property<Damaging, struct Damage_first>)>() << '\n';
+            std::cout << "3  = " << name<decltype(With::taged_property<Damaging_impl>)>() << '\n';
+            std::cout << "4  = " << name<decltype(With::taged_property<Damaging_impl, struct Damage_first>)>() << '\n';
 
             std::cout << "decltype(1) " << name<decltype(t1_creator)>() << '\n';
             std::cout << "decltype(2) " << name<decltype(t2_creator)>() << '\n';
@@ -155,7 +155,7 @@ int main() {
         [[maybe_unused]] list list_1 =
             With::user_property<Damage, struct Damage_first> | With::user_property<Damage>;
         [[maybe_unused]] list list_2 =
-            With::taged_property<Damaging, struct Damage_first> | With::taged_property<Damaging>;
+            With::taged_property<Damaging_impl, struct Damage_first> | With::taged_property<Damaging_impl>;
 
         auto type_test_1 = Base{} | list_1;
         auto type_test_2 = Base{} | list_2;
@@ -165,8 +165,58 @@ int main() {
     }
 
     {
-        auto prop_1 = With::taged_property_once<Damaging, struct Damage_first>;
-        auto prop_2 = With::taged_property_once<Damaging>;
+        auto prop_1 = With::taged_property<Damaging_impl, struct Damage_first>;
+        auto prop_2 = With::taged_property<Damaging_impl>;
+
+        list l_test_a =  //
+            prop_1       //
+            | prop_2     //
+            ;
+        list l_test_b =  //
+            prop_2       //
+            | prop_1     //
+            ;
+
+        auto type_test_a = Base{} | l_test_a;
+        auto type_test_b = Base{} | l_test_b;
+
+        std::cout << "decltype(type_test_a) " << parse_type_name<decltype(type_test_a)>() << '\n';
+        std::cout << "decltype(type_test_b) " << parse_type_name<decltype(type_test_b)>() << '\n';
+    }
+
+    {
+        auto prop_1 = With::taged_property<Damaging_impl, struct Damage_first>;
+        auto prop_2 = With::taged_property<Damaging_impl>;
+        auto prop_3 = With::user_property<Damage, struct Damage_first>;
+
+        [[maybe_unused]] list l_test_a =  //
+            prop_1                        //
+            | prop_2                      //
+            | prop_3                      //
+            ;
+        [[maybe_unused]] list l_test_b =  //
+            prop_2                        //
+            | prop_3                      //
+            | prop_1                      //
+            ;
+        [[maybe_unused]] list l_test_c =  //
+            prop_3                        //
+            | prop_1                      //
+            | prop_2                      //
+            ;
+
+        auto type_test_a = Base{} | l_test_a;
+        auto type_test_b = Base{} | l_test_b;
+        auto type_test_c = Base{} | l_test_c;
+
+        std::cout << "decltype(type_test_a) " << parse_type_name<decltype(type_test_a)>() << '\n';
+        std::cout << "decltype(type_test_b) " << parse_type_name<decltype(type_test_b)>() << '\n';
+        std::cout << "decltype(type_test_c) " << parse_type_name<decltype(type_test_c)>() << '\n';
+    }
+
+    {
+        auto prop_1 = With::taged_property_once<Damaging_impl, struct Damage_first>;
+        auto prop_2 = With::taged_property_once<Damaging_impl>;
         auto prop_3 = With::user_property_once<Damage, struct Damage_first>;
 
         [[maybe_unused]] list l_test_a =  //
@@ -185,13 +235,6 @@ int main() {
             | prop_2                      //
             ;
 
-        std::cout << "decltype(l_test_a) " << name<decltype(l_test_a)>() << '\n'
-                  << '\n';
-        std::cout << "decltype(l_test_b) " << name<decltype(l_test_b)>() << '\n'
-                  << '\n';
-        std::cout << "decltype(l_test_c) " << name<decltype(l_test_c)>() << '\n'
-                  << '\n';
-
         auto type_test_a = Base{} | l_test_a;
         auto type_test_b = Base{} | l_test_b;
         auto type_test_c = Base{} | l_test_c;
@@ -201,7 +244,7 @@ int main() {
         std::cout << "decltype(type_test_c) " << parse_type_name<decltype(type_test_c)>() << '\n';
     }
 
-    if (false) {
+    {
         // goes with order
         // ! accept only properties with higher order index
 
@@ -220,8 +263,8 @@ int main() {
             | With::user_property_once<std::string, struct second_string>  // 1 : string - (aka. i_p2::type)
             | With::user_property_once<double, struct second_double>       // 0 : double - (aka. d_p2::type)
             | With::user_property_once<double, struct first_double>        // ! : double - (aka. d_p1::type)
-            | With::taged_property_once<Damaging, struct Damage_first>     // 7 : Damage / impl::Damaging_
-            | With::taged_property_once<Damaging>                          // ! : Damage / impl::Damaging_ - duplication
+            | With::taged_property_once<Damaging_impl, struct Damage_first>     // 7 : Damage / impl::Damaging_
+            | With::taged_property_once<Damaging_impl>                          // ! : Damage / impl::Damaging_ - duplication
             | With::user_property_once<Damage, struct Damage_first>        // 7 : Damage - replace impl::Damaging_
             ;
         auto type2 = Base{} | l_p2;
@@ -244,8 +287,8 @@ int main() {
             | With::user_property_once<std::string, struct second_string>  // 1 : string - higher index for std::string (aka. s_p2::order)
             | With::user_property_once<double, struct second_double>       // 0 : double - higher index for double (aka. d_p2::order)
             | With::user_property_once<double, struct first_double>        // ! : double - ignored (aka. d_p1::order)
-            | With::taged_property_once<Damaging, struct Damage_first>     // 7 : Damage / impl::Damaging_
-            | With::taged_property_once<Damaging>                          // ! : Damage / impl::Damaging_ - duplication
+            | With::taged_property_once<Damaging_impl, struct Damage_first>     // 7 : Damage / impl::Damaging_
+            | With::taged_property_once<Damaging_impl>                          // ! : Damage / impl::Damaging_ - duplication
             | With::user_property_once<Damage, struct Damage_first>        // 7 : Damage - replace impl::Damaging_
             | Create;
 

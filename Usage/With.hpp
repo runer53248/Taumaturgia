@@ -13,6 +13,13 @@ public:
     template <typename T>
     using apply = P<T, Tags...>;
 
+    // template <typename T>
+    // using apply_order = apply_property<T, P, Tags...>;
+
+    static_assert(not std::same_as<
+                  P<P<tag, Tags...>, Tags...>,
+                  P<tag, Tags...>>);  // is_property_forced
+
     template <typename T>
     using apply_order = std::conditional_t<
         (trait_accessable<T, hold_type<T>> and  //
