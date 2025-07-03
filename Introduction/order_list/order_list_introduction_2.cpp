@@ -18,7 +18,7 @@ int main() {
         static_assert(
             std::is_same_v<
                 decltype(With::user_property<int, struct first_int>),
-                const Property<i_p1::type>>);
+                const Property<int_first::type>>);
 
         std::cout << "order index: \n";
         std::cout << "higher on order_list " << decltype(With::user_property<int, struct first_int>)::value << '\n';
@@ -90,23 +90,23 @@ int main() {
 
         {
             auto t1_creator =
-                From::base<Base>                                       //
-                | With::user_property<Damage, struct Damage_first>     // 12 : Damage added
+                From::base<Base>                                            //
+                | With::user_property<Damage, struct Damage_first>          // 12 : Damage added
                 | With::taged_property<Damaging_impl, struct Damage_first>  //
                 | With::taged_property<Damaging_impl>                       //
-                | With::Damage                                         // ! last
+                | With::Damage                                              // ! last
                 ;
             auto t2_creator =
-                From::base<Base>                                       //
-                | With::user_property<Damage, struct Damage_first>     // 12 : Damage added
-                | With::Damage                                         //
+                From::base<Base>                                            //
+                | With::user_property<Damage, struct Damage_first>          // 12 : Damage added
+                | With::Damage                                              //
                 | With::taged_property<Damaging_impl, struct Damage_first>  //
                 | With::taged_property<Damaging_impl>                       // ! last
                 ;
             auto t3_creator =
-                From::base<Base>                                       //
-                | With::user_property<Damage, struct Damage_first>     // 12 : Damage added
-                | With::Damage                                         //
+                From::base<Base>                                            //
+                | With::user_property<Damage, struct Damage_first>          // 12 : Damage added
+                | With::Damage                                              //
                 | With::taged_property<Damaging_impl>                       //
                 | With::taged_property<Damaging_impl, struct Damage_first>  // ! last
                 ;
@@ -150,7 +150,58 @@ int main() {
             std::cout << "decltype(type3) " << parse_type_name<decltype(type3)>() << '\n';
         }
     }
-    if (true) {
+
+    {
+        [[maybe_unused]] list list_1 =
+            With::user_property<Damage, struct Damage_first> | With::user_property<Damage>;
+        [[maybe_unused]] list list_2 =
+            With::taged_property<Damaging, struct Damage_first> | With::taged_property<Damaging>;
+
+        auto type_test_1 = Base{} | list_1;
+        auto type_test_2 = Base{} | list_2;
+
+        std::cout << "decltype(type_test_1) " << parse_type_name<decltype(type_test_1)>() << '\n';
+        std::cout << "decltype(type_test_2) " << parse_type_name<decltype(type_test_2)>() << '\n';
+    }
+
+    {
+        auto prop_1 = With::taged_property_once<Damaging, struct Damage_first>;
+        auto prop_2 = With::taged_property_once<Damaging>;
+        auto prop_3 = With::user_property_once<Damage, struct Damage_first>;
+
+        [[maybe_unused]] list l_test_a =  //
+            prop_1                        //
+            | prop_2                      //
+            | prop_3                      //
+            ;
+        [[maybe_unused]] list l_test_b =  //
+            prop_2                        //
+            | prop_3                      //
+            | prop_1                      //
+            ;
+        [[maybe_unused]] list l_test_c =  //
+            prop_3                        //
+            | prop_1                      //
+            | prop_2                      //
+            ;
+
+        std::cout << "decltype(l_test_a) " << name<decltype(l_test_a)>() << '\n'
+                  << '\n';
+        std::cout << "decltype(l_test_b) " << name<decltype(l_test_b)>() << '\n'
+                  << '\n';
+        std::cout << "decltype(l_test_c) " << name<decltype(l_test_c)>() << '\n'
+                  << '\n';
+
+        auto type_test_a = Base{} | l_test_a;
+        auto type_test_b = Base{} | l_test_b;
+        auto type_test_c = Base{} | l_test_c;
+
+        std::cout << "decltype(type_test_a) " << parse_type_name<decltype(type_test_a)>() << '\n';
+        std::cout << "decltype(type_test_b) " << parse_type_name<decltype(type_test_b)>() << '\n';
+        std::cout << "decltype(type_test_c) " << parse_type_name<decltype(type_test_c)>() << '\n';
+    }
+
+    if (false) {
         // goes with order
         // ! accept only properties with higher order index
 

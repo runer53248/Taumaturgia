@@ -2,24 +2,26 @@
 
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
-using d_p1 = AdvanceUserProperty<double, struct first_double>;
-using d_p2 = AdvanceUserProperty<double, struct second_double>;
+using double_first = AdvanceUserProperty<double, struct first_double>;
+using double_second = AdvanceUserProperty<double, struct second_double>;
 
-using i_p1 = AdvanceUserProperty<int, struct first_int>;
-using i_p2 = AdvanceUserProperty<int, struct second_int, struct int_tag>;
-using i_p3 = AdvanceUserProperty<int, struct third_int>;
+using int_first = AdvanceUserProperty<int, struct first_int>;
+using int_second_tag = AdvanceUserProperty<int, struct second_int, struct int_tag>;
+using int_third = AdvanceUserProperty<int, struct third_int>;
 
-using f_p = UserPropertyAdapter<float>;
+using just_float = UserPropertyAdapter<float>;
 
-using s_p1 = AdvanceUserProperty<std::string, struct first_string>;
-using s_p2 = AdvanceUserProperty<std::string, struct second_string>;
+using just_int = AdvanceUserProperty<int>;
+
+using string_first = AdvanceUserProperty<std::string, struct first_string>;
+using string_second = AdvanceUserProperty<std::string, struct second_string>;
 
 using order_list = taged_list<
-    d_p1::order,
-    d_p2::order,
-    i_p1::order,
-    i_p2::order,
-    i_p3::order,
-    f_p::type,
-    s_p1::order,
-    s_p2::order>;
+    double_first::order,
+    double_second::order,
+    int_first::order,
+    int_second_tag::order,
+    int_third::order,
+    just_float::type,
+    string_first::order,
+    string_second::order>;
