@@ -1,7 +1,7 @@
 #pragma once
 #include "Taumaturgia/Properties/Helpers/pipeing.hpp"
 
-namespace With {
+namespace impl {
 
 template <template <typename, typename...> typename P, typename... Tags>
 struct ApplyTag {
@@ -28,6 +28,10 @@ public:
         P<T, Tags...>>;
 };
 
+}  // namespace impl
+
+namespace With {
+
 // * forced version - will not be removed by taged versions - but be added even when trait in base is accessable
 [[maybe_unused]] constexpr Property<Naming_impl> Name{};
 [[maybe_unused]] constexpr Property<Damaging_impl> Damage{};
@@ -50,10 +54,10 @@ template <template <typename> typename P>
 [[maybe_unused]] constexpr Property<P> property{};
 
 template <template <typename, typename> typename P, typename... Tags>
-[[maybe_unused]] constexpr Property<ApplyTag<P, Tags...>::template apply> taged_property{};
+[[maybe_unused]] constexpr Property<impl::ApplyTag<P, Tags...>::template apply> taged_property{};
 
 template <template <typename, typename> typename P, typename... Tags>
-[[maybe_unused]] constexpr Property<ApplyTag<P, Tags...>::template apply_order> taged_property_once{};
+[[maybe_unused]] constexpr Property<impl::ApplyTag<P, Tags...>::template apply_order> taged_property_once{};
 
 template <typename T, typename... Tags>
 [[maybe_unused]] constexpr Property<AdvanceUserProperty<T, Tags...>::template type> user_property{};
@@ -81,16 +85,20 @@ template <typename TT>
 };  // namespace With
 
 namespace WithUnordered {
-[[maybe_unused]] constexpr Property_unordered<Naming> Name{};
-[[maybe_unused]] constexpr Property_unordered<Damaging> Damage{};
-[[maybe_unused]] constexpr Property_unordered<Healing> CureHealth{};
-[[maybe_unused]] constexpr Property_unordered<Living> Health{};
-[[maybe_unused]] constexpr Property_unordered<Protecting> Protection{};
-[[maybe_unused]] constexpr Property_unordered<Restoring> EffectTypeContainer{};
-[[maybe_unused]] constexpr Property_unordered<Wearing> WearContainer{};
+[[maybe_unused]] constexpr Property_unordered<Naming_impl> Name{};
+[[maybe_unused]] constexpr Property_unordered<Damaging_impl> Damage{};
+[[maybe_unused]] constexpr Property_unordered<Healing_impl> CureHealth{};
+[[maybe_unused]] constexpr Property_unordered<Living_impl> Health{};
+[[maybe_unused]] constexpr Property_unordered<Protecting_impl> Protection{};
+[[maybe_unused]] constexpr Property_unordered<Restoring_impl> EffectTypeContainer{};
+[[maybe_unused]] constexpr Property_unordered<Wearing_impl> WearContainer{};
 
 template <template <typename> typename P>
 [[maybe_unused]] constexpr Property_unordered<P> property{};
 template <typename T, typename... Tags>
 [[maybe_unused]] constexpr Property_unordered<UserPropertyAdapter<T, Tags...>::template type> user_property{};
+
+template <template <typename, typename> typename P, typename... Tags>
+[[maybe_unused]] constexpr Property_unordered<impl::ApplyTag<P, Tags...>::template apply> taged_property{};
+
 };  // namespace WithUnordered
