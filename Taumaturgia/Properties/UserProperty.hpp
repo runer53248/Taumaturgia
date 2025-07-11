@@ -22,32 +22,6 @@ struct PropertyFor {
     using type = UserProperty_<TYPE, TARGET, Tags...>;
 };  // may be specialized to replacing UserProperty_
 
-// MARK: UserProperty_ for tag
-
-template <typename TYPE /*, typename... Tags*/>
-class UserProperty_<TYPE, tag /*, Tags...*/> {
-public:
-    using property_data = PropertyData<PropertyFor<TYPE /*, Tags...*/>::template type,
-                                       tag>;                        // ? should add TYPE into PropertyData?
-    using improvement_of = UserProperty_<TYPE, tag /*, Tags...*/>;  // will act like same type if TYPE and Tags are same
-    using hold_type = TYPE;
-
-    template <typename RETURN = TYPE, size_t DIG = 0>
-    // requires std::is_same_v<RETURN, TYPE>
-    constexpr decltype(auto) getType() & noexcept {
-        return (type_);
-    }
-
-    template <typename RETURN = TYPE, size_t DIG = 0>
-    // requires std::is_same_v<RETURN, TYPE>
-    constexpr decltype(auto) getType() const& noexcept {
-        return (type_);
-    }
-
-private:
-    TYPE type_{};
-};
-
 template <typename T, typename Base, size_t DIG>
 concept parent_digingable = requires(T t) {
     static_cast<const Base&>(t).template getType<DIG - 1>();
@@ -395,7 +369,7 @@ using UserProperty = apply_property2<T, impl::UserProperty_, TYPE, Tags...>;
 template <typename TYPE, typename... Tags>
 struct UserPropertyAdapter {
     template <typename T>
-    using type = UserProperty<TYPE, T, Tags...>;
+    using once = UserProperty<TYPE, T, Tags...>;
 };
 
 template <typename TYPE, typename... Tags>
@@ -404,8 +378,7 @@ struct AdvanceUserProperty {
     using type = impl::UserProperty_<TYPE, T, Tags...>;
 
     template <typename T>
-    // using order = UserPropertyAdapter<TYPE, Tags...>::template type<T>;  // type valid for Property - pass is_property
-    using order = UserProperty<TYPE, T, Tags...>;  // type valid for Property - pass is_property
+    using once = UserProperty<TYPE, T, Tags...>;
 };
 
 // TODO: check is this needed?
