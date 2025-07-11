@@ -5,9 +5,9 @@
 #include "Taumaturgia/Strategies/UserStrategy.hpp"
 
 using order_list = taged_list<
-    UserPropertyAdapter<int>::type,
-    UserPropertyAdapter<std::string>::type,
-    UserPropertyAdapter<float>::type  // floats have less priority
+    UserPropertyAdapter<int>::once,
+    UserPropertyAdapter<std::string>::once,
+    UserPropertyAdapter<float>::once  // floats have less priority
     >;                                // properties list in order
 
 #include "Taumaturgia/Properties/Structs/Property.hpp"  // depends on order_list existence
@@ -136,15 +136,15 @@ int main() {
 
     using user_name_a_int_type = add_properties_ordered<
         name_type1,
-        UserPropertyAdapter<int>::type>;  // just int
+        UserPropertyAdapter<int>::once>;  // just int
     using user_name_a_float_a_int_type = add_properties_ordered<
         name_type1,
-        UserPropertyAdapter<float>::type,
-        UserPropertyAdapter<int>::type>;  // float and int
+        UserPropertyAdapter<float>::once,
+        UserPropertyAdapter<int>::once>;  // float and int
     using user_name_a_int_a_float_type = add_properties_ordered<
         name_type1,
-        UserPropertyAdapter<int>::type,
-        UserPropertyAdapter<float>::type>;  // int and float
+        UserPropertyAdapter<int>::once,
+        UserPropertyAdapter<float>::once>;  // int and float
     static_assert(std::is_same_v<user_name_a_float_a_int_type, UserProperty<int, UserProperty<float, name_type1>>>);
     static_assert(std::is_same_v<user_name_a_float_a_int_type, user_name_a_int_a_float_type>);
 
@@ -189,8 +189,8 @@ int main() {
     {
         using UserClass5_1 = add_properties_ordered<
             name_type1,
-            UserPropertyAdapter<int>::type,
-            UserPropertyAdapter<float>::type>;
+            UserPropertyAdapter<int>::once,
+            UserPropertyAdapter<float>::once>;
         UserClass5_1 type1{Name{}, value_i_1, value_f_1};
         std::cout << "default traits::accessType \n";
         decltype(auto) x = trait<float>::get(std::as_const(type1));
@@ -208,8 +208,8 @@ int main() {
         std::cout << "custom traits::accessType for one type\n";
         using UserClass5_2 = add_properties_ordered<
             name_type2,
-            UserPropertyAdapter<int>::type,
-            UserPropertyAdapter<float>::type>;
+            UserPropertyAdapter<int>::once,
+            UserPropertyAdapter<float>::once>;
         UserClass5_2 type2{Name{}, value_i_2, value_f_2};
         decltype(auto) x = trait<float>::get(std::as_const(type2));
         std::cout << x << '\n';
@@ -226,8 +226,8 @@ int main() {
         std::cout << "custom traits::accessType for all types\n";
         using UserClass5_3 = add_properties_ordered<
             name_type3,
-            UserPropertyAdapter<int>::type,
-            UserPropertyAdapter<float>::type>;
+            UserPropertyAdapter<int>::once,
+            UserPropertyAdapter<float>::once>;
         UserClass5_3 type3{Name{}, value_i_3, value_f_3};
         decltype(auto) x = trait<float>::get(std::as_const(type3));
         std::cout << x << '\n';
@@ -244,8 +244,8 @@ int main() {
         std::cout << "custom traits::accessType can be used both as consteval and normal\n";
         using UserClass5_3 = add_properties_ordered<
             name_type3,
-            UserPropertyAdapter<int>::type,
-            UserPropertyAdapter<float>::type>;
+            UserPropertyAdapter<int>::once,
+            UserPropertyAdapter<float>::once>;
         UserClass5_3 type3{Name{}, value_i_3, value_f_3};
 
         UserStrategy_<float, Default> userStrategy{};
