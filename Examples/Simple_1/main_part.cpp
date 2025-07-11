@@ -5,13 +5,13 @@
 struct base {};
 
 template <typename T>
-using int_property = UserPropertyAdapter<int>::type<T>;
+using int_property = UserPropertyAdapter<int>::once<T>;
 
 template <typename T>
-using CureValueType_property = UserPropertyAdapter<CureValueType>::type<T>;
+using CureValueType_property = UserPropertyAdapter<CureValueType>::once<T>;
 
 template <typename T>
-using EffectContainer_property = UserPropertyAdapter<EffectContainer>::type<T>;
+using EffectContainer_property = UserPropertyAdapter<EffectContainer>::once<T>;
 
 using CureHealthType = add_properties_ordered<
     base,

@@ -8,10 +8,10 @@
 #include "Usage/Types/Name/Name.hpp"
 
 template <typename TYPE>
-using Living = UserPropertyAdapter<Health>::template type<TYPE>;
+using Living = UserPropertyAdapter<Health>::template once<TYPE>;
 
 template <typename TYPE>
-using Naming = UserPropertyAdapter<Name>::template type<TYPE>;
+using Naming = UserPropertyAdapter<Name>::template once<TYPE>;
 
 template <typename T>
 using Living_impl = impl::UserProperty_<Health, T>;
@@ -29,7 +29,7 @@ using Living_impl = impl::Living_<T>;
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
 template <typename TYPE>
-using Integering = UserPropertyAdapter<int>::template type<TYPE>;
+using Integering = UserPropertyAdapter<int>::template once<TYPE>;
 
 using order_list = taged_list<
     Integering,

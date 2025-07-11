@@ -17,7 +17,7 @@ template <typename T>
 using Living_taged = AdvanceUserProperty<Health, struct tag_health>::type<T>;
 
 template <typename T>
-using Living_taged_once = AdvanceUserProperty<Health, struct tag_health>::order<T>;
+using Living_taged_once = AdvanceUserProperty<Health, struct tag_health>::once<T>;
 
 namespace With {
 [[maybe_unused]] constexpr auto MyHealth = user_property<::Health, struct tag_health>;

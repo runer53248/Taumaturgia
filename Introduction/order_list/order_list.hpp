@@ -17,11 +17,11 @@ using string_first = AdvanceUserProperty<std::string, struct first_string>;
 using string_second = AdvanceUserProperty<std::string, struct second_string>;
 
 using order_list = taged_list<
-    double_first::order,
-    double_second::order,
-    int_first::order,
-    int_second_tag::order,
-    int_third::order,
-    just_float::type,
-    string_first::order,
-    string_second::order>;
+    double_first::once,
+    double_second::once,
+    int_first::once,
+    int_second_tag::once,
+    int_third::once,
+    just_float::once,
+    string_first::once,
+    string_second::once>;

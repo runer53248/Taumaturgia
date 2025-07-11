@@ -12,19 +12,19 @@
 #include "Usage/Types/WearContainer/WearContainer.hpp"
 
 template <typename TYPE>
-using Living = UserPropertyAdapter<Health>::template type<TYPE>;
+using Living = UserPropertyAdapter<Health>::template once<TYPE>;
 template <typename TYPE>
-using Wearing = UserPropertyAdapter<WearContainer>::template type<TYPE>;
+using Wearing = UserPropertyAdapter<WearContainer>::template once<TYPE>;
 template <typename TYPE, typename... Tags>
-using Damaging = UserPropertyAdapter<Damage, Tags...>::template type<TYPE>;
+using Damaging = UserPropertyAdapter<Damage, Tags...>::template once<TYPE>;
 template <typename TYPE>
-using Protecting = UserPropertyAdapter<Protection>::template type<TYPE>;
+using Protecting = UserPropertyAdapter<Protection>::template once<TYPE>;
 template <typename TYPE>
-using Healing = UserPropertyAdapter<CureHealth>::template type<TYPE>;
+using Healing = UserPropertyAdapter<CureHealth>::template once<TYPE>;
 template <typename TYPE>
-using Restoring = UserPropertyAdapter<EffectTypeContainer>::template type<TYPE>;
+using Restoring = UserPropertyAdapter<EffectTypeContainer>::template once<TYPE>;
 template <typename TYPE>
-using Naming = UserPropertyAdapter<Name>::template type<TYPE>;
+using Naming = UserPropertyAdapter<Name>::template once<TYPE>;
 
 template <typename T>
 using Living_impl = impl::UserProperty_<Health, T>;

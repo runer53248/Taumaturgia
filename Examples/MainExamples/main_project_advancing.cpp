@@ -4,10 +4,10 @@
 struct Base {};
 
 template <typename T>
-using Integering = UserPropertyAdapter<int>::template type<T>;
+using Integering = UserPropertyAdapter<int>::template once<T>;
 
 namespace With {
-[[maybe_unused]] constexpr Property<UserPropertyAdapter<int>::template type> Integer{};
+[[maybe_unused]] constexpr Property<UserPropertyAdapter<int>::template once> Integer{};
 }  // namespace With
 
 int main() {

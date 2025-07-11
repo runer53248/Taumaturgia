@@ -101,7 +101,7 @@ int main() {
             ;
         static_assert(std::is_same_v<
                       decltype(create_type_simple00)::result_type,
-                      UserPropertyAdapter<float>::type<
+                      UserPropertyAdapter<float>::once<
                           Damaging<Living<Naming<Simple00>>>>>);
     }
 

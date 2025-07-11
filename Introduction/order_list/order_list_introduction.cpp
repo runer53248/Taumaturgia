@@ -18,11 +18,11 @@ int main() {
         Base{}                                                //
         | With::user_property<int, struct second_int>         //* 6  : not in list
         | Property<int_second_tag::type>{}                    //  1  :
-        | Property<int_second_tag::order>{}                   //  1  :
-        | Property<int_third::order>{}                        //  2  :
-        | Property<int_first::order>{}                        //  0  :
+        | Property<int_second_tag::once>{}                    //  1  :
+        | Property<int_third::once>{}                         //  2  :
+        | Property<int_first::once>{}                         //  0  :
         | With::user_property<int, struct second_int>         //* 6  : not in list
-        | Property<just_float::type>{}                        //  3  :
+        | Property<just_float::once>{}                        //  3  :
         | Property<string_second::type>{}                     //  5  :
         | Property<string_first::type>{}                      //  4  :
         | With::user_property_once<bool, struct first_bool>   //* 7  : not in list
@@ -31,7 +31,7 @@ int main() {
         | With::user_property<char, struct second_char>       //* 10 : not in list
         | With::user_property<float>                          //  3  :
         | Property<string_first::type>{}                      //  4  :
-        | Property<int_third::order>{}                        //  2  :
+        | Property<int_third::once>{}                         //  2  :
         | With::Damage                                        //* 11 : not in list
         | Create;
 
@@ -89,10 +89,10 @@ int main() {
     using Type2 = add_properties_ordered<Base,
                                          int_second_tag::type,
                                          int_third::type,
-                                         just_float::type,
+                                         just_float::once,
                                          int_first::type>;
     using Type3 = add_properties_ordered<Base,
-                                         just_float::type,
+                                         just_float::once,
                                          int_third::type,
                                          int_second_tag::type>;
 
@@ -106,14 +106,14 @@ int main() {
                                                         int_third::type>>()
               << '\n';
 
-    static_assert(Property<int_first::type>::value == Property<int_first::order>::value);
-    static_assert(Property<int_second_tag::type>::value == Property<int_second_tag::order>::value);
-    static_assert(Property<int_third::type>::value == Property<int_third::order>::value);
+    static_assert(Property<int_first::type>::value == Property<int_first::once>::value);
+    static_assert(Property<int_second_tag::type>::value == Property<int_second_tag::once>::value);
+    static_assert(Property<int_third::type>::value == Property<int_third::once>::value);
 
     std::cout << Property<int_first::type>::value << '\n';
     std::cout << Property<int_second_tag::type>::value << '\n';
     std::cout << Property<int_third::type>::value << '\n';
-    std::cout << Property<just_float::type>::value << '\n';
+    std::cout << Property<just_float::once>::value << '\n';
     std::cout << '\n';
 
     Type2 t2{};

@@ -10,9 +10,9 @@ using type_3 = bool;
 using TestType = add_properties_ordered<
     MyType,
     //
-    UserPropertyAdapter<type_1>::type,  // not on order_list - last on c-tor arguments list
-    UserPropertyAdapter<type_2>::type,    // not on order_list - always apply to MyType as most inner (before Naming !!!)
-    UserPropertyAdapter<type_3>::type,
+    UserPropertyAdapter<type_1>::once,  // not on order_list - last on c-tor arguments list
+    UserPropertyAdapter<type_2>::once,    // not on order_list - always apply to MyType as most inner (before Naming !!!)
+    UserPropertyAdapter<type_3>::once,
     // below are in order_list order
     Living,
     Wearing,
@@ -44,21 +44,21 @@ static_assert(Property<Damaging>::value < Property<Protecting>::value);
 static_assert(Property<Protecting>::value < Property<Healing>::value);
 static_assert(Property<Healing>::value < Property<Restoring>::value);
 static_assert(Property<Restoring>::value < Property<Naming>::value);
-static_assert(Property<Naming>::value < Property<UserPropertyAdapter<type_1>::type>::value);
-static_assert(Property<UserPropertyAdapter<type_1>::type>::value == Property<UserPropertyAdapter<type_2>::type>::value);
-static_assert(Property<UserPropertyAdapter<type_1>::type>::value == Property<UserPropertyAdapter<type_3>::type>::value);
+static_assert(Property<Naming>::value < Property<UserPropertyAdapter<type_1>::once>::value);
+static_assert(Property<UserPropertyAdapter<type_1>::once>::value == Property<UserPropertyAdapter<type_2>::once>::value);
+static_assert(Property<UserPropertyAdapter<type_1>::once>::value == Property<UserPropertyAdapter<type_3>::once>::value);
 
 using helpers::is_same_priority;
 
 static_assert(not is_same_priority<
-              Property<UserPropertyAdapter<type_1>::type>,
-              Property<UserPropertyAdapter<type_2>::type>>);
+              Property<UserPropertyAdapter<type_1>::once>,
+              Property<UserPropertyAdapter<type_2>::once>>);
 static_assert(not is_same_priority<
-              Property<UserPropertyAdapter<type_1>::type>,
-              Property<UserPropertyAdapter<type_3>::type>>);
+              Property<UserPropertyAdapter<type_1>::once>,
+              Property<UserPropertyAdapter<type_3>::once>>);
 static_assert(not is_same_priority<
-              Property<UserPropertyAdapter<type_2>::type>,
-              Property<UserPropertyAdapter<type_3>::type>>);
+              Property<UserPropertyAdapter<type_2>::once>,
+              Property<UserPropertyAdapter<type_3>::once>>);
 
 auto& operator<<(std::ostream& stream, const Name& name) {
     return stream << std::string(name);

@@ -183,12 +183,10 @@ int main() {
         static_assert(std::same_as<Attrib_updated, Attrib_updated3>);
         static_assert(std::same_as<Attrib_updated, Attrib_updated3b>);
 
-        using Attrib_updated4 = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght, other>::order>;  // * not introduce <Strenght, other>
+        using Attrib_updated4 = add_properties_ordered<Attrib, AdvanceUserProperty<Strenght, other>::once>;  // * not introduce <Strenght, other>
         using Attrib_updated5 = decltype(From::base<Attrib> | With::Strenght2_once)::result_type;             // * not introduce <Strenght, other>
 
         static_assert(std::same_as<Attrib_updated4, Attrib_updated5>);
-
-        // static_assert(std::same_as<Attrib_updated3, Attrib_updated5>);
 
         {
             // if base of Strenght is diffrent

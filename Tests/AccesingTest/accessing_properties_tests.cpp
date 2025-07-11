@@ -58,12 +58,12 @@ using MyLiving = AdvanceUserProperty<::Health, tag_health>::type<T>;
 template <typename T>
 using MyLiving2 = AdvanceUserProperty<::Health, tag_health2>::type<T>;
 template <typename T>
-using MyLiving_once = AdvanceUserProperty<::Health, tag_health>::order<T>;
+using MyLiving_once = AdvanceUserProperty<::Health, tag_health>::once<T>;
 
 template <typename T>
 using MyDamaging = AdvanceUserProperty<::Damage, tag_damage>::type<T>;
 template <typename T>
-using MyDamaging_once = AdvanceUserProperty<::Damage, tag_damage>::order<T>;
+using MyDamaging_once = AdvanceUserProperty<::Damage, tag_damage>::once<T>;
 
 namespace With {
 [[maybe_unused]] const auto MyHealth = user_property<::Health, struct tag_health>;
