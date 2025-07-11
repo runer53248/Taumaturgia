@@ -20,12 +20,12 @@ public:
                   P<P<tag, Tags...>, Tags...>,
                   P<tag, Tags...>>);  // is_property_forced
 
-    template <typename T>
-    using apply_order = std::conditional_t<
-        (trait_accessable<T, hold_type<T>> and  //
-         (is_getTypeTags_valid<T, hold_type<T>, Tags...>)),
-        T,
-        P<T, Tags...>>;
+    // template <typename T>
+    // using apply_order = std::conditional_t<
+    //     (trait_accessable<T, hold_type<T>> and  //
+    //      (is_getTypeTags_valid<T, hold_type<T>, Tags...>)),
+    //     T,
+    //     P<T, Tags...>>;
 };
 
 }  // namespace impl
@@ -56,14 +56,14 @@ template <template <typename> typename P>
 template <template <typename, typename> typename P, typename... Tags>
 [[maybe_unused]] constexpr Property<impl::ApplyTag<P, Tags...>::template apply> taged_property{};
 
-template <template <typename, typename> typename P, typename... Tags>
-[[maybe_unused]] constexpr Property<impl::ApplyTag<P, Tags...>::template apply_order> taged_property_once{};
+// template <template <typename, typename> typename P, typename... Tags>
+// [[maybe_unused]] constexpr Property<impl::ApplyTag<P, Tags...>::template apply_order> taged_property_once{};
 
 template <typename T, typename... Tags>
 [[maybe_unused]] constexpr Property<AdvanceUserProperty<T, Tags...>::template type> user_property{};
 
 template <typename T, typename... Tags>
-[[maybe_unused]] constexpr Property<AdvanceUserProperty<T, Tags...>::template order> user_property_once{};
+[[maybe_unused]] constexpr Property<AdvanceUserProperty<T, Tags...>::template once> user_property_once{};
 
 namespace impl {
 
@@ -95,10 +95,14 @@ namespace WithUnordered {
 
 template <template <typename> typename P>
 [[maybe_unused]] constexpr Property_unordered<P> property{};
-template <typename T, typename... Tags>
-[[maybe_unused]] constexpr Property_unordered<UserPropertyAdapter<T, Tags...>::template type> user_property{};
 
 template <template <typename, typename> typename P, typename... Tags>
 [[maybe_unused]] constexpr Property_unordered<impl::ApplyTag<P, Tags...>::template apply> taged_property{};
+
+template <typename T, typename... Tags>
+[[maybe_unused]] constexpr Property_unordered<AdvanceUserProperty<T, Tags...>::template type> user_property{};
+
+template <typename T, typename... Tags>
+[[maybe_unused]] constexpr Property_unordered<AdvanceUserProperty<T, Tags...>::template once> user_property_once{};
 
 };  // namespace WithUnordered
