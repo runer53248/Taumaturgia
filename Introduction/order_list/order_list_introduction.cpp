@@ -39,8 +39,19 @@ int main() {
 
     AccessInt::get<0>(type) = 100;
     AccessInt::get<1>(type) = 200;
-    std::cout << type.getType<int, 0>() << '\n';
-    std::cout << type.getType<int, 1>() << '\n';
+    AccessInt::get<2>(type) = 300;
+    AccessInt::get<3>(type) = 400;
+
+    std::cout << "getTypeTaged<int, first_int>           = " << type.getTypeTaged<int, first_int>() << '\n';
+    std::cout << "getTypeTaged<int, second_int, int_tag> = " << type.getTypeTaged<int, second_int, int_tag>() << '\n';
+    std::cout << "getTypeTaged<int, third_int>           = " << type.getTypeTaged<int, third_int>() << '\n';
+    std::cout << "getTypeTaged<int, second_int>          = " << type.getTypeTaged<int, second_int>() << '\n';
+    std::cout << '\n';
+
+    std::cout << "getType<int, 0>  = " << type.getType<int, 1>() << '\n';
+    std::cout << "getType<int, 1>  = " << type.getType<int, 1>() << '\n';
+    std::cout << "getType<int, 2>  = " << type.getType<int, 2>() << '\n';
+    std::cout << "getType<int, 3>  = " << type.getType<int, 3>() << '\n';
     std::cout << '\n';
 
     using Type = decltype(type);
@@ -71,6 +82,7 @@ int main() {
     std::cout << "char 1      " << type2.getType<char, 1>() << '\n';
     std::cout << "Damage      " << type2.getType<Damage>() << '\n';
     std::cout << '\n';
+
     std::cout << "trait<int>    " << trait<int>::get(type2) << '\n';
     std::cout << "trait<float>  " << trait<float>::get(type2) << '\n';
     std::cout << "trait<string> " << trait<std::string>::get(type2) << '\n';
@@ -79,54 +91,38 @@ int main() {
     std::cout << "trait<Damage> " << trait<Damage>::get(type2) << '\n';
     std::cout << '\n';
 
-    std::cout << "Type1 " << parse_type_name<decltype(type)>() << '\n';
-    std::cout << '\n';
+    {
+        static_assert(not helpers::impl::same_priority<
+                      Property<int_second_tag::type>,
+                      Property<int_third::type>>::value);
 
-    static_assert(not helpers::impl::same_priority<
-                  Property<int_second_tag::type>,
-                  Property<int_third::type>>::value);
+        static_assert(Property<int_first::type>::value == Property<int_first::once>::value);
+        static_assert(Property<int_second_tag::type>::value == Property<int_second_tag::once>::value);
+        static_assert(Property<int_third::type>::value == Property<int_third::once>::value);
 
-    using Type2 = add_properties_ordered<Base,
-                                         int_second_tag::type,
-                                         int_third::type,
-                                         just_float::once,
-                                         int_first::type>;
-    using Type3 = add_properties_ordered<Base,
-                                         just_float::once,
-                                         int_third::type,
-                                         int_second_tag::type>;
+        std::cout << "priority of int_first::type      = " << Property<int_first::type>::value << '\n';
+        std::cout << "priority of int_second_tag::type = " << Property<int_second_tag::type>::value << '\n';
+        std::cout << "priority of int_third::type      = " << Property<int_third::type>::value << '\n';
+        std::cout << "priority of just_float::once     = " << Property<just_float::once>::value << '\n';
+        std::cout << '\n';
 
-    std::cout << "Type2 " << parse_type_name<Type2>() << '\n';
-    std::cout << "Type3 " << parse_type_name<Type3>() << '\n';
-    std::cout << '\n';
+        using Type2 = add_properties_ordered<Base,
+                                             int_second_tag::type,
+                                             int_third::type,
+                                             just_float::once,
+                                             int_first::type>;
+        using Type3 = add_properties_ordered<Base,
+                                             just_float::once,
+                                             int_third::type,
+                                             int_second_tag::type>;
 
-    std::cout << "add_properties_ordered<Base, int_second_tag, int_third> "
-              << parse_type_name<add_properties_ordered<Base,
-                                                        int_second_tag::type,
-                                                        int_third::type>>()
-              << '\n';
+        using Type4 = add_properties_ordered<Base,
+                                             int_second_tag::type,
+                                             int_third::type>;
 
-    static_assert(Property<int_first::type>::value == Property<int_first::once>::value);
-    static_assert(Property<int_second_tag::type>::value == Property<int_second_tag::once>::value);
-    static_assert(Property<int_third::type>::value == Property<int_third::once>::value);
-
-    std::cout << Property<int_first::type>::value << '\n';
-    std::cout << Property<int_second_tag::type>::value << '\n';
-    std::cout << Property<int_third::type>::value << '\n';
-    std::cout << Property<just_float::once>::value << '\n';
-    std::cout << '\n';
-
-    Type2 t2{};
-
-    constexpr int int_value_0 = 100;
-    constexpr int int_value_1 = 200;
-    constexpr int int_value_2 = 300;
-
-    t2.getType<int>() = int_value_0;
-    t2.getType<int, 1>() = int_value_1;
-    t2.getType<int, 2>() = int_value_2;
-
-    std::cout << (t2.getType<int>() == int_value_0) << '\n';
-    std::cout << (t2.getType<int, 1>() == int_value_1) << '\n';
-    std::cout << (t2.getType<int, 2>() == int_value_2) << '\n';
+        std::cout << "Type2 " << parse_type_name<Type2>() << '\n';
+        std::cout << "Type3 " << parse_type_name<Type3>() << '\n';
+        std::cout << "Type4 " << parse_type_name<Type4>() << '\n';
+        std::cout << '\n';
+    }
 }
