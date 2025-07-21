@@ -10,6 +10,9 @@ add_executable(3_order_list_introduction_${addons}
 add_executable(3_2_order_list_introduction_${addons}
     order_list/order_list_introduction_2.cpp
 )
+add_executable(3_3_order_list_introduction_${addons}
+    order_list/order_list_introduction_3.cpp
+)
 add_executable(4_tags_introduction_${addons}
     tags/tags_introduction.cpp
 )
