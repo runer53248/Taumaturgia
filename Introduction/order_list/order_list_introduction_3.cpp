@@ -18,77 +18,84 @@ int main() {
         std::cout << "- *********** " << '\n';
         std::cout << "decltype(1) " << parse_type_name<add_properties<Base, Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>>>() << '\n';
         std::cout << "decltype(2) " << parse_type_name<add_properties<Base, Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>>>() << '\n';
-        std::cout << "decltype(3) " << parse_type_name<add_properties<Base, Property_unordered<AdvanceUserProperty<Damage, struct Damage_first>::template type>>>() << '\n';
+        std::cout << "decltype(3) " << parse_type_name<add_properties<Base, Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template apply>>>() << '\n';
         std::cout << "- *********** " << '\n'
                   << '\n';
     }
 
     {
-        using test_type1 = add_properties<Base,
-                                          Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>,
-                                          Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
-                                          Property_unordered<Damaging_impl>>;  // Damaging_impl
-        using test_type2 = add_properties<Base,
-                                          Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>,
-                                          Property_unordered<Damaging_impl>,  // Damaging_impl
-                                          Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>>;
+        using test_type1a = add_properties<Base,
+                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>,
+                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
+                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
+                                           Property_unordered<Damaging_impl>>;
+        using test_type1b = add_properties<Base,
+                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template apply>,
+                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
+                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
+                                           Property_unordered<Damaging_impl>>;
 
-        using test_type3 = add_properties<Base,
-                                          Property_unordered<Damaging_impl>,  // Damaging_impl
-                                          Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
-                                          Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>>;
-        using test_type4 = add_properties<Base,
-                                          Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
-                                          Property_unordered<Damaging_impl>,  // Damaging_impl
-                                          Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>>;
+        using test_type2a = add_properties<Base,
+                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>,
+                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
+                                           Property_unordered<Damaging_impl>,
+                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>>;
+        using test_type2b = add_properties<Base,
+                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template apply>,
+                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
+                                           Property_unordered<Damaging_impl>,
+                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>>;
 
-        std::cout << "1 a ********************************* " << '\n'
+        using test_type3a = add_properties<Base,
+                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
+                                           Property_unordered<Damaging_impl>,
+                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
+                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>>;
+        using test_type3b = add_properties<Base,
+                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
+                                           Property_unordered<Damaging_impl>,
+                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
+                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template apply>>;
+
+        using test_type4a = add_properties<Base,
+                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
+                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
+                                           Property_unordered<Damaging_impl>,
+                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>>;
+        using test_type4b = add_properties<Base,
+                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
+                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
+                                           Property_unordered<Damaging_impl>,
+                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template apply>>;
+
+        std::cout << "1 ab ********************************* " << '\n'
                   << '\n';
 
         std::cout << "is duplicate taged Damage_first: " <<                                             //
             (Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>{}   //
              == Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>{})  // ! later is not forced
+                  << '\n';
+        // std::cout << "is duplicate taged Damage_first: " <<                                             //
+        //     (Property_unordered<impl::ApplyTag<Damaging, struct Damage_first>::template apply>{}        // ApplyTag required forced version
+        //      == Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>{})  // ? both are not forced
+        //           << '\n';
+        std::cout << "is other duplicate taged Damage_first: " <<                                        //
+            (Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>{}    //
+             == Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template apply>{})  // ? both are forced
                   << '\n'
                   << '\n';
-
-        std::cout << "decltype(type1) " << parse_type_name<test_type1>() << '\n';
-        std::cout << "decltype(type2) " << parse_type_name<test_type2>() << '\n';
-        std::cout << "decltype(type3) " << parse_type_name<test_type3>() << '\n';
-        std::cout << "decltype(type4) " << parse_type_name<test_type4>() << '\n';
-    }
-
-    {
-        using test_type1 = add_properties<Base,
-                                          Property_unordered<AdvanceUserProperty<Damage, struct Damage_first>::template type>,
-                                          Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
-                                          Property_unordered<Damaging_impl>>;  // Damaging_impl
-        using test_type2 = add_properties<Base,
-                                          Property_unordered<AdvanceUserProperty<Damage, struct Damage_first>::template type>,
-                                          Property_unordered<Damaging_impl>,  // Damaging_impl
-                                          Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>>;
-
-        using test_type3 = add_properties<Base,
-                                          Property_unordered<Damaging_impl>,  // Damaging_impl
-                                          Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
-                                          Property_unordered<AdvanceUserProperty<Damage, struct Damage_first>::template type>>;
-        using test_type4 = add_properties<Base,
-                                          Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
-                                          Property_unordered<Damaging_impl>,  // Damaging_impl
-                                          Property_unordered<AdvanceUserProperty<Damage, struct Damage_first>::template type>>;
-
-        std::cout << "1 b ********************************* " << '\n'
-                  << '\n';
-
-        std::cout << "is other duplicate taged Damage_first: " <<                                       //
-            (Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>{}   //
-             == Property_unordered<AdvanceUserProperty<Damage, struct Damage_first>::template type>{})  // ? both are forced
-                  << '\n'
-                  << '\n';
-
-        std::cout << "decltype(type1) " << parse_type_name<test_type1>() << '\n';
-        std::cout << "decltype(type2) " << parse_type_name<test_type2>() << '\n';
-        std::cout << "decltype(type3) " << parse_type_name<test_type3>() << '\n';
-        std::cout << "decltype(type4) " << parse_type_name<test_type4>() << '\n';
+        static_assert(std::same_as<test_type1a, test_type1b>);
+        std::cout << "decltype(type1) " << parse_type_name<test_type1a>() << '\n';
+        std::cout << "******************* " << '\n';
+        static_assert(std::same_as<test_type2a, test_type2b>);
+        std::cout << "decltype(type2) " << parse_type_name<test_type2a>() << '\n';
+        std::cout << "******************* " << '\n';
+        static_assert(std::same_as<test_type3a, test_type3b>);
+        std::cout << "decltype(type3) " << parse_type_name<test_type3a>() << '\n';
+        std::cout << "******************* " << '\n';
+        static_assert(std::same_as<test_type4a, test_type4b>);
+        std::cout << "decltype(type4) " << parse_type_name<test_type4a>() << '\n';
+        std::cout << "******************* " << '\n';
     }
 
     {
@@ -172,11 +179,11 @@ int main() {
             | WithUnordered::user_property<float, float, int>                    // 4  : float
             | WithUnordered::Damage                                              // 5  : Damage / impl::Damaging_
             | WithUnordered::user_property<int>                                  // 6  : int
-            | WithUnordered::user_property<int, struct first_int>                //*7  : int - (aka. int_first::type)
-            | WithUnordered::user_property<std::string, struct first_string>     //*8  : string - (aka. string_first::type)
-            | WithUnordered::user_property<std::string, struct second_string>    //*9  : string - (aka. string_second::type)
-            | WithUnordered::user_property<double, struct second_double>         //*10 : double - (aka. double_second::type)
-            | WithUnordered::user_property<double, struct first_double>          //*11 : double - (aka. double_first::type)
+            | WithUnordered::user_property<int, struct first_int>                //*7  : int - (aka. int_first::apply)
+            | WithUnordered::user_property<std::string, struct first_string>     //*8  : string - (aka. string_first::apply)
+            | WithUnordered::user_property<std::string, struct second_string>    //*9  : string - (aka. string_second::apply)
+            | WithUnordered::user_property<double, struct second_double>         //*10 : double - (aka. double_second::apply)
+            | WithUnordered::user_property<double, struct first_double>          //*11 : double - (aka. double_first::apply)
             | WithUnordered::user_property<Damage, struct Damage_first>          // 12 : Damage added
             | WithUnordered::taged_property<Damaging_impl, struct Damage_first>  // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
             | WithUnordered::taged_property<Damaging_impl>                       // !  : Damage / impl::Damaging_ - duplication
@@ -193,11 +200,11 @@ int main() {
             | WithUnordered::user_property<float, float, int>                    // 4  : float
             | WithUnordered::Damage                                              // 5  : Damage / impl::Damaging_
             | WithUnordered::user_property<int>                                  // 6 : int
-            | WithUnordered::user_property<int, struct first_int>                //*7  : int - (aka. int_first::type)
-            | WithUnordered::user_property<std::string, struct first_string>     //*8  : string - (aka. string_first::type)
-            | WithUnordered::user_property<std::string, struct second_string>    //*9  : string - (aka. string_second::type)
-            | WithUnordered::user_property<double, struct second_double>         //*10 : double - (aka. double_second::type)
-            | WithUnordered::user_property<double, struct first_double>          //*11 : double - (aka. double_first::type)
+            | WithUnordered::user_property<int, struct first_int>                //*7  : int - (aka. int_first::apply)
+            | WithUnordered::user_property<std::string, struct first_string>     //*8  : string - (aka. string_first::apply)
+            | WithUnordered::user_property<std::string, struct second_string>    //*9  : string - (aka. string_second::apply)
+            | WithUnordered::user_property<double, struct second_double>         //*10 : double - (aka. double_second::apply)
+            | WithUnordered::user_property<double, struct first_double>          //*11 : double - (aka. double_first::apply)
             | WithUnordered::user_property<Damage, struct Damage_first>          // 12 : Damage added
             | WithUnordered::taged_property<Damaging_impl, struct Damage_first>  // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
             | WithUnordered::taged_property<Damaging_impl>                       // !  : Damage / impl::Damaging_ - duplication
@@ -213,11 +220,11 @@ int main() {
             | WithUnordered::user_property<float, float, int>                    // 4  : float
             | WithUnordered::Damage                                              // 5  : Damage / impl::Damaging_
             | WithUnordered::user_property<int>                                  // 6  : int
-            | WithUnordered::user_property<int, struct first_int>                //*7  : int - (aka. int_first::type)
-            | WithUnordered::user_property<std::string, struct first_string>     //*8  : string - (aka. string_first::type)
-            | WithUnordered::user_property<std::string, struct second_string>    //*9  : string - (aka. string_second::type)
-            | WithUnordered::user_property<double, struct second_double>         //*10 : double - (aka. double_second::type)
-            | WithUnordered::user_property<double, struct first_double>          //*11 : double - (aka. double_first::type)
+            | WithUnordered::user_property<int, struct first_int>                //*7  : int - (aka. int_first::apply)
+            | WithUnordered::user_property<std::string, struct first_string>     //*8  : string - (aka. string_first::apply)
+            | WithUnordered::user_property<std::string, struct second_string>    //*9  : string - (aka. string_second::apply)
+            | WithUnordered::user_property<double, struct second_double>         //*10 : double - (aka. double_second::apply)
+            | WithUnordered::user_property<double, struct first_double>          //*11 : double - (aka. double_first::apply)
             | WithUnordered::user_property<Damage, struct Damage_first>          // 12 : Damage added
             | WithUnordered::taged_property<Damaging_impl, struct Damage_first>  // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
             | WithUnordered::taged_property<Damaging_impl>                       // !  : Damage / impl::Damaging_ - duplication
