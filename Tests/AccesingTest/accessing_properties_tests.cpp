@@ -54,16 +54,16 @@ public:
 // MARK: properties
 
 template <typename T>
-using MyLiving = AdvanceUserProperty<::Health, tag_health>::type<T>;
+using MyLiving = UserPropertyAdapter<::Health, tag_health>::apply<T>;
 template <typename T>
-using MyLiving2 = AdvanceUserProperty<::Health, tag_health2>::type<T>;
+using MyLiving2 = UserPropertyAdapter<::Health, tag_health2>::apply<T>;
 template <typename T>
-using MyLiving_once = AdvanceUserProperty<::Health, tag_health>::once<T>;
+using MyLiving_once = UserPropertyAdapter<::Health, tag_health>::once<T>;
 
 template <typename T>
-using MyDamaging = AdvanceUserProperty<::Damage, tag_damage>::type<T>;
+using MyDamaging = UserPropertyAdapter<::Damage, tag_damage>::apply<T>;
 template <typename T>
-using MyDamaging_once = AdvanceUserProperty<::Damage, tag_damage>::once<T>;
+using MyDamaging_once = UserPropertyAdapter<::Damage, tag_damage>::once<T>;
 
 namespace With {
 [[maybe_unused]] const auto MyHealth = user_property<::Health, struct tag_health>;

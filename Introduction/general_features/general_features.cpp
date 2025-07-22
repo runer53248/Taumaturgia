@@ -35,9 +35,9 @@ int main() {
     static_assert(trait_accessable<Type, Health>);
     static_assert(trait_accessable<Type, int>);
 
-    using property_health_x = Property<AdvanceUserProperty<Health, struct x>::type>;
-    using property_name_name_t = Property<AdvanceUserProperty<Name, name_t>::type>;
-    using property_int_int_t = Property<AdvanceUserProperty<int, int_t>::type>;
+    using property_health_x = Property<UserPropertyAdapter<Health, struct x>::apply>;
+    using property_name_name_t = Property<UserPropertyAdapter<Name, name_t>::apply>;
+    using property_int_int_t = Property<UserPropertyAdapter<int, int_t>::apply>;
     using property_name = Property<Naming_impl>;
     using property_protection = Property<Protecting_impl>;
 

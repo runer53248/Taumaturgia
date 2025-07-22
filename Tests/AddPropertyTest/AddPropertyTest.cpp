@@ -14,10 +14,10 @@ struct with_health {
 struct tag_health {};
 
 template <typename T>
-using Living_taged = AdvanceUserProperty<Health, struct tag_health>::type<T>;
+using Living_taged = UserPropertyAdapter<Health, struct tag_health>::apply<T>;
 
 template <typename T>
-using Living_taged_once = AdvanceUserProperty<Health, struct tag_health>::once<T>;
+using Living_taged_once = UserPropertyAdapter<Health, struct tag_health>::once<T>;
 
 namespace With {
 [[maybe_unused]] constexpr auto MyHealth = user_property<::Health, struct tag_health>;

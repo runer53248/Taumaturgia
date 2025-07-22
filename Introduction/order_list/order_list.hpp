@@ -2,19 +2,19 @@
 
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
-using double_first = AdvanceUserProperty<double, struct first_double>;
-using double_second = AdvanceUserProperty<double, struct second_double>;
+using double_first = UserPropertyAdapter<double, struct first_double>;
+using double_second = UserPropertyAdapter<double, struct second_double>;
 
-using int_first = AdvanceUserProperty<int, struct first_int>;
-using int_second_tag = AdvanceUserProperty<int, struct second_int, struct int_tag>;
-using int_third = AdvanceUserProperty<int, struct third_int>;
+using int_first = UserPropertyAdapter<int, struct first_int>;
+using int_second_tag = UserPropertyAdapter<int, struct second_int, struct int_tag>;
+using int_third = UserPropertyAdapter<int, struct third_int>;
 
 using just_float = UserPropertyAdapter<float>;
 
-using just_int = AdvanceUserProperty<int>;
+using just_int = UserPropertyAdapter<int>;
 
-using string_first = AdvanceUserProperty<std::string, struct first_string>;
-using string_second = AdvanceUserProperty<std::string, struct second_string>;
+using string_first = UserPropertyAdapter<std::string, struct first_string>;
+using string_second = UserPropertyAdapter<std::string, struct second_string>;
 
 using order_list = taged_list<
     double_first::once,

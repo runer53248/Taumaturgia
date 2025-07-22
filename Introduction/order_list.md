@@ -23,17 +23,17 @@ using order_list = taged_list<
 #define ORDER_LIST_PATH "PATH_TO_ORDER_LIST_FILE"
 ```
 
-# UserPropertyAdapter and AdvanceUserProperty
+# UserPropertyAdapter
 
 ```cpp
 using simple = UserPropertyAdapter<float>;
-using advanced = AdvanceUserProperty<int, struct first_int>;
+using advanced = UserPropertyAdapter<int, struct first_int>;
 
 // examples of user properties
 template <typename T>
-using simple_property = simple::template type<T>;
+using simple_property = simple::template apply<T>;
 template <typename T>
-using advanced_property = advanced::template type<T>;
+using advanced_property = advanced::template apply<T>;
 
 using order_list = taged_list<
     simple_property,
