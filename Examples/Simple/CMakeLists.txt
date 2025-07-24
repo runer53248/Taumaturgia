@@ -25,7 +25,7 @@ add_executable(main_fix_noOrder_Ap_${addons}
 target_compile_definitions(main_fix_noOrder_Ap_${addons} PUBLIC IGNORE_ORDER_LIST WITH_ADD_PROPERTIES)
 
 add_executable(main_token_${addons}
-    main_token.cpp
+    Token/main_token.cpp
 )
 
 add_subdirectory(Pipe)
