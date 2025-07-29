@@ -5,22 +5,20 @@
 #include "Introduction/parse_type_name.hpp"
 #include "Usage/Properties.hpp"
 
-#include "Base.hpp"
+#include "../Base.hpp"
 
 enum class As { given,
                 order_list };
 
-constexpr auto with_ignore_order_list = As::given;
+constexpr auto with_order_type = As::given;
 
 template <As order_type, typename T, template <typename...> typename... properties>
 using add_properties_type = std::conditional_t<
-    order_type == As::given,
-    add_properties_unordered<T, properties...>,
-    add_properties_ordered<T, properties...>>;
+    order_type == As::order_list,
+    add_properties_ordered<T, properties...>,
+    add_properties_unordered<T, properties...> >;
 
 int main() {
-    std::cout << '\n';
-
     [[maybe_unused]] int default_int{100};
     [[maybe_unused]] float default_float{3.14f};
     [[maybe_unused]] double default_double{20.20};
@@ -53,8 +51,8 @@ int main() {
             Naming>;
 
         // create a type
-        using Type_1 = p_list::apply_properties_to<Base, with_ignore_order_list == As::order_list>;
-        using Type_2 = p_list_2::apply_properties_to<Type_1, with_ignore_order_list == As::order_list>;
+        using Type_1 = p_list::apply_properties_to<Base, with_order_type == As::order_list>;
+        using Type_2 = p_list_2::apply_properties_to<Type_1, with_order_type == As::order_list>;
 
         static_assert(std::same_as<Type_1, Type_2>);
     }
@@ -83,7 +81,7 @@ int main() {
             Health{100, 100},
         };
 
-        std::cout << parse_type_name<Type_1>() << '\n';
+        std::cout << parse_type_name<Type_1, float, double>() << '\n';
         print(type1);
     }
 
@@ -110,7 +108,7 @@ int main() {
             default_protection,
             default_name};
 
-        std::cout << parse_type_name<Type_1>() << '\n';
+        std::cout << parse_type_name<Type_1, float, double>() << '\n';
         print(type1);
     }
 }

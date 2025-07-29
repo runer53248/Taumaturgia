@@ -68,11 +68,11 @@ public:
         requires(not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<Args>(args)...} {}
 
-    // MARK: Token C-tors
+    // MARK: Unordered C-tors
 
     template <typename... Args>
         requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
-    constexpr UserProperty_(const Token&, Args&&... args)
+    constexpr UserProperty_(const Unordered&, Args&&... args)
         : T{} {
         constexpr bool have_all_types_from_args = (trait_accessable<UserProperty_<TYPE, T, Tags...>, std::remove_cvref_t<Args>> and ...);
         if constexpr (have_all_types_from_args) {

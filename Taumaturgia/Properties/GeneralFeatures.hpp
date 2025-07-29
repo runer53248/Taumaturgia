@@ -60,11 +60,11 @@ public:
     constexpr explicit GeneralFeatures_(TT&& t)
         : T{std::forward<TT>(t)} {}
 
-    // MARK: Token C-tors
+    // MARK: Unordered C-tors
 
     template <typename... Args>
         requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
-    constexpr GeneralFeatures_(const Token&, Args&&... args)
+    constexpr GeneralFeatures_(const Unordered&, Args&&... args)
         : T{} {
         ((trait<std::remove_cvref_t<Args>>::get(*this) = std::forward<Args>(args)), ...);
     }

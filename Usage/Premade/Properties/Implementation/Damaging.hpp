@@ -45,11 +45,11 @@ public:
         static_assert(constructible_from_args<hold_type, INFO...>, "Can't create Damage from given tuple.");
     }
 
-    // MARK: Token C-tors
+    // MARK: Unordered C-tors
 
     template <typename... Args>
         requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
-    DamagingSimple_(const Token&, Args&&... args)
+    DamagingSimple_(const Unordered&, Args&&... args)
         : T{} {
         auto fn = []<typename A>(auto* th, [[maybe_unused]] A& arg) {
             if constexpr (std::same_as<std::remove_cvref_t<A>, hold_type>) {
