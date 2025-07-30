@@ -216,6 +216,10 @@ auto type_name_result(std::string text = name<T>()) {
         result.base += std::to_string(prop_index++);
         result.base += "  : EffectContainer\n";
     }
+    if constexpr (trait_accessable<base_type, EffectTypeContainer> or traits::helpers::get_type_taged_accessable<base_type, EffectTypeContainer>) {
+        result.base += std::to_string(prop_index++);
+        result.base += "  : EffectTypeContainer\n";
+    }
     if constexpr (trait_accessable<base_type, WearContainer> or traits::helpers::get_type_taged_accessable<base_type, WearContainer>) {
         result.base += std::to_string(prop_index++);
         result.base += "  : WearContainer\n";
