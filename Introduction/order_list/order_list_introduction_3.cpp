@@ -35,66 +35,27 @@ int main() {
                                            Property_unordered<UserPropertyAdapter<Damage>::template apply>,
                                            Property_unordered<Damaging_impl>>;
 
-        using test_type2a = add_properties<Base,
-                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>,
-                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
-                                           Property_unordered<Damaging_impl>,
-                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>>;
-        using test_type2b = add_properties<Base,
-                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template apply>,
-                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
-                                           Property_unordered<Damaging_impl>,
-                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>>;
-
-        using test_type3a = add_properties<Base,
-                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
-                                           Property_unordered<Damaging_impl>,
-                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
-                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>>;
-        using test_type3b = add_properties<Base,
-                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
-                                           Property_unordered<Damaging_impl>,
-                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
-                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template apply>>;
-
-        using test_type4a = add_properties<Base,
-                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
-                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
-                                           Property_unordered<Damaging_impl>,
-                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>>;
-        using test_type4b = add_properties<Base,
-                                           Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>,
-                                           Property_unordered<UserPropertyAdapter<Damage>::template apply>,
-                                           Property_unordered<Damaging_impl>,
-                                           Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template apply>>;
-
         std::cout << "1 ab ********************************* " << '\n'
                   << '\n';
 
-        std::cout << "is duplicate taged Damage_first: " <<                                             //
-            (Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>{}   //
-             == Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>{})  // ! later is not forced
+        std::cout << "ApplyTag<Damaging_impl, Damage_first>::apply == UserPropertyAdapter<Damage, Damage_first>::once: "
+                  << std::boolalpha
+                  << (Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>{}   //
+                      == Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>{})  // ! later is not forced
                   << '\n';
-        // std::cout << "is duplicate taged Damage_first: " <<                                             //
-        //     (Property_unordered<impl::ApplyTag<Damaging, struct Damage_first>::template apply>{}        // ApplyTag required forced version
-        //      == Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>{})  // ? both are not forced
+        // std::cout << "is duplicate taged Damage_first: "                                                         //
+        //           << (Property_unordered<impl::ApplyTag<Damaging, struct Damage_first>::template apply>{}        // ApplyTag required forced version
+        //               == Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template once>{})  // ? both are not forced
         //           << '\n';
-        std::cout << "is other duplicate taged Damage_first: " <<                                        //
-            (Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>{}    //
-             == Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template apply>{})  // ? both are forced
+        std::cout << "ApplyTag<Damaging_impl, Damage_first>::apply == UserPropertyAdapter<Damage, Damage_first>::apply: "
+                  << std::boolalpha
+                  << (Property_unordered<impl::ApplyTag<Damaging_impl, struct Damage_first>::template apply>{}    //
+                      == Property_unordered<UserPropertyAdapter<Damage, struct Damage_first>::template apply>{})  // ? both are forced
                   << '\n'
                   << '\n';
+
         static_assert(std::same_as<test_type1a, test_type1b>);
         std::cout << "decltype(type1) " << parse_type_name<test_type1a>() << '\n';
-        std::cout << "******************* " << '\n';
-        static_assert(std::same_as<test_type2a, test_type2b>);
-        std::cout << "decltype(type2) " << parse_type_name<test_type2a>() << '\n';
-        std::cout << "******************* " << '\n';
-        static_assert(std::same_as<test_type3a, test_type3b>);
-        std::cout << "decltype(type3) " << parse_type_name<test_type3a>() << '\n';
-        std::cout << "******************* " << '\n';
-        static_assert(std::same_as<test_type4a, test_type4b>);
-        std::cout << "decltype(type4) " << parse_type_name<test_type4a>() << '\n';
         std::cout << "******************* " << '\n';
     }
 
@@ -103,33 +64,26 @@ int main() {
             Base{}                                                               //
             | WithUnordered::Damage                                              //
             | WithUnordered::taged_property<Damaging_impl, struct Damage_first>  //
-            | WithUnordered::taged_property<Damaging_impl>                       //
+            | WithUnordered::taged_property<Damaging_impl>                       //? always duplicate
             | Create;
         auto type_b =
             Base{}                                                               //
             | WithUnordered::taged_property<Damaging_impl>                       //
             | WithUnordered::taged_property<Damaging_impl, struct Damage_first>  //
-            | WithUnordered::Damage                                              //
-            | Create;
-        auto type_c =
-            Base{}                                                               //
-            | WithUnordered::Damage                                              //
-            | WithUnordered::taged_property<Damaging_impl>                       //
-            | WithUnordered::taged_property<Damaging_impl, struct Damage_first>  //
+            | WithUnordered::Damage                                              //? always duplicate
             | Create;
 
         std::cout << "2 ********************************* " << '\n'
                   << '\n';
 
-        std::cout << "is duplicate added: " <<  //
-            (WithUnordered::Damage              //
-             == WithUnordered::taged_property<Damaging_impl>)
+        std::cout << "WithUnordered::Damage == WithUnordered::taged_property<Damaging_impl>: "  //
+                  << std::boolalpha
+                  << (WithUnordered::Damage == WithUnordered::taged_property<Damaging_impl>)
                   << '\n'
                   << '\n';
 
         std::cout << "decltype(type_a) " << parse_type_name<decltype(type_a)>() << '\n';
         std::cout << "decltype(type_b) " << parse_type_name<decltype(type_b)>() << '\n';
-        std::cout << "decltype(type_c) " << parse_type_name<decltype(type_c)>() << '\n';
     }
 
     {
@@ -138,35 +92,25 @@ int main() {
             | WithUnordered::Damage                                              //
             | WithUnordered::user_property<Damage, struct Damage_first>          //
             | WithUnordered::taged_property<Damaging_impl, struct Damage_first>  //? sometimes duplicate
-            | WithUnordered::taged_property<Damaging_impl>                       //! duplicate
             | Create;
         auto type_b =
             Base{}                                                               //
             | WithUnordered::taged_property<Damaging_impl>                       //
-            | WithUnordered::user_property<Damage, struct Damage_first>          //
-            | WithUnordered::taged_property<Damaging_impl, struct Damage_first>  //? sometimes duplicate
-            | WithUnordered::Damage                                              //! duplicate
-            | Create;
-        auto type_c =
-            Base{}                                                               //
-            | WithUnordered::Damage                                              //
             | WithUnordered::taged_property<Damaging_impl, struct Damage_first>  //
             | WithUnordered::user_property<Damage, struct Damage_first>          //? sometimes duplicate
-            | WithUnordered::taged_property<Damaging_impl>                       //! duplicate
             | Create;
 
         std::cout << "3 ********************************* " << '\n'
                   << '\n';
 
-        std::cout << "is duplicate taged Damage_first: " <<                     //
-            (WithUnordered::taged_property<Damaging_impl, struct Damage_first>  //
-             == WithUnordered::user_property<Damage, struct Damage_first>)
+        std::cout << "WithUnordered::taged_property<Damaging_impl, Damage_first> == WithUnordered::user_property<Damage, Damage_first>: "  //
+                  << std::boolalpha
+                  << (WithUnordered::taged_property<Damaging_impl, struct Damage_first> == WithUnordered::user_property<Damage, struct Damage_first>)
                   << '\n'
                   << '\n';
 
         std::cout << "decltype(type_a) " << parse_type_name<decltype(type_a)>() << '\n';
         std::cout << "decltype(type_b) " << parse_type_name<decltype(type_b)>() << '\n';
-        std::cout << "decltype(type_c) " << parse_type_name<decltype(type_c)>() << '\n';
     }
 
     {
@@ -232,7 +176,7 @@ int main() {
         auto type3 = type3_creator();
 
         static_assert(std::same_as<decltype(type1), decltype(type2)>);
-        // static_assert(std::same_as<decltype(type1), decltype(type3)>);
+        static_assert(std::same_as<decltype(type1), decltype(type3)>);
 
         std::cout << "4 ********************************* " << '\n'
                   << '\n';
