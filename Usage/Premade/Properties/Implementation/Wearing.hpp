@@ -9,10 +9,10 @@
 
 namespace impl {
 
-template <typename T>
+template <typename T, typename... Tags>
 class WearingSimple_ : public T {
 public:
-    using property_data = PropertyData<WearingSimple_, T>;
+    using property_data = PropertyData<For<WearingSimple_, Tags...>::template type, T, Tags...>;
     using hold_type = WearContainer;
 
     WearingSimple_() = default;
@@ -100,7 +100,9 @@ public:
     }
 
 private:
-    hold_type armorWear_ = buildin_defaults<hold_type>::get();
+    hold_type armorWear_ = (boost::mp11::mp_empty<list<Tags...>>::value)
+                               ? buildin_defaults<hold_type>::get()
+                               : UserDefaultValue<hold_type, Tags...>::value();
 };
 
 }  // namespace impl

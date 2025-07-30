@@ -13,30 +13,30 @@
 
 template <typename TYPE>
 using Living = UserPropertyAdapter<Health>::template once<TYPE>;
-template <typename TYPE>
-using Wearing = UserPropertyAdapter<WearContainer>::template once<TYPE>;
+template <typename TYPE, typename... Tags>
+using Wearing = UserPropertyAdapter<WearContainer, Tags...>::template once<TYPE>;
 template <typename TYPE, typename... Tags>
 using Damaging = UserPropertyAdapter<Damage, Tags...>::template once<TYPE>;
 template <typename TYPE>
 using Protecting = UserPropertyAdapter<Protection>::template once<TYPE>;
 template <typename TYPE>
 using Healing = UserPropertyAdapter<CureHealth>::template once<TYPE>;
-template <typename TYPE>
-using Restoring = UserPropertyAdapter<EffectTypeContainer>::template once<TYPE>;
+template <typename TYPE, typename... Tags>
+using Restoring = UserPropertyAdapter<EffectTypeContainer, Tags...>::template once<TYPE>;
 template <typename TYPE>
 using Naming = UserPropertyAdapter<Name>::template once<TYPE>;
 
 template <typename T>
 using Living_impl = impl::UserProperty_<Health, T>;
-template <typename T>
-using Wearing_impl = impl::UserProperty_<WearContainer, T>;
+template <typename T, typename... Tags>
+using Wearing_impl = impl::UserProperty_<WearContainer, T, Tags...>;
 template <typename T, typename... Tags>
 using Damaging_impl = impl::UserProperty_<Damage, T, Tags...>;
 template <typename T>
 using Protecting_impl = impl::UserProperty_<Protection, T>;
 template <typename T>
 using Healing_impl = impl::UserProperty_<CureHealth, T>;
-template <typename T>
-using Restoring_impl = impl::UserProperty_<EffectTypeContainer, T>;
+template <typename T, typename... Tags>
+using Restoring_impl = impl::UserProperty_<EffectTypeContainer, T, Tags...>;
 template <typename T>
 using Naming_impl = impl::UserProperty_<Name, T>;

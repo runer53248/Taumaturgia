@@ -327,7 +327,7 @@ public:
     }
 
 private:
-    TYPE type_ = UserDefaultValue<TYPE, Tags...>::value();  // specialization for default values
+    hold_type type_ = UserDefaultValue<hold_type, Tags...>::value();  // specialization for default values
 };
 
 }  // namespace impl

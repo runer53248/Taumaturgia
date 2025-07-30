@@ -12,10 +12,10 @@ namespace impl {
 
 // MARK: RestoringSimple_
 
-template <typename T>
+template <typename T, typename... Tags>
 class RestoringSimple_ : public T {
 public:
-    using property_data = PropertyData<RestoringSimple_, T>;
+    using property_data = PropertyData<For<RestoringSimple_, Tags...>::template type, T, Tags...>;
     using hold_type = EffectTypeContainer;
 
     RestoringSimple_() = default;
@@ -107,7 +107,9 @@ public:
     }
 
 private:
-    hold_type restoreEffects_ = buildin_defaults<hold_type>::get();
+    hold_type restoreEffects_ = (boost::mp11::mp_empty<list<Tags...>>::value)
+                               ? buildin_defaults<hold_type>::get()
+                               : UserDefaultValue<hold_type, Tags...>::value();
 };
 
 }  // namespace impl

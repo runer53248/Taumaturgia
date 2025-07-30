@@ -5,11 +5,11 @@
 
 namespace impl {
 
-template <typename T>
-class Wearing_ : public Features_<WearingSimple_<T>> {
+template <typename T, typename... Tags>
+class Wearing_ : public Features_<WearingSimple_<T, Tags...>> {
 public:
-    using property_data = PropertyData<Wearing_, T>;
-    using child = Features_<WearingSimple_<T>>;
+    using property_data = PropertyData<For<Wearing_, Tags...>::template type, T, Tags...>;
+    using child = Features_<WearingSimple_<T, Tags...>>;
     using typename child::hold_type;
 
     using child::child;
@@ -20,7 +20,8 @@ public:
 namespace impl::Test {
 struct Wearing_Test {};
 static_assert(Wearingable<Wearing_<Wearing_Test>>);
+static_assert(Wearingable<Wearing_<tag>>);
 }  // namespace impl::Test
 
-template <typename T>
-using Wearing = apply_property<T, impl::Wearing_>;
+template <typename T, typename... Tags>
+using Wearing = apply_property<T, impl::Wearing_, Tags...>;

@@ -8,21 +8,12 @@
 
 namespace impl {
 
-template <typename T, typename... Tags>
-class DamagingSimple_;
-
-template <typename... Tags>
-struct DamagingFor {
-    template <typename TARGET>
-    using type = DamagingSimple_<TARGET, Tags...>;
-};
-
 // MARK: DamagingSimple_
 
 template <typename T, typename... Tags>
 class DamagingSimple_ : public T {
 public:
-    using property_data = PropertyData<DamagingFor<Tags...>::template type, T, Tags...>;
+    using property_data = PropertyData<For<DamagingSimple_, Tags...>::template type, T, Tags...>;
     using hold_type = Damage;
 
     // MARK: default C-tor
@@ -128,7 +119,9 @@ public:
     }
 
 private:
-    hold_type dmg_ = buildin_defaults<hold_type>::get();
+    hold_type dmg_ = (boost::mp11::mp_empty<list<Tags...>>::value)
+                         ? buildin_defaults<hold_type>::get()
+                         : UserDefaultValue<hold_type, Tags...>::value();
 };
 
 }  // namespace impl
