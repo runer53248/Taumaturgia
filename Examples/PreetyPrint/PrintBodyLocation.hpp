@@ -1,19 +1,20 @@
 #pragma once
 #include <iostream>
 #include "Usage/Enums/BodyLocation.hpp"
+#include "Color_print.hpp"
 
-constexpr const char* toString(BodyLocation location) noexcept {
+constexpr std::string toString(BodyLocation location) noexcept {
     switch (location) {
     case BodyLocation::Head:
-        return "\033[1;37mHead\033[0m";
+        return Color::White + "Head" + Color::Reset;
     case BodyLocation::Body:
-        return "\033[1;37mBody\033[0m";
+        return Color::White + "Body" + Color::Reset;
     case BodyLocation::Arms:
-        return "\033[1;37mArms\033[0m";
+        return Color::White + "Arms" + Color::Reset;
     case BodyLocation::Legs:
-        return "\033[1;37mLegs\033[0m";
+        return Color::White + "Legs" + Color::Reset;
     case BodyLocation::Internal:
-        return "\033[1;37mInternal\033[0m";
+        return Color::White + "Internal" + Color::Reset;
     case BodyLocation::ALL:
         return "ALL";
     default:

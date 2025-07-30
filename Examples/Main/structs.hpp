@@ -1,12 +1,6 @@
 #pragma once
-#include "Usage/Properties.hpp"
-
-struct Living_type {
-    Name name;
-    Health hp;
-};
-
 #include "Examples/structs.hpp"
+#include "Usage/Properties.hpp"
 
 using ArmorSet = add_properties_ordered<Type, Naming, Wearing>;
 
@@ -21,7 +15,7 @@ using restoring_potion = add_properties_ordered<Potion, Restoring>;
 using weapon_1 = add_properties_ordered<Weapon, Damaging>;
 using weapon_2 = Weapon;
 using weapon_3 = CustomWeapon;
-using weapon_4 = add_properties_ordered<CustomWeapon, Damaging>;   // CustomWeapon became Damagingable
+using weapon_4 = add_properties_ordered<CustomWeapon, Damaging>;  // CustomWeapon became Damagingable
 using weapon_5 = add_properties_ordered<DefaultWeapon, Damaging>;
 using weapon_6 = add_properties_ordered<Weapon, Living, Healing, Living, Healing>;
 using weapon_7 = add_properties_ordered<NoNameWeapon, Living, Healing, Living, Healing, Naming>;

@@ -1,15 +1,16 @@
 #pragma once
 #include <iostream>
+#include "Color_print.hpp"
 #include "Usage/Enums/DamageType.hpp"
 
-constexpr const char* toString(DamageType damageType) noexcept {
+constexpr std::string toString(DamageType damageType) noexcept {
     switch (damageType) {
     case DamageType::Physical:
-        return "\033[1;37mPhysical\033[0m";
+        return Color::White + "Physical" + Color::Reset;
     case DamageType::Magical:
-        return "\033[1;34mMagical\033[0m";
+        return Color::Yellow + "Magical" + Color::Reset;
     case DamageType::Divine:
-        return "\033[1;33mDivine\033[0m";
+        return Color::Blue + "Divine" + Color::Reset;
     default:
         return "Unknown";
     }

@@ -2,7 +2,6 @@
 #include "Examples/Main/Actions.hpp"
 #include "Examples/Main/FillBackpack.hpp"
 #include "Examples/Main/Print.hpp"
-#include "Taumaturgia/Properties/UserProperty.hpp"
 
 int main(int, [[maybe_unused]] char* argv[]) {
     // Redirect redirect{argv[0]};
@@ -14,10 +13,16 @@ int main(int, [[maybe_unused]] char* argv[]) {
 
     auto armorSet = ArmorSet{Name{"Body of Lidia"}};
 
-    trait<WearContainer>::get(armorSet).wearProtection(Protection{
-        ArmorClass{5, BodyLocation::Legs, {EffectType::Burn, EffectType::Freeze}}});
-    trait<WearContainer>::get(armorSet).wearProtection(Protection{
-        ArmorClass{3, BodyLocation::Arms, {EffectType::Burn, EffectType::Freeze}}});
+    decltype(auto) armor_set_container = trait<WearContainer>::get(armorSet);
+
+    armor_set_container.wearProtection(Protection{
+        ArmorClass{5,
+                   BodyLocation::Legs,
+                   {EffectType::Burn, EffectType::Freeze}}});
+    armor_set_container.wearProtection(Protection{
+        ArmorClass{3,
+                   BodyLocation::Arms,
+                   {EffectType::Burn, EffectType::Freeze}}});
 
     backpack.push_back(armorSet);
 

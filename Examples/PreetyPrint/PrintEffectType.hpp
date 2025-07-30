@@ -1,29 +1,30 @@
 #pragma once
 #include <iostream>
+#include "Color_print.hpp"
 #include "Usage/Enums/EffectType.hpp"
 
-constexpr const char* toString(EffectType effect) noexcept {
+constexpr std::string toString(EffectType effect) noexcept {
     switch (effect) {
     case EffectType::Infection:
-        return "\033[1;32mInfection\033[0m";
+        return Color::Green + "Infection" + Color::Reset;
     case EffectType::Bleed:
-        return "\033[1;31mBleed\033[0m";
+        return Color::Red + "Bleed" + Color::Reset;
     case EffectType::Burn:
-        return "\033[1;31mBurn\033[0m";
+        return Color::Red + "Burn" + Color::Reset;
     case EffectType::Sleep:
-        return "\033[1;34mSleep\033[0m";
+        return Color::Blue + "Sleep" + Color::Reset;
     case EffectType::Daze:
         return "Daze";
     case EffectType::Devour:
-        return "\033[1;32mDevour\033[0m";
+        return Color::Green + "Devour" + Color::Reset;
     case EffectType::Stun:
-        return "\033[1;37mStun\033[0m";
+        return Color::White + "Stun" + Color::Reset;
     case EffectType::Shock:
-        return "\033[1;33mShock\033[0m";
+        return Color::Yellow+ "Shock" + Color::Reset;
     case EffectType::None:
         return "None";
     case EffectType::Freeze:
-        return "\033[1;34mFreeze\033[0m";
+        return Color::Blue + "Freeze" + Color::Reset;
     case EffectType::Slow:
         return "Slow";
     case EffectType::Paralyze:
@@ -31,9 +32,9 @@ constexpr const char* toString(EffectType effect) noexcept {
     case EffectType::Dazzle:
         return "Dazzle";
     case EffectType::Poison:
-        return "\033[1;32mPoison\033[0m";
+        return Color::Green + "Poison" + Color::Reset;
     case EffectType::Contagion:
-        return "\033[1;32mContagion\033[0m";
+        return Color::Green + "Contagion" + Color::Reset;
     case EffectType::Smite:
         return "Smite";
     case EffectType::Petryfy:

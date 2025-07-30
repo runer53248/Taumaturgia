@@ -1,15 +1,16 @@
 #pragma once
 #include <iostream>
+#include "Color_print.hpp"
 #include "Usage/Enums/AliveStatus.hpp"
 
-constexpr const char* toString(AliveStatus status) noexcept {
+constexpr std::string toString(AliveStatus status) noexcept {
     switch (status) {
     case AliveStatus::Death:
-        return "\033[1;31mDeath\033[0m";
+        return Color::Red + "Death" + Color::Reset;
     case AliveStatus::Dying:
         return "Dying";
     case AliveStatus::Living:
-        return "\033[1;37mLiving\033[0m";
+        return Color::White + "Living" + Color::Reset;
     default:
         return "Unknown";
     }
