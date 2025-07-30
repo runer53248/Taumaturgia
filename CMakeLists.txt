@@ -38,8 +38,6 @@ add_compile_options(
 
 include_directories(${PROJECT_SOURCE_DIR})
 
-add_subdirectory(Examples/Simple_1)
-
 find_package(GTest REQUIRED)
 enable_testing()
 
