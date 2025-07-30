@@ -2,6 +2,8 @@
 #include "Examples/Main/Print.hpp"
 #include "Examples/Main/structs.hpp"
 
+#include "Introduction/parse_type_name.hpp"
+
 int main() {
     static_assert(Namingable<player_type>);
     static_assert(Livingable<player_type>);
@@ -54,6 +56,8 @@ int main() {
 
     decltype(auto) damage_a = trait<Damage>::get(weapon_a);  // reference
     decltype(auto) damage_b = trait<Damage>::get(weapon_b);  // const reference
+
+    std::cout << parse_type_name<player_type>() << '\n';
 
     static_assert(std::is_same_v<decltype(damage_a), Damage&>);
     static_assert(std::is_same_v<decltype(damage_b), const Damage&>);
