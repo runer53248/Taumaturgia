@@ -39,15 +39,39 @@ int main(int, [[maybe_unused]] char* argv[]) {
     defend(backpack, player);
     wear(backpack, player);
     enemy_defend(backpack, enemy);
+
+    std::cout << Color::Red << "\nUse sleep scroll on player //////////////////////////////\n"
+              << Color::Reset;
+    Object sleep_scroll = scroll_3(
+        Name{"SLEEP_SCROLL"},
+        Damage{
+            0,
+            Effect{EffectType::Sleep}});
+    sleep_scroll.doAction(Actions::Attack, &sleep_scroll, &player);
+    print_person(player);
+    std::cout << Color::Red << "//////////////////////////////\n\n"
+              << Color::Reset;
+
     restore(backpack, player);
     heal(backpack, player);
 
-    std::cout << "//////////////////////////////\n\n";
+    std::cout << Color::Red << "//////////////////////////////\n\n"
+              << Color::Reset;
 
-    std::cout << "print living items from backpack:\n";
+    std::cout << Color::Yellow << "print living items from backpack:\n"
+              << Color::Reset;
     for (auto item = backpack.begin(); item != backpack.end(); ++item) {
         if (item->hasStrategyFor(Properties::Health)) {
             print_person(*item);
+        }
+    }
+    std::cout << '\n';
+
+    std::cout << Color::Yellow << "print protecting items from backpack:\n"
+              << Color::Reset;
+    for (auto item = backpack.begin(); item != backpack.end(); ++item) {
+        if (item->hasStrategyFor(Properties::Protection)) {
+            print_object(*item);
         }
     }
     std::cout << '\n';

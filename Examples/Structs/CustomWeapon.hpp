@@ -6,7 +6,9 @@ struct WithDefaultWeaponVector {
     std::vector<DefaultWeapon> others{
         // will be used in AttackStrategy_<CustomWeaponBuild> / UserStrategy_<Damage, CustomWeaponBuild>
         DefaultWeapon{Name{"Light weapon"}, Damage{10}},
-        DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
+        DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical}},
+        DefaultWeapon{Name{"Flames"}, Damage{0, Effect{EffectType::Burn}}}
+    };
 };
 using CustomWeaponBuild = add_properties_ordered<
     WithDefaultWeaponVector,
@@ -17,7 +19,9 @@ struct CustomWeaponClass {  // is not Damagingable but still counts as AttackStr
     std::vector<DefaultWeapon> others{
         // will be used in AttackStrategy_<CustomWeaponClass> / UserStrategy_<Damage, CustomWeaponClass>
         DefaultWeapon{Name{"Light weapon"}, Damage{10}},
-        DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical, Effect{EffectType::Burn}}}};
+        DefaultWeapon{Name{"Medium weapon"}, Damage{20, DamageType::Magical}},
+        DefaultWeapon{Name{"Flames"}, Damage{0, Effect{EffectType::Burn}}}
+    };
 };
 
 #ifdef WITH_ADD_PROPERTIES
@@ -53,6 +57,7 @@ struct AttackStrategy_<T> {
 
         if constexpr (requires { obj.others; }) {
             if constexpr (Damagingable<typename decltype(obj.others)::value_type>) {
+                // std::random_shuffle(obj.others.begin(), obj.others.end());
                 for (auto& other : obj.others) {
                     status = default_attack_behavior(other, suspect);
                     std::cout << "\t\t " << other << '\n';

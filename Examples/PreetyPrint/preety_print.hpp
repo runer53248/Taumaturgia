@@ -104,7 +104,7 @@ inline void print_liveable(const Object& person) {
 };
 
 inline void print_person(const Object& person) {
-    std::cout << person.name();
+    std::cout << Color::Green << person.name() << Color::Reset;
     print_liveable(person);
     // getOpt<Properties::Protection>(person).and_then(print_protection); // protection is now property of wearable items
     getOpt<Properties::Wear>(person).and_then(print_wear);
@@ -124,7 +124,7 @@ inline void print_properties(const auto& type) {
                                     {"wear] ", Properties::Wear}};
 
     if constexpr (std::same_as<Object, std::remove_cvref_t<decltype(type)>>) {
-        std::cout << "Name: " << type.name() << '\n';
+        std::cout << "Name: " << Color::Green << type.name() << Color::Reset << '\n';
 
         for (auto [text, prop] : properties_enums) {
             if (auto value = type.hasStrategyFor(prop)) {
@@ -133,7 +133,7 @@ inline void print_properties(const auto& type) {
         }
     } else {
         Object obj = type;
-        std::cout << "Name: " << obj.name() << '\n';
+        std::cout << "Name: " << Color::Green << obj.name() << Color::Reset << '\n';
         const auto map = propertiesCustomizationMap<std::remove_cvref_t<decltype(type)>>();
 
         for (auto [text, prop] : properties_enums) {
@@ -153,7 +153,7 @@ inline void print_properties(const auto& type) {
 };
 
 inline void print_object(const Object& obj) {
-    std::cout << "Name: " << obj.name();
+    std::cout << "Name: " << Color::Green << obj.name() << Color::Reset;
     print_liveable(obj);
     std::cout << '\n';
 

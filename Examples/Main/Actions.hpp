@@ -12,7 +12,12 @@ void attack(auto& backpack, auto& player, auto& enemy) {
         if (not item.hasStrategyFor(Properties::Damage)) {
             continue;
         }
-        std::cout << player.name() << " attack " << enemy.name() << " with " << item.name() << ' ';
+        std::cout << Color::Green << player.name() << Color::Reset
+                  << " attack "
+                  << Color::Green << enemy.name() << Color::Reset
+                  << " with "
+                  << Color::Green << item.name() << Color::Reset
+                  << ' ';
         // use getOpt template method of Object
         item.getOpt<Properties::Damage>()
             .and_then(print_dmg)
@@ -40,12 +45,17 @@ void wear(std::ranges::range auto& backpack, auto& player) {
         auto status = wear(item, &player /*, &player*/);
         std::cout << " - wearing " << status << ": ";  // when target dont have Wearingable property
         if (status != ActionStatus::Success) {
-            std::cout << player.name() << " can't wear " << item.name() << ' ';
+            std::cout << Color::Green << player.name() << Color::Reset
+                      << " can't wear "
+                      << Color::Green << item.name() << Color::Reset
+                      << ' ';
             std::cout << '\n';
             continue;
         }
 
-        std::cout << player.name() << " wear " << item.name();
+        std::cout << Color::Green << player.name() << Color::Reset
+                  << " wear "
+                  << Color::Green << item.name() << Color::Reset;
         // use getOpt template method of auto type
         item.template getOpt<Properties::Wear>()
             .and_then(print_wear)
@@ -68,12 +78,17 @@ void defend(std::ranges::range auto& backpack, auto& player) {
         auto status = defend(item, &player /*, &player*/);
         std::cout << " - defending " << status << ": ";  // when target dont have Wearingable property
         if (status != ActionStatus::Success) {
-            std::cout << player.name() << " can't defend with " << item.name() << ' ';
+            std::cout << Color::Green << player.name() << Color::Reset
+                      << " can't defend with "
+                      << Color::Green << item.name() << Color::Reset
+                      << ' ';
             std::cout << '\n';
             continue;
         }
 
-        std::cout << player.name() << " defend with " << item.name();
+        std::cout << Color::Green << player.name() << Color::Reset
+                  << " defend with "
+                  << Color::Green << item.name() << Color::Reset;
         getOpt<Properties::Protection>(item)
             .and_then(print_protection)
             .and_then(print_new_line);
@@ -97,12 +112,18 @@ void enemy_defend(std::ranges::range auto& backpack, auto& enemy) {
         auto status = defend(item, &enemy /*, &player*/);
         std::cout << " - defending " << status << ": ";  // when target dont have Wearingable property
         if (status != ActionStatus::Success) {
-            std::cout << enemy.name() << " can't defend with " << item.name() << ' ';
+            std::cout << Color::Green << enemy.name() << Color::Reset
+                      << " can't defend with "
+                      << Color::Green << item.name() << Color::Reset
+                      << ' ';
             std::cout << '\n';
             continue;
         }
 
-        std::cout << enemy.name() << " defend with " << item.name() << ' ';
+        std::cout << Color::Green << enemy.name() << Color::Reset
+                  << " defend with "
+                  << Color::Green << item.name() << Color::Reset
+                  << ' ';
         getOpt<Properties::Protection>(item)
             .and_then(print_protection)
             .and_then(print_new_line);
@@ -124,7 +145,10 @@ void restore(std::ranges::range auto& backpack, auto& player) {
         auto status = restore(item, &player, &player);
         std::cout << " - restore" << status << ": ";
 
-        std::cout << player.name() << " restore self with " << item.name() << ' ';
+        std::cout << Color::Green << player.name() << Color::Reset
+                  << " restore self with "
+                  << Color::Green << item.name() << Color::Reset
+                  << ' ';
         // get(item, Properties::Restore).and_then(print_restore);
         getOpt<Properties::Restore>(item)
             .and_then(print_restore)
@@ -147,7 +171,9 @@ void heal(std::ranges::range auto& backpack, auto& player) {
         auto status = heal(item, &player, &player);
         std::cout << " - healing" << status << ": ";
 
-        std::cout << player.name() << " heal self with " << item.name();
+        std::cout << Color::Green << player.name() << Color::Reset
+                  << " heal self with "
+                  << Color::Green << item.name() << Color::Reset;
         if (auto cureHealth_opt = getOpt<Properties::CureHealth>(item)) {
             const CureHealth& cureHealth = cureHealth_opt.value();
             std::cout << " for " << cureHealth.value() << toString(cureHealth.valueType()) << " Health";
