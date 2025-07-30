@@ -1,22 +1,10 @@
+#include "../Base.hpp"
 #include "Examples/PreetyPrint/PrintDamage.hpp"
 #include "Examples/PreetyPrint/PrintHealth.hpp"
 #include "Examples/PreetyPrint/PrintName.hpp"
 #include "Examples/PreetyPrint/PrintProtection.hpp"
 #include "Introduction/parse_type_name.hpp"
 #include "Usage/Properties.hpp"
-
-#include "../Base.hpp"
-
-enum class As { given,
-                order_list };
-
-constexpr auto with_order_type = As::given;
-
-template <As order_type, typename T, template <typename...> typename... properties>
-using add_properties_type = std::conditional_t<
-    order_type == As::order_list,
-    add_properties_ordered<T, properties...>,
-    add_properties_unordered<T, properties...> >;
 
 int main() {
     [[maybe_unused]] int default_int{100};
@@ -51,21 +39,22 @@ int main() {
             Naming>;
 
         // create a type
-        using Type_1 = p_list::apply_properties_to<Base, with_order_type == As::order_list>;
-        using Type_2 = p_list_2::apply_properties_to<Type_1, with_order_type == As::order_list>;
+        using Type_1a = p_list::apply_properties_to<Base, false>;
+        using Type_2a = p_list_2::apply_properties_to<Type_1a, false>;
+        static_assert(std::same_as<Type_1a, Type_2a>);
 
-        static_assert(std::same_as<Type_1, Type_2>);
+        using Type_1b = p_list::apply_properties_to<Base, true>;
+        using Type_2b = p_list_2::apply_properties_to<Type_1b, true>;
+        static_assert(std::same_as<Type_1b, Type_2b>);
     }
 
     {
-        using Type_A = add_properties_type<
-            As::given,
+        using Type_A = add_properties_unordered<
             Base,
             Damaging,
             Living>;
 
-        using Type_1 = add_properties_type<
-            As::given,
+        using Type_1 = add_properties_unordered<
             Type_A,
             Protecting,
             Naming>;
@@ -86,14 +75,12 @@ int main() {
     }
 
     {
-        using Type_A = add_properties_type<
-            As::order_list,
+        using Type_A = add_properties_ordered<
             Base,
             Damaging,
             Living>;
 
-        using Type_1 = add_properties_type<
-            As::order_list,
+        using Type_1 = add_properties_ordered<
             Type_A,
             Protecting,
             Naming>;
