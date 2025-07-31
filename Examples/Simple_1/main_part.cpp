@@ -20,9 +20,17 @@ using CureHealthType = add_properties_ordered<
     EffectContainer_property>;
 
 int main() {
-    CureHealthType cureHealthType{5, CureValueType::CURRENT_PERCENT, EffectContainer{Effect{EffectType::Burn}, Effect{EffectType::Devour}}};
+    CureHealthType cureHealthType{
+        5,
+        CureValueType::CURRENT_PERCENT,
+        EffectContainer{
+            Effect{EffectType::Burn},
+            Effect{EffectType::Devour, EffectState::Active},
+            Effect{EffectType::Shock, Duration{3, DurationType::Minute}, EffectState::Finished},
+            Effect{EffectType::Freeze, Duration{0, DurationType::Instant}, EffectState::Removed}
+        }};
 
-    std::cout << trait<int>::get(cureHealthType);
-    std::cout << toString(trait<CureValueType>::get(cureHealthType));
-    std::cout << trait<EffectContainer>::get(cureHealthType) << '\n';
+    std::cout << "int = " << trait<int>::get(cureHealthType) << '\n';
+    std::cout << "CureValueType = " << toString(trait<CureValueType>::get(cureHealthType)) << '\n';
+    std::cout << "EffectContainer = " << trait<EffectContainer>::get(cureHealthType) << '\n';
 }
