@@ -11,6 +11,9 @@ auto& operator<<(std::ostream& out, const Effect& effect) {
     if (effectType == EffectType::None) {
         return out;
     }
-    out << '[' << effectType << " | " << effect.duration() << " | " << effect.state() << ']';
+    out << '[' << effectType
+        << " | " << std::pair{effect.duration(), effect.state()}  //
+        // << " | " << effect.state()
+        << ']';
     return out;
 }

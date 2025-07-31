@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include "Usage/Types/Health/Health.hpp"
 #include "PrintWrapper.hpp"
+#include "Usage/Types/Health/Health.hpp"
 
 auto& operator<<(std::ostream& out, const Health& health) {
     return print_in_round_braces(
@@ -17,7 +17,8 @@ auto& operator<<(std::ostream& out, const Health& health) {
                 out, "Effects",
                 [&] {
                     for (const auto& effect : health.effects()) {
-                        out << effect.effectType() << effect.duration();
+                        out << effect.effectType()
+                            << std::pair{effect.duration(), effect.state()};
                     }
                 });
         });
