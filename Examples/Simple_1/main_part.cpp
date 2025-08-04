@@ -1,3 +1,4 @@
+#include <print>
 #include <vector>
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
@@ -19,7 +20,23 @@ using CureHealthType = add_properties_ordered<
     CureValueType_property,
     EffectContainer_property>;
 
+template <typename T>
+struct std::formatter<std::pair<T, EffectState>> : std::formatter<std::string> {
+    auto format(const std::pair<T, EffectState>& t, [[maybe_unused]] std::format_context& ctx) const {
+        std::ostringstream o;
+        o << t;
+        return formatter<string>::format(std::move(o).str(), ctx);
+    }
+};
+
 int main() {
+    std::println();
+    std::print("{}\n", std::pair{"Inactive", EffectState::Inactive});
+    std::print("{}\n", std::pair{"Active", EffectState::Active});
+    std::print("{}\n", std::pair{"Removed", EffectState::Removed});
+    std::print("{}\n", std::pair{"Finished", EffectState::Finished});
+    std::println();
+
     CureHealthType cureHealthType{
         5,
         CureValueType::CURRENT_PERCENT,
@@ -27,10 +44,9 @@ int main() {
             Effect{EffectType::Burn},
             Effect{EffectType::Devour, EffectState::Active},
             Effect{EffectType::Shock, Duration{3, DurationType::Minute}, EffectState::Finished},
-            Effect{EffectType::Freeze, Duration{0, DurationType::Instant}, EffectState::Removed}
-        }};
+            Effect{EffectType::Freeze, Duration{0, DurationType::Instant}, EffectState::Removed}}};
 
-    std::cout << "int = " << trait<int>::get(cureHealthType) << '\n';
-    std::cout << "CureValueType = " << toString(trait<CureValueType>::get(cureHealthType)) << '\n';
-    std::cout << "EffectContainer = " << trait<EffectContainer>::get(cureHealthType) << '\n';
+    std::print("int = {}\n", trait<int>::get(cureHealthType));
+    std::print("CureValueType = {}\n", toString(trait<CureValueType>::get(cureHealthType)));
+    std::print("EffectContainer = {}\n", trait<EffectContainer>::get(cureHealthType));
 }
