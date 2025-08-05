@@ -71,13 +71,13 @@ public:
         return static_cast<base>(self).template getType<DIG - 1>();
     }
     template <size_t DIG, typename Self>
-        requires(DIG > 0 and not requires(base_type t) { t.template getType<DIG - 1>(); })
+        requires(DIG > 0 and not have_getType_num_method<base_type, DIG - 1>)
     constexpr decltype(auto) getType(this Self& self) noexcept = delete;
 
     // MARK: haveTypeNum
 
     template <typename RETURN, size_t NUM = 0>
-        requires have_getType_type_num<Features_<T>, RETURN, NUM>
+        requires have_getType_type_num_method<Features_<T>, RETURN, NUM>
     static consteval bool haveTypeNum() noexcept {
         return true;
     }
@@ -87,7 +87,7 @@ public:
     }
 
     template <size_t NUM = 0>
-        requires have_getType_num<Features_<T>, NUM>
+        requires have_getType_num_method<Features_<T>, NUM>
     static consteval bool haveTypeNum() noexcept {
         return true;
     }
@@ -133,9 +133,9 @@ public:
     }
 
     template <typename RETURN, typename... TTags, typename Self>
-        requires(not(get_type_taged_able<T, RETURN, TTags...> or            //
-                     get_type_taged_able<base_type, RETURN, TTags...>) and  //
-                 not(std::same_as<list<>, list<TTags...>> and               //
+        requires(not(have_getTypeTaged_method<T, RETURN, TTags...> or            //
+                     have_getTypeTaged_method<base_type, RETURN, TTags...>) and  //
+                 not(std::same_as<list<>, list<TTags...>> and                    //
                      std::same_as<RETURN, hold_type>))
     constexpr decltype(auto) getTypeTaged(this Self&& self) noexcept = delete;
 
@@ -176,7 +176,7 @@ public:
     }
 
     template <typename RETURN, typename... TTags, typename Self>
-        requires(not get_type_taged_able<Self, RETURN, TTags...>)
+        requires(not have_getTypeTaged_method<Self, RETURN, TTags...>)
     constexpr decltype(auto) getTypeOf(this Self&& self, [[maybe_unused]] list<RETURN, TTags...> signature) noexcept = delete;
 
     // MARK: getTypeOfSignature
@@ -186,7 +186,7 @@ public:
         return self.getTypeOf(Signature{});
     }
     template <typename Signature, typename Self>
-        requires(not get_type_of_able<Self, Signature>)
+        requires(not have_getTypeOf_method<Self, Signature>)
     constexpr decltype(auto) getTypeOfSignature(this Self&& self) noexcept = delete;
 };
 
@@ -210,7 +210,7 @@ struct test_property : public T {
 
 using tested_type = Features_<test_property<test_base>>;
 
-static_assert(have_get_features<tested_type, type>);
+static_assert(have_all_get_features_for_type<tested_type, type>);
 
 }  // namespace impl::Test
 

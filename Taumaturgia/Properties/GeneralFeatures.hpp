@@ -120,7 +120,7 @@ public:
     // MARK: haveTypeNum
 
     template <typename RETURN, size_t NUM = 0>
-        requires have_getType_type_num<GeneralFeatures_<T>, RETURN, NUM>
+        requires have_getType_type_num_method<GeneralFeatures_<T>, RETURN, NUM>
     static consteval bool haveTypeNum() noexcept {
         return true;
     }
@@ -130,7 +130,7 @@ public:
     }
 
     template <size_t NUM = 0>
-        requires have_getType_num<GeneralFeatures_<T>, NUM>
+        requires have_getType_num_method<GeneralFeatures_<T>, NUM>
     static consteval bool haveTypeNum() noexcept {
         return true;
     }
@@ -143,7 +143,7 @@ public:
 
     template <typename RETURN, typename... TTags, typename Self>
         requires(std::same_as<list<>, list<TTags...>> and
-                 requires(Self s) { s.template getType<RETURN>(); })
+                 have_getType_type_method<Self, RETURN>)
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept {
         return self.template getType<RETURN>();
     }
@@ -158,15 +158,15 @@ public:
         return static_cast<type>(self).template getTypeTaged<RETURN, TTags...>();
     }
     template <typename RETURN, typename... TTags, typename Self>
-        requires(not get_type_taged_able<T, RETURN, TTags...>      //
-                 and not(std::same_as<list<>, list<TTags...>> and  //
-                         requires(Self s) { s.template getType<RETURN>(); }))
+        requires(not have_getTypeTaged_method<T, RETURN, TTags...>  //
+                 and not(std::same_as<list<>, list<TTags...>> and   //
+                         have_getType_type_method<Self, RETURN>))
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept = delete;
 
     // MARK: getTypeOf
 
     template <typename RETURN, typename... TTags, typename Self>
-        requires(get_type_taged_able<Self, RETURN, TTags...>)
+        requires(have_getTypeTaged_method<Self, RETURN, TTags...>)
     constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTags...> signature) noexcept {
         return self.template getTypeTaged<RETURN, TTags...>();
     }
@@ -177,7 +177,7 @@ public:
     // MARK: getTypeOfSignature
 
     template <typename Signature, typename Self>
-        requires requires(Self s) { s.getTypeOf(Signature{}); }
+        requires have_getTypeOf_method<Self, Signature>
     constexpr decltype(auto) getTypeOfSignature(this Self& self) noexcept {
         return self.getTypeOf(Signature{});
     }
@@ -193,7 +193,7 @@ public:
             const T&,
             T&>;
 
-        if constexpr (get_taged_able<T, SKIP, TTags...>) {
+        if constexpr (have_getTaged_method<T, SKIP, TTags...>) {
             return static_cast<type>(self).template getTaged<SKIP, TTags...>();  // skip - diffrent tags
         } else if constexpr (std::same_as<list<>, list<TTags...>>) {
             return self.template getBuildinTypes<SKIP>(types_ptr{});
@@ -247,8 +247,8 @@ struct test_general_base2 {
 using tested_general_type = GeneralFeatures_<test_general_base>;
 using tested_general_type2 = GeneralFeatures_<test_general_base2>;
 
-static_assert(not have_get_features<tested_general_type, general_type>);  // ! general_type is not on list_of_types
-static_assert(have_get_features<tested_general_type2, general_type2>);
+static_assert(not have_all_get_features_for_type<tested_general_type, general_type>);  // ! general_type is not on list_of_types
+static_assert(have_all_get_features_for_type<tested_general_type2, general_type2>);
 
 }  // namespace impl::Test
 

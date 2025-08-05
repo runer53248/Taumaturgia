@@ -230,7 +230,7 @@ public:
     // MARK: haveTypeNum
 
     template <typename RETURN = TYPE, size_t NUM = 0>
-        requires have_getType_type_num<improvement_of, RETURN, NUM>
+        requires have_getType_type_num_method<improvement_of, RETURN, NUM>
     static consteval bool haveTypeNum() noexcept {
         return true;
     }
@@ -240,7 +240,7 @@ public:
     }
 
     template <size_t NUM>
-        requires have_getType_num<improvement_of, NUM>
+        requires have_getType_num_method<improvement_of, NUM>
     static consteval bool haveTypeNum() noexcept {
         return true;
     }
@@ -268,14 +268,14 @@ public:
     }
 
     template <typename RETURN, typename... TTags, typename Self>
-        requires(not get_type_taged_able<T, RETURN, TTags...>  //
+        requires(not have_getTypeTaged_method<T, RETURN, TTags...>  //
                  and not std::same_as<list<RETURN, TTags...>, list<TYPE, Tags...>>)
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept = delete;
 
     // MARK: getTypeOf
 
     template <typename RETURN, typename... TTags, typename Self>
-        requires get_type_taged_able<Self, RETURN, TTags...>
+        requires have_getTypeTaged_method<Self, RETURN, TTags...>
     constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTags...> signature) noexcept {
         return self.template getTypeTaged<RETURN, TTags...>();
     }
@@ -286,7 +286,7 @@ public:
     // MARK: getTypeOfSignature
 
     template <typename Signature, typename Self>
-        requires requires(Self s) { s.getTypeOf(Signature{}); }
+        requires have_getTypeOf_method<Self, Signature>
     constexpr decltype(auto) getTypeOfSignature(this Self& self) noexcept {
         return self.getTypeOf(Signature{});
     }
@@ -305,7 +305,7 @@ public:
 
         if constexpr (SKIP > 0) {
             return static_cast<type>(self).template getTaged<SKIP - 1, TTags...>();  // skip
-        } else if constexpr (get_type_taged_able<Self, TYPE, TTags...>) {
+        } else if constexpr (have_getTypeTaged_method<Self, TYPE, TTags...>) {
             return self.template getTypeTaged<TYPE, TTags...>();  // return by tags and current type
         }
     }
@@ -343,7 +343,7 @@ static_assert(trait_accessable<tested_tag, type>);
 
 static_assert(getType_able<tested_type, type>);
 
-static_assert(have_get_features<tested_type, type>);
+static_assert(have_all_get_features_for_type<tested_type, type>);
 
 }  // namespace impl::Test
 
