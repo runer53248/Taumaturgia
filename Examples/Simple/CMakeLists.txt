@@ -7,22 +7,12 @@ add_executable(main_fix_${addons}
     Fix/main_fix.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
-add_executable(main_fix_Ap_${addons}
-    Fix/main_fix.cpp
-    ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
-)
-target_compile_definitions(main_fix_Ap_${addons} PUBLIC WITH_ADD_PROPERTIES)
 
 add_executable(main_fix_noOrder_${addons}
     Fix/main_fix.cpp
     ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
 )
 target_compile_definitions(main_fix_noOrder_${addons} PUBLIC IGNORE_ORDER_LIST)
-add_executable(main_fix_noOrder_Ap_${addons}
-    Fix/main_fix.cpp
-    ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
-)
-target_compile_definitions(main_fix_noOrder_Ap_${addons} PUBLIC IGNORE_ORDER_LIST WITH_ADD_PROPERTIES)
 
 add_executable(main_unordered_ctor_${addons}
     UnorderedCtor/main_unordered_ctor.cpp
