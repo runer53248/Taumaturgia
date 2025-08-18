@@ -14,6 +14,7 @@ struct HelmetClass {
 };
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 using Helmet = HelmetBuild;
 #else
 using Helmet = HelmetClass;

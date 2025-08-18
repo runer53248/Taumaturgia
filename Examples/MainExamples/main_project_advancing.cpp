@@ -1,3 +1,4 @@
+#include "Examples/Checks.hpp"
 #include "Introduction/parse_type_name.hpp"
 #include "Usage/With.hpp"
 
@@ -66,4 +67,12 @@ int main() {
     static_assert(same_as<decltype(t1), decltype(t3c)>);
 
     cout << parse_type_name<decltype(t1)>() << '\n';
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

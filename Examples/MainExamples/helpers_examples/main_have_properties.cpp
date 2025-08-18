@@ -1,8 +1,9 @@
 #include <iostream>
+#include "Examples/Checks.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Taumaturgia/Properties/Helpers/have_properties.hpp"
-#include "Usage/Properties.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
+#include "Usage/Properties.hpp"
 
 struct Type {
     Name name;
@@ -84,5 +85,11 @@ int main() {
     std::cout << name<add_properties_ordered<Type, Living>>() << '\n';
     std::cout << name<Property<Living>>() << '\n';
 
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

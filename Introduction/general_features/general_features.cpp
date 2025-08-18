@@ -1,4 +1,5 @@
 #include <print>
+#include "Examples/Checks.hpp"
 #include "Introduction/parse_type_name.hpp"
 #include "Taumaturgia/Properties/GeneralFeatures.hpp"
 
@@ -344,4 +345,12 @@ int main() {
     }
 
     static_assert(not is_property<GeneralFeatures>);
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

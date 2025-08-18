@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Examples/Checks.hpp"
 #include "Taumaturgia/Object/Enums/ActionStatus.hpp"
 #include "Taumaturgia/Properties/Helpers/taged_list.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
@@ -282,6 +283,14 @@ int main() {
             userStrategy(std::as_const(type3)),
             UserStrategy_<int, Default>{}(type3),
             UserStrategy_<int, Default>{}(std::as_const(type3))>{};
+#endif
+    }
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
 #endif
     }
 }

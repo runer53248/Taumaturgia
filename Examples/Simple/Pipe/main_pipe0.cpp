@@ -4,6 +4,7 @@
 #define ORDER_LIST_PATH "Examples/Simple/Pipe/custom_order_list.hpp"
 #endif
 
+#include "Examples/Checks.hpp"
 #include "Usage/With.hpp"
 #include "default_values.hpp"
 #include "print.hpp"
@@ -208,5 +209,13 @@ int main() {
         print(type_simple4_1, 41);
         print(type_simple4_2, 42);
         print(type_simple4_3, 43);
+    }
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
     }
 }

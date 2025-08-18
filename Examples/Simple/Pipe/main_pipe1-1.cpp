@@ -4,6 +4,7 @@
 #define ORDER_LIST_PATH "Examples/Simple/Pipe/custom_order_list.hpp"
 #endif
 
+#include "Examples/Checks.hpp"
 #include "Usage/With.hpp"
 #include "default_values.hpp"
 #include "print.hpp"
@@ -161,5 +162,13 @@ int main() {
         std::cout << "float 1    = " << type.getFloat(1) << '\n';
         std::cout << "dmg other  = " << type.getOtherDamage() << '\n';
         std::cout << '\n';
+    }
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
     }
 }

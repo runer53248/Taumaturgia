@@ -11,6 +11,7 @@ struct NoNameWeaponClass {
 };
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 using NoNameWeapon = NoNameWeaponBuild;
 #else
 using NoNameWeapon = NoNameWeaponClass;

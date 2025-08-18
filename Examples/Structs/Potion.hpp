@@ -11,6 +11,7 @@ struct PotionClass {
 };
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 using Potion = PotionBuild;
 #else
 using Potion = PotionClass;

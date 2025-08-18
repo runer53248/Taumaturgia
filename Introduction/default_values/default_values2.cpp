@@ -1,4 +1,5 @@
 #include <print>
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Introduction/parse_type_name.hpp"
 #include "Usage/With.hpp"
@@ -179,6 +180,14 @@ int main() {
         std::print("size of Protection = {} = {}\n", sizeof(Protection), (ptrdiff_t)(address_of_property_5 - address_of_property_6));
     }
     std::println();
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }
 
 // Living_<

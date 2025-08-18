@@ -1,5 +1,6 @@
 #include <vector>
 #include "Actions.hpp"
+#include "Examples/Checks.hpp"
 #include "FillBackpack.hpp"
 #include "Print.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
@@ -109,5 +110,11 @@ int main() {
             return std::optional{cure};
         });
 
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

@@ -2,6 +2,7 @@
 #define ORDER_LIST_PATH "Introduction/order_list/order_list.hpp"
 
 #include <iostream>
+#include "Examples/Checks.hpp"
 #include "Introduction/parse_type_name.hpp"
 
 struct Base {};
@@ -124,5 +125,13 @@ int main() {
         std::cout << "Type3 " << parse_type_name<Type3>() << '\n';
         std::cout << "Type4 " << parse_type_name<Type4>() << '\n';
         std::cout << '\n';
+    }
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
     }
 }

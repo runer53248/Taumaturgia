@@ -1,3 +1,4 @@
+#include "Examples/Checks.hpp"
 #include "Examples/property_A.hpp"
 #include "Examples/property_B.hpp"
 #include "Usage/Properties.hpp"
@@ -62,4 +63,12 @@ int main() {
     derived_from_property_test.operator()<Wearing_impl>();  // without duplication removal feature
 
     derived_from_property_test.operator()<Wearing>();  // with duplication removal feature
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

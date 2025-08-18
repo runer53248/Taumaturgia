@@ -1,3 +1,4 @@
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print_types.hpp"
 #include "Usage/Properties.hpp"
 
@@ -62,5 +63,11 @@ int main() {
     std::cout << "Protection:   " << trait<Protection>::get(type4) << '\n';
     std::cout << "CureHp:       " << trait<CureHealth>::get(type4) << '\n';
     std::cout << "Restore:      " << trait<EffectTypeContainer>::get(type4) << '\n';
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

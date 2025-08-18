@@ -4,7 +4,7 @@
 #define ORDER_LIST_PATH "Examples/MainExamples/order_list.hpp"
 
 #include <print>
-
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print_types.hpp"
 #include "Introduction/parse_type_name.hpp"
 #include "Usage/With.hpp"
@@ -175,7 +175,7 @@ int main() {
     }
     {
         using Attrib_updated = impl::UserProperty_<Strenght, Attrib, other>;                                   // ? introduce <Strenght, other>
-        using Attrib_updated2 = add_properties_ordered<Attrib, UserPropertyAdapter<Strenght, other>::apply>;    // ? introduce <Strenght, other>
+        using Attrib_updated2 = add_properties_ordered<Attrib, UserPropertyAdapter<Strenght, other>::apply>;   // ? introduce <Strenght, other>
         using Attrib_updated3 = decltype(From::base<Attrib> | With::Strenght2 | With::Strenght)::result_type;  // ? introduce <Strenght, other>
         using Attrib_updated3b = decltype(Attrib{} | With::Strenght2 | With::Strenght | Create);               // ? introduce <Strenght, other>
 
@@ -184,14 +184,14 @@ int main() {
         static_assert(std::same_as<Attrib_updated, Attrib_updated3b>);
 
         using Attrib_updated4 = add_properties_ordered<Attrib, UserPropertyAdapter<Strenght, other>::once>;  // * not introduce <Strenght, other>
-        using Attrib_updated5 = decltype(From::base<Attrib> | With::Strenght2_once)::result_type;             // * not introduce <Strenght, other>
+        using Attrib_updated5 = decltype(From::base<Attrib> | With::Strenght2_once)::result_type;            // * not introduce <Strenght, other>
 
         static_assert(std::same_as<Attrib_updated4, Attrib_updated5>);
 
         {
             // if base of Strenght is diffrent
             using Attrib_updated_a = add_properties_ordered<Attrib, UserPropertyAdapter<Strenght_next, other>::apply>;  // ? introduce <Strenght_next, other>
-            using Attrib_updated_b = decltype(From::base<Attrib> | With::Strenght_next_other)::result_type;            // ? introduce <Strenght_next, other>
+            using Attrib_updated_b = decltype(From::base<Attrib> | With::Strenght_next_other)::result_type;             // ? introduce <Strenght_next, other>
 
             static_assert(std::same_as<Attrib_updated_a, Attrib_updated_b>);
         }
@@ -226,5 +226,13 @@ int main() {
         // type.getType<8>();                    //? call of deleted function
         // type.getType<long>();                 //? call of deleted function
         // type.getTypeTaged<Strenght, long>();  //? call of deleted function
+    }
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
     }
 }

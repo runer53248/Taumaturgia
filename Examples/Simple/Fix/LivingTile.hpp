@@ -17,6 +17,7 @@ struct LivingTileClass : Tile {
 };
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 using LivingTile = LivingTileBuild;
 #else
 using LivingTile = LivingTileClass;

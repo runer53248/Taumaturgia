@@ -1,3 +1,4 @@
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/basic_strategies.hpp"
 #include "Examples/demangle_type_name.hpp"
@@ -134,7 +135,13 @@ int main() {
     static_assert(sizeof(type1) == sizeof(type5));
     static_assert(sizeof(type1) == sizeof(type6));
 
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }
 
 using type_A = Living<Damaging<Element_name>>;

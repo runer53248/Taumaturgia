@@ -1,6 +1,7 @@
 #include "Usage/With.hpp"
 #include "default_values.hpp"
 #include "print.hpp"
+#include "Examples/Checks.hpp"
 
 int main() {
     {
@@ -136,5 +137,13 @@ int main() {
         std::cout << "string     = " << type_2.getType<std::string>() << '\n';
         std::cout << "float 0    = " << type_2.getFloat(0) << '\n';
         std::cout << "float 1    = " << type_2.getFloat(1) << '\n';
+    }
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
     }
 }

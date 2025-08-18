@@ -1,3 +1,4 @@
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Examples/improved_types.hpp"
@@ -133,5 +134,11 @@ int main() {
     std::cout << name<type_d>() << '\n'
               << '\n';
 
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

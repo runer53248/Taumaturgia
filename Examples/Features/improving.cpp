@@ -1,3 +1,4 @@
+#include "Examples/Checks.hpp"
 #include "Taumaturgia/Properties/Helpers/taged_list.hpp"
 #include "Usage/Traits.hpp"
 
@@ -221,4 +222,12 @@ int main() {
     std::cout << obj3.getHealth().value() << '\n';
     std::cout << obj4.getHealth().value() << '\n';
     std::cout << obj5.getHealth().value() << '\n';
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

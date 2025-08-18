@@ -11,6 +11,7 @@ struct NpcClass {
 };
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 using Npc = NpcBuild;
 #else
 using Npc = NpcClass;

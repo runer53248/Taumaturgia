@@ -1,8 +1,9 @@
+#include "Examples/Checks.hpp"
+#include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/basic_strategies.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Examples/property_A.hpp"
 #include "Examples/property_B.hpp"
-#include "Examples/PreetyPrint/preety_print.hpp"
 
 struct Empty {};
 
@@ -64,7 +65,7 @@ int main() {
 
     static_assert(sizeof(Y) == sizeof(Z));
 
-    using type_wrong_order = Damaging<Living<Naming<Element_name>>>;        // ! incorrect order
+    using type_wrong_order = Damaging<Living<Naming<Element_name>>>;                // ! incorrect order
     using type_fix = add_properties_ordered<type_wrong_order>;                      // add_properties will fix incorrect type
     using c_type = add_properties_ordered<Element_name, Damaging, Living, Naming>;  // correct order
     using d_type = add_properties_ordered<Damaging<Element_name>, Naming, Living>;  // correct order
@@ -87,5 +88,11 @@ int main() {
     std::cout << "e_type fix:   " << name<e_type_fix>() << '\n';
     std::cout << "f_type:       " << name<f_type>() << " = e_type + Naming + Living" << '\n';
 
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

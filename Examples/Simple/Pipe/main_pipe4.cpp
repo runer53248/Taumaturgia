@@ -1,5 +1,6 @@
 #define IGNORE_ORDER_LIST
 
+#include "Examples/Checks.hpp"
 #include "Usage/With.hpp"
 #include "default_values.hpp"
 #include "print.hpp"
@@ -51,4 +52,12 @@ int main() {
 #endif
     std::cout << "x    = " << type2.x << '\n';
     std::cout << "y    = " << type2.y << '\n';
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

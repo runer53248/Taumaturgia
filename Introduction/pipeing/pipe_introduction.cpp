@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/PrintDamage.hpp"
 #include "Examples/PreetyPrint/PrintHealth.hpp"
 #include "Examples/PreetyPrint/PrintName.hpp"
@@ -115,5 +116,13 @@ int main() {
         std::cout << "x          = " << new_type.x << '\n';
         std::cout << "y          = " << new_type.y << '\n';
         std::cout << '\n';
+    }
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
     }
 }

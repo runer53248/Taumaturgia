@@ -1,5 +1,6 @@
 #include <print>
 #include <vector>
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
@@ -49,4 +50,12 @@ int main() {
     std::print("int = {}\n", trait<int>::get(cureHealthType));
     std::print("CureValueType = {}\n", toString(trait<CureValueType>::get(cureHealthType)));
     std::print("EffectContainer = {}\n", trait<EffectContainer>::get(cureHealthType));
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

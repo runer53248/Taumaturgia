@@ -1,5 +1,6 @@
 #include <vector>
 #include "Actions.hpp"
+#include "Examples/Checks.hpp"
 #include "Introduction/parse_type_name.hpp"
 #include "Print.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
@@ -64,5 +65,11 @@ int main() {
     std::cout << "builded from type Weapon: \n"
               << parse_type_name<Weapon>() << '\n';
 
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+        check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

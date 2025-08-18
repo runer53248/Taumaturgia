@@ -25,6 +25,7 @@ struct CustomWeaponClass {  // is not Damagingable but still counts as AttackStr
 };
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 using CustomWeapon = CustomWeaponBuild;
 #else
 using CustomWeapon = CustomWeaponClass;

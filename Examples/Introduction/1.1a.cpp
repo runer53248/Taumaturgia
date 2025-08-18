@@ -1,3 +1,4 @@
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print_types.hpp"
 #include "Usage/Properties.hpp"
 
@@ -49,4 +50,12 @@ static_assert(Wearingable<Type_all>);
 static_assert(Healingable<Type_all>);
 static_assert(Restoringable<Type_all>);
 
-int main() {}
+int main() {
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
+}

@@ -1,4 +1,5 @@
 #include <print>
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Introduction/parse_type_name.hpp"
 
@@ -55,4 +56,12 @@ int main() {
     std::print("x.float = {}\n", x.getType<float>());
     std::print("y.name  = {}\n", y.getTypeOfSignature<Name>());
     std::println();
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

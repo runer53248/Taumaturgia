@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Usage/DefaultStrategies.hpp"
 
@@ -152,4 +153,12 @@ int main() {
         damage_variant,   // restoring
         damage_variant,   // protecting
         damage_variant};  // damaging
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

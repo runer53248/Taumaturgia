@@ -2,6 +2,7 @@
 // #define NO_PREMADE_PROPERTIES
 
 #include <iostream>
+#include "Examples/Checks.hpp"
 
 #include "Examples/PreetyPrint/PrintDamage.hpp"
 #include "Examples/PreetyPrint/PrintName.hpp"
@@ -90,5 +91,13 @@ int main() {
         std::cout << "example 2 = " << value_2 << '\n';
         std::cout << "example 3 = " << value_3 << '\n'
                   << '\n';
+    }
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
     }
 }

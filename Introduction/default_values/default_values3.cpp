@@ -1,4 +1,5 @@
 #include <print>
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Introduction/parse_type_name.hpp"
 #include "Usage/With.hpp"
@@ -69,4 +70,12 @@ int main() {
     std::print("\n");
     std::print("test7 = {}\n", ::name<decltype(test7)>());
     std::print("test8 = {}\n", ::name<decltype(test8)>());
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

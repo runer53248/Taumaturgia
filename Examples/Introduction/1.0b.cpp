@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include "Examples/Checks.hpp"
 #include "Usage/Traits.hpp"
 
 constexpr auto default_name = "Valid";
@@ -31,5 +32,11 @@ int main() {
     std::cout << "Take name from by access trait:" << '\n';
     std::cout << "trait<Name>::get(type2) = " << trait<Name>::get(type2a) << '\n';
     std::cout << "trait<Name>::get(type2) = " << trait<Name>::get(type2b) << '\n';
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

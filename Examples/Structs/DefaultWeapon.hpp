@@ -14,6 +14,7 @@ struct DefaultWeaponClass {
 };
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 using DefaultWeapon = DefaultWeaponBuild;
 #else
 using DefaultWeapon = DefaultWeaponClass;

@@ -1,3 +1,4 @@
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Usage/DefaultStrategies.hpp"
@@ -116,4 +117,12 @@ int main() {
     std::cout << "properties_list<>::apply_ordered_properties_to<Tile_unordered>> = \n\t"
               << name<properties_list<>::apply_ordered_properties_to<Tile_unordered>>()
               << "\n\n";
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

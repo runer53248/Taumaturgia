@@ -44,6 +44,7 @@ struct traits::CustomAccessType<Damage, T> {
 };
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 using Weapon = WeaponBuild;
 #else
 using Weapon = WeaponClass;

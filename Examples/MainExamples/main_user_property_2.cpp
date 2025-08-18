@@ -1,5 +1,6 @@
 #include <iostream>
 #include <typeinfo>
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
@@ -76,5 +77,11 @@ int main() {
     b = false;
     std::cout << b2 << '\n';
 
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

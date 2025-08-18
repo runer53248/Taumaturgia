@@ -1,4 +1,5 @@
 #include "Examples/Benchmark.hpp"
+#include "Examples/Checks.hpp"
 #include "Usage/DefaultStrategies.hpp"
 
 struct BaseType {
@@ -52,4 +53,12 @@ int main() {
     test(baseType);
     std::cout << '\n';
     test(myType);
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

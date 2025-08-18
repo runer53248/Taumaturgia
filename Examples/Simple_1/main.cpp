@@ -1,4 +1,5 @@
 #include <vector>
+#include "Examples/Checks.hpp"
 #include "Examples/Main/Actions.hpp"
 #include "Examples/Main/FillBackpack.hpp"
 #include "Examples/Main/Print.hpp"
@@ -76,5 +77,11 @@ int main(int, [[maybe_unused]] char* argv[]) {
     }
     std::cout << '\n';
 
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

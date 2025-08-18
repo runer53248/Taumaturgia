@@ -1,4 +1,5 @@
 #include <print>
+#include "Examples/Checks.hpp"
 #include "Introduction/parse_type_name.hpp"
 
 struct Base {};
@@ -162,4 +163,12 @@ int main() {
 
     // std::print("{}", ::name<Data>());
     std::print("{}\n\n", parse_type_name<Data>());
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

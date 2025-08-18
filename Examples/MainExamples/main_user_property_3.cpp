@@ -1,5 +1,6 @@
 #include <iostream>
 #include <typeinfo>
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
@@ -134,5 +135,11 @@ int main() {
     static_assert(std::same_as<add_properties_ordered<unlimited_nest_4>, impl::Damaging_<MyType, int>>);
 #endif
 
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

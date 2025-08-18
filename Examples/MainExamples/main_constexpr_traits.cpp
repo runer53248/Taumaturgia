@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Examples/Checks.hpp"
 #include "Taumaturgia/Object/Enums/ActionStatus.hpp"
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
@@ -53,4 +54,12 @@ int main() {
 
     static_assert(trait<int>::get(type_b) == 15);
     static_assert(trait<int>::get(std::as_const(type_b)) == 15);
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

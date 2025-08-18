@@ -1,4 +1,5 @@
 #include <vector>
+#include "Examples/Checks.hpp"
 #include "Examples/Main/Print.hpp"
 #include "Examples/Main/structs.hpp"
 
@@ -62,5 +63,11 @@ int main() {
     static_assert(std::is_same_v<decltype(damage_a), Damage&>);
     static_assert(std::is_same_v<decltype(damage_b), const Damage&>);
 
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

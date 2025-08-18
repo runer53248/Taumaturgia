@@ -1,5 +1,6 @@
 #include <vector>
 #include "Actions.hpp"
+#include "Examples/Checks.hpp"
 #include "Print.hpp"
 
 #include "Examples/Structs/Armor.hpp"
@@ -65,4 +66,12 @@ int main() {
     getOpt<Properties::Wear>(obj)
         .and_then(print_wear)
         .and_then(print_new_line);
+
+        {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

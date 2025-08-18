@@ -1,4 +1,5 @@
 #include <vector>
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Usage/DefaultStrategies.hpp"
 #include "Usage/With.hpp"
@@ -153,5 +154,13 @@ int main() {
     for (const auto* entity : std::array{&paladin, &warior, &shield, &weaponA, &weaponB, &weaponC, &weapon_c2, &potion}) {
         print_properties(*entity);
         print_object(*entity);
+    }
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
     }
 }

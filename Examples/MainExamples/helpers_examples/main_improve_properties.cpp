@@ -1,3 +1,4 @@
+#include "Examples/Checks.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Examples/improved_types.hpp"
 
@@ -85,4 +86,12 @@ int main() {
     std::cout << "Damaging_impl<Type>{}.getType() shadowed \n";
     std::cout << name<Damaging_impl<Type>>() << '\n'
               << '\n';
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

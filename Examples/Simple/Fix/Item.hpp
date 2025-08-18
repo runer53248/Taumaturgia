@@ -14,6 +14,7 @@ struct ItemClass {
 };
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 using Item = ItemBuild;
 #else
 using Item = ItemClass;

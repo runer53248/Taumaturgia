@@ -1,4 +1,5 @@
 #include <vector>
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Usage/DefaultStrategies.hpp"
@@ -11,6 +12,7 @@
 // MARK: main
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 #ifndef IGNORE_ORDER_LIST
 #define ARGUMENTS_REORDERED
 #endif
@@ -128,4 +130,12 @@ int main() {
     std::cout << '\n'
               << "name_result_2_unpack = "
               << name<unpack_to_list_t<decltype(name_result_2)>>() << '\n';
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

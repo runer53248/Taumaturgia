@@ -4,7 +4,7 @@
 #define ORDER_LIST_PATH "Examples/MainExamples/order_list.hpp"
 
 #include <print>
-
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print_types.hpp"
 #include "Introduction/parse_type_name.hpp"
 #include "Usage/With.hpp"
@@ -59,12 +59,12 @@ int main() {
 
     {
         Tp<Type> tp_type{unordered,
-                       Name{"test"},
-                       Damage{30, DamageType::Divine},
-                       Health{30, 100},
-                       13.03f,
-                       Protection{ArmorClass{18, BodyLocation::Body}},
-                       155};
+                         Name{"test"},
+                         Damage{30, DamageType::Divine},
+                         Health{30, 100},
+                         13.03f,
+                         Protection{ArmorClass{18, BodyLocation::Body}},
+                         155};
 
         auto gt_name = tp_type.getType<Name>();
         auto gt_damage = tp_type.getType<Damage>();
@@ -106,7 +106,7 @@ int main() {
 
         {
             using type = decltype(tp_type);
-            auto featured = impl::GeneralFeatures_<type>(tp_type); //TODO: extract types for getType
+            auto featured = impl::GeneralFeatures_<type>(tp_type);  // TODO: extract types for getType
 
             auto gt0 = featured.getType<0>();
             auto gt1 = featured.getType<1>();
@@ -127,5 +127,13 @@ int main() {
 
         cout << parse_type_name<decltype(tp_type)>() << '\n';
         cout << name<decltype(tp_type)>() << '\n';
+    }
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
     }
 }

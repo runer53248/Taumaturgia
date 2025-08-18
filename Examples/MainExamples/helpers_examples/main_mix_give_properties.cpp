@@ -1,6 +1,7 @@
 #include <iostream>
-#include "Usage/Properties.hpp"
+#include "Examples/Checks.hpp"
 #include "Examples/demangle_type_name.hpp"
+#include "Usage/Properties.hpp"
 
 struct Type {
     Name name;
@@ -39,11 +40,17 @@ int main() {
     std::cout << "Scheme<Type0>::list_t                    = " << name<Scheme<Type0>::list_t>() << '\n';
     std::cout << "append_and_order_property_lists<Type0> = "
               << name<append_and_order_property_lists<  //
-                     Scheme<Type0>::list_t,               //
+                     Scheme<Type0>::list_t,             //
                      create_ordered_property_list<Living, Healing>>>()
               << '\n';
     std::cout << "Property<Living>  priority = " << Property<Living>::value << '\n';
     std::cout << "Property<Living_> priority = " << Property<Living_impl>::value << '\n';
 
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

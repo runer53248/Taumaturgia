@@ -2,6 +2,7 @@
 #include "Usage/With.hpp"
 #include "default_values.hpp"
 #include "print.hpp"
+#include "Examples/Checks.hpp"
 
 int main() {
     // MARK: print lambda
@@ -85,5 +86,13 @@ int main() {
 
         print(type1);
         print(type2);
+    }
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
     }
 }

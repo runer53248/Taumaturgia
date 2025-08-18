@@ -1,4 +1,5 @@
 #include "../Base.hpp"
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/PrintDamage.hpp"
 #include "Examples/PreetyPrint/PrintHealth.hpp"
 #include "Examples/PreetyPrint/PrintName.hpp"
@@ -97,5 +98,13 @@ int main() {
 
         std::cout << parse_type_name<Type_1, float, double>() << '\n';
         print(type1);
+    }
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
     }
 }

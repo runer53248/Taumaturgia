@@ -1,3 +1,4 @@
+#include "Examples/Checks.hpp"
 #include "Examples/PreetyPrint/preety_print.hpp"
 #include "Examples/basic_strategies.hpp"
 
@@ -76,5 +77,13 @@ int main() {
         }
     } catch (const std::exception& err) {
         std::cout << err.what() << '\n';
+    }
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
     }
 }

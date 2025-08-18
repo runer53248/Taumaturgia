@@ -1,6 +1,7 @@
 #define IGNORE_ORDER_LIST
 
 #include "../Base.hpp"
+#include "Examples/Checks.hpp"
 #include "Usage/With.hpp"
 #include "default_values.hpp"
 #include "print.hpp"
@@ -187,4 +188,12 @@ int main() {
         | (WithUnordered::Damage | WithUnordered::Damage | WithUnordered::Health | WithUnordered::Health);  // ! impl::pipe_helper depends on IGNORE_ORDER_LIST
     std::cout << "type w2 list = " << name<decltype((WithUnordered::Damage | WithUnordered::Damage | WithUnordered::Health | WithUnordered::Health))>() << '\n';
     std::cout << "type w2      = " << name<decltype(typew2)>() << '\n';
+
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

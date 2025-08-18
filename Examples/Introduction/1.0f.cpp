@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Examples/Checks.hpp"
 #include "Usage/Traits.hpp"
 #include "Usage/Types/Name/Name.hpp"
 
@@ -38,5 +39,11 @@ int main() {
     std::cout << "Take name from by access trait:" << '\n';
     std::cout << "trait<Name>::get(type6) = " << trait<Name>::get(type6) << '\n';
     std::cout << "trait<Name>::get(std::as_const(type6)) = " << trait<Name>::get(std::as_const(type6)) << '\n';
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

@@ -10,6 +10,7 @@ using WeirdTileBuild = add_properties_ordered<
 struct WeirdTileClass : Tile {};
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 using WeirdTile = WeirdTileBuild;
 #else
 using WeirdTile = WeirdTileClass;

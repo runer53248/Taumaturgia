@@ -18,6 +18,7 @@ struct TileClass {
 };
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 
 static_assert(std::same_as<
               TileBuild,

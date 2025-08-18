@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include "Examples/Checks.hpp"
 #include "Usage/Traits.hpp"
 #include "Usage/Types/Name/Name.hpp"
 
@@ -50,5 +51,11 @@ int main() {
     std::cout << "trait<Name>::get(type4_1) = " << trait<Name>::get(type4_1) << '\n';
     std::cout << "trait<Name>::get(type4_2) = " << trait<Name>::get(type4_2) << '\n';
     std::cout << "trait<Name>::get(type4_3) = " << trait<Name>::get(type4_3) << '\n';
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }

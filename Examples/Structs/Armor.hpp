@@ -33,6 +33,7 @@ private:
 };
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 using Armor = ArmorBuild;
 #else
 using Armor = Armor_Class;

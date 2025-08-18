@@ -11,6 +11,7 @@ struct EnemyClass {
 };
 
 #ifdef WITH_ADD_PROPERTIES
+#define USES_ADD_PROPERTIES
 using Enemy = EnemyBuild;
 #else
 using Enemy = EnemyClass;

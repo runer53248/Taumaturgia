@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Examples/Checks.hpp"
 #include "Examples/demangle_type_name.hpp"
 #include "Usage/Properties.hpp"
 
@@ -41,5 +42,11 @@ int main() {
     std::cout << Property<Restoring>::value << " - Restoring priority" << '\n';
     std::cout << '\n';
 
-    return 0;
+    {
+#ifdef USES_ADD_PROPERTIES
+       check_aP<true>();
+#else
+        check_aP<false>();
+#endif
+    }
 }
