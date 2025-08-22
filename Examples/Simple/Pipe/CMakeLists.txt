@@ -1,18 +1,6 @@
-add_executable(main_pipe0_${addons}
-    main_pipe0.cpp
-)
-add_executable(main_pipe1-1_${addons}
-    main_pipe1-1.cpp
-)
-add_executable(main_pipe1-2_${addons}
-    main_pipe1-2.cpp
-)
-add_executable(main_pipe2_${addons}
-    main_pipe2.cpp
-)
-add_executable(main_pipe3_${addons}
-    main_pipe3.cpp
-)
-add_executable(main_pipe4_${addons}
-    main_pipe4.cpp
-)
+add_executable(main_pipe0_${addons} main_pipe0.cpp)
+add_executable(main_pipe1-1_${addons} main_pipe1-1.cpp)
+add_executable(main_pipe1-2_${addons}  main_pipe1-2.cpp)
+add_executable(main_pipe2_${addons} main_pipe2.cpp)
+add_executable(main_pipe3_${addons} main_pipe3.cpp)
+add_executable(main_pipe4_${addons} main_pipe4.cpp)

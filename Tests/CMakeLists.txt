@@ -6,7 +6,4 @@ add_subdirectory(AddPropertyTest)
 
 add_subdirectory(AccesingTest)
 
-add_executable(test_${addons}
-    main_tests.cpp
-    ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp
-)
+add_executable(test_${addons} main_tests.cpp ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp)
