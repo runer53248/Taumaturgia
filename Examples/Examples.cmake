@@ -10,6 +10,8 @@ function(print_all_targets DIR)
             DEPENDS 
                 $<TARGET_FILE:${TGT}>
             COMMAND
+                ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/COMPARE/EXEC
+            COMMAND
                 ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:${TGT}> ${CMAKE_BINARY_DIR}/COMPARE/EXEC
         )
 
@@ -19,13 +21,18 @@ function(print_all_targets DIR)
             DEPENDS 
                 copy-executable-${TGT}
             COMMAND
+                ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/COMPARE/TXT
+            COMMAND
                 ${CMAKE_BINARY_DIR}/COMPARE/EXEC/${TGT} --gtest_color=yes > ${CMAKE_BINARY_DIR}/COMPARE/TXT/${TGT}.txt
         )
 
         add_custom_target(
             html-${TGT}${ID}
             ALL
-            DEPENDS run-text-${TGT}
+            DEPENDS 
+                run-text-${TGT}
+            COMMAND
+                ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/COMPARE/HTML
             COMMAND
                 ansi2html < ${CMAKE_BINARY_DIR}/COMPARE/TXT/${TGT}.txt > ${CMAKE_BINARY_DIR}/COMPARE/HTML/${TGT}.html
         )
