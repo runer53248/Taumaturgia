@@ -1,13 +1,8 @@
 #pragma once
 #include <string>
+#include "Adapter.hpp"
 #include "EmptyType.hpp"
 #include "Usage/Types/WearContainer/WearContainer.hpp"
-
-template <template <typename...> typename property, typename... Tags>
-struct Adapter {
-    template <typename T>
-    using type = property<T, Tags...>;
-};
 
 using PlayerBuild = add_properties_ordered<
     Type,

@@ -1,10 +1,17 @@
 #pragma once
+#include "Adapter.hpp"
 #include "EmptyType.hpp"
 #include "Usage/Types/Health/Health.hpp"
 
 using NpcBuild = add_properties_ordered<
     Type,
-    Living>;
+    Adapter<Living, struct Npc_tag>::type  // Living taged for custom default value
+    >;
+
+template <>
+struct UserDefaultValue<Health, struct Npc_tag> {
+    static constexpr auto value = [] { return Health{5}; };
+};
 
 struct NpcClass {
     Health hp{5};
