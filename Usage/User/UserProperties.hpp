@@ -11,8 +11,8 @@
 #include "Usage/Types/Protection/Protection.hpp"
 #include "Usage/Types/WearContainer/WearContainer.hpp"
 
-template <typename TYPE>
-using Living = UserPropertyAdapter<Health>::template once<TYPE>;
+template <typename TYPE, typename... Tags>
+using Living = UserPropertyAdapter<Health, Tags...>::template once<TYPE>;
 template <typename TYPE, typename... Tags>
 using Wearing = UserPropertyAdapter<WearContainer, Tags...>::template once<TYPE>;
 template <typename TYPE, typename... Tags>

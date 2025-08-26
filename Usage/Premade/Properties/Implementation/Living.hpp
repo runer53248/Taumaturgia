@@ -3,15 +3,16 @@
 #include "Taumaturgia/Properties/Structs/PropertyData.hpp"
 #include "Taumaturgia/Properties/UserDefaultValue.hpp"
 #include "Taumaturgia/Properties/unordered_token.hpp"
+#include "Usage/Premade/Properties/Helpers/For.hpp"
 #include "Usage/Types/Health/Health.hpp"
 #include "Usage/Types/Name/Name.hpp"
 
 namespace impl {
 
-template <typename T>
+template <typename T, typename... Tags>
 class LivingSimple_ : public T {
 public:
-    using property_data = PropertyData<LivingSimple_, T>;
+    using property_data = PropertyData<For<LivingSimple_, Tags...>::template type, T, Tags...>;
     using hold_type = Health;
     using T::T;
 
@@ -25,7 +26,7 @@ public:
     LivingSimple_(const Name& name, const hold_type& hp, Args&&... args)
         : T{name, std::forward<Args>(args)...}, hp_{hp} {}
 
-    // MARK: type C-tors
+    // MARK: nameless C-tor
 
     template <typename... Args>
     LivingSimple_(hold_type&& hp, Args&&... args)
@@ -53,7 +54,9 @@ public:
     }
 
 private:
-    hold_type hp_ = buildin_defaults<hold_type>::get();
+    hold_type hp_ = (boost::mp11::mp_empty<list<Tags...>>::value)
+                        ? buildin_defaults<hold_type>::get()
+                        : UserDefaultValue<hold_type, Tags...>::value();
 };
 
 }  // namespace impl
