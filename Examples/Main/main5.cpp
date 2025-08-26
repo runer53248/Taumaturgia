@@ -15,6 +15,7 @@ int main() {
     print_person(player);
     print_person(enemy);
     print_person(enemy_2);
+    print_person(npc);
 
     std::cout << "\nenemy_2 attack player with Stunning " << log.name() << ":\n\n";
     attack(
