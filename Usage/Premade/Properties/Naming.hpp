@@ -9,10 +9,10 @@ template <typename T>
 class Naming_ : public Features_<NamingSimple_<T>> {
 public:
     using property_data = PropertyData<Naming_, T>;
-    using child = Features_<NamingSimple_<T>>;
-    using typename child::hold_type;
+    using base = Features_<NamingSimple_<T>>;
+    using typename base::hold_type;
 
-    using child::child;
+    using base::base;
 };
 
 }  // namespace impl

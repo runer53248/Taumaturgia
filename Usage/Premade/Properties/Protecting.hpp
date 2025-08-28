@@ -9,10 +9,10 @@ template <typename T>
 class Protecting_ : public Features_<ProtectingSimple_<T>> {
 public:
     using property_data = PropertyData<Protecting_, T>;
-    using child = Features_<ProtectingSimple_<T>>;
-    using typename child::hold_type;
+    using base = Features_<ProtectingSimple_<T>>;
+    using typename base::hold_type;
 
-    using child::child;
+    using base::base;
 };
 
 }  // namespace impl

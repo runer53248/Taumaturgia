@@ -10,10 +10,10 @@ template <typename T>
 class Healing_ : public Features_<Constructors_<HealingSimple_<T>>> {
 public:
     using property_data = PropertyData<Healing_, T>;
-    using child = Features_<Constructors_<HealingSimple_<T>>>;
-    using typename child::hold_type;
+    using base = Features_<Constructors_<HealingSimple_<T>>>;
+    using typename base::hold_type;
 
-    using child::child;
+    using base::base;
 };
 
 }  // namespace impl

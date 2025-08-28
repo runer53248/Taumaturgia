@@ -9,10 +9,10 @@ template <typename T, typename... Tags>
 class Wearing_ : public Features_<WearingSimple_<T, Tags...>> {
 public:
     using property_data = PropertyData<For<Wearing_, Tags...>::template type, T, Tags...>;
-    using child = Features_<WearingSimple_<T, Tags...>>;
-    using typename child::hold_type;
+    using base = Features_<WearingSimple_<T, Tags...>>;
+    using typename base::hold_type;
 
-    using child::child;
+    using base::base;
 };
 
 }  // namespace impl

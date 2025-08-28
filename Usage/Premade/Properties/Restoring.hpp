@@ -11,10 +11,10 @@ template <typename T, typename... Tags>
 class Restoring_ : public Features_<RestoringSimple_<T, Tags...>> {
 public:
     using property_data = PropertyData<For<Restoring_, Tags...>::template type, T, Tags...>;
-    using child = Features_<RestoringSimple_<T, Tags...>>;
-    using typename child::hold_type;
+    using base = Features_<RestoringSimple_<T, Tags...>>;
+    using typename base::hold_type;
 
-    using child::child;
+    using base::base;
 };
 
 }  // namespace impl
