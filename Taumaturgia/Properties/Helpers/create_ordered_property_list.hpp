@@ -4,7 +4,7 @@
 
 template <template <typename...> typename property>
     requires is_property<property>
-struct Property;
+struct Property_ordered;
 
 template <template <typename...> typename property>
     requires is_property<property>
@@ -31,7 +31,7 @@ using create_property_list_of_type = append_and_order_property_lists<
 
 template <template <typename...> typename... properties>
     requires(is_property<properties> and ...)
-using create_ordered_property_list = create_property_list_of_type<Property, properties...>;
+using create_ordered_property_list = create_property_list_of_type<Property_ordered, properties...>;
 
 template <template <typename...> typename... properties>
     requires(is_property<properties> and ...)

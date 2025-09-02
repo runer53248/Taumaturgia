@@ -14,11 +14,11 @@ constexpr decltype(auto) getType(T&& el) noexcept
 template <size_t S, typename T>
 constexpr decltype(auto) getType(T&& el) noexcept
     requires(
-        requires { typename helpers::Scheme<std::remove_cvref_t<T>>::base::hold_type; }  //
+        requires { typename helpers::Scheme_ordered<std::remove_cvref_t<T>>::base::hold_type; }  //
         and not have_getType_num_method<T, S>                                            //
         and (S == 0 or have_getType_num_method<T, S - 1>))
 {
-    using base_type = helpers::Scheme<std::remove_cvref_t<T>>::base;  // most base type
+    using base_type = helpers::Scheme_ordered<std::remove_cvref_t<T>>::base;  // most base type
     using hold_type = typename std::remove_cvref_t<base_type>::hold_type;
 
     return trait<hold_type>::get(static_cast<base_type&>(el));
@@ -38,10 +38,10 @@ template <typename TYPE, typename... Tags, typename T>
 constexpr decltype(auto) getTypeTaged(T&& el) noexcept
     requires(not requires { el.template getTypeTaged<TYPE, Tags...>(); } and
              sizeof...(Tags) == 0 and trait_accessable<                                            //
-                                          typename helpers::Scheme<std::remove_cvref_t<T>>::base,  //
+                                          typename helpers::Scheme_ordered<std::remove_cvref_t<T>>::base,  //
                                           TYPE>)
 {
-    using base_type = helpers::Scheme<std::remove_cvref_t<T>>::base;  // most base type
+    using base_type = helpers::Scheme_ordered<std::remove_cvref_t<T>>::base;  // most base type
     return trait<TYPE>::get(static_cast<base_type&>(el));
 }
 template <typename TYPE, typename... Tags, typename T>

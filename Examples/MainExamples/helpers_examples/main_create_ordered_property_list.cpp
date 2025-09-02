@@ -24,18 +24,18 @@ int main() {
         A>;
     std::cout << name<type_0>() << '\n'
               << '\n';
-    static_assert(Property<Living>::value < Property<Damaging>::value);
-    static_assert(Property<Damaging>::value < Property<Protecting>::value);
-    static_assert(Property<Protecting>::value < Property<A>::value);
-    static_assert(Property<A>::value == Property<B>::value);
+    static_assert(Property_ordered<Living>::value < Property_ordered<Damaging>::value);
+    static_assert(Property_ordered<Damaging>::value < Property_ordered<Protecting>::value);
+    static_assert(Property_ordered<Protecting>::value < Property_ordered<A>::value);
+    static_assert(Property_ordered<A>::value == Property_ordered<B>::value);
     static_assert(std::is_same_v<
                   type_0,
                   list<
-                      Property<Living>,
-                      Property<Damaging>,
-                      Property<Protecting>,
-                      Property<A>,
-                      Property<B>>>);
+                      Property_ordered<Living>,
+                      Property_ordered<Damaging>,
+                      Property_ordered<Protecting>,
+                      Property_ordered<A>,
+                      Property_ordered<B>>>);
 
     using type_00 = create_ordered_property_list<Damaging, Protecting>;
     using type_01 = create_ordered_property_list<Protecting, Damaging>;
@@ -92,12 +92,12 @@ int main() {
     using type_y0 = create_ordered_property_list<DamagingImproved, Damaging, Damaging_impl, DamagingImproved_>;
     using type_y1 = create_ordered_property_list<DamagingImproved, Damaging_impl, Damaging, DamagingImproved_>;
     using type_y2 = create_ordered_property_list<DamagingImproved_, DamagingImproved, Damaging_impl, Damaging>;
-    static_assert(std::is_same_v<type_x0, list<Property<Damaging>>>);
-    static_assert(std::is_same_v<type_x1, list<Property<Damaging_impl>>>);
-    static_assert(std::is_same_v<type_x2, list<Property<DamagingImproved_>>>);
-    static_assert(std::is_same_v<type_y0, list<Property<DamagingImproved>>>);
-    static_assert(std::is_same_v<type_y1, list<Property<DamagingImproved>>>);
-    static_assert(std::is_same_v<type_y2, list<Property<DamagingImproved_>>>);
+    static_assert(std::is_same_v<type_x0, list<Property_ordered<Damaging>>>);
+    static_assert(std::is_same_v<type_x1, list<Property_ordered<Damaging_impl>>>);
+    static_assert(std::is_same_v<type_x2, list<Property_ordered<DamagingImproved_>>>);
+    static_assert(std::is_same_v<type_y0, list<Property_ordered<DamagingImproved>>>);
+    static_assert(std::is_same_v<type_y1, list<Property_ordered<DamagingImproved>>>);
+    static_assert(std::is_same_v<type_y2, list<Property_ordered<DamagingImproved_>>>);
     std::cout << "8) only first occurence of same property index count in create_ordered_property_list" << '\n';
     std::cout << name<type_x0>() << '\n';
     std::cout << name<type_x1>() << '\n';
@@ -107,10 +107,10 @@ int main() {
     std::cout << name<type_y2>() << '\n'
               << '\n';
 
-    static_assert(Property<Protecting_impl>::value == Property<Protecting>::value);
-    static_assert(is_same_priority<Property<Protecting_impl>, Property<Protecting>>);
-    static_assert(Property<Damaging_impl>::value == Property<Damaging>::value);
-    static_assert(is_same_priority<Property<Damaging_impl>, Property<Damaging>>);
+    static_assert(Property_ordered<Protecting_impl>::value == Property_ordered<Protecting>::value);
+    static_assert(is_same_priority<Property_ordered<Protecting_impl>, Property_ordered<Protecting>>);
+    static_assert(Property_ordered<Damaging_impl>::value == Property_ordered<Damaging>::value);
+    static_assert(is_same_priority<Property_ordered<Damaging_impl>, Property_ordered<Damaging>>);
 
     using type_x = create_ordered_property_list<Protecting_impl, Damaging_impl, Protecting, Damaging>;  // end with Protecting, Damaging
     using type_y = create_ordered_property_list<Damaging_impl, Protecting_impl, Damaging, Protecting>;  // end with Damaging, Protecting

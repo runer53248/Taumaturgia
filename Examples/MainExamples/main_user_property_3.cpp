@@ -38,7 +38,7 @@ using Type_adapter = add_properties_ordered<Type_basic, UserPropertyAdapter<TYPE
 
 int main() {
     std::cout << "taged_list                     = " << name<taged_list<UserProperty2>>() << '\n';
-    std::cout << "Property                       = " << name<Property<UserProperty2>::apply<tag>>() << '\n';
+    std::cout << "Property_ordered               = " << name<Property_ordered<UserProperty2>::apply<tag>>() << '\n';
     std::cout << '\n';
 
     std::cout << "Type_basic                     = " << name<Type_basic>() << '\n';

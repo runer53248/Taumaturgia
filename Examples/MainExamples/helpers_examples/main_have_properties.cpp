@@ -75,15 +75,15 @@ static_assert(not have_properties<
 
 int main() {
     std::cout << name<add_properties_ordered<Type, IntProperty>>() << '\n';
-    std::cout << name<Property<IntProperty>>() << '\n';
-    std::cout << name<Property<IntProperty>::apply<tag>>() << '\n';
+    std::cout << name<Property_ordered<IntProperty>>() << '\n';
+    std::cout << name<Property_ordered<IntProperty>::apply<tag>>() << '\n';
     std::cout << '\n';
     std::cout << name<add_properties_ordered<tag, Living>>() << '\n';
-    std::cout << name<Property<Living>::apply<tag>>() << '\n';
+    std::cout << name<Property_ordered<Living>::apply<tag>>() << '\n';
     std::cout << '\n';
 
     std::cout << name<add_properties_ordered<Type, Living>>() << '\n';
-    std::cout << name<Property<Living>>() << '\n';
+    std::cout << name<Property_ordered<Living>>() << '\n';
 
     {
 #ifdef USES_ADD_PROPERTIES

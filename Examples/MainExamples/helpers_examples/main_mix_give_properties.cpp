@@ -19,7 +19,7 @@ static_assert(std::is_same_v<Type3, Type4>);
 
 using helpers::append_and_order_property_lists;
 using helpers::create_ordered_property_list;
-using helpers::Scheme;
+using helpers::Scheme_ordered;
 
 int main() {
     auto print = [](auto t) {
@@ -27,7 +27,7 @@ int main() {
         std::cout << have_property_data<typename T::property_data::base_type> << '\n';
         std::cout << "RESULT type   = " << name<T>() << '\n';
         std::cout << "Base type     = " << name<typename T::property_data::base_type>() << '\n';
-        std::cout << "Property type = " << name<typename T::property_data::property_type>() << "\n\n";
+        std::cout << "Property type = " << name<typename T::property_data::ordered_property_type>() << "\n\n";
     };
 
     print(Type0{});
@@ -37,14 +37,14 @@ int main() {
     print(Type4{});
 
     std::cout << "create_ordered_property_list           = " << name<create_ordered_property_list<Living, Healing>>() << '\n';
-    std::cout << "Scheme<Type0>::list_t                    = " << name<Scheme<Type0>::list_t>() << '\n';
+    std::cout << "Scheme_ordered<Type0>::list_t          = " << name<Scheme_ordered<Type0>::list_t>() << '\n';
     std::cout << "append_and_order_property_lists<Type0> = "
               << name<append_and_order_property_lists<  //
-                     Scheme<Type0>::list_t,             //
+                     Scheme_ordered<Type0>::list_t,             //
                      create_ordered_property_list<Living, Healing>>>()
               << '\n';
-    std::cout << "Property<Living>  priority = " << Property<Living>::value << '\n';
-    std::cout << "Property<Living_> priority = " << Property<Living_impl>::value << '\n';
+    std::cout << "Property_ordered<Living>  priority = " << Property_ordered<Living>::value << '\n';
+    std::cout << "Property_ordered<Living_> priority = " << Property_ordered<Living_impl>::value << '\n';
 
     {
 #ifdef USES_ADD_PROPERTIES

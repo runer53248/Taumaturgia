@@ -37,7 +37,7 @@ auto type_name_result(std::string text = name<T>()) {
         }
     };
 
-    using base_type = typename helpers::Scheme<T>::base;
+    using base_type = typename helpers::Scheme_ordered<T>::base;
     std::string base_name = name<base_type>();
 
     what = base_name;

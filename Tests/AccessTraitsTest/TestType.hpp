@@ -38,27 +38,27 @@ using TestType = add_properties_ordered<
 
 // Living < Wearing < Damaging < Protecting < Healing < Restoring < Naming < UserPropertyAdapter<float>::type
 // UserPropertyAdapter<float>::type == UserPropertyAdapter<int>::type == UserPropertyAdapter<bool>::type
-static_assert(Property<Living>::value < Property<Wearing>::value);
-static_assert(Property<Wearing>::value < Property<Damaging>::value);
-static_assert(Property<Damaging>::value < Property<Protecting>::value);
-static_assert(Property<Protecting>::value < Property<Healing>::value);
-static_assert(Property<Healing>::value < Property<Restoring>::value);
-static_assert(Property<Restoring>::value < Property<Naming>::value);
-static_assert(Property<Naming>::value < Property<UserPropertyAdapter<type_1>::once>::value);
-static_assert(Property<UserPropertyAdapter<type_1>::once>::value == Property<UserPropertyAdapter<type_2>::once>::value);
-static_assert(Property<UserPropertyAdapter<type_1>::once>::value == Property<UserPropertyAdapter<type_3>::once>::value);
+static_assert(Property_ordered<Living>::value < Property_ordered<Wearing>::value);
+static_assert(Property_ordered<Wearing>::value < Property_ordered<Damaging>::value);
+static_assert(Property_ordered<Damaging>::value < Property_ordered<Protecting>::value);
+static_assert(Property_ordered<Protecting>::value < Property_ordered<Healing>::value);
+static_assert(Property_ordered<Healing>::value < Property_ordered<Restoring>::value);
+static_assert(Property_ordered<Restoring>::value < Property_ordered<Naming>::value);
+static_assert(Property_ordered<Naming>::value < Property_ordered<UserPropertyAdapter<type_1>::once>::value);
+static_assert(Property_ordered<UserPropertyAdapter<type_1>::once>::value == Property_ordered<UserPropertyAdapter<type_2>::once>::value);
+static_assert(Property_ordered<UserPropertyAdapter<type_1>::once>::value == Property_ordered<UserPropertyAdapter<type_3>::once>::value);
 
 using helpers::is_same_priority;
 
 static_assert(not is_same_priority<
-              Property<UserPropertyAdapter<type_1>::once>,
-              Property<UserPropertyAdapter<type_2>::once>>);
+              Property_ordered<UserPropertyAdapter<type_1>::once>,
+              Property_ordered<UserPropertyAdapter<type_2>::once>>);
 static_assert(not is_same_priority<
-              Property<UserPropertyAdapter<type_1>::once>,
-              Property<UserPropertyAdapter<type_3>::once>>);
+              Property_ordered<UserPropertyAdapter<type_1>::once>,
+              Property_ordered<UserPropertyAdapter<type_3>::once>>);
 static_assert(not is_same_priority<
-              Property<UserPropertyAdapter<type_2>::once>,
-              Property<UserPropertyAdapter<type_3>::once>>);
+              Property_ordered<UserPropertyAdapter<type_2>::once>,
+              Property_ordered<UserPropertyAdapter<type_3>::once>>);
 
 auto& operator<<(std::ostream& stream, const Name& name) {
     return stream << std::string(name);

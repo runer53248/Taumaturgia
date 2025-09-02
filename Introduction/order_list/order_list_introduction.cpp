@@ -18,21 +18,21 @@ int main() {
     auto type =
         Base{}                                                //
         | With::user_property<int, struct second_int>         //* 6  : not in list
-        | Property<int_second_tag::apply>{}                    //  1  :
-        | Property<int_second_tag::once>{}                    //  1  :
-        | Property<int_third::once>{}                         //  2  :
-        | Property<int_first::once>{}                         //  0  :
+        | Property_ordered<int_second_tag::apply>{}                    //  1  :
+        | Property_ordered<int_second_tag::once>{}                    //  1  :
+        | Property_ordered<int_third::once>{}                         //  2  :
+        | Property_ordered<int_first::once>{}                         //  0  :
         | With::user_property<int, struct second_int>         //* 6  : not in list
-        | Property<just_float::once>{}                        //  3  :
-        | Property<string_second::apply>{}                     //  5  :
-        | Property<string_first::apply>{}                      //  4  :
+        | Property_ordered<just_float::once>{}                        //  3  :
+        | Property_ordered<string_second::apply>{}                     //  5  :
+        | Property_ordered<string_first::apply>{}                      //  4  :
         | With::user_property_once<bool, struct first_bool>   //* 7  : not in list
         | With::user_property_once<bool, struct second_bool>  //* 8  : not in list
         | With::user_property<char, struct first_char>        //* 9  : not in list
         | With::user_property<char, struct second_char>       //* 10 : not in list
         | With::user_property<float>                          //  3  :
-        | Property<string_first::apply>{}                      //  4  :
-        | Property<int_third::once>{}                         //  2  :
+        | Property_ordered<string_first::apply>{}                      //  4  :
+        | Property_ordered<int_third::once>{}                         //  2  :
         | With::Damage                                        //* 11 : not in list
         | Create;
 
@@ -94,17 +94,17 @@ int main() {
 
     {
         static_assert(not helpers::impl::same_priority<
-                      Property<int_second_tag::apply>,
-                      Property<int_third::apply>>::value);
+                      Property_ordered<int_second_tag::apply>,
+                      Property_ordered<int_third::apply>>::value);
 
-        static_assert(Property<int_first::apply>::value == Property<int_first::once>::value);
-        static_assert(Property<int_second_tag::apply>::value == Property<int_second_tag::once>::value);
-        static_assert(Property<int_third::apply>::value == Property<int_third::once>::value);
+        static_assert(Property_ordered<int_first::apply>::value == Property_ordered<int_first::once>::value);
+        static_assert(Property_ordered<int_second_tag::apply>::value == Property_ordered<int_second_tag::once>::value);
+        static_assert(Property_ordered<int_third::apply>::value == Property_ordered<int_third::once>::value);
 
-        std::cout << "priority of int_first::apply      = " << Property<int_first::apply>::value << '\n';
-        std::cout << "priority of int_second_tag::apply = " << Property<int_second_tag::apply>::value << '\n';
-        std::cout << "priority of int_third::apply      = " << Property<int_third::apply>::value << '\n';
-        std::cout << "priority of just_float::once     = " << Property<just_float::once>::value << '\n';
+        std::cout << "priority of int_first::apply      = " << Property_ordered<int_first::apply>::value << '\n';
+        std::cout << "priority of int_second_tag::apply = " << Property_ordered<int_second_tag::apply>::value << '\n';
+        std::cout << "priority of int_third::apply      = " << Property_ordered<int_third::apply>::value << '\n';
+        std::cout << "priority of just_float::once     = " << Property_ordered<just_float::once>::value << '\n';
         std::cout << '\n';
 
         using Type2 = add_properties_ordered<Base,

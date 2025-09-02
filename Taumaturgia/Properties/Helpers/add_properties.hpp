@@ -8,7 +8,7 @@ template <typename property>
 struct is_property_type_ordered_impl {};  // invalid template argument
 template <template <typename...> typename property>
     requires is_property<property>
-struct is_property_type_ordered_impl<Property<property>> {
+struct is_property_type_ordered_impl<Property_ordered<property>> {
     static constexpr bool value = true;
 };
 template <template <typename...> typename property>
@@ -39,9 +39,9 @@ struct add_properties_ordered_impl {
     using type = std::conditional_t<
         have_property_data<T>,
         build_into_t<
-            typename Scheme<T>::base,
+            typename Scheme_ordered<T>::base,
             append_and_order_property_lists<
-                typename Scheme<T>::list_t,
+                typename Scheme_ordered<T>::list_t,
                 create_ordered_property_list<properties...>>>,
         build_into_t<
             T,
@@ -72,7 +72,7 @@ struct add_properties_impl {
 
     using scheme_type = std::conditional_t<
         all_properties_type_ordered<properties...>,
-        Scheme<T>,
+        Scheme_ordered<T>,
         Scheme_unordered<T>>;
 
     using type = std::conditional_t<

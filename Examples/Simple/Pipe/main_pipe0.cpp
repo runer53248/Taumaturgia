@@ -83,14 +83,14 @@ int main() {
                       impl::Creator<::add_properties<T, Property_unordered<Naming>>>,
                       impl::Creator<::add_properties_unordered<T, Naming>>>);
         static_assert(std::is_same_v<
-                      impl::Creator<::add_properties<T, Property<Naming>>>,
+                      impl::Creator<::add_properties<T, Property_ordered<Naming>>>,
                       impl::Creator<::add_properties_ordered<T, Naming>>>);
         using T2 = Living<Damaging<Simple00>>;
         static_assert(std::is_same_v<
                       impl::Creator<::add_properties<T2, Property_unordered<Naming>>>,
                       impl::Creator<::add_properties_unordered<T2, Naming>>>);
         static_assert(std::is_same_v<
-                      impl::Creator<::add_properties<T2, Property<Naming>>>,
+                      impl::Creator<::add_properties<T2, Property_ordered<Naming>>>,
                       impl::Creator<::add_properties_ordered<T2, Naming>>>);
 
         auto create_type_simple00 =

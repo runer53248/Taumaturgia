@@ -14,30 +14,30 @@ using Tile_unordered = Tile_list::apply_unordered_properties_to<Empty>;
 #include "order_assertions.hpp"
 
 int main() {
-    static_assert(not helpers::is_same_priority<Property<Naming>, Property<Damaging>>);
+    static_assert(not helpers::is_same_priority<Property_ordered<Naming>, Property_ordered<Damaging>>);
     static_assert(not helpers::is_same_priority<Property_unordered<Naming>, Property_unordered<Damaging>>);
 
-    std::cout << "priority Property<Naming> = " << Property<Naming>::value << '\n';
-    std::cout << "priority Property<Damaging> = " << Property<Damaging>::value << '\n';
-    std::cout << "priority Property_unordered<Naming> = " << Property_unordered<Naming>::value << '\n';
+    std::cout << "priority Property_ordered<Naming> =     " << Property_ordered<Naming>::value << '\n';
+    std::cout << "priority Property_ordered<Damaging> =   " << Property_ordered<Damaging>::value << '\n';
+    std::cout << "priority Property_unordered<Naming> =   " << Property_unordered<Naming>::value << '\n';
     std::cout << "priority Property_unordered<Damaging> = " << Property_unordered<Damaging>::value
               << "\n\n";
 
     static_assert(helpers::is_same_priority<
-                  Property<Damaging_impl>,
-                  Property<Damaging>>);
+                  Property_ordered<Damaging_impl>,
+                  Property_ordered<Damaging>>);
 
     static_assert(helpers::is_same_priority<
                   Property_unordered<Damaging_impl>,
                   Property_unordered<Damaging>>);
 
     using list_of_impl_short = list<
-        Property<Damaging_impl>,
-        Property<Naming_impl>>;
+        Property_ordered<Damaging_impl>,
+        Property_ordered<Naming_impl>>;
     using list_of_alias_long = list<
-        Property<Damaging>,
-        Property<Naming>,
-        Property<Living>>;
+        Property_ordered<Damaging>,
+        Property_ordered<Naming>,
+        Property_ordered<Living>>;
     std::cout << "list of impl followed by list of alias = \n\t"
               << name<helpers::append_and_order_property_lists<
                      list_of_impl_short,
@@ -45,12 +45,12 @@ int main() {
               << "\n\n";
 
     using list_of_alias_short = list<
-        Property<Damaging>,
-        Property<Naming>>;
+        Property_ordered<Damaging>,
+        Property_ordered<Naming>>;
     using list_of_impl_long = list<
-        Property<Damaging_impl>,
-        Property<Naming_impl>,
-        Property<Living_impl>>;
+        Property_ordered<Damaging_impl>,
+        Property_ordered<Naming_impl>,
+        Property_ordered<Living_impl>>;
     std::cout << "list of alias followed by list of impl  = \n\t"
               << name<helpers::append_and_order_property_lists<
                      list_of_alias_short,
@@ -72,9 +72,9 @@ int main() {
               << name<helpers::append_and_order_property_lists<
                      list<
                          Property_unordered<Damaging_impl>,
-                         Property<Naming_impl>>,
+                         Property_ordered<Naming_impl>>,
                      list<
-                         Property<Healing>,
+                         Property_ordered<Healing>,
                          Property_unordered<Damaging>,
                          Property_unordered<Naming>,
                          Property_unordered<Living>>>>()

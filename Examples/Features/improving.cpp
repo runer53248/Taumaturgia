@@ -165,24 +165,24 @@ using helpers::is_same_priority;
 struct Empty {};
 
 static_assert(is_same_priority<
-              Property<Living>,
-              Property<Living_1_Improved>>);
+              Property_ordered<Living>,
+              Property_ordered<Living_1_Improved>>);
 static_assert(is_same_priority<
-              Property<Living_1_Improved>,
-              Property<Living_2_Improved>>);
+              Property_ordered<Living_1_Improved>,
+              Property_ordered<Living_2_Improved>>);
 static_assert(is_same_priority<
-              Property<Living_2_Improved>,
-              Property<Improved_Living_3_Improved>>);
+              Property_ordered<Living_2_Improved>,
+              Property_ordered<Improved_Living_3_Improved>>);
 static_assert(is_same_priority<
-              Property<Improved_Living_3_Improved>,
-              Property<Improved_Living_4_Improved>>);
+              Property_ordered<Improved_Living_3_Improved>,
+              Property_ordered<Improved_Living_4_Improved>>);
 
 int main() {
-    static_assert(Property<Living>::value == Property<Living_impl>::value);
-    static_assert(is_same_priority<Property<Living>, Property<Living_impl>>);
+    static_assert(Property_ordered<Living>::value == Property_ordered<Living_impl>::value);
+    static_assert(is_same_priority<Property_ordered<Living>, Property_ordered<Living_impl>>);
 
     auto print = []<template <typename...> typename property>() {
-        std::cout << name<Property<property>>() << " priority = " << Property<property>::value << " | improved = " << is_property_improvement<property> << '\n';
+        std::cout << name<Property_ordered<property>>() << " priority = " << Property_ordered<property>::value << " | improved = " << is_property_improvement<property> << '\n';
     };
 
     std::cout << "properties can be improved" << '\n';

@@ -18,7 +18,7 @@ private:
 
 public:
     template <typename T>
-    using type = equivalent_properties_predicate_impl<T, Property<property>>;
+    using type = equivalent_properties_predicate_impl<T, Property_ordered<property>>;
 };
 
 }  // namespace helpers
@@ -29,5 +29,5 @@ concept have_properties =
     boost::mp11::mp_and<
         boost::mp11::mp_to_bool<
             boost::mp11::mp_count_if<
-                typename helpers::Scheme<T>::list_t,
+                typename helpers::Scheme_ordered<T>::list_t,
                 helpers::equivalent_properties_predicate<properties>::template type>>...>::value;

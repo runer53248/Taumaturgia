@@ -18,15 +18,15 @@ int main() {
     {
         static_assert(std::is_same_v<
                       decltype(With::user_property<int, struct first_int>),
-                      const Property<int_first::apply>>);
+                      const Property_ordered<int_first::apply>>);
 
-        static_assert(Property<int_first::apply>{} == With::user_property<int, struct first_int>);
-        static_assert(Property<int_first::once>{} != With::user_property<int, struct first_int>);
-        static_assert(Property<int_first::once>{} == With::user_property_once<int, struct first_int>);
-        static_assert(Property<int_first::apply>{} != With::user_property_once<int, struct first_int>);
+        static_assert(Property_ordered<int_first::apply>{} == With::user_property<int, struct first_int>);
+        static_assert(Property_ordered<int_first::once>{} != With::user_property<int, struct first_int>);
+        static_assert(Property_ordered<int_first::once>{} == With::user_property_once<int, struct first_int>);
+        static_assert(Property_ordered<int_first::apply>{} != With::user_property_once<int, struct first_int>);
 
-        static_assert(Property<just_float::once>{} != With::user_property<float>);
-        static_assert(Property<just_float::once>{} == With::user_property_once<float>);
+        static_assert(Property_ordered<just_float::once>{} != With::user_property<float>);
+        static_assert(Property_ordered<just_float::once>{} == With::user_property_once<float>);
 
         static_assert(Property_unordered<int_first::apply>{} == WithUnordered::user_property<int, struct first_int>);
         static_assert(Property_unordered<int_first::once>{} != WithUnordered::user_property<int, struct first_int>);
@@ -76,10 +76,10 @@ int main() {
         auto type1 = t1_creator();
         auto type2 = t2_creator();
         auto type3 = t3_creator();
-        std::cout << "Damaging                  =  " << Property<Damaging>::value << '\n';
-        std::cout << "Damaging<.. Damage_first> =  " << Property<Damaging<tag, struct Damage_first>::property_data::property_type::apply>::value << '\n';
-        std::cout << "Damage                    =  " << Property<Damaging_impl>::value << '\n';
-        std::cout << "Damage<.. Damage_first>   =  " << Property<Damaging_impl<tag, struct Damage_first>::property_data::property_type::apply>::value << '\n';
+        std::cout << "Damaging                  =  " << Property_ordered<Damaging>::value << '\n';
+        std::cout << "Damaging<.. Damage_first> =  " << Property_ordered<Damaging<tag, struct Damage_first>::property_data::ordered_property_type::apply>::value << '\n';
+        std::cout << "Damage                    =  " << Property_ordered<Damaging_impl>::value << '\n';
+        std::cout << "Damage<.. Damage_first>   =  " << Property_ordered<Damaging_impl<tag, struct Damage_first>::property_data::ordered_property_type::apply>::value << '\n';
         std::cout << "1  = " << decltype(With::user_property<Damage, struct Damage_first>)::value << '\n';
         std::cout << "2  = " << decltype(With::Damage)::value << '\n';
         std::cout << "3  = " << decltype(With::taged_property<Damaging_impl>)::value << '\n';

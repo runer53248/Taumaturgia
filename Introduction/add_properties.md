@@ -18,7 +18,7 @@ using NewType = Living<Wearing<Damaging<Protecting<Healing<Restoring<Naming<Type
 ```cpp
 // ordered
 using NewType_1 = add_properties_ordered<Type, Naming, Living, Wearing>;
-using NewType_2 = add_properties<Type, Property<Naming>, Property<Living>, Property<Wearing>>;
+using NewType_2 = add_properties<Type, Property_ordered<Naming>, Property_ordered<Living>, Property_ordered<Wearing>>;
 ```
 
 ```cpp

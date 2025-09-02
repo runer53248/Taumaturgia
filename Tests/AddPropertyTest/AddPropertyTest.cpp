@@ -25,11 +25,11 @@ namespace With {
 }  // namespace With
 
 static_assert(std::same_as<
-              Property<Living_taged>::property_data,
+              Property_ordered<Living_taged>::property_data,
               decltype(With::MyHealth)::property_data>);
 
 static_assert(std::same_as<
-              Property<Living_taged_once>::property_data,
+              Property_ordered<Living_taged_once>::property_data,
               decltype(With::MyHealth_once)::property_data>);
 
 TEST(AddPropertyTest, new_property) {

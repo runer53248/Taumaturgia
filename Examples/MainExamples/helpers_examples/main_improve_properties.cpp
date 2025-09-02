@@ -9,13 +9,13 @@ using helpers::is_same_priority;
 
 int main() {
     // improvements of build-in properties
-    static_assert(Property<Damaging>::value == Property<DamagingImproved>::value);
-    static_assert(is_same_priority<Property<Damaging>, Property<DamagingImproved>>);
-    static_assert(is_same_priority<Property<Damaging_impl>, Property<DamagingImproved>>);
+    static_assert(Property_ordered<Damaging>::value == Property_ordered<DamagingImproved>::value);
+    static_assert(is_same_priority<Property_ordered<Damaging>, Property_ordered<DamagingImproved>>);
+    static_assert(is_same_priority<Property_ordered<Damaging_impl>, Property_ordered<DamagingImproved>>);
 
     auto printPriority = []<template <typename...> typename T>(std::string const& text) {
         std::cout << text << '\n';
-        std::cout << " priority = " << Property<T>::value << " | improved = " << is_property_improvement<T> << '\n';
+        std::cout << " priority = " << Property_ordered<T>::value << " | improved = " << is_property_improvement<T> << '\n';
     };
 
     std::cout << "build-in properties can be improved" << '\n';
@@ -25,11 +25,11 @@ int main() {
     std::cout << '\n';
 
     // improvements of user properties
-    static_assert(Property<Protecting>::value == Property<UserProtectingImproved>::value);
-    static_assert(is_same_priority<Property<Protecting>, Property<UserProtectingImproved>>);
-    static_assert(is_same_priority<Property<Protecting_impl>, Property<UserProtectingImproved>>);
-    static_assert(is_same_priority<Property<Protecting>, Property<UserProtectingImproved_2>>);
-    static_assert(is_same_priority<Property<Protecting_impl>, Property<UserProtectingImproved_2>>);
+    static_assert(Property_ordered<Protecting>::value == Property_ordered<UserProtectingImproved>::value);
+    static_assert(is_same_priority<Property_ordered<Protecting>, Property_ordered<UserProtectingImproved>>);
+    static_assert(is_same_priority<Property_ordered<Protecting_impl>, Property_ordered<UserProtectingImproved>>);
+    static_assert(is_same_priority<Property_ordered<Protecting>, Property_ordered<UserProtectingImproved_2>>);
+    static_assert(is_same_priority<Property_ordered<Protecting_impl>, Property_ordered<UserProtectingImproved_2>>);
 
     std::cout << "user properties can be improved" << '\n';
     printPriority.operator()<Protecting>("Protecting");
@@ -39,15 +39,15 @@ int main() {
     std::cout << '\n';
 
     // UserProperty may have same priority value but are not considered same by same_priority struct
-    static_assert(Property<Protecting_impl>::value != Property<Damaging_impl>::value);  // not same priority value
+    static_assert(Property_ordered<Protecting_impl>::value != Property_ordered<Damaging_impl>::value);  // not same priority value
 
-    static_assert(Property<Protecting_impl>::value == Property<Protecting>::value);  // same priority value
+    static_assert(Property_ordered<Protecting_impl>::value == Property_ordered<Protecting>::value);  // same priority value
     static_assert(not is_same_priority<
-                  Property<Protecting_impl>,
-                  Property<Damaging_impl>>);  // not same_priority value - different types
+                  Property_ordered<Protecting_impl>,
+                  Property_ordered<Damaging_impl>>);  // not same_priority value - different types
     static_assert(is_same_priority<
-                  Property<Protecting>,
-                  Property<Protecting_impl>>);  // same type have same_priority value
+                  Property_ordered<Protecting>,
+                  Property_ordered<Protecting_impl>>);  // same type have same_priority value
 
     struct Type {
     public:

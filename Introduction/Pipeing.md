@@ -44,7 +44,7 @@ auto type = create_type(
 2. Create or expand a list of properties.
 
 ```cpp
-list with_list_Name = With::Name; // implicit conversion from Property<Naming_> to list<Property<Naming_>>
+list with_list_Name = With::Name; // implicit conversion from Property_ordered<Naming_> to list<Property_ordered<Naming_>>
 auto tlist = With::Name | With::Health | With::Protection | With::Damage;
 auto nlist = tlist | With::user_property<int>;
 ```

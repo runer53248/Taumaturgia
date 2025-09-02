@@ -25,21 +25,21 @@ struct PlainProperty : public T {
 // Living<Wearing<Damaging<Protecting<Healing<Restoring<Naming<...<TYPE>>>>>>>>
 
 int main() {
-    std::cout << "B. 'Property<...>::value' priority examples:" << '\n'
+    std::cout << "B. 'Property_ordered<...>::value' priority examples:" << '\n'
               << '\n';
 
     std::cout << "1) print priority of unknown properties" << '\n';
-    std::cout << Property<PlainProperty>::value << " - PlainProperty priority" << '\n';
+    std::cout << Property_ordered<PlainProperty>::value << " - PlainProperty priority" << '\n';
     std::cout << '\n';
 
     std::cout << "2) print priority of known from order_list properties" << '\n';
-    std::cout << Property<Naming>::value << " - Naming priority" << '\n';
-    std::cout << Property<Living>::value << " - Living priority" << '\n';
-    std::cout << Property<Wearing>::value << " - Wearing priority" << '\n';
-    std::cout << Property<Damaging>::value << " - Damaging priority" << '\n';
-    std::cout << Property<Protecting>::value << " - Protecting priority" << '\n';
-    std::cout << Property<Healing>::value << " - Healing priority" << '\n';
-    std::cout << Property<Restoring>::value << " - Restoring priority" << '\n';
+    std::cout << Property_ordered<Naming>::value << " - Naming priority" << '\n';
+    std::cout << Property_ordered<Living>::value << " - Living priority" << '\n';
+    std::cout << Property_ordered<Wearing>::value << " - Wearing priority" << '\n';
+    std::cout << Property_ordered<Damaging>::value << " - Damaging priority" << '\n';
+    std::cout << Property_ordered<Protecting>::value << " - Protecting priority" << '\n';
+    std::cout << Property_ordered<Healing>::value << " - Healing priority" << '\n';
+    std::cout << Property_ordered<Restoring>::value << " - Restoring priority" << '\n';
     std::cout << '\n';
 
     {

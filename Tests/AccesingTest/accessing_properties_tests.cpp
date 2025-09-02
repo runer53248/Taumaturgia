@@ -14,7 +14,7 @@ struct tag_health2 {};
 struct tag_damage {};
 struct tag_wrong {};
 
-static_assert(Property<Living>::value < Property<Damaging>::value);
+static_assert(Property_ordered<Living>::value < Property_ordered<Damaging>::value);
 
 struct with_health {
     using hold_type = Health;
@@ -74,17 +74,17 @@ namespace With {
 }  // namespace With
 
 static_assert(std::same_as<
-              Property<MyLiving>::property_data,
+              Property_ordered<MyLiving>::property_data,
               decltype(With::MyHealth)::property_data>);
 static_assert(std::same_as<
-              Property<MyLiving_once>::property_data,
+              Property_ordered<MyLiving_once>::property_data,
               decltype(With::MyHealth_once)::property_data>);
 
 static_assert(std::same_as<
-              Property<MyDamaging>::property_data,
+              Property_ordered<MyDamaging>::property_data,
               decltype(With::MyDamage)::property_data>);
 static_assert(std::same_as<
-              Property<MyDamaging_once>::property_data,
+              Property_ordered<MyDamaging_once>::property_data,
               decltype(With::MyDamage_once)::property_data>);
 
 // MARK: helpers
@@ -241,7 +241,7 @@ TEST(add_two_kind_of_property_to_same_type, base_empty) {
     using type1 = add_properties_ordered<empty, Damaging, Living>;
     using type2 = add_properties_ordered<type1, MyDamaging, MyLiving>;
 
-    static_assert(not helpers::impl::same_priority<Property<Damaging>, Property<MyDamaging>>::value);
+    static_assert(not helpers::impl::same_priority<Property_ordered<Damaging>, Property_ordered<MyDamaging>>::value);
     static_assert(std::same_as<
                   helpers::create_ordered_property_list<Living, MyLiving>,
                   helpers::create_ordered_property_list<MyLiving, Living>>);
@@ -268,7 +268,7 @@ TEST(add_two_kind_of_property_to_same_type, base_with_health) {
     using type1 = add_properties_ordered<with_health, Damaging, Living>;
     using type2 = add_properties_ordered<type1, MyDamaging, MyLiving>;
 
-    static_assert(not helpers::impl::same_priority<Property<Damaging>, Property<MyDamaging>>::value);
+    static_assert(not helpers::impl::same_priority<Property_ordered<Damaging>, Property_ordered<MyDamaging>>::value);
     static_assert(std::same_as<
                   helpers::create_ordered_property_list<Living, MyLiving>,
                   helpers::create_ordered_property_list<MyLiving, Living>>);

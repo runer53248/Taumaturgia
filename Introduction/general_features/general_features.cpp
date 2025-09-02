@@ -36,11 +36,11 @@ int main() {
     static_assert(trait_accessable<Type, Health>);
     static_assert(trait_accessable<Type, int>);
 
-    using property_health_x = Property<UserPropertyAdapter<Health, struct x>::apply>;
-    using property_name_name_t = Property<UserPropertyAdapter<Name, name_t>::apply>;
-    using property_int_int_t = Property<UserPropertyAdapter<int, int_t>::apply>;
-    using property_name = Property<Naming_impl>;
-    using property_protection = Property<Protecting_impl>;
+    using property_health_x = Property_ordered<UserPropertyAdapter<Health, struct x>::apply>;
+    using property_name_name_t = Property_ordered<UserPropertyAdapter<Name, name_t>::apply>;
+    using property_int_int_t = Property_ordered<UserPropertyAdapter<int, int_t>::apply>;
+    using property_name = Property_ordered<Naming_impl>;
+    using property_protection = Property_ordered<Protecting_impl>;
 
     using general_type = GeneralFeatures<Type>;
     using general_type2 = add_properties<general_type,

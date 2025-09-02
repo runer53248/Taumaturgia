@@ -12,8 +12,8 @@ struct Base {
 
 int main() {
     // MARK: extra example
-    list with_list_Name = With::Name;  // implicit conversion from Property<Naming> to list<Naming<tag>>
-    auto with_auto_Name = With::Name;  // ! auto deduce Property<Naming> (single object is not a list)
+    list with_list_Name = With::Name;  // implicit conversion from Property_ordered<Naming> to list<Naming<tag>>
+    auto with_auto_Name = With::Name;  // ! auto deduce Property_ordered<Naming> (single object is not a list)
 
     static_assert(std::same_as<
                   decltype(with_list_Name | With::Health),    // append to list

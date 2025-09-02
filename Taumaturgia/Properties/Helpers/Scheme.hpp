@@ -4,22 +4,22 @@
 namespace helpers {
 
 template <typename T>
-struct Scheme;
+struct Scheme_ordered;
 
 template <typename T>
     requires(not have_property_data<T>)
-struct Scheme<T> {
+struct Scheme_ordered<T> {
     using base = T;
     using list_t = list<>;
 };
 
 template <typename T>
     requires(have_property_data<T>)
-struct Scheme<T> {
-    using base = Scheme<typename T::property_data::base_type>::base;  // most inner base type
-    using list_helper = Scheme<typename T::property_data::base_type>::list_t;
+struct Scheme_ordered<T> {
+    using base = Scheme_ordered<typename T::property_data::base_type>::base;  // most inner base type
+    using list_helper = Scheme_ordered<typename T::property_data::base_type>::list_t;
     using list_t = append_and_order_property_lists<  // list of all properties needed to add into base type
-        list<typename T::property_data::property_type>,
+        list<typename T::property_data::ordered_property_type>,
         list_helper>;
 };
 

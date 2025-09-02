@@ -61,7 +61,7 @@ int main() {
     // 2
     {
         auto property_Name = With::Name;
-        list list_Name = With::Name;  // implicit conversion from Property<Naming_> to list<Property<Naming_>>
+        list list_Name = With::Name;  // implicit conversion from Property_ordered<Naming_> to list<Property_ordered<Naming_>>
         auto tlist = With::Name | With::Health | With::Protection | With::Damage;
         auto nlist = tlist | With::user_property<int>;
 

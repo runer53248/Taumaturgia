@@ -8,7 +8,7 @@ template <typename T>
 using Integering = UserPropertyAdapter<int>::template once<T>;
 
 namespace With {
-[[maybe_unused]] constexpr Property<UserPropertyAdapter<int>::template once> Integer{};
+[[maybe_unused]] constexpr Property_ordered<UserPropertyAdapter<int>::template once> Integer{};
 }  // namespace With
 
 int main() {
@@ -17,9 +17,9 @@ int main() {
 
     // second version of adding properties
     using type_v2 = add_properties<Base,
-                                   Property<Naming>,
-                                   Property<Damaging>,
-                                   Property<Integering>>;
+                                   Property_ordered<Naming>,
+                                   Property_ordered<Damaging>,
+                                   Property_ordered<Integering>>;
     using type_v2b = add_properties_ordered<Base,
                                             Naming,
                                             Damaging,
