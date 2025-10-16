@@ -1,7 +1,7 @@
 #pragma once
 #include "Taumaturgia/Properties/Helpers/have_get_features.hpp"
-#include "Taumaturgia/Properties/Helpers/property_helpers.hpp"
-#include "trait.hpp"
+#include "Taumaturgia/Properties/Helpers/Scheme.hpp"
+#include "Taumaturgia/Traits/trait.hpp"
 
 // MARK: getType
 
@@ -15,7 +15,7 @@ template <size_t S, typename T>
 constexpr decltype(auto) getType(T&& el) noexcept
     requires(
         requires { typename helpers::Scheme_ordered<std::remove_cvref_t<T>>::base::hold_type; }  //
-        and not have_getType_num_method<T, S>                                            //
+        and not have_getType_num_method<T, S>                                                    //
         and (S == 0 or have_getType_num_method<T, S - 1>))
 {
     using base_type = helpers::Scheme_ordered<std::remove_cvref_t<T>>::base;  // most base type
@@ -37,7 +37,7 @@ constexpr decltype(auto) getTypeTaged(T&& el) noexcept
 template <typename TYPE, typename... Tags, typename T>
 constexpr decltype(auto) getTypeTaged(T&& el) noexcept
     requires(not requires { el.template getTypeTaged<TYPE, Tags...>(); } and
-             sizeof...(Tags) == 0 and trait_accessable<                                            //
+             sizeof...(Tags) == 0 and trait_accessable<                                                    //
                                           typename helpers::Scheme_ordered<std::remove_cvref_t<T>>::base,  //
                                           TYPE>)
 {
@@ -46,3 +46,8 @@ constexpr decltype(auto) getTypeTaged(T&& el) noexcept
 }
 template <typename TYPE, typename... Tags, typename T>
 constexpr decltype(auto) getTypeTaged(T&& el) noexcept = delete;
+
+template <typename T, typename Type, typename... Tags>
+concept is_getTypeTaged_valid = requires {
+    getTypeTaged<Type, Tags...>(std::declval<T&>());
+};

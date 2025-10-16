@@ -1,5 +1,5 @@
 #pragma once
-#include "Taumaturgia/Traits/trait.hpp"
+#include "Taumaturgia/Properties/access_features.hpp"
 
 class CureHealth;
 

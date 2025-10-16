@@ -12,7 +12,7 @@ struct apply_property_impl {
 
     using type = std::conditional_t<
         (trait_accessable<T, typename PropImpl<T, Tags...>::hold_type> and  //
-         (is_getTypeTags_valid<T, typename PropImpl<T, Tags...>::hold_type, Tags...>)),
+         (is_getTypeTaged_valid<T, typename PropImpl<T, Tags...>::hold_type, Tags...>)),
         T,
         PropImpl<T, Tags...>>;
 };

@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "Taumaturgia/Traits/trait.hpp"
+#include "Taumaturgia/Properties/access_features.hpp"
 
 class Name;
 

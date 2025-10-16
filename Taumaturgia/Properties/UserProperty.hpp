@@ -4,8 +4,7 @@
 #include "GetFeatures.hpp"
 #include "Helpers/constructible_from_args.hpp"
 #include "Structs/PropertyData.hpp"
-#include "Taumaturgia/Properties/Helpers/have_get_features.hpp"
-#include "Taumaturgia/Traits/trait.hpp"
+#include "Taumaturgia/Properties/access_features.hpp"
 #include "Usage/Types/Name/Name.hpp"
 #include "UserDefaultValue.hpp"
 #include "unordered_token.hpp"
@@ -69,7 +68,7 @@ static_assert(have_all_get_features_for_type<tested_type, type>);
 template <typename TYPE, typename T, typename... Tags>
 using UserProperty = std::conditional_t<
     (trait_accessable<T, TYPE> and  //
-     (is_getTypeTags_valid<T, TYPE, Tags...>)),
+     (is_getTypeTaged_valid<T, TYPE, Tags...>)),
     T,
     impl::UserProperty_<TYPE, T, Tags...>>;
 
