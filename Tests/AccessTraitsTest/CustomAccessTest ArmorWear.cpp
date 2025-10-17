@@ -47,13 +47,8 @@ protected:
 };
 
 TEST_F(ArmorWear_Fixture, Access_by_getArmorWear_or_getType) {
-#ifndef NO_PREMADE_PROPERTIES
-    decltype(auto) armor = (*type).getArmorWear();
-    decltype(auto) armor_const = std::as_const(*type).getArmorWear();
-#else
     decltype(auto) armor = (*type).getType<WearContainer>();
     decltype(auto) armor_const = std::as_const(*type).getType<WearContainer>();
-#endif
 
     static_assert(not std::is_const_v<std::remove_reference_t<decltype(armor)>>);
     static_assert(std::is_const_v<std::remove_reference_t<decltype(armor_const)>>);
@@ -63,11 +58,7 @@ TEST_F(ArmorWear_Fixture, Access_by_getArmorWear_or_getType) {
 
     armor = default_armor_change;
 
-#ifndef NO_PREMADE_PROPERTIES
-    armor = (*type).getArmorWear();
-#else
     armor = (*type).getType<WearContainer>();
-#endif
 
     EXPECT_EQ(armor, default_armor_change);
 }

@@ -1,9 +1,5 @@
 #pragma once
-#ifdef NO_PREMADE_STRATEGIES
 #include "Usage/User/UserStrategies.hpp"
-#else
-#include "Usage/Premade/PremadeStrategies.hpp"
-#endif
 
 #include "Usage/Enums/Properties.hpp"
 

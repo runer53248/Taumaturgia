@@ -71,11 +71,7 @@ inline constexpr ActionStatus attack_impl_x(Damagingable auto& obj, Object* owne
 // MARK: AttackStrategy_<Weapon_D>
 
 template <>
-#ifdef NO_PREMADE_STRATEGIES
 struct UserStrategy_<Damage, Weapon_D> {  // override UserStrategy_<T, Default, ActionStatus>
-#else
-struct AttackStrategy_<Weapon_D> {  // override AttackStrategy_<Default>
-#endif
     static constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) {
         return attack_impl_x(obj, owner, nullptr);
     }
@@ -92,11 +88,7 @@ inline constexpr ActionStatus attack_impl(Damagingable auto& obj, Object* owner,
 // MARK: AttackStrategy_<Damagingable>
 
 template <Damagingable T>
-#ifdef NO_PREMADE_STRATEGIES
 struct UserStrategy_<Damage, T> {
-#else
-struct AttackStrategy_<T> {
-#endif
     static constexpr ActionStatus operator()(Damagingable auto& obj, Object* owner, Object*) {
         return attack_impl(obj, owner, nullptr);
     }

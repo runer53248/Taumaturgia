@@ -1,5 +1,3 @@
-// #define NO_PREMADE_PROPERTIES
-
 #define CUSTOM_ORDER_LIST
 #define ORDER_LIST_PATH "Examples/MainExamples/order_list.hpp"
 

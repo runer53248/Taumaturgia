@@ -69,13 +69,8 @@ int main() {
     auto dmg_b = Damaging_impl<Type>{}.dmgs;
     std::cout << "Damaging_impl<Type>{}.dmgs = " << dmg_b << '\n';
 
-#ifdef NO_PREMADE_PROPERTIES
     // [[maybe_unused]] auto dmg_c = Damaging_impl<Type>{}.getType(); // ! public getType is shadowed by protected one from UserProperty
     std::cout << "Damaging_impl<Type>{}.getType() is shadowed\n";
-#else
-    [[maybe_unused]] auto dmg_c = Damaging_impl<Type>{}.getType();  // Type::getType method call
-    std::cout << "Damaging_impl<Type>{}.getType() = " << dmg_c << '\n';
-#endif
 
     std::cout << "custom property may shadow members and methods\n of type that pass validation concept for property\n";
     auto dmg_d = Damaging_impl<Type>{}.dmg;

@@ -57,11 +57,7 @@ static_assert(is_from_Tile<Tile>);
 template <typename T>
 // requires std::is_base_of_v<Tile, T>
     requires is_from_Tile<T>
-#ifdef NO_PREMADE_STRATEGIES
 struct UserStrategy_<Health, T> {
-#else
-struct AliveStrategy_<T> {
-#endif
     static constexpr std::optional<AliveStatus> operator()(Livingable auto&) {  // when have Livingable properties
         std::cout << " [play death]";
         return AliveStatus::Death;

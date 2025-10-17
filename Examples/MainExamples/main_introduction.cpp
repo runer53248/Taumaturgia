@@ -19,11 +19,9 @@ int main() {
     BaseType baseType{};
 
     LivingType myType{};
-#ifdef NO_PREMADE_PROPERTIES
-    trait<Health>::get(myType) = Health{4};
-#else
-    myType.getHealth() = Health{4};
-#endif
+
+    // trait<Health>::get(myType) = Health{4};
+    myType.getType<Health>() = Health{4};
 
     auto test = [](auto& type) {
         Object object{type};

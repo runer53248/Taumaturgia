@@ -2,8 +2,6 @@
 #include "Taumaturgia/Properties/Helpers/taged_list.hpp"
 #include "Usage/Traits.hpp"
 
-#ifdef NO_PREMADE_PROPERTIES
-
 #include "Taumaturgia/Properties/UserProperty.hpp"
 #include "Usage/Types/Health/Health.hpp"
 #include "Usage/Types/Name/Name.hpp"
@@ -16,16 +14,6 @@ using Naming = UserPropertyAdapter<Name>::template once<TYPE>;
 
 template <typename T>
 using Living_impl = impl::UserProperty_<Health, T>;
-
-#else
-
-#include "Usage/Premade/Properties/Living.hpp"
-#include "Usage/Premade/Properties/Naming.hpp"
-
-template <typename T>
-using Living_impl = impl::Living_<T>;
-
-#endif
 
 #include "Taumaturgia/Properties/UserProperty.hpp"
 
@@ -213,11 +201,9 @@ int main() {
     std::cout << name<decltype(obj5)>() << " = " << traits::accessHealth::get(obj5).value() << '\n';
 
     std::cout << '\n';
-#ifdef NO_PREMADE_PROPERTIES
+
     std::cout << obj1.getType<Health>().value() << '\n';
-#else
-    std::cout << obj1.getHealth().value() << '\n';
-#endif
+    
     std::cout << obj2.hp.value() << '\n';
     std::cout << obj3.getHealth().value() << '\n';
     std::cout << obj4.getHealth().value() << '\n';

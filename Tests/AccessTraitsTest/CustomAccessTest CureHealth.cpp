@@ -47,13 +47,8 @@ protected:
 };
 
 TEST_F(CureHealth_Fixture, Access_by_getCureHealth) {
-#ifndef NO_PREMADE_PROPERTIES
-    decltype(auto) cureHp = (*type).getCureHealth();
-    decltype(auto) cureHp_const = std::as_const((*type)).getCureHealth();
-#else
     decltype(auto) cureHp = (*type).getType<CureHealth>();
     decltype(auto) cureHp_const = std::as_const((*type)).getType<CureHealth>();
-#endif
 
     static_assert(not std::is_const_v<std::remove_reference_t<decltype(cureHp)>>);
     static_assert(std::is_const_v<std::remove_reference_t<decltype(cureHp_const)>>);
@@ -62,11 +57,7 @@ TEST_F(CureHealth_Fixture, Access_by_getCureHealth) {
     EXPECT_EQ(cureHp_const, default_cureHp);
 
     cureHp = default_cureHp_change;
-#ifndef NO_PREMADE_PROPERTIES
-    cureHp = (*type).getCureHealth();
-#else
     cureHp = (*type).getType<CureHealth>();
-#endif
 
     EXPECT_EQ(cureHp, default_cureHp_change);
 }

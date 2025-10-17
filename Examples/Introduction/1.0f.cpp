@@ -2,8 +2,7 @@
 #include "Examples/Checks.hpp"
 #include "Usage/Traits.hpp"
 #include "Usage/Types/Name/Name.hpp"
-
-#include "Usage/Premade/Properties/Naming.hpp"
+#include "Usage/User/UserProperties.hpp"
 
 // Namingable concepts is valid for types that:
 // * type that have CustomAccessName trait specialization
@@ -41,7 +40,7 @@ int main() {
     std::cout << "trait<Name>::get(std::as_const(type6)) = " << trait<Name>::get(std::as_const(type6)) << '\n';
     {
 #ifdef USES_ADD_PROPERTIES
-       check_aP<true>();
+        check_aP<true>();
 #else
         check_aP<false>();
 #endif

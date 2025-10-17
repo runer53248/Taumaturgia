@@ -124,16 +124,14 @@ int main() {
     static_assert(std::same_as<add_properties_ordered<unlimited_nest_1>, impl::UserProperty_<Name, MyType, int>>);
     static_assert(std::same_as<add_properties_ordered<unlimited_nest_2>, impl::UserProperty_<Damage, MyType, int>>);
 
-#ifndef NO_PREMADE_PROPERTIES
-    using unlimited_nest_3 = impl::Naming_<impl::Naming_<MyType>>;
-    using unlimited_nest_4 = impl::Damaging_<impl::Damaging_<MyType, int>, int>;
+    using unlimited_nest_3 = Naming_impl<Naming_impl<MyType>>;
+    using unlimited_nest_4 = Damaging_impl<Damaging_impl<MyType, int>, int>;
     std::cout << "unlimited_nest_3            = " << name<unlimited_nest_3>() << '\n';
     std::cout << "unlimited_nest_4            = " << name<unlimited_nest_4>() << '\n';
     std::cout << "unlimited_nest_3 collapse   = " << name<add_properties_ordered<unlimited_nest_3>>() << '\n';
     std::cout << "unlimited_nest_4 collapse   = " << name<add_properties_ordered<unlimited_nest_4>>() << '\n';
-    static_assert(std::same_as<add_properties_ordered<unlimited_nest_3>, impl::Naming_<MyType>>);
-    static_assert(std::same_as<add_properties_ordered<unlimited_nest_4>, impl::Damaging_<MyType, int>>);
-#endif
+    static_assert(std::same_as<add_properties_ordered<unlimited_nest_3>, Naming_impl<MyType>>);
+    static_assert(std::same_as<add_properties_ordered<unlimited_nest_4>, Damaging_impl<MyType, int>>);
 
     {
 #ifdef USES_ADD_PROPERTIES

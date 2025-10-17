@@ -47,23 +47,15 @@ protected:
 };
 
 TEST_F(RestoreEffects_Fixture, Access_by_getRestoreEffects) {
-#ifndef NO_PREMADE_PROPERTIES
-    decltype(auto) restoreEffects = (*type).getRestoreEffects();
-    decltype(auto) restoreEffects_const = std::as_const((*type)).getRestoreEffects();
-#else
     decltype(auto) restoreEffects = (*type).getType<EffectTypeContainer>();
     decltype(auto) restoreEffects_const = std::as_const((*type)).getType<EffectTypeContainer>();
-#endif
+
 
     EXPECT_EQ(restoreEffects, default_restoreEffects);
     EXPECT_EQ(restoreEffects_const, default_restoreEffects);
 
     restoreEffects = default_restoreEffects_change;
-#ifndef NO_PREMADE_PROPERTIES
-    restoreEffects = (*type).getRestoreEffects();
-#else
     restoreEffects = (*type).getType<EffectTypeContainer>();
-#endif
 
     EXPECT_EQ(restoreEffects, default_restoreEffects_change);
 }

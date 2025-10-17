@@ -1,6 +1,3 @@
-#undef NO_PREMADE_PROPERTIES
-// #define NO_PREMADE_PROPERTIES
-
 #include <iostream>
 #include "Examples/Checks.hpp"
 
@@ -35,13 +32,8 @@ int main() {
     {  // 3 way of access
         static_assert(trait_accessable<decltype(type_3), Damage>);
         trait<Damage>::get(type_3) = Damage{5};
-#ifndef NO_PREMADE_PROPERTIES
-        std::cout << "access 3a = " << type_3.getDamage() << '\n'
-                  << '\n';
-#else
         std::cout << "access 3b = " << type_3.getType() << '\n'
                   << '\n';
-#endif
     }
     {  // 4 way of access
         static_assert(trait_accessable<decltype(type_4), std::string>);

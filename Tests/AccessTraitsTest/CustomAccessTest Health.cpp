@@ -47,23 +47,14 @@ protected:
 };
 
 TEST_F(Health_Fixture, Access_by_getHealth) {
-#ifndef NO_PREMADE_PROPERTIES
-    decltype(auto) hp = (*type).getHealth();
-    decltype(auto) hp_const = std::as_const((*type)).getHealth();
-#else
     decltype(auto) hp = (*type).getType<Health>();
     decltype(auto) hp_const = std::as_const((*type)).getType<Health>();
-#endif
 
     EXPECT_EQ(hp, default_hp);
     EXPECT_EQ(hp_const, default_hp);
 
     hp = default_hp_change;
-#ifndef NO_PREMADE_PROPERTIES
-    hp = (*type).getHealth();
-#else
     hp = (*type).getType<Health>();
-#endif
 
     EXPECT_EQ(hp, default_hp_change);
 }

@@ -47,23 +47,14 @@ protected:
 };
 
 TEST_F(Protection_Fixture, Access_by_getProtection) {
-#ifndef NO_PREMADE_PROPERTIES
-    decltype(auto) protection = (*type).getProtection();
-    decltype(auto) protection_const = std::as_const((*type)).getProtection();
-#else
     decltype(auto) protection = (*type).getType<Protection>();
     decltype(auto) protection_const = std::as_const((*type)).getType<Protection>();
-#endif
 
     EXPECT_EQ(protection, default_protection);
     EXPECT_EQ(protection_const, default_protection);
 
     protection = default_protection_change;
-#ifndef NO_PREMADE_PROPERTIES
-    protection = (*type).getProtection();
-#else
     protection = (*type).getType<Protection>();
-#endif
 
     EXPECT_EQ(protection, default_protection_change);
 }

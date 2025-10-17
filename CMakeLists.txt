@@ -42,8 +42,4 @@ find_package(GTest REQUIRED)
 enable_testing()
 
 add_subdirectory(Examples/nn)
-add_subdirectory(Examples/nP)
 add_subdirectory(Examples/nnaP)
-add_subdirectory(Examples/nPaP)
-add_subdirectory(Examples/nS)
-add_subdirectory(Examples/nPnS)

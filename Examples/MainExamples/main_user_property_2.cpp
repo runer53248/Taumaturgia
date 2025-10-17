@@ -55,13 +55,10 @@ int main() {
 
     decltype(auto) s = trait<Name>::get(type);
     decltype(auto) d = trait<Damage>::get(type);
-#ifdef NO_PREMADE_PROPERTIES
+
     [[maybe_unused]] decltype(auto) s2 = type.getType<Name>();
     [[maybe_unused]] decltype(auto) d2 = type.getType<Damage>();
-#else
-    [[maybe_unused]] decltype(auto) s2 = type.getName();
-    [[maybe_unused]] decltype(auto) d2 = type.getDamage();
-#endif
+
     decltype(auto) i = type.getType<int>();
     decltype(auto) i2 = std::as_const(type).getType<int>();
     decltype(auto) b = type.getType<bool>();

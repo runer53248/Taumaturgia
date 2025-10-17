@@ -50,11 +50,7 @@ auto type = Base{}  //
     | With::Damage  //
     | Create;       //
 
-#ifndef NO_PREMADE_PROPERTIES
-type.getDamage(); // when With::Damage is build-in property
-#else
-type.getType();   // when With::Damage is based on UserProperty
-#endif
+type.getType<Damage>();
 ```
 </details>
 <details>

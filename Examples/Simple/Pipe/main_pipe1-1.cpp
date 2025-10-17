@@ -76,17 +76,12 @@ int main() {
         std::cout << "float 0    = " << type.getType<float, 0>() << '\n';
         std::cout << "float 1    = " << type.getType<float, 1>() << '\n';
         std::cout << "string     = " << type.getType<std::string>() << '\n';
-#ifndef NO_PREMADE_PROPERTIES
-        std::cout << "Name       = " << type.getName() << '\n';
-        std::cout << "Health     = " << type.getHealth() << '\n';
-        std::cout << "Damage     = " << type.getDamage() << '\n';
-        std::cout << "Protection = " << type.getProtection() << '\n';
-#else
+
         std::cout << "Name       = " << type.getType<Name>() << '\n';
         std::cout << "Health     = " << type.getType<Health>() << '\n';
         std::cout << "Damage     = " << type.getType<Damage>() << '\n';
         std::cout << "Protection = " << type.getType<Protection>() << '\n';
-#endif
+
         std::cout << "int        = " << type.getType<int>() << '\n';
         std::cout << "float 0    = " << type.getFloat(0) << '\n';
         std::cout << "float 1    = " << type.getFloat(1) << '\n';
@@ -146,17 +141,12 @@ int main() {
         std::cout << "float 0    = " << type.getType<float, 0>() << '\n';
         std::cout << "float 1    = " << type.getType<float, 1>() << '\n';
         std::cout << "string     = " << type.getType<std::string>() << '\n';
-#ifndef NO_PREMADE_PROPERTIES
-        std::cout << "Name       = " << type.getName() << '\n';
-        std::cout << "Health     = " << type.getHealth() << '\n';
-        std::cout << "Damage     = " << type.getDamage() << '\n';
-        std::cout << "Protection = " << type.getProtection() << '\n';
-#else
+
         std::cout << "Name       = " << type.getType<Name>() << '\n';
         std::cout << "Health     = " << type.getType<Health>() << '\n';
         std::cout << "Damage     = " << type.getType<Damage>() << '\n';
         std::cout << "Protection = " << type.getType<Protection>() << '\n';
-#endif
+
         std::cout << "int        = " << type.getType<int>() << '\n';
         std::cout << "float 0    = " << type.getFloat(0) << '\n';
         std::cout << "float 1    = " << type.getFloat(1) << '\n';

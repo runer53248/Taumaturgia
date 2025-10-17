@@ -1,9 +1,5 @@
 #pragma once
-#ifdef NO_PREMADE_PROPERTIES
 #include "Usage/User/UserProperties.hpp"
-#else
-#include "Usage/Premade/PremadeProperties.hpp"
-#endif
 
 #ifndef CUSTOM_ORDER_LIST
 #include "order_list.hpp"

@@ -55,17 +55,12 @@ int main() {
 
         std::cout << "float acces= " << trait_accessable<decltype(type_2), float> << '\n';
 
-#ifndef NO_PREMADE_PROPERTIES
-        std::cout << "Name       = " << type_2.getName() << '\n';
-        std::cout << "Health     = " << type_2.getHealth() << '\n';
-        std::cout << "Damage     = " << type_2.getDamage() << '\n';
-        std::cout << "Protection = " << type_2.getProtection() << '\n';
-#else
+
         std::cout << "Name       = " << type_2.getType<Name>() << '\n';
         std::cout << "Health     = " << type_2.getType<Health>() << '\n';
         std::cout << "Damage     = " << type_2.getType<Damage>() << '\n';
         std::cout << "Protection = " << type_2.getType<Protection>() << '\n';
-#endif
+
         std::cout << "int        = " << type_2.getType<int>() << '\n';
         std::cout << "string     = " << type_2.getType<std::string>() << '\n';
         std::cout << "float 0    = " << type_2.getFloat(0) << '\n';
@@ -122,17 +117,11 @@ int main() {
 
         std::cout << "float acces= " << trait_accessable<decltype(type_2), float> << '\n';
 
-#ifndef NO_PREMADE_PROPERTIES
-        std::cout << "Name       = " << type_2.getName() << '\n';
-        std::cout << "Health     = " << type_2.getHealth() << '\n';
-        std::cout << "Damage     = " << type_2.getDamage() << '\n';
-        std::cout << "Protection = " << type_2.getProtection() << '\n';
-#else
         std::cout << "Name       = " << type_2.getType<Name>() << '\n';
         std::cout << "Health     = " << type_2.getType<Health>() << '\n';
         std::cout << "Damage     = " << type_2.getType<Damage>() << '\n';
         std::cout << "Protection = " << type_2.getType<Protection>() << '\n';
-#endif
+
         std::cout << "int        = " << type_2.getType<int>() << '\n';
         std::cout << "string     = " << type_2.getType<std::string>() << '\n';
         std::cout << "float 0    = " << type_2.getFloat(0) << '\n';

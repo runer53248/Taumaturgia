@@ -37,10 +37,6 @@ protected:
             /*int*/ default_int,
             /*bool*/ default_bool);
 
-#ifndef NO_PREMADE_PROPERTIES
-        static_assert(traits::helpers::GetNameAccessable<decltype(*type)>);
-        static_assert(traits::helpers::GetNameAccessable<decltype(std::as_const(*type))>);
-#endif
         static_assert(CustomAccessType_able<decltype(*type), Name>);
         static_assert(CustomAccessType_able<decltype(std::as_const(*type)), Name>);
 
@@ -55,24 +51,14 @@ protected:
 };
 
 TEST_F(Name_Fixture, Access_by_getName) {
-#ifndef NO_PREMADE_PROPERTIES
-    decltype(auto) name = (*type).getName();
-    decltype(auto) name_const = std::as_const((*type)).getName();
-#else
     decltype(auto) name = (*type).getType<Name>();
     decltype(auto) name_const = std::as_const((*type)).getType<Name>();
-#endif
 
     EXPECT_EQ(name, default_name);
     EXPECT_EQ(name_const, default_name);
 
     name = default_name_change;
-
-#ifndef NO_PREMADE_PROPERTIES
-    name = (*type).getName();
-#else
     name = (*type).getType<Name>();
-#endif
 
     EXPECT_EQ(name, default_name_change);
 }

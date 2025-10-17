@@ -27,29 +27,20 @@ int main() {
     std::cout << "base_with_list_Name =    " << name<decltype(base_with_list_Name)>() << '\n';  // object
     std::cout << "base_with_auto_Name =    " << name<decltype(base_with_auto_Name)>() << '\n';  // ! creator
     std::cout << '\n';
-#ifndef NO_PREMADE_PROPERTIES
-    base_with_list_Name.getName() = default_name;  // used as object
-#else
+
     base_with_list_Name.getType<Name>() = default_name;  // used as object
-#endif
+
     auto type = base_with_list_Name;
     std::cout << "creator type:\n";
 
-#ifndef NO_PREMADE_PROPERTIES
-    std::cout << "name = " << type.getName().operator std::string() << '\n';
-#else
-    base_with_list_Name.getType<Name>() = default_name;  // used as object
-#endif
+    std::cout << "name = " << type.getType<Name>().operator std::string() << '\n';
     std::cout << "x    = " << type.x << '\n';
     std::cout << "y    = " << type.y << '\n';
 
     auto type2 = base_with_auto_Name(default_name, default_x, default_y);  // used as creator
     std::cout << "creator type:\n";
-#ifndef NO_PREMADE_PROPERTIES
-    std::cout << "name = " << type2.getName().operator std::string() << '\n';
-#else
-    base_with_list_Name.getType<Name>() = default_name;  // used as object
-#endif
+
+    std::cout << "name = " << type2.getType<Name>().operator std::string() << '\n';
     std::cout << "x    = " << type2.x << '\n';
     std::cout << "y    = " << type2.y << '\n';
 

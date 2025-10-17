@@ -47,23 +47,14 @@ protected:
 };
 
 TEST_F(Damage_Fixture, Access_by_getDamage) {
-#ifndef NO_PREMADE_PROPERTIES
-    decltype(auto) damage = (*type).getDamage();
-    decltype(auto) damage_const = std::as_const((*type)).getDamage();
-#else
     decltype(auto) damage = (*type).getType<Damage>();
     decltype(auto) damage_const = std::as_const((*type)).getType<Damage>();
-#endif
 
     EXPECT_EQ(damage, default_damage);
     EXPECT_EQ(damage_const, default_damage);
 
     damage = default_damage_change;
-#ifndef NO_PREMADE_PROPERTIES
-    damage = (*type).getDamage();
-#else
     damage = (*type).getType<Damage>();
-#endif
 
     EXPECT_EQ(damage, default_damage_change);
 }
