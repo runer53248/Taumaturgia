@@ -10,7 +10,7 @@ using DefaultWeaponBuild = add_properties_ordered<
 
 struct DefaultWeaponClass {
     std::string name;  // string used as name
-    Damage dmg{};
+    property_t<Damaging> dmg{};
 };
 
 #ifdef WITH_ADD_PROPERTIES

@@ -9,12 +9,12 @@ using NpcBuild = add_properties_ordered<
     >;
 
 template <>
-struct UserDefaultValue<Health, struct Npc_tag> {
-    static constexpr auto value = [] { return Health{5}; };
+struct UserDefaultValue<property_t<Living>, struct Npc_tag> {
+    static constexpr auto value = [] { return property_t<Living>{5}; };
 };
 
 struct NpcClass {
-    Health hp{5};
+    property_t<Living> hp{5};
 };
 
 #ifdef WITH_ADD_PROPERTIES

@@ -7,7 +7,7 @@ using EnemyBuild = add_properties_ordered<
     Naming>;
 
 struct EnemyClass {
-    Name name;
+    property_t<Naming> name;
 };
 
 #ifdef WITH_ADD_PROPERTIES

@@ -7,7 +7,7 @@ using NoNameWeaponBuild = add_properties_ordered<
     Damaging>;
 
 struct NoNameWeaponClass {
-    Damage dmg{};
+    property_t<Damaging> dmg{};
 };
 
 #ifdef WITH_ADD_PROPERTIES

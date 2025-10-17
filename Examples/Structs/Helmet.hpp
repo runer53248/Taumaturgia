@@ -9,8 +9,8 @@ using HelmetBuild = add_properties_ordered<
     Protecting>;
 
 struct HelmetClass {
-    Name name;
-    Protection protection{};
+    property_t<Naming> name;
+    property_t<Protecting> protection{};
 };
 
 #ifdef WITH_ADD_PROPERTIES

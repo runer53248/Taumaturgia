@@ -7,7 +7,7 @@ using PotionBuild = add_properties_ordered<
     Naming>;
 
 struct PotionClass {
-    Name name;
+    property_t<Naming> name;
 };
 
 #ifdef WITH_ADD_PROPERTIES

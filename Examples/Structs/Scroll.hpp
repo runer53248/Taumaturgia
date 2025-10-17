@@ -6,7 +6,7 @@ using ScrollBuild = add_properties_ordered<
     Naming>;
 
 struct ScrollClass {
-    Name name;
+    property_t<Naming> name;
 };
 
 #ifdef WITH_ADD_PROPERTIES
