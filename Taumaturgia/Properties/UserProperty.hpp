@@ -1,13 +1,8 @@
 #pragma once
-#include <variant>
-#include "Constructors.hpp"
 #include "GetFeatures.hpp"
-#include "Helpers/constructible_from_args.hpp"
+#include "Constructors.hpp"
 #include "Structs/PropertyData.hpp"
 #include "Taumaturgia/Properties/access_features.hpp"
-#include "Usage/Types/Name/Name.hpp"
-#include "UserDefaultValue.hpp"
-#include "unordered_token.hpp"
 
 namespace impl {
 
@@ -80,6 +75,9 @@ struct UserPropertyAdapter {
     template <typename T>
     using once = UserProperty<TYPE, T, Tags...>;
 };
+
+template <template <typename> typename property>
+using property_t = Property_ordered<property>::hold_type;
 
 // TODO: check is this needed?
 // template <typename TYPE, typename T>

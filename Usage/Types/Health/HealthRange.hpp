@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 
 struct HealthRange {
     constexpr HealthRange(int value) noexcept

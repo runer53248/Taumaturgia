@@ -1,8 +1,6 @@
 #pragma once
 #include <variant>
 #include "Helpers/constructible_from_args.hpp"
-#include "Structs/PropertyData.hpp"
-#include "Taumaturgia/Properties/Helpers/have_get_features.hpp"
 #include "Taumaturgia/Traits/trait.hpp"
 #include "Usage/Types/Name/Name.hpp"
 #include "UserDefaultValue.hpp"
@@ -51,7 +49,7 @@ public:
         requires(not std::is_same_v<TYPE, Name>)
         : T{name, std::forward<Args>(args)...} {}
 
-    // // MARK: Unordered C-tors
+    // MARK: Unordered C-tors
 
     template <typename... Args>
         requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type

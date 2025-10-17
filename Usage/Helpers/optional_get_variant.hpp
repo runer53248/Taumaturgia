@@ -1,7 +1,4 @@
 #pragma once
-#include <boost/mp11.hpp>
-#include <optional>
-#include <variant>
 #include "list_of_types.hpp"
 
 using get_variant_type = boost::mp11::mp_append<
