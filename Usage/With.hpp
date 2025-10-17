@@ -4,16 +4,15 @@
 namespace impl {
 
 template <template <typename, typename...> typename P, typename... Tags>
+    requires(not std::same_as<
+             P<P<tag, Tags...>, Tags...>,
+             P<tag, Tags...>>)  // is_property_forced
 struct ApplyTag {
 private:
     template <typename T>
     using hold_type = typename P<T, Tags...>::hold_type;
 
 public:
-    static_assert(not std::same_as<
-                  P<P<tag, Tags...>, Tags...>,
-                  P<tag, Tags...>>);  // is_property_forced
-
     template <typename T>
     using apply = P<T, Tags...>;
 };
