@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "Color_print.hpp"
 #include "Usage/Enums/EffectState.hpp"
 
 constexpr const char* toString(EffectState state) noexcept {
