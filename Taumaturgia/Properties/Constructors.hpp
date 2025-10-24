@@ -6,6 +6,16 @@
 #include "UserDefaultValue.hpp"
 #include "unordered_token.hpp"
 
+template <typename T, typename... Tags>
+struct Data {
+    T value;
+};
+
+template <typename... Tags, typename T>
+decltype(auto) forTags(T&& data) {
+    return Data<T, Tags...>{std::forward<T>(data)};
+}
+
 namespace impl {
 
 template <typename TYPE, typename T, typename... Tags>
@@ -50,6 +60,21 @@ public:
         : T{name, std::forward<Args>(args)...} {}
 
     // MARK: Unordered C-tors
+
+    template <typename TT, typename... TTags>
+    constexpr Constructors(const Unordered&, Data<TT, TTags...>&& arg) {
+        using user_prop = UserProperty_<TYPE, T, Tags...>;
+
+        getTypeTaged<TT, TTags...>(*static_cast<user_prop*>(this)) = arg.value;
+    }
+
+    template <typename TT, typename... TTags, typename... Args>
+    constexpr Constructors(const Unordered& u, Data<TT, TTags...>&& arg, Args&&... args)
+        : Constructors{u, std::forward<Args>(args)...} {
+        using user_prop = UserProperty_<TYPE, T, Tags...>;
+
+        getTypeTaged<TT, TTags...>(*static_cast<user_prop*>(this)) = arg.value;
+    }
 
     template <typename... Args>
         requires std::same_as<boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>, list<std::remove_cvref_t<Args>...>>  // every argument have unique type
