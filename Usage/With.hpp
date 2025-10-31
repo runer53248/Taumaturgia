@@ -58,7 +58,8 @@ namespace impl {
 
 template <typename TT>
 struct t_help;
-template <template <typename, typename...> typename TT,
+
+template <template <typename...> typename TT,
           typename TType,
           typename... TTags>
 struct t_help<TT<TType, TTags...>> {
