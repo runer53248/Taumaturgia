@@ -14,3 +14,6 @@ target_link_libraries(5_default_values_${addons} PRIVATE "-lstdc++exp")
 target_link_libraries(5_default_values2_${addons} PRIVATE "-lstdc++exp")
 target_link_libraries(5_default_values3_${addons} PRIVATE "-lstdc++exp")
 target_link_libraries(6_general_features_${addons} PRIVATE "-lstdc++exp")
+
+add_executable(forTags_${addons} main_forTags.cpp)
+target_link_libraries(forTags_${addons} PRIVATE "-lstdc++exp")
