@@ -9,25 +9,32 @@ struct extra_token {};
 
 struct Base {
     Health hp;
+    // Damage dmg;
     Data<int, extra_token> type;
 
-    template <size_t DIG>
-        requires(DIG < 2)
-    decltype(auto) getType(this auto& self) {
+    template <size_t DIG, typename Self>
+        requires(DIG < boost::pfr::tuple_size_v<Self>)
+    decltype(auto) getType(this Self& self) {
         return boost::pfr::get<DIG>(self);
     }
 };
+
+// MARK: UserDefaultValue
 
 template <>
 struct UserDefaultValue<Damage, extra_token> {
     static constexpr auto value = [] { return Damage{500}; };
 };
 
+// MARK: operator<<
+
 template <typename T, typename Tags>
 auto& operator<<(std::ostream& out, Data<T, Tags> status) {
     out << status.value;
     return out;
 }
+
+// MARK: std::formatter
 
 template <>
 struct std::formatter<Data<int, extra_token>> : std::formatter<std::string> {
@@ -38,6 +45,8 @@ struct std::formatter<Data<int, extra_token>> : std::formatter<std::string> {
     }
 };
 
+// MARK: to_tuple
+
 template <typename T>
 auto to_tuple(T&& type) {
     using TUPLE = as_tuple<std::remove_cvref_t<T>>;
@@ -47,14 +56,22 @@ auto to_tuple(T&& type) {
     }(std::make_index_sequence<count>{});
 };
 
+// MARK: getWay
+
 template <size_t N, typename T>
+    requires requires { std::declval<T>().template getType<N>(); }
 decltype(auto) getWay(T&& type) {
-    if constexpr (requires { type.template getType<N>(); }) {
-        return std::forward<T>(type).template getType<N>();
-    } else {
-        return std::get<N>(std::forward<T>(type));
-    }
+    return std::forward<T>(type).template getType<N>();
 }
+template <size_t N, typename T>
+    requires requires { std::get<N>(std::declval<T>()); }
+decltype(auto) getWay(T&& type) {
+    return std::get<N>(std::forward<T>(type));
+}
+template <size_t N, typename T>
+decltype(auto) getWay(T&& type) = delete;
+
+// MARK: for_each_type
 
 auto for_each_type = []<typename T, typename Fn>(T&& type, Fn fn) {
     using TUPLE = as_tuple<std::remove_cvref_t<T>>;
@@ -66,44 +83,48 @@ auto for_each_type = []<typename T, typename Fn>(T&& type, Fn fn) {
 };
 
 int main() {
-    auto create_entity =                            //
-        From::base<Base>                            //
-        | With::Damage                              //
-        | With::CureHealth                          //
-        | With::Health                              //
-        | With::user_property<Damage, extra_token>  //
-        | With::user_property<Health, extra_token>  //
-        | With::user_property<int, extra_token>     //
-        ;
+    {
+        auto create_entity =                               //
+            From::base<Base>                               //
+            | With::CureHealth                             //* reorder with priority
+            | With::Damage                                 //
+            | With::Health                                 //* skipped for Base
+            | With::user_property<Damage, extra_token>     //
+            | With::user_property<Health, extra_token>     //
+            | With::user_property<int, extra_token>        //* similiar with Base member
+            | With::user_property<Data<int, extra_token>>  //* skipped for Base
+            ;
 
-    auto entity = create_entity(unordered,
-                                forTags<>(Health{100}),
-                                forTags<extra_token>(Health{150}),
-                                forTags<>(Damage{5}),  // TODO: mix with normal types
-                                forTags<extra_token>(Damage{150}),
-                                forTags<>(CureHealth{15}),
-                                forTags<extra_token>(25),
-                                forTags<>(Data<int, extra_token>{15}));
+        auto entity = create_entity(
+            unordered,
+            forTags<>(Health{100}),
+            forTags<extra_token>(Health{150}),
+            forTags<>(Damage{5}),
+            forTags<extra_token>(Damage{150}),
+            CureHealth{15},  //* can mix with normal types
+            forTags<extra_token>(25),
+            // Data<int, extra_token>{15}, //! duplication of types if Base - Data is used as way to specify type in C-tor
+            forTags<>(Data<int, extra_token>{15}));  //* walkaround - Data<Data<int, extra_token>>
 
-    std::println("{}", name<decltype(entity)>());
+        static_assert(std::same_as<decltype(create_entity)::result_type, decltype(entity)>);
 
-    std::println("{}", parse_type_name<decltype(entity)>());
+        std::println("type:     {}", name<decltype(entity)>());
+        std::println("as_tuple: {}", name<as_tuple<decltype(entity)>>());
+        std::println("{}", parse_type_name<decltype(entity)>());
 
-    for_each_type(entity,
-                  [](const auto& entry) { std::println("{}", entry); });
+        for_each_type(entity,
+                      [](const auto& entry) { std::println("{}", entry); });
 
-    auto [e_dmg, e_hp, e_int] = std::tie(
-        entity.getTaged<0, extra_token>(),
-        entity.getTaged<1, extra_token>(),
-        entity.getTaged<2, extra_token>());
-    std::println("extra:\n\t{}\n\t{}\n\t({})\n", e_dmg, e_hp, e_int);
+        auto tp = to_tuple(entity);
+        std::println();
+        for_each_type(tp,
+                      [](const auto& entry) { std::println("{}", entry); });
 
-    using entity_type = decltype(entity);
-    std::println("{}", name<as_tuple<entity_type>>());
-
-    auto tp = to_tuple(entity);
-    std::println();
-
-    for_each_type(tp,
-                  [](const auto& entry) { std::println("{}", entry); });
+        auto [e_dmg, e_hp, e_int] = std::tie(
+            getTaged<0, extra_token>(entity),
+            getTaged<1, extra_token>(entity),
+            getTaged<2, extra_token>(entity));
+        std::println();
+        std::println("taged:\n  {}\n  {}\n  {}\n", e_dmg, e_hp, e_int);
+    }
 }
