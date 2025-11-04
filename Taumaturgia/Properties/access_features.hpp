@@ -1,6 +1,6 @@
 #pragma once
-#include "Taumaturgia/Properties/Helpers/have_get_features.hpp"
 #include "Taumaturgia/Properties/Helpers/Scheme.hpp"
+#include "Taumaturgia/Properties/Helpers/have_get_features.hpp"
 #include "Taumaturgia/Traits/trait.hpp"
 
 // MARK: getType
@@ -50,4 +50,30 @@ constexpr decltype(auto) getTypeTaged(T&& el) noexcept = delete;
 template <typename T, typename Type, typename... Tags>
 concept is_getTypeTaged_valid = requires {
     getTypeTaged<Type, Tags...>(std::declval<T&>());
+};
+
+// MARK: getTaged
+
+template <typename... Tags, typename T>
+constexpr decltype(auto) getTaged(T&& el) noexcept
+    requires have_getTaged_method<T, 0, Tags...>
+{
+    return el.template getTaged<Tags...>();
+}
+template <typename... Tags, typename T>
+constexpr decltype(auto) getTaged(T&& el) noexcept = delete;
+
+template <size_t SKIP, typename... Tags, typename T>
+constexpr decltype(auto) getTaged(T&& el) noexcept
+    requires have_getTaged_method<T, SKIP, Tags...>
+{
+    return el.template getTaged<SKIP, Tags...>();
+}
+template <size_t SKIP, typename... Tags, typename T>
+constexpr decltype(auto) getTaged(T&& el) noexcept = delete;
+
+template <typename T, typename... Tags>
+concept is_getTaged_valid = requires {
+    getTaged<Tags...>(std::declval<T&>());
+    getTaged<0, Tags...>(std::declval<T&>());
 };
