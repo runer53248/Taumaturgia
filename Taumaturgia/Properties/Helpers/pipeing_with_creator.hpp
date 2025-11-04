@@ -32,6 +32,12 @@ struct Creator {
             return result_type(std::forward<Arg>(arg), std::forward<Args>(args)...);
         }
     }
+
+    template <typename Arg, typename... Args>
+        requires(not std::same_as<
+                    boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>,
+                    list<std::remove_cvref_t<Args>...>>)
+    static constexpr auto operator()(Arg&& arg, Args&&... args) = delete;
 };
 
 }  // namespace impl
