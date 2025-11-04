@@ -1,6 +1,7 @@
 #pragma once
 #include <boost/mp11.hpp>
 
+namespace impl {
 template <typename T, size_t N = 0, typename L = std::tuple<>>
 struct AsTuple_impl;
 
@@ -21,6 +22,7 @@ struct AsTuple_impl<T, N, L> {
     using new_list = boost::mp11::mp_push_back<L, current_type>;
     using type = typename AsTuple_impl<T, N + 1, new_list>::type;
 };
+}  // namespace impl
 
-template <typename T, size_t N = 0, typename L = std::tuple<>>
-using as_tuple = AsTuple_impl<T, N, L>::type;
+template <typename T>
+using as_tuple = impl::AsTuple_impl<T, 0, std::tuple<>>::type;
