@@ -18,25 +18,28 @@ struct Creator {
 
     template <typename Arg, typename... Args>
     static constexpr auto operator()(Arg&& arg, Args&&... args) {
-        constexpr bool arg_signals_unordered_args = std::is_same_v<std::remove_cvref_t<Arg>, decltype(unordered)>;
+        // token not introduced
+        static_assert(std::constructible_from<result_type, Arg, Args...>, "Creator can't create result_type from given arguments!");
+        return result_type(std::forward<Arg>(arg), std::forward<Args>(args)...);
+    }
 
-        if constexpr (arg_signals_unordered_args) {                              // token was introduced
-            if constexpr (std::constructible_from<result_type, Arg, Args...>) {  // can be constructed with Arg
-                return result_type(std::forward<Arg>(arg), std::forward<Args>(args)...);
-            } else {  // can be constructed without Arg
-                static_assert(std::constructible_from<result_type, Args...>, "Creator with unordered args can't create result_type from given arguments!");
-                return result_type(std::forward<Args>(args)...);
-            }
-        } else {  // token not introduced
-            static_assert(std::constructible_from<result_type, Arg, Args...>, "Creator can't create result_type from given arguments!");
+    template <typename Arg, typename... Args>
+        requires std::is_same_v<std::remove_cvref_t<Arg>, decltype(unordered)>
+    static constexpr auto operator()(Arg&& arg, Args&&... args) {
+        // token was introduced
+        if constexpr (std::constructible_from<result_type, Arg, Args...>) {  // can be constructed with Arg
             return result_type(std::forward<Arg>(arg), std::forward<Args>(args)...);
+        } else {  // can be constructed without Arg
+            static_assert(std::constructible_from<result_type, Args...>, "Creator with unordered args can't create result_type from given arguments!");
+            return result_type(std::forward<Args>(args)...);
         }
     }
 
     template <typename Arg, typename... Args>
-        requires(not std::same_as<
-                    boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>,
-                    list<std::remove_cvref_t<Args>...>>)
+        requires(std::is_same_v<std::remove_cvref_t<Arg>, decltype(unordered)> and
+                 not std::same_as<
+                     boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>,
+                     list<std::remove_cvref_t<Args>...>>)
     static constexpr auto operator()(Arg&& arg, Args&&... args) = delete;
 };
 
