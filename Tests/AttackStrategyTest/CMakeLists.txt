@@ -3,6 +3,6 @@ add_executable(AttackStrategyTest_${addons}
     AttackStrategyTest.cpp)
 target_link_libraries(AttackStrategyTest_${addons} PRIVATE 
     GTest::GTest GTest::Main)
-add_test(NAME AttackStrategyTest_${addons} COMMAND AttackStrategyTest-1_${addons} --gtest_color=yes)
+add_test(NAME AttackStrategyTest_${addons} COMMAND AttackStrategyTest_${addons} --gtest_color=yes)
 
 target_compile_definitions(AttackStrategyTest_${addons} PUBLIC)
