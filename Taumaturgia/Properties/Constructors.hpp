@@ -106,7 +106,7 @@ public:
                     boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>,
                     list<std::remove_cvref_t<Args>...>>)  // arguments are not of unique type
     constexpr Constructors(const Unordered& u, Data<TT, TTags...>&& arg, Args&&... args) = delete;
-    
+
     template <typename Arg, typename... Args>
         requires(not std::same_as<
                     boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>,
@@ -196,14 +196,8 @@ public:
     constexpr Constructors([[maybe_unused]] const std::variant<V...>& type, Args&&... args)
         : T{std::forward<Args>(args)...} {}  //? skip type
 
-    // MARK: getT
 
-    template <typename Self>
-    constexpr decltype(auto) getT(this Self& self) {
-        return (self.type_);
-    }
-
-private:
+protected:
     hold_type type_ = UserDefaultValue<hold_type, Tags...>::value();  // specialization for default values
 };
 

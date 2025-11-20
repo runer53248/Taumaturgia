@@ -1,6 +1,6 @@
 #pragma once
-#include "GetFeatures.hpp"
 #include "Constructors.hpp"
+#include "GetFeatures.hpp"
 #include "Structs/PropertyData.hpp"
 #include "Taumaturgia/Properties/access_features.hpp"
 
@@ -39,6 +39,8 @@ public:
     using GetFeatures<UserProperty_<TYPE, T, Tags...>>::getTaged;
 
     using Constructors<UserProperty_<TYPE, T, Tags...>>::Constructors;
+
+    friend GetFeatures<UserProperty_<TYPE, T, Tags...>>;
 };
 
 }  // namespace impl

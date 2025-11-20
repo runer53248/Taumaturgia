@@ -36,8 +36,7 @@ public:
                 return static_cast<type>(self).template getType<RETURN, DIG - 1>();
             }
         } else {
-            // return (self.type_);
-            return (self.getT());
+            return (self.type_);
         }
     }
 
@@ -67,8 +66,7 @@ public:
     template <size_t DIG, typename Self>
         requires(DIG == 0)
     constexpr decltype(auto) getType(this Self& self) noexcept {
-        // return (self.type_);
-        return (self.getT());
+        return (self.type_);
     }
 
     template <size_t DIG, typename Self>
@@ -112,8 +110,7 @@ public:
     template <typename RETURN, typename... TTags, typename Self>
         requires std::same_as<list<RETURN, TTags...>, list<TYPE, Tags...>>
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept {
-        // return (self.type_);
-        return (self.getT());
+        return (self.type_);
     }
 
     template <typename RETURN, typename... TTags, typename Self>
