@@ -71,7 +71,7 @@ int main() {
             Health{100, 100},
         };
 
-        std::cout << parse_type_name<Type_1, float, double>() << '\n';
+        std::cout << parse_type_name<Type_1>() << '\n';
         print(type1);
     }
 
@@ -96,7 +96,7 @@ int main() {
             default_protection,
             default_name};
 
-        std::cout << parse_type_name<Type_1, float, double>() << '\n';
+        std::cout << parse_type_name<Type_1>() << '\n';
         print(type1);
     }
 

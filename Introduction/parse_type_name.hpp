@@ -5,7 +5,7 @@
 #include "Taumaturgia/Properties/Helpers/as_tuple.hpp"
 #include "Usage/With.hpp"  // for some includes to Scheme, traits and types
 
-template <typename T, typename... Args>
+template <typename T>
 auto type_name_result(std::string text = name<T>()) {
     struct Data {
         std::string type;
@@ -197,50 +197,6 @@ auto type_name_result(std::string text = name<T>()) {
 
     result.base = text;
     result.base += " == " + base_name + '\n';
-    // if constexpr (trait_accessable<base_type, Name> or traits::helpers::get_type_taged_accessable<base_type, Name>) {
-    //     result.base += std::to_string(prop_index++);
-    //     result.base += "  : Name\n";
-    // }
-    // if constexpr (trait_accessable<base_type, CureHealth> or traits::helpers::get_type_taged_accessable<base_type, CureHealth>) {
-    //     result.base += std::to_string(prop_index++);
-    //     result.base += "  : CureHealth\n";
-    // }
-    // if constexpr (trait_accessable<base_type, Protection> or traits::helpers::get_type_taged_accessable<base_type, Protection>) {
-    //     result.base += std::to_string(prop_index++);
-    //     result.base += "  : Protection\n";
-    // }
-    // if constexpr (trait_accessable<base_type, Damage> or traits::helpers::get_type_taged_accessable<base_type, Damage>) {
-    //     result.base += std::to_string(prop_index++);
-    //     result.base += "  : Damage\n";
-    // }
-    // if constexpr (trait_accessable<base_type, EffectContainer> or traits::helpers::get_type_taged_accessable<base_type, EffectContainer>) {
-    //     result.base += std::to_string(prop_index++);
-    //     result.base += "  : EffectContainer\n";
-    // }
-    // if constexpr (trait_accessable<base_type, EffectTypeContainer> or traits::helpers::get_type_taged_accessable<base_type, EffectTypeContainer>) {
-    //     result.base += std::to_string(prop_index++);
-    //     result.base += "  : EffectTypeContainer\n";
-    // }
-    // if constexpr (trait_accessable<base_type, WearContainer> or traits::helpers::get_type_taged_accessable<base_type, WearContainer>) {
-    //     result.base += std::to_string(prop_index++);
-    //     result.base += "  : WearContainer\n";
-    // }
-    // if constexpr (trait_accessable<base_type, Health> or traits::helpers::get_type_taged_accessable<base_type, Health>) {
-    //     result.base += std::to_string(prop_index++);
-    //     result.base += "  : Health\n";
-    // }
-    // if constexpr (trait_accessable<base_type, int> or traits::helpers::get_type_taged_accessable<base_type, int>) {
-    //     result.base += std::to_string(prop_index++);
-    //     result.base += "  : int\n";
-    // }
-    if constexpr (requires { typename base_type::base_type; }) {
-        if constexpr (trait_accessable<typename base_type::base_type, int>) {
-            result.base += std::to_string(prop_index++);
-            result.base += "  : : int\n";
-        }
-    }
-
-    ///
 
     using TUPLE = as_tuple<std::remove_cvref_t<base_type>>;
     constexpr size_t count = std::tuple_size_v<TUPLE>;
@@ -253,31 +209,14 @@ auto type_name_result(std::string text = name<T>()) {
 
         (..., fn.template operator()<std::remove_cvref_t<decltype(getType<idx>(std::declval<base_type>()))>>());
     }(std::make_index_sequence<count>{});
-    ///
-
-    // [[maybe_unused]] auto extra = [&]<typename A>() {
-    //     if constexpr (trait_accessable<base_type, A>) {
-    //         result.base += std::to_string(prop_index++);
-    //         result.base += "  : " + name<A>() + "\n";
-    //     }
-
-    //     if constexpr (requires { typename base_type::base_type; }) {
-    //         if constexpr (trait_accessable<typename base_type::base_type, A>) {
-    //             result.base += std::to_string(prop_index++);
-    //             result.base += "  : : " + name<A>() + "\n";
-    //         }
-    //     }
-    // };
-
-    // (extra.template operator()<Args>(), ...);
 
     return result;
 };
 
-template <typename T, typename... Args>
+template <typename T>
 auto parse_type_name() {
     std::string result;
-    auto data = type_name_result<T, Args...>();
+    auto data = type_name_result<T>();
     if (data.properties.empty()) {
         result += '\n';
     } else {

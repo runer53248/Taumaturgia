@@ -74,7 +74,7 @@ namespace With {
 }  // namespace With
 
 template <typename T>
-using Ta = decltype(From::base<T>         //
+using T_7attrib = decltype(From::base<T>         //
                     | With::Strenght      //
                     | With::Strenght2     //
                     | With::Dexterity     //
@@ -131,44 +131,20 @@ int main() {
 
     {
         cout << "[Strenght::improvement_of]"
-             << parse_type_name<Strenght::improvement_of,
-                                Strenght,
-                                Dexterity,
-                                Constitution,
-                                Inteligence,
-                                Wisdom,
-                                Charisma>()
+             << parse_type_name<Strenght::improvement_of>()
              << '\n';
         cout << "[Strenght_next::improvement_of]"
-             << parse_type_name<Strenght_next::improvement_of,
-                                Strenght,
-                                Dexterity,
-                                Constitution,
-                                Inteligence,
-                                Wisdom,
-                                Charisma>()
+             << parse_type_name<Strenght_next::improvement_of>()
              << '\n';
     }
     {
         cout << "[Attrib]"
-             << parse_type_name<Attrib,
-                                Strenght,
-                                Dexterity,
-                                Constitution,
-                                Inteligence,
-                                Wisdom,
-                                Charisma>()
+             << parse_type_name<Attrib>()
              << '\n';
     }
     {
-        cout << "[Ta<Attrib>]"
-             << parse_type_name<Ta<Attrib>,
-                                Strenght,
-                                Dexterity,
-                                Constitution,
-                                Inteligence,
-                                Wisdom,
-                                Charisma>()
+        cout << "[T_7attrib<Attrib>]"
+             << parse_type_name<T_7attrib<Attrib>>()
              << '\n';
     }
     {
@@ -195,25 +171,16 @@ int main() {
         }
 
         cout << "[Attrib_updated]"
-             << parse_type_name<Attrib_updated,
-                                Strenght,
-                                Dexterity,
-                                Constitution,
-                                Inteligence,
-                                Wisdom,
-                                Charisma>()
+             << parse_type_name<Attrib_updated>()
              << '\n';
         cout << "[Attrib_updated3]"
-             << parse_type_name<Attrib_updated3,
-                                Strenght,
-                                Dexterity,
-                                Constitution,
-                                Inteligence,
-                                Wisdom,
-                                Charisma>()
+             << parse_type_name<Attrib_updated3>()
+             << '\n';
+        cout << "[T_7attrib<Attrib_updated>]"
+             << parse_type_name<T_7attrib<Attrib_updated>>()
              << '\n';
 
-        Ta<Attrib_updated> type{};
+        T_7attrib<Attrib_updated> type{};
 
         type.getType<Strenght>() = {15};
         type.getType<Dexterity>() = {18.1f};
