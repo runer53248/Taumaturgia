@@ -18,21 +18,21 @@ int main() {
     auto type =
         Base{}                                                //
         | With::user_property<int, struct second_int>         //* 6  : not in list
-        | Property_ordered<int_second_tag::apply>{}                    //  1  :
-        | Property_ordered<int_second_tag::once>{}                    //  1  :
-        | Property_ordered<int_third::once>{}                         //  2  :
-        | Property_ordered<int_first::once>{}                         //  0  :
+        | Property_ordered<int_second_tag::apply>{}           //  1  :
+        | Property_ordered<int_second_tag::once>{}            //  1  :
+        | Property_ordered<int_third::once>{}                 //  2  :
+        | Property_ordered<int_first::once>{}                 //  0  :
         | With::user_property<int, struct second_int>         //* 6  : not in list
-        | Property_ordered<just_float::once>{}                        //  3  :
-        | Property_ordered<string_second::apply>{}                     //  5  :
-        | Property_ordered<string_first::apply>{}                      //  4  :
+        | Property_ordered<just_float::once>{}                //  3  :
+        | Property_ordered<string_second::apply>{}            //  5  :
+        | Property_ordered<string_first::apply>{}             //  4  :
         | With::user_property_once<bool, struct first_bool>   //* 7  : not in list
         | With::user_property_once<bool, struct second_bool>  //* 8  : not in list
         | With::user_property<char, struct first_char>        //* 9  : not in list
         | With::user_property<char, struct second_char>       //* 10 : not in list
         | With::user_property<float>                          //  3  :
-        | Property_ordered<string_first::apply>{}                      //  4  :
-        | Property_ordered<int_third::once>{}                         //  2  :
+        | Property_ordered<string_first::apply>{}             //  4  :
+        | Property_ordered<int_third::once>{}                 //  2  :
         | With::Damage                                        //* 11 : not in list
         | Create;
 
@@ -129,7 +129,7 @@ int main() {
 
     {
 #ifdef USES_ADD_PROPERTIES
-       check_aP<true>();
+        check_aP<true>();
 #else
         check_aP<false>();
 #endif
