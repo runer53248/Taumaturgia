@@ -7,13 +7,17 @@
 
 struct extra_token {};
 
+template <typename T, size_t N>
+concept get_limited = N < boost::pfr::tuple_size_v<std::remove_cvref_t<T>>;
+
+// MARK: Base
+
 struct Base {
     Health hp;
     // Damage dmg;
     Data<int, extra_token> type;
 
-    template <size_t DIG, typename Self>
-        requires(DIG < boost::pfr::tuple_size_v<Self>)
+    template <size_t DIG, get_limited<DIG> Self>
     decltype(auto) getType(this Self& self) {
         return boost::pfr::get<DIG>(self);
     }
@@ -56,24 +60,36 @@ auto to_tuple(T&& type) {
     }(std::make_index_sequence<count>{});
 };
 
-// MARK: for_each_type
+// MARK: for_each_impl
 
-auto for_each_type = []<typename T, typename Fn>(T&& type, Fn fn) {
-    using TUPLE = as_tuple<std::remove_cvref_t<T>>;
-    constexpr size_t count = std::tuple_size_v<TUPLE>;
-
-    auto getWay = []<size_t N, typename TT>(TT&& type) {
-        if constexpr (requires { getType<N>(std::declval<TT>()); }) {
-            return getType<N>(std::forward<TT>(type));
-        } else if constexpr (requires { std::get<N>(std::declval<TT>()); }) {
-            return std::get<N>(std::forward<TT>(type));
-        }
-    };
+template <auto GET>
+using for_each_impl = decltype([]<typename T, typename Fn>(T&& type, Fn fn) {
+    constexpr size_t count = std::tuple_size_v<as_tuple<std::remove_cvref_t<T>>>;
 
     return [&]<size_t... idx>(std::index_sequence<idx...>) {
-        (..., fn(getWay.template operator()<idx>(type)));
+        (..., fn(GET.template operator()<idx>(std::forward<T>(type))));
     }(std::make_index_sequence<count>{});
-};
+});
+
+// MARK: for_each_type
+
+auto for_each_type = for_each_impl<[]<size_t N, typename T>(T&& t) {
+    if constexpr (requires { std::get<N>(std::declval<T>()); }) {
+        return std::get<N>(std::forward<T>(t));
+    } else if constexpr (requires { getType<N>(std::declval<T>()); }) {
+        return getType<N>(std::forward<T>(t));
+    }
+}>{};
+
+// MARK: for_each_taged_type
+
+auto for_each_taged_type = for_each_impl<[]<size_t N, typename T>(T&& t) {
+    if constexpr (requires { getTaged<N, extra_token>(std::declval<T>()); }) {
+        return getTaged<N, extra_token>(std::forward<T>(t));
+    } else {
+        return "unused";
+    }
+}>{};
 
 int main() {
     auto create_entity =                               //
@@ -100,17 +116,17 @@ int main() {
 
     static_assert(std::same_as<decltype(create_entity)::result_type, decltype(entity)>);
 
-    std::println("type:     {}", name<decltype(entity)>());
-    std::println("as_tuple: {}", name<as_tuple<decltype(entity)>>());
+    std::println("type:     {}{}{}", Color::Grey, name<decltype(entity)>(), Color::Reset);
+    std::println("as_tuple: {}{}{}", Color::Grey, name<as_tuple<decltype(entity)>>(), Color::Reset);
     std::println("{}", parse_type_name<decltype(entity)>());
 
-    for_each_type(entity,
-                  [](const auto& entry) { std::println("{}", entry); });
+    auto print = [](const auto& entry) { std::println("{:30}{}", name<std::remove_cvref_t<decltype(entry)>>(), entry); };
+
+    for_each_type(entity, print);
 
     auto tp = to_tuple(entity);
     std::println();
-    for_each_type(tp,
-                  [](const auto& entry) { std::println("{}", entry); });
+    for_each_type(tp, print);
 
     auto [e_dmg, e_hp, e_int] = std::tie(
         getTaged<0, extra_token>(entity),
@@ -118,4 +134,7 @@ int main() {
         getTaged<2, extra_token>(entity));
     std::println();
     std::println("taged:\n  {}\n  {}\n  {}\n", e_dmg, e_hp, e_int);
+
+    std::println();
+    for_each_taged_type(entity, print);
 }
