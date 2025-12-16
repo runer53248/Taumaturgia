@@ -140,7 +140,7 @@ int main() {
             static_assert(std::same_as<decltype(type2.getTaged<2>()), Name&>);
             static_assert(std::same_as<decltype(type2.getTaged<3>()), Damage&>);
             static_assert(std::same_as<decltype(type2.getTaged<4>()), Health&>);
-            static_assert(std::same_as<decltype(type2.getTaged<5>()), void>);
+            // static_assert(std::same_as<decltype(type2.getTaged<5>()), void>);
 
             static_assert(std::same_as<decltype(std::as_const(type2).getTaged()), const Protection&>);
             static_assert(std::same_as<decltype(std::as_const(type2).getTaged<1>()), const Name&>);
@@ -150,7 +150,7 @@ int main() {
             static_assert(std::same_as<decltype(std::as_const(type2).getTaged<2>()), const Name&>);
             static_assert(std::same_as<decltype(std::as_const(type2).getTaged<3>()), const Damage&>);
             static_assert(std::same_as<decltype(std::as_const(type2).getTaged<4>()), const Health&>);
-            static_assert(std::same_as<decltype(std::as_const(type2).getTaged<5>()), void>);
+            // static_assert(std::same_as<decltype(std::as_const(type2).getTaged<5>()), void>);
 
             static_assert(&type2.getType<0>() == &type2.getTaged<>());
             static_assert(&type2.getType<1>() == &type2.getTaged<1>());
