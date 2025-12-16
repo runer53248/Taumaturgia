@@ -9,6 +9,12 @@ concept parent_digingable = requires(T t) {
     static_cast<const Base&>(t).template getType<DIG - 1>();
 };
 
+template <typename T, typename S>
+using const_like_ref = std::conditional_t<
+    std::is_const_v<S>,
+    const std::remove_reference_t<T>&,
+    std::remove_reference_t<T>&>;
+
 template <typename TYPE, typename T, typename... Tags>
 // requires(not std::is_reference_v<T>)
 class UserProperty_;
@@ -152,28 +158,30 @@ public:
     // MARK: getTaged<SKIP, TTags>
 
     template <size_t SKIP, typename... TTags, typename Self>
-        requires std::same_as<list<TTags...>, list<Tags...>>
+        requires(std::same_as<list<TTags...>, list<Tags...>>  //
+                 and SKIP > 0                                 //
+                 and have_getTaged_method<const_like_ref<T, Self>, SKIP - 1, TTags...>)
     constexpr decltype(auto) getTaged(this Self& self) noexcept {
-        using type = std::conditional_t<
-            std::is_const_v<Self>,
-            const T&,
-            T&>;
-
-        if constexpr (SKIP > 0) {
-            return static_cast<type>(self).template getTaged<SKIP - 1, TTags...>();  // skip
-        } else if constexpr (have_getTypeTaged_method<Self, TYPE, TTags...>) {
-            return self.template getTypeTaged<TYPE, TTags...>();  // return by tags and current type
-        }
+        return static_cast<const_like_ref<T, Self>>(self).template getTaged<SKIP - 1, TTags...>();  // skip
     }
+
     template <size_t SKIP, typename... TTags, typename Self>
+        requires(std::same_as<list<TTags...>, list<Tags...>>  //
+                 and SKIP == 0                                //
+                 and have_getTypeTaged_method<Self, TYPE, TTags...>)
     constexpr decltype(auto) getTaged(this Self& self) noexcept {
-        using type = std::conditional_t<
-            std::is_const_v<Self>,
-            const T&,
-            T&>;
-
-        return static_cast<type>(self).template getTaged<SKIP, TTags...>();  // skip - diffrent tags
+        return self.template getTypeTaged<TYPE, TTags...>();  // return by tags and current type
     }
+
+    template <size_t SKIP, typename... TTags, typename Self>
+        requires(not std::same_as<list<TTags...>, list<Tags...>>  //
+                 and have_getTaged_method<const_like_ref<T, Self>, SKIP, TTags...>)
+    constexpr decltype(auto) getTaged(this Self& self) noexcept {
+        return static_cast<const_like_ref<T, Self>>(self).template getTaged<SKIP, TTags...>();  // skip - diffrent tags
+    }
+
+    template <size_t SKIP, typename... TTags, typename Self>
+    constexpr decltype(auto) getTaged(this Self& self) noexcept = delete;
 
     // MARK: getTaged<TTags...>
 
