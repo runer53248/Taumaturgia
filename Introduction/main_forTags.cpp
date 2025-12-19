@@ -87,7 +87,7 @@ auto for_each_taged_type = for_each_impl<[]<size_t N, typename T>(T&& t) {
     if constexpr (requires { getTaged<N, extra_token>(std::declval<T>()); }) {
         return getTaged<N, extra_token>(std::forward<T>(t));
     } else {
-        return "unused";
+        return std::monostate{};
     }
 }>{};
 
@@ -120,7 +120,11 @@ int main() {
     std::println("as_tuple: {}{}{}", Color::Grey, name<as_tuple<decltype(entity)>>(), Color::Reset);
     std::println("{}", parse_type_name<decltype(entity)>());
 
-    auto print = [](const auto& entry) { std::println("{:30}{}", name<std::remove_cvref_t<decltype(entry)>>(), entry); };
+    auto print = [](const auto& entry) {
+        if constexpr (not std::same_as<std::remove_cvref_t<decltype(entry)>, std::monostate>) {
+            std::println("{:30}{}", name<std::remove_cvref_t<decltype(entry)>>(), entry);
+        }
+    };
 
     for_each_type(entity, print);
 
@@ -128,12 +132,12 @@ int main() {
     std::println();
     for_each_type(tp, print);
 
-    auto [e_dmg, e_hp, e_int] = std::tie(
+    auto tied_data = std::tie(
         getTaged<0, extra_token>(entity),
         getTaged<1, extra_token>(entity),
         getTaged<2, extra_token>(entity));
     std::println();
-    std::println("taged:\n  {}\n  {}\n  {}\n", e_dmg, e_hp, e_int);
+    for_each_type(tied_data, print);
 
     std::println();
     for_each_taged_type(entity, print);
