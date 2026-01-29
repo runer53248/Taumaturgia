@@ -17,19 +17,19 @@ struct AccessInt {
 int main() {
     auto type =
         Base{}                                                //
-        | With::user_property<int, struct second_int>         //* 6  : not in list
+        | With::user_property<int, Tags<struct second_int>>         //* 6  : not in list
         | Property_ordered<int_second_tag::apply>{}           //  1  :
         | Property_ordered<int_second_tag::once>{}            //  1  :
         | Property_ordered<int_third::once>{}                 //  2  :
         | Property_ordered<int_first::once>{}                 //  0  :
-        | With::user_property<int, struct second_int>         //* 6  : not in list
+        | With::user_property<int, Tags<struct second_int>>         //* 6  : not in list
         | Property_ordered<just_float::once>{}                //  3  :
         | Property_ordered<string_second::apply>{}            //  5  :
         | Property_ordered<string_first::apply>{}             //  4  :
-        | With::user_property_once<bool, struct first_bool>   //* 7  : not in list
-        | With::user_property_once<bool, struct second_bool>  //* 8  : not in list
-        | With::user_property<char, struct first_char>        //* 9  : not in list
-        | With::user_property<char, struct second_char>       //* 10 : not in list
+        | With::user_property_once<bool, Tags<struct first_bool>>   //* 7  : not in list
+        | With::user_property_once<bool, Tags<struct second_bool>>  //* 8  : not in list
+        | With::user_property<char, Tags<struct first_char>>        //* 9  : not in list
+        | With::user_property<char, Tags<struct second_char>>       //* 10 : not in list
         | With::user_property<float>                          //  3  :
         | Property_ordered<string_first::apply>{}             //  4  :
         | Property_ordered<int_third::once>{}                 //  2  :
@@ -43,10 +43,10 @@ int main() {
     AccessInt::get<2>(type) = 300;
     AccessInt::get<3>(type) = 400;
 
-    std::cout << "getTypeTaged<int, first_int>           = " << type.getTypeTaged<int, first_int>() << '\n';
-    std::cout << "getTypeTaged<int, second_int, int_tag> = " << type.getTypeTaged<int, second_int, int_tag>() << '\n';
-    std::cout << "getTypeTaged<int, third_int>           = " << type.getTypeTaged<int, third_int>() << '\n';
-    std::cout << "getTypeTaged<int, second_int>          = " << type.getTypeTaged<int, second_int>() << '\n';
+    std::cout << "getTypeTaged<int, first_int>           = " << type.getTypeTaged<int, Tags<first_int>>() << '\n';
+    std::cout << "getTypeTaged<int, second_int, int_tag> = " << type.getTypeTaged<int, Tags<second_int, int_tag>>() << '\n';
+    std::cout << "getTypeTaged<int, third_int>           = " << type.getTypeTaged<int, Tags<third_int>>() << '\n';
+    std::cout << "getTypeTaged<int, second_int>          = " << type.getTypeTaged<int, Tags<second_int>>() << '\n';
     std::cout << '\n';
 
     std::cout << "getType<int, 0>  = " << type.getType<int, 1>() << '\n';

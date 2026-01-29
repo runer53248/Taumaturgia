@@ -46,9 +46,9 @@ struct LivingImproved_1_ : public T {
     Health hp;
 };
 
-template <typename T, typename... Tags>
+template <typename T, isTag TAGS = Tags<>>
 struct LivingImproved_2_ : public T {
-    using property_data = PropertyData<LivingImproved_2_, T, Tags...>;
+    using property_data = PropertyData<LivingImproved_2_, T, TAGS>;
     using improvement_of = Living_impl<T>;
     using hold_type = void;
 

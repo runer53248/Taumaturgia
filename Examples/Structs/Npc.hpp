@@ -5,11 +5,11 @@
 
 using NpcBuild = add_properties_ordered<
     Type,
-    Adapter<Living, struct Npc_tag>::type  // Living taged for custom default value
+    Adapter<Living, Tags<struct Npc_tag>>::type  // Living taged for custom default value
     >;
 
 template <>
-struct UserDefaultValue<property_t<Living>, struct Npc_tag> {
+struct UserDefaultValue<property_t<Living>, Tags<struct Npc_tag>> {
     static constexpr auto value = [] { return property_t<Living>{5}; };
 };
 

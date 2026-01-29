@@ -3,18 +3,18 @@
 
 namespace impl {
 
-template <template <typename, typename...> typename P, typename... Tags>
+template <template <typename, typename...> typename P, isTag TAGS = Tags<>>
     requires(not std::same_as<
-             P<P<tag, Tags...>, Tags...>,
-             P<tag, Tags...>>)  // is_property_forced
+             P<P<tag, TAGS>, TAGS>,
+             P<tag, TAGS>>)  // is_property_forced
 struct ApplyTag {
 private:
     template <typename T>
-    using hold_type = typename P<T, Tags...>::hold_type;
+    using hold_type = typename P<T, TAGS>::hold_type;
 
 public:
     template <typename T>
-    using apply = P<T, Tags...>;
+    using apply = P<T, TAGS>;
 };
 
 }  // namespace impl
@@ -42,17 +42,17 @@ namespace With {
 template <template <typename> typename P>
 [[maybe_unused]] constexpr Property_ordered<P> property{};
 
-template <template <typename, typename> typename P, typename... Tags>
-[[maybe_unused]] constexpr Property_ordered<impl::ApplyTag<P, Tags...>::template apply> taged_property{};
+template <template <typename, typename> typename P, isTag TAGS = Tags<>>
+[[maybe_unused]] constexpr Property_ordered<impl::ApplyTag<P, TAGS>::template apply> taged_property{};
 
-// template <template <typename, typename> typename P, typename... Tags>
-// [[maybe_unused]] constexpr Property_ordered<impl::ApplyTag<P, Tags...>::template apply_order> taged_property_once{};
+// template <template <typename, typename> typename P, typename... TAGS>
+// [[maybe_unused]] constexpr Property_ordered<impl::ApplyTag<P, TAGS...>::template apply_order> taged_property_once{};
 
-template <typename T, typename... Tags>
-[[maybe_unused]] constexpr Property_ordered<UserPropertyAdapter<T, Tags...>::template apply> user_property{};
+template <typename T, isTag TAGS = Tags<>>
+[[maybe_unused]] constexpr Property_ordered<UserPropertyAdapter<T, TAGS>::template apply> user_property{};
 
-template <typename T, typename... Tags>
-[[maybe_unused]] constexpr Property_ordered<UserPropertyAdapter<T, Tags...>::template once> user_property_once{};
+template <typename T, isTag TAGS = Tags<>>
+[[maybe_unused]] constexpr Property_ordered<UserPropertyAdapter<T, TAGS>::template once> user_property_once{};
 
 namespace impl {
 
@@ -61,10 +61,10 @@ struct t_help;
 
 template <template <typename...> typename TT,
           typename TType,
-          typename... TTags>
-struct t_help<TT<TType, TTags...>> {
+          isTag TTags>
+struct t_help<TT<TType, TTags>> {
     template <typename T>
-    using type = UserPropertyAdapter<TType, TTags...>::template apply<T>;
+    using type = UserPropertyAdapter<TType, TTags>::template apply<T>;
 };
 
 }  // namespace impl
@@ -86,13 +86,13 @@ namespace WithUnordered {
 template <template <typename> typename P>
 [[maybe_unused]] constexpr Property_unordered<P> property{};
 
-template <template <typename, typename> typename P, typename... Tags>
-[[maybe_unused]] constexpr Property_unordered<impl::ApplyTag<P, Tags...>::template apply> taged_property{};
+template <template <typename, typename> typename P, isTag TAGS = Tags<>>
+[[maybe_unused]] constexpr Property_unordered<impl::ApplyTag<P, TAGS>::template apply> taged_property{};
 
-template <typename T, typename... Tags>
-[[maybe_unused]] constexpr Property_unordered<UserPropertyAdapter<T, Tags...>::template apply> user_property{};
+template <typename T, isTag TAGS = Tags<>>
+[[maybe_unused]] constexpr Property_unordered<UserPropertyAdapter<T, TAGS>::template apply> user_property{};
 
-template <typename T, typename... Tags>
-[[maybe_unused]] constexpr Property_unordered<UserPropertyAdapter<T, Tags...>::template once> user_property_once{};
+template <typename T, isTag TAGS = Tags<>>
+[[maybe_unused]] constexpr Property_unordered<UserPropertyAdapter<T, TAGS>::template once> user_property_once{};
 
 };  // namespace WithUnordered

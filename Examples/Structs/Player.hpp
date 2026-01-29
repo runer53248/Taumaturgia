@@ -6,17 +6,17 @@
 using PlayerBuild = add_properties_ordered<
     Type,
     Naming,
-    Adapter<Wearing, struct Player_tag>::type,   // taged for custom default value
-    Adapter<Restoring, struct Player_tag>::type  // taged for custom default value
+    Adapter<Wearing, Tags<struct Player_tag>>::type,   // taged for custom default value
+    Adapter<Restoring, Tags<struct Player_tag>>::type  // taged for custom default value
     >;
 
 template <>
-struct UserDefaultValue<property_t<Wearing>, struct Player_tag> {
+struct UserDefaultValue<property_t<Wearing>, Tags<struct Player_tag>> {
     static inline std::move_only_function<property_t<Wearing>()> value = [] { return property_t<Wearing>{10}; };
 };
 
 template <>
-struct UserDefaultValue<property_t<Restoring>, struct Player_tag> {
+struct UserDefaultValue<property_t<Restoring>, Tags<struct Player_tag>> {
     static constexpr auto value = [] { return property_t<Restoring>{EffectType::Infection}; };
 };
 

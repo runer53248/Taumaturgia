@@ -39,38 +39,38 @@ public:
         requires(S > 1)
     constexpr decltype(auto) getType(this Self& self) noexcept = delete;
 
-    template <typename Type, typename... Tags, typename Self>
-        requires((std::same_as<Type, Health> or std::same_as<Type, Damage>) and sizeof...(Tags) == 0)
+    template <typename Type, isTag TAGS = Tags<>, typename Self>
+        requires((std::same_as<Type, Health> or std::same_as<Type, Damage>) and TAGS::size == 0)
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept {
         if constexpr (std::same_as<Type, Health>)
             return (self.other_hp);
         if constexpr (std::same_as<Type, Damage>)
             return (self.other_dmg);
     }
-    template <typename Type, typename... Tags, typename Self>
+    template <typename Type, isTag TAGS, typename Self>
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept = delete;
 };
 
 // MARK: properties
 
 template <typename T>
-using MyLiving = UserPropertyAdapter<::Health, tag_health>::apply<T>;
+using MyLiving = UserPropertyAdapter<::Health, Tags<tag_health>>::apply<T>;
 template <typename T>
-using MyLiving2 = UserPropertyAdapter<::Health, tag_health2>::apply<T>;
+using MyLiving2 = UserPropertyAdapter<::Health, Tags<tag_health2>>::apply<T>;
 template <typename T>
-using MyLiving_once = UserPropertyAdapter<::Health, tag_health>::once<T>;
+using MyLiving_once = UserPropertyAdapter<::Health, Tags<tag_health>>::once<T>;
 
 template <typename T>
-using MyDamaging = UserPropertyAdapter<::Damage, tag_damage>::apply<T>;
+using MyDamaging = UserPropertyAdapter<::Damage, Tags<tag_damage>>::apply<T>;
 template <typename T>
-using MyDamaging_once = UserPropertyAdapter<::Damage, tag_damage>::once<T>;
+using MyDamaging_once = UserPropertyAdapter<::Damage, Tags<tag_damage>>::once<T>;
 
 namespace With {
-[[maybe_unused]] const auto MyHealth = user_property<::Health, struct tag_health>;
-[[maybe_unused]] const auto MyHealth_once = user_property_once<::Health, struct tag_health>;
+[[maybe_unused]] const auto MyHealth = user_property<::Health, Tags<struct tag_health>>;
+[[maybe_unused]] const auto MyHealth_once = user_property_once<::Health, Tags<struct tag_health>>;
 
-[[maybe_unused]] const auto MyDamage = user_property<::Damage, struct tag_damage>;
-[[maybe_unused]] const auto MyDamage_once = user_property_once<::Damage, struct tag_damage>;
+[[maybe_unused]] const auto MyDamage = user_property<::Damage, Tags<struct tag_damage>>;
+[[maybe_unused]] const auto MyDamage_once = user_property_once<::Damage, Tags<struct tag_damage>>;
 }  // namespace With
 
 static_assert(std::same_as<
@@ -96,13 +96,13 @@ struct val {
 
 template <typename T, typename N>
 using member_getType = decltype(std::declval<T&>().template getType<N::value>());
-template <typename T, typename TYPE, typename... Tags>
-using member_getTypeTaged = decltype(std::declval<T&>().template getTypeTaged<TYPE, Tags...>());
+template <typename T, typename TYPE, isTag TAGS = Tags<>>
+using member_getTypeTaged = decltype(std::declval<T&>().template getTypeTaged<TYPE, TAGS>());
 
 template <typename T, typename N>
 using free_getType = decltype(getType<N::value>(std::declval<T&>()));
-template <typename T, typename TYPE, typename... Tags>
-using free_getTypeTaged = decltype(getTypeTaged<TYPE, Tags...>(std::declval<T&>()));
+template <typename T, typename TYPE, isTag TAGS = Tags<>>
+using free_getTypeTaged = decltype(getTypeTaged<TYPE, TAGS>(std::declval<T&>()));
 
 template <template <typename...> typename Fn, typename TARGET, typename... CONFIG>
 using detect = std::experimental::is_detected<Fn, TARGET, CONFIG...>;
@@ -158,22 +158,22 @@ protected:
         trait<Health>::get(obj_by_list) = taged_health;  // set added value
         if constexpr (not Livingable<base>)
             obj_by_list.template getTypeTaged<Health>() = base_health;           // set added value
-        obj_by_list.template getTypeTaged<Health, tag_health>() = taged_health;  // set added value
+        obj_by_list.template getTypeTaged<Health, Tags<tag_health>>() = taged_health;  // set added value
         obj_by_list.template getTypeTaged<Damage>() = base_damage;               // set added value
-        obj_by_list.template getTypeTaged<Damage, tag_damage>() = taged_damage;  // set added value
+        obj_by_list.template getTypeTaged<Damage, Tags<tag_damage>>() = taged_damage;  // set added value
 
         trait<Health>::get(obj_by_create) = taged_health;  // set added value
         if constexpr (not Livingable<base>)
             obj_by_create.template getTypeTaged<Health>() = base_health;           // set added value
-        obj_by_create.template getTypeTaged<Health, tag_health>() = taged_health;  // set added value
+        obj_by_create.template getTypeTaged<Health, Tags<tag_health>>() = taged_health;  // set added value
         obj_by_create.template getTypeTaged<Damage>() = base_damage;               // set added value
-        obj_by_create.template getTypeTaged<Damage, tag_damage>() = taged_damage;  // set added value
+        obj_by_create.template getTypeTaged<Damage, Tags<tag_damage>>() = taged_damage;  // set added value
 
         if constexpr (std::same_as<base, with_health_and_damage>) {
             obj_by_creator.template getTypeTaged<Health>() = base_health;               // set added value
-            obj_by_creator.template getTypeTaged<Health, tag_health>() = taged_health;  // set added value
+            obj_by_creator.template getTypeTaged<Health, Tags<tag_health>>() = taged_health;  // set added value
             obj_by_creator.template getTypeTaged<Damage>() = base_damage;               // set added value
-            obj_by_creator.template getTypeTaged<Damage, tag_damage>() = taged_damage;  // set added value
+            obj_by_creator.template getTypeTaged<Damage, Tags<tag_damage>>() = taged_damage;  // set added value
         }
     }
     void TearDown() override {}
@@ -330,11 +330,11 @@ auto check = []<typename type>(type& obj, std::string texted_type) {
     print("free getType<3>: ", getType<3>(obj));
     // std::cout << "free2: " << getType<4>(obj).value() << '\n';  //? deleted function - out of range
 
-    EXPECT_TRUE((detect<member_getTypeTaged, type, Health, tag_health>::value));
-    EXPECT_TRUE((detect<member_getTypeTaged, type, Damage, tag_damage>::value));
+    EXPECT_TRUE((detect<member_getTypeTaged, type, Health, Tags<tag_health>>::value));
+    EXPECT_TRUE((detect<member_getTypeTaged, type, Damage, Tags<tag_damage>>::value));
     EXPECT_TRUE((detect<member_getTypeTaged, type, Damage>::value));
-    print("memb getTypeTaged<Health, tag_health>: ", obj.template getTypeTaged<Health, tag_health>());
-    print("memb getTypeTaged<Damage, tag_damage>: ", obj.template getTypeTaged<Damage, tag_damage>());
+    print("memb getTypeTaged<Health, tag_health>: ", obj.template getTypeTaged<Health, Tags<tag_health>>());
+    print("memb getTypeTaged<Damage, tag_damage>: ", obj.template getTypeTaged<Damage, Tags<tag_damage>>());
     print("memb getTypeTaged<Damage>:             ", obj.template getTypeTaged<Damage>());
     if constexpr ((detect<member_getTypeTaged, type, Health>::value)) {
         print("memb getTypeTaged<Health>:             ", obj.template getTypeTaged<Health>());
@@ -342,14 +342,14 @@ auto check = []<typename type>(type& obj, std::string texted_type) {
         print("memb getTypeTaged<Health>:             unaccessable", empty{});  //? deleted method - base don't have getTypeTaged
     }
 
-    EXPECT_TRUE((detect<free_getTypeTaged, type, Health, tag_health>::value));
-    EXPECT_TRUE((detect<free_getTypeTaged, type, Damage, tag_damage>::value));
+    EXPECT_TRUE((detect<free_getTypeTaged, type, Health, Tags<tag_health>>::value));
+    EXPECT_TRUE((detect<free_getTypeTaged, type, Damage, Tags<tag_damage>>::value));
     EXPECT_TRUE((detect<free_getTypeTaged, type, Health>::value));
     EXPECT_TRUE((detect<free_getTypeTaged, type, Damage>::value));
     EXPECT_FALSE((detect<free_getTypeTaged, type, Protection>::value));         //? deleted function - wrong type
-    EXPECT_FALSE((detect<free_getTypeTaged, type, Health, tag_wrong>::value));  //? deleted function - wrong tag
-    print("free getTypeTaged<Health, tag_health>: ", getTypeTaged<Health, tag_health>(obj));
-    print("free getTypeTaged<Damage, tag_damage>: ", getTypeTaged<Damage, tag_damage>(obj));
+    EXPECT_FALSE((detect<free_getTypeTaged, type, Health, Tags<tag_wrong>>::value));  //? deleted function - wrong tag
+    print("free getTypeTaged<Health, tag_health>: ", getTypeTaged<Health, Tags<tag_health>>(obj));
+    print("free getTypeTaged<Damage, tag_damage>: ", getTypeTaged<Damage, Tags<tag_damage>>(obj));
     print("free getTypeTaged<Damage>            : ", getTypeTaged<Damage>(obj));
     print("free getTypeTaged<Health>            : ", getTypeTaged<Health>(obj));
     // std::cout << "free getTypeTaged<Protection>:         " << getTypeTaged<Protection>(obj).value() << '\n';  //? deleted function - wrong type
@@ -359,8 +359,8 @@ auto check = []<typename type>(type& obj, std::string texted_type) {
 
     EXPECT_TRUE(getTypeTaged<Health>(obj) == base_health);
     EXPECT_TRUE(getTypeTaged<Damage>(obj) == base_damage);
-    EXPECT_TRUE((getTypeTaged<Damage, tag_damage>(obj)) == taged_damage);
-    EXPECT_TRUE((getTypeTaged<Health, tag_health>(obj)) == taged_health);
+    EXPECT_TRUE((getTypeTaged<Damage, Tags<tag_damage>>(obj)) == taged_damage);
+    EXPECT_TRUE((getTypeTaged<Health, Tags<tag_health>>(obj)) == taged_health);
 };
 
 TEST_F(Access_Fixture_empty, access_by_method_and_free_function) {

@@ -17,28 +17,28 @@ struct AccessInt {
 int main() {
     {
         static_assert(std::is_same_v<
-                      decltype(With::user_property<int, struct first_int>),
+                      decltype(With::user_property<int, Tags<struct first_int>>),
                       const Property_ordered<int_first::apply>>);
 
-        static_assert(Property_ordered<int_first::apply>{} == With::user_property<int, struct first_int>);
-        static_assert(Property_ordered<int_first::once>{} != With::user_property<int, struct first_int>);
-        static_assert(Property_ordered<int_first::once>{} == With::user_property_once<int, struct first_int>);
-        static_assert(Property_ordered<int_first::apply>{} != With::user_property_once<int, struct first_int>);
+        static_assert(Property_ordered<int_first::apply>{} == With::user_property<int, Tags<struct first_int>>);
+        static_assert(Property_ordered<int_first::once>{} != With::user_property<int, Tags<struct first_int>>);
+        static_assert(Property_ordered<int_first::once>{} == With::user_property_once<int, Tags<struct first_int>>);
+        static_assert(Property_ordered<int_first::apply>{} != With::user_property_once<int, Tags<struct first_int>>);
 
         static_assert(Property_ordered<just_float::once>{} != With::user_property<float>);
         static_assert(Property_ordered<just_float::once>{} == With::user_property_once<float>);
 
-        static_assert(Property_unordered<int_first::apply>{} == WithUnordered::user_property<int, struct first_int>);
-        static_assert(Property_unordered<int_first::once>{} != WithUnordered::user_property<int, struct first_int>);
-        static_assert(Property_unordered<int_first::once>{} == WithUnordered::user_property_once<int, struct first_int>);
-        static_assert(Property_unordered<int_first::apply>{} != WithUnordered::user_property_once<int, struct first_int>);
+        static_assert(Property_unordered<int_first::apply>{} == WithUnordered::user_property<int, Tags<struct first_int>>);
+        static_assert(Property_unordered<int_first::once>{} != WithUnordered::user_property<int, Tags<struct first_int>>);
+        static_assert(Property_unordered<int_first::once>{} == WithUnordered::user_property_once<int, Tags<struct first_int>>);
+        static_assert(Property_unordered<int_first::apply>{} != WithUnordered::user_property_once<int, Tags<struct first_int>>);
 
         static_assert(Property_unordered<just_float::once>{} != WithUnordered::user_property<float>);
         static_assert(Property_unordered<just_float::once>{} == WithUnordered::user_property_once<float>);
     }
 
     {
-        constexpr auto high_order_type_index = decltype(With::user_property<int, struct first_int>)::value;
+        constexpr auto high_order_type_index = decltype(With::user_property<int, Tags<struct first_int>>)::value;
         constexpr auto low_order_type_index = decltype(With::user_property<float>)::value;
         constexpr auto unorder_type_index = decltype(With::user_property<bool>)::value;
 
@@ -54,40 +54,40 @@ int main() {
     {
         auto t1_creator =
             From::base<Base>                                            //
-            | With::user_property<Damage, struct Damage_first>          // 12 : Damage added
-            | With::taged_property<Damaging_impl, struct Damage_first>  //
+            | With::user_property<Damage, Tags<struct Damage_first>>          // 12 : Damage added
+            | With::taged_property<Damaging_impl, Tags<struct Damage_first>>  //
             | With::taged_property<Damaging_impl>                       //
             | With::Damage                                              // ! last
             ;
         auto t2_creator =
             From::base<Base>                                            //
-            | With::user_property<Damage, struct Damage_first>          // 12 : Damage added
+            | With::user_property<Damage, Tags<struct Damage_first>>          // 12 : Damage added
             | With::Damage                                              //
-            | With::taged_property<Damaging_impl, struct Damage_first>  //
+            | With::taged_property<Damaging_impl, Tags<struct Damage_first>>  //
             | With::taged_property<Damaging_impl>                       // ! last
             ;
         auto t3_creator =
             From::base<Base>                                            //
-            | With::user_property<Damage, struct Damage_first>          // 12 : Damage added
+            | With::user_property<Damage, Tags<struct Damage_first>>          // 12 : Damage added
             | With::Damage                                              //
             | With::taged_property<Damaging_impl>                       //
-            | With::taged_property<Damaging_impl, struct Damage_first>  // ! last
+            | With::taged_property<Damaging_impl, Tags<struct Damage_first>>  // ! last
             ;
         auto type1 = t1_creator();
         auto type2 = t2_creator();
         auto type3 = t3_creator();
         std::cout << "Damaging                  =  " << Property_ordered<Damaging>::value << '\n';
-        std::cout << "Damaging<.. Damage_first> =  " << Property_ordered<Damaging<tag, struct Damage_first>::property_data::ordered_property_type::apply>::value << '\n';
+        std::cout << "Damaging<.. Damage_first> =  " << Property_ordered<Damaging<tag, Tags<struct Damage_first>>::property_data::ordered_property_type::apply>::value << '\n';
         std::cout << "Damage                    =  " << Property_ordered<Damaging_impl>::value << '\n';
-        std::cout << "Damage<.. Damage_first>   =  " << Property_ordered<Damaging_impl<tag, struct Damage_first>::property_data::ordered_property_type::apply>::value << '\n';
-        std::cout << "1  = " << decltype(With::user_property<Damage, struct Damage_first>)::value << '\n';
+        std::cout << "Damage<.. Damage_first>   =  " << Property_ordered<Damaging_impl<tag, Tags<struct Damage_first>>::property_data::ordered_property_type::apply>::value << '\n';
+        std::cout << "1  = " << decltype(With::user_property<Damage, Tags<struct Damage_first>>)::value << '\n';
         std::cout << "2  = " << decltype(With::Damage)::value << '\n';
         std::cout << "3  = " << decltype(With::taged_property<Damaging_impl>)::value << '\n';
-        std::cout << "4  = " << decltype(With::taged_property<Damaging_impl, struct Damage_first>)::value << '\n';
-        std::cout << "1  = " << name<decltype(With::user_property<Damage, struct Damage_first>)>() << '\n';
+        std::cout << "4  = " << decltype(With::taged_property<Damaging_impl, Tags<struct Damage_first>>)::value << '\n';
+        std::cout << "1  = " << name<decltype(With::user_property<Damage, Tags<struct Damage_first>>)>() << '\n';
         std::cout << "2  = " << name<decltype(With::Damage)>() << '\n';
         std::cout << "3  = " << name<decltype(With::taged_property<Damaging_impl>)>() << '\n';
-        std::cout << "4  = " << name<decltype(With::taged_property<Damaging_impl, struct Damage_first>)>() << '\n';
+        std::cout << "4  = " << name<decltype(With::taged_property<Damaging_impl, Tags<struct Damage_first>>)>() << '\n';
 
         std::cout << "decltype(1) " << name<decltype(t1_creator)>() << '\n';
         std::cout << "decltype(2) " << name<decltype(t2_creator)>() << '\n';
@@ -101,19 +101,19 @@ int main() {
         // type build with property list
         [[maybe_unused]] list list_1 =                                  //
             With::Name                                                  // 6  : Name / impl::Naming_
-            | With::user_property<bool, bool>                           // 7  : bool
-            | With::user_property<char, bool, bool>                     // 8  : char
+            | With::user_property<bool, Tags<bool>>                           // 7  : bool
+            | With::user_property<char, Tags<bool, bool>>                     // 8  : char
             | With::user_property<float>                                //*3  : float - (aka. just_float)
-            | With::user_property<float, float, int>                    // 9  : float
+            | With::user_property<float, Tags<float, int>>                    // 9  : float
             | With::Damage                                              // 10 : Damage / impl::Damaging_
             | With::user_property<int>                                  // 11 : int
-            | With::user_property<int, struct first_int>                //*2  : int - (aka. int_first::apply)
-            | With::user_property<std::string, struct first_string>     //*4  : string - (aka. string_first::apply)
-            | With::user_property<std::string, struct second_string>    //*5  : string - (aka. string_second::apply)
-            | With::user_property<double, struct second_double>         //*0  : double - (aka. double_second::apply)
-            | With::user_property<double, struct first_double>          //*1  : double - (aka. double_first::apply)
-            | With::user_property<Damage, struct Damage_first>          // 12 : Damage added
-            | With::taged_property<Damaging_impl, struct Damage_first>  // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
+            | With::user_property<int, Tags<struct first_int>>                //*2  : int - (aka. int_first::apply)
+            | With::user_property<std::string, Tags<struct first_string>>     //*4  : string - (aka. string_first::apply)
+            | With::user_property<std::string, Tags<struct second_string>>    //*5  : string - (aka. string_second::apply)
+            | With::user_property<double, Tags<struct second_double>>         //*0  : double - (aka. double_second::apply)
+            | With::user_property<double, Tags<struct first_double>>          //*1  : double - (aka. double_first::apply)
+            | With::user_property<Damage, Tags<struct Damage_first>>          // 12 : Damage added
+            | With::taged_property<Damaging_impl, Tags<struct Damage_first>>  // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
             | With::taged_property<Damaging_impl>                       // !  : Damage / impl::Damaging_ - duplication
             ;
         auto type1 = Base{} | list_1;
@@ -122,19 +122,19 @@ int main() {
         auto type2 =
             Base{}                                                      //
             | With::Name                                                // 6  : Name / impl::Naming_
-            | With::user_property<bool, bool>                           // 7  : bool
-            | With::user_property<char, bool, bool>                     // 8  : char
+            | With::user_property<bool, Tags<bool>>                           // 7  : bool
+            | With::user_property<char, Tags<bool, bool>>                     // 8  : char
             | With::user_property<float>                                //*3  : float - (aka. just_float)
-            | With::user_property<float, float, int>                    // 9  : float
+            | With::user_property<float, Tags<float, int>>                    // 9  : float
             | With::Damage                                              // 10 : Damage / impl::Damaging_
             | With::user_property<int>                                  // 11 : int
-            | With::user_property<int, struct first_int>                //*2  : int - (aka. int_first::apply)
-            | With::user_property<std::string, struct first_string>     //*4  : string - (aka. string_first::apply)
-            | With::user_property<std::string, struct second_string>    //*5  : string - (aka. string_second::apply)
-            | With::user_property<double, struct second_double>         //*0  : double - (aka. double_second::apply)
-            | With::user_property<double, struct first_double>          //*1  : double - (aka. double_first::apply)
-            | With::user_property<Damage, struct Damage_first>          // 12 : Damage added
-            | With::taged_property<Damaging_impl, struct Damage_first>  // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
+            | With::user_property<int, Tags<struct first_int>>                //*2  : int - (aka. int_first::apply)
+            | With::user_property<std::string, Tags<struct first_string>>     //*4  : string - (aka. string_first::apply)
+            | With::user_property<std::string, Tags<struct second_string>>    //*5  : string - (aka. string_second::apply)
+            | With::user_property<double, Tags<struct second_double>>         //*0  : double - (aka. double_second::apply)
+            | With::user_property<double, Tags<struct first_double>>          //*1  : double - (aka. double_first::apply)
+            | With::user_property<Damage, Tags<struct Damage_first>>          // 12 : Damage added
+            | With::taged_property<Damaging_impl, Tags<struct Damage_first>>  // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
             | With::taged_property<Damaging_impl>                       // !  : Damage / impl::Damaging_ - duplication
             | Create;
 
@@ -142,19 +142,19 @@ int main() {
         auto type3_creator =
             From::base<Base>                                            //
             | With::Name                                                // 6  : Name / impl::Naming_
-            | With::user_property<bool, bool>                           // 7  : bool
-            | With::user_property<char, bool, bool>                     // 8  : char
+            | With::user_property<bool, Tags<bool>>                           // 7  : bool
+            | With::user_property<char, Tags<bool, bool>>                     // 8  : char
             | With::user_property<float>                                //*3  : float - (aka. just_float)
-            | With::user_property<float, float, int>                    // 9  : float
+            | With::user_property<float, Tags<float, int>>                    // 9  : float
             | With::Damage                                              // 10 : Damage / impl::Damaging_
             | With::user_property<int>                                  // 11 : int
-            | With::user_property<int, struct first_int>                //*2  : int - (aka. int_first::apply)
-            | With::user_property<std::string, struct first_string>     //*4  : string - (aka. string_first::apply)
-            | With::user_property<std::string, struct second_string>    //*5  : string - (aka. string_second::apply)
-            | With::user_property<double, struct second_double>         //*0  : double - (aka. double_second::apply)
-            | With::user_property<double, struct first_double>          //*1  : double - (aka. double_first::apply)
-            | With::user_property<Damage, struct Damage_first>          // 12 : Damage added
-            | With::taged_property<Damaging_impl, struct Damage_first>  // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
+            | With::user_property<int, Tags<struct first_int>>                //*2  : int - (aka. int_first::apply)
+            | With::user_property<std::string, Tags<struct first_string>>     //*4  : string - (aka. string_first::apply)
+            | With::user_property<std::string, Tags<struct second_string>>    //*5  : string - (aka. string_second::apply)
+            | With::user_property<double, Tags<struct second_double>>         //*0  : double - (aka. double_second::apply)
+            | With::user_property<double, Tags<struct first_double>>          //*1  : double - (aka. double_first::apply)
+            | With::user_property<Damage, Tags<struct Damage_first>>          // 12 : Damage added
+            | With::taged_property<Damaging_impl, Tags<struct Damage_first>>  // ? -/13 : Damage duplication / impl::Damaging_ added (as different type than impl::UserProperty_<Damage,...>)
             | With::taged_property<Damaging_impl>                       // !  : Damage / impl::Damaging_ - duplication
             ;
         auto type3 = type3_creator();
@@ -178,10 +178,10 @@ int main() {
 
     {
         [[maybe_unused]] list list_1 =
-            With::user_property<Damage, struct Damage_first>  //
+            With::user_property<Damage, Tags<struct Damage_first>>  //
             | With::user_property<Damage>;
         [[maybe_unused]] list list_2 =
-            With::taged_property<Damaging_impl, struct Damage_first>  //
+            With::taged_property<Damaging_impl, Tags<struct Damage_first>>  //
             | With::taged_property<Damaging_impl>;
 
         auto type_test_1 = Base{} | list_1;
@@ -195,7 +195,7 @@ int main() {
     }
 
     {
-        auto prop_1 = With::taged_property<Damaging_impl, struct Damage_first>;
+        auto prop_1 = With::taged_property<Damaging_impl, Tags<struct Damage_first>>;
         auto prop_2 = With::taged_property<Damaging_impl>;
 
         list l_test_a =  //
@@ -218,9 +218,9 @@ int main() {
     }
 
     {
-        auto prop_1 = With::taged_property<Damaging_impl, struct Damage_first>;
+        auto prop_1 = With::taged_property<Damaging_impl, Tags<struct Damage_first>>;
         auto prop_2 = With::taged_property<Damaging_impl>;
-        auto prop_3 = With::user_property<Damage, struct Damage_first>;
+        auto prop_3 = With::user_property<Damage, Tags<struct Damage_first>>;
 
         [[maybe_unused]] list l_test_a =  //
             prop_1                        //
@@ -251,9 +251,9 @@ int main() {
     }
 
     {
-        auto prop_1 = With::taged_property<Damaging_impl, struct Damage_first>;
+        auto prop_1 = With::taged_property<Damaging_impl, Tags<struct Damage_first>>;
         auto prop_2 = With::taged_property<Damaging_impl>;
-        auto prop_3 = With::user_property_once<Damage, struct Damage_first>;
+        auto prop_3 = With::user_property_once<Damage, Tags<struct Damage_first>>;
 
         [[maybe_unused]] list l_test_a =  //
             prop_1                        //
@@ -290,21 +290,21 @@ int main() {
         // type build with property list
         [[maybe_unused]] list l_p2 =                                       //
             With::Name_once                                                // 6  : Name / impl::Naming_
-            | With::user_property_once<bool, bool>                         // 7  : bool
-            | With::user_property_once<bool, struct other_bool>            // 8  : bool
-            | With::user_property_once<char, bool, bool>                   // 9  : char
+            | With::user_property_once<bool, Tags<bool>>                         // 7  : bool
+            | With::user_property_once<bool, Tags<struct other_bool>>            // 8  : bool
+            | With::user_property_once<char, Tags<bool, bool>>                  // 9  : char
             | With::user_property_once<float>                              //*3  : float - (aka. just_float)
-            | With::user_property_once<float, float, int>                  // 10 : float
+            | With::user_property_once<float, Tags<float, int>>                  // 10 : float
             | With::Damage_once                                            // 11 : Damage / impl::Damaging_
             | With::user_property_once<int>                                // 12 : int
-            | With::user_property_once<int, struct first_int>              //*2  : int - (aka. int_first::once)
-            | With::user_property_once<std::string, struct first_string>   //*4  : string - (aka. string_first::once)
-            | With::user_property_once<std::string, struct second_string>  //*5  : string - (aka. string_second::once)
-            | With::user_property_once<double, struct second_double>       //*1  : double - (aka. double_second::once)
-            | With::user_property_once<double, struct first_double>        //*0  : double - (aka. double_first::once)
-            | With::taged_property<Damaging_impl, struct Damage_first>     // 13 : Damage / impl::Damaging_
+            | With::user_property_once<int, Tags<struct first_int>>              //*2  : int - (aka. int_first::once)
+            | With::user_property_once<std::string, Tags<struct first_string>>   //*4  : string - (aka. string_first::once)
+            | With::user_property_once<std::string, Tags<struct second_string>>  //*5  : string - (aka. string_second::once)
+            | With::user_property_once<double, Tags<struct second_double>>       //*1  : double - (aka. double_second::once)
+            | With::user_property_once<double, Tags<struct first_double>>        //*0  : double - (aka. double_first::once)
+            | With::taged_property<Damaging_impl, Tags<struct Damage_first>>     // 13 : Damage / impl::Damaging_
             | With::taged_property<Damaging_impl>                          // ! : Damage / impl::Damaging_ - duplication
-            | With::user_property_once<Damage, struct Damage_first>        // 13 : Damage - replace impl::Damaging_
+            | With::user_property_once<Damage, Tags<struct Damage_first>>        // 13 : Damage - replace impl::Damaging_
             ;
         auto type2 = Base{} | l_p2;
 
@@ -314,21 +314,21 @@ int main() {
         auto type00 =
             Base{}                                                         //
             | With::Name_once                                              // 6  : Name / impl::Naming_
-            | With::user_property_once<bool, bool>                         // 7  : bool
-            | With::user_property_once<bool, struct other_bool>            // 8  : bool
-            | With::user_property_once<char, bool, bool>                   // 9  : char
+            | With::user_property_once<bool, Tags<bool>>                         // 7  : bool
+            | With::user_property_once<bool, Tags<struct other_bool>>            // 8  : bool
+            | With::user_property_once<char, Tags<bool, bool>>                   // 9  : char
             | With::user_property_once<float>                              //*3  : float - (aka. just_float)
-            | With::user_property_once<float, float, int>                  // 10 : float
+            | With::user_property_once<float, Tags<float, int>>                  // 10 : float
             | With::Damage_once                                            // 11 : Damage / impl::Damaging_
             | With::user_property_once<int>                                // 12 : int
-            | With::user_property_once<int, struct first_int>              //*2  : int - (aka. int_first::once)
-            | With::user_property_once<std::string, struct first_string>   //*4  : string - (aka. string_first::once)
-            | With::user_property_once<std::string, struct second_string>  //*5  : string - (aka. string_second::once)
-            | With::user_property_once<double, struct second_double>       //*1  : double - (aka. double_second::once)
-            | With::user_property_once<double, struct first_double>        //*0  : double - (aka. double_first::once)
-            | With::taged_property<Damaging_impl, struct Damage_first>     // 13 : Damage / impl::Damaging_
+            | With::user_property_once<int, Tags<struct first_int>>              //*2  : int - (aka. int_first::once)
+            | With::user_property_once<std::string, Tags<struct first_string>>   //*4  : string - (aka. string_first::once)
+            | With::user_property_once<std::string, Tags<struct second_string>>  //*5  : string - (aka. string_second::once)
+            | With::user_property_once<double, Tags<struct second_double> >      //*1  : double - (aka. double_second::once)
+            | With::user_property_once<double, Tags<struct first_double>>        //*0  : double - (aka. double_first::once)
+            | With::taged_property<Damaging_impl, Tags<struct Damage_first>>     // 13 : Damage / impl::Damaging_
             | With::taged_property<Damaging_impl>                          // !   : Damage / impl::Damaging_ - duplication
-            | With::user_property_once<Damage, struct Damage_first>        // 13 : Damage - replace impl::Damaging_
+            | With::user_property_once<Damage, Tags<struct Damage_first>>        // 13 : Damage - replace impl::Damaging_
             | Create;
 
         static_assert(std::same_as<decltype(type2), decltype(type00)>);

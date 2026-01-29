@@ -6,27 +6,27 @@
 #include "UserDefaultValue.hpp"
 #include "unordered_token.hpp"
 
-template <typename T, typename... Tags>
+template <typename T, isTag TAGS>
 struct Data {
     T value;
 };
 
-template <typename... Tags, typename T>
+template <isTag TAGS = Tags<>, typename T>
 decltype(auto) forTags(T&& data) {
-    return Data<T, Tags...>{std::forward<T>(data)};
+    return Data<T, TAGS>{std::forward<T>(data)};
 }
 
 namespace impl {
 
-template <typename TYPE, typename T, typename... Tags>
+template <typename TYPE, typename T, isTag TAGS>
 // requires(not std::is_reference_v<T>)
 class UserProperty_;
 
 template <typename T>
 class Constructors;
 
-template <typename TYPE, typename T, typename... Tags>
-class Constructors<UserProperty_<TYPE, T, Tags...>> : public T {
+template <typename TYPE, typename T, isTag TAGS>
+class Constructors<UserProperty_<TYPE, T, TAGS>> : public T {
 public:
     using hold_type = TYPE;
 
@@ -61,26 +61,26 @@ public:
 
     // MARK: Unordered Data<>
 
-    template <typename TT, typename... TTags>
-    constexpr Constructors(const Unordered&, Data<TT, TTags...>&& arg) {
-        using user_prop = UserProperty_<TYPE, T, Tags...>;
+    template <typename TT, isTag TTAGS>
+    constexpr Constructors(const Unordered&, Data<TT, TTAGS>&& arg) {
+        using user_prop = UserProperty_<TYPE, T, TAGS>;
 
-        getTypeTaged<TT, TTags...>(*static_cast<user_prop*>(this)) = arg.value;
+        getTypeTaged<TT, TTAGS>(*static_cast<user_prop*>(this)) = arg.value;
     }
 
-    template <typename TT, typename... TTags, typename... Args>
-    constexpr Constructors(const Unordered& u, Data<TT, TTags...>&& arg, Args&&... args)
+    template <typename TT, isTag TTAGS, typename... Args>
+    constexpr Constructors(const Unordered& u, Data<TT, TTAGS>&& arg, Args&&... args)
         : Constructors{u, std::forward<Args>(args)...} {
-        using user_prop = UserProperty_<TYPE, T, Tags...>;
+        using user_prop = UserProperty_<TYPE, T, TAGS>;
 
-        getTypeTaged<TT, TTags...>(*static_cast<user_prop*>(this)) = arg.value;
+        getTypeTaged<TT, TTAGS>(*static_cast<user_prop*>(this)) = arg.value;
     }
 
     // MARK: Unordered
 
     template <typename Arg>
     constexpr Constructors(const Unordered&, Arg&& arg) {
-        using user_prop = UserProperty_<TYPE, T, Tags...>;
+        using user_prop = UserProperty_<TYPE, T, TAGS>;
 
         if constexpr (trait_accessable<user_prop, std::remove_cvref_t<Arg>>) {
             trait<std::remove_cvref_t<Arg>>::get(*static_cast<user_prop*>(this)) = std::forward<Arg>(arg);
@@ -92,7 +92,7 @@ public:
     template <typename Arg, typename... Args>
     constexpr Constructors(const Unordered& u, Arg&& arg, Args&&... args)
         : Constructors{u, std::forward<Args>(args)...} {
-        using user_prop = UserProperty_<TYPE, T, Tags...>;
+        using user_prop = UserProperty_<TYPE, T, TAGS>;
 
         if constexpr (trait_accessable<user_prop, std::remove_cvref_t<Arg>>) {
             trait<std::remove_cvref_t<Arg>>::get(*static_cast<user_prop*>(this)) = std::forward<Arg>(arg);
@@ -101,11 +101,11 @@ public:
         }
     }
 
-    template <typename TT, typename... TTags, typename... Args>
+    template <typename TT, isTag TTAGS, typename... Args>
         requires(not std::same_as<
                     boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>,
                     list<std::remove_cvref_t<Args>...>>)  // arguments are not of unique type
-    constexpr Constructors(const Unordered& u, Data<TT, TTags...>&& arg, Args&&... args) = delete;
+    constexpr Constructors(const Unordered& u, Data<TT, TTAGS>&& arg, Args&&... args) = delete;
 
     template <typename Arg, typename... Args>
         requires(not std::same_as<
@@ -198,7 +198,7 @@ public:
 
 
 protected:
-    hold_type type_ = UserDefaultValue<hold_type, Tags...>::value();  // specialization for default values
+    hold_type type_ = UserDefaultValue<hold_type, TAGS>::value();  // specialization for default values
 };
 
 }  // namespace impl

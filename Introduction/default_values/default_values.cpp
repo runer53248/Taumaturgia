@@ -18,22 +18,22 @@ struct UserDefaultValue<int> {
     static constexpr auto value = [] { return default_int; };
 };
 template <>
-struct UserDefaultValue<int, int_tag> {
+struct UserDefaultValue<int, Tags<int_tag>> {
     static constexpr auto value = [] { return default_int2; };
 };
 template <>
-struct UserDefaultValue<float, float_tag> {
+struct UserDefaultValue<float, Tags<float_tag>> {
     static constexpr auto value = [] { return default_float; };
 };
 template <>
-struct UserDefaultValue<std::string, name_tag> {
+struct UserDefaultValue<std::string, Tags<name_tag>> {
     static constexpr auto value = [] { return default_name_tag; };
 };
 
 int main() {
-    using Int_name = list<int, int_tag>;
-    using Float_name = list<float, float_tag>;
-    using Name = list<std::string, name_tag>;
+    using Int_name = list<int, Tags<int_tag>>;
+    using Float_name = list<float, Tags<float_tag>>;
+    using Name = list<std::string, Tags<name_tag>>;
 
     constexpr auto x =                       // pipeing with create
         Base{}                               //
@@ -48,7 +48,7 @@ int main() {
 
     static_assert(x.getType<int>() == default_int);
     static_assert(x.getType<int, 1>() == default_int2);
-    static_assert(x.getTaged<int_tag>() == default_int2);
+    static_assert(x.getTaged<Tags<int_tag>>() == default_int2);
     static_assert(x.getTypeOfSignature<Float_name>() == default_float);
 
     std::print("x.int   = {}\n", x.getType<int>());

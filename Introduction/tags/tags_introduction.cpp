@@ -14,18 +14,18 @@ int main() {
     // type for building properties - list containing result type and tags
 
     // building lists with same tags but different type
-    using Int_name = list<int, name_tag>;
-    using Float_name = list<float, name_tag>;
+    using Int_name = list<int, Tags<name_tag>>;
+    using Float_name = list<float, Tags<name_tag>>;
 
-    using Name = list<std::string, name_tag>;  // building lists with duplicated type and tags
+    using Name = list<std::string, Tags<name_tag>>;  // building lists with duplicated type and tags
 
-    using Name_2 = list<std::string, name_tag, tag_2>;  // building lists with duplicated type and one of it's tags
+    using Name_2 = list<std::string, Tags<name_tag, tag_2>>;  // building lists with duplicated type and one of it's tags
     // using Name_3 = list<std::string, tag_2, name_tag>;
 
     // building lists with same type but different tags
-    using Surname = list<std::string, surname_tag>;
-    using Address = list<std::string, address_tag>;
-    using Info = list<std::string>;
+    using Surname = list<std::string, Tags<surname_tag>>;
+    using Address = list<std::string, Tags<address_tag>>;
+    using Info = list<std::string, Tags<>>;
 
     Name name{};
     Name_2 name_2{};
@@ -37,24 +37,24 @@ int main() {
 
     auto data =                                              // pipeing with create
         Base{}                                               //
-        | With::user_property<int, name_tag>                 //
-        | With::user_property<std::string, name_tag>         //
-        | With::user_property<std::string, name_tag, tag_2>  //
-        | With::user_property<std::string, surname_tag>      //
-        | With::user_property<std::string, address_tag>      //
+        | With::user_property<int, Tags<name_tag>>                 //
+        | With::user_property<std::string, Tags<name_tag>>         //
+        | With::user_property<std::string, Tags<name_tag, tag_2>>  //
+        | With::user_property<std::string, Tags<surname_tag>>      //
+        | With::user_property<std::string, Tags<address_tag>>      //
         | With::user_property<std::string>                   //
-        | With::user_property<float, name_tag>               //
+        | With::user_property<float, Tags<name_tag>>               //
         | Create;
 
     auto data2 =                                             // pipeing creator
         From::base<Base>                                     //
-        | With::user_property<int, name_tag>                 //
-        | With::user_property<std::string, name_tag>         //
-        | With::user_property<std::string, name_tag, tag_2>  //
-        | With::user_property<std::string, surname_tag>      //
-        | With::user_property<std::string, address_tag>      //
+        | With::user_property<int, Tags<name_tag>>                 //
+        | With::user_property<std::string, Tags<name_tag>>         //
+        | With::user_property<std::string, Tags<name_tag, tag_2>>  //
+        | With::user_property<std::string, Tags<surname_tag>>      //
+        | With::user_property<std::string, Tags<address_tag>>      //
         | With::user_property<std::string>                   //
-        | With::user_property<float, name_tag>               //
+        | With::user_property<float, Tags<name_tag>>               //
         ;
 
     auto data3 =                             //
@@ -119,25 +119,25 @@ int main() {
     std::println("getTypeTaged<type, tags...>() - get property by type and it's tags");
     std::print(
         seven_types,
-        person.getTypeTaged<int, name_tag>(),
-        person.getTypeTaged<float, name_tag>(),
-        person.getTypeTaged<std::string, name_tag>(),
-        person.getTypeTaged<std::string, name_tag, tag_2>(),
-        person.getTypeTaged<std::string, surname_tag>(),
-        person.getTypeTaged<std::string, address_tag>(),
+        person.getTypeTaged<int, Tags<name_tag>>(),
+        person.getTypeTaged<float, Tags<name_tag>>(),
+        person.getTypeTaged<std::string, Tags<name_tag>>(),
+        person.getTypeTaged<std::string, Tags<name_tag, tag_2>>(),
+        person.getTypeTaged<std::string, Tags<surname_tag>>(),
+        person.getTypeTaged<std::string, Tags<address_tag>>(),
         person.getTypeTaged<std::string>());
 
     std::println("getTaged<tags...>() / getTagedSKIP<index, tags...>() - get property by it's tags alone (with skipping for access toother types under same ones)");
     std::print(
         seven_types,
-        person.getTaged<0, name_tag>(),  // same as: person.getTaged<name_tag>()
-        person.getTaged<2, name_tag>(),
-        person.getTaged<1, name_tag>(),
-        person.getTaged<name_tag, tag_2>(),
-        person.getTaged<surname_tag>(),
-        person.getTaged<address_tag>(),
+        person.getTaged<0, Tags<name_tag>>(),  // same as: person.getTaged<name_tag>()
+        person.getTaged<2, Tags<name_tag>>(),
+        person.getTaged<1, Tags<name_tag>>(),
+        person.getTaged<Tags<name_tag, tag_2>>(),
+        person.getTaged<Tags<surname_tag>>(),
+        person.getTaged<Tags<address_tag>>(),
         person.getTaged());
-    static_assert(&person.getTaged<0, name_tag>() == &person.getTaged<name_tag>());  // same reference
+    static_assert(&person.getTaged<0, Tags<name_tag>>() == &person.getTaged<Tags<name_tag>>());  // same reference
 
     std::println("getTypeLike(list<type, tags...>{{}}) - get property by it's building list object");
     std::print(

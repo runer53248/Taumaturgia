@@ -141,38 +141,47 @@ public:
 
     // MARK: getTypeTaged
 
-    template <typename RETURN, typename... TTags, typename Self>
-        requires(std::same_as<list<>, list<TTags...>> and
+    template <typename RETURN, isTag TTAGS = Tags<>, typename Self>
+        requires(std::same_as<list<Tags<>>, list<TTAGS>> and
                  have_getType_type_method<Self, RETURN>)
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept {
         return self.template getType<RETURN>();
     }
 
-    template <typename RETURN, typename... TTags, typename Self>
+    template <typename RETURN, isTag TTAGS, typename Self>
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept {
         using type = std::conditional_t<
             std::is_const_v<std::remove_reference_t<Self>>,
             const T&,
             T&>;
 
-        return static_cast<type>(self).template getTypeTaged<RETURN, TTags...>();
+        return static_cast<type>(self).template getTypeTaged<RETURN, TTAGS>();
     }
-    template <typename RETURN, typename... TTags, typename Self>
-        requires(not have_getTypeTaged_method<T, RETURN, TTags...>  //
-                 and not(std::same_as<list<>, list<TTags...>> and   //
+    template <typename RETURN, isTag TTAGS = Tags<>, typename Self>
+        requires(not have_getTypeTaged_method<T, RETURN, TTAGS>  //
+                 and not(std::same_as<Tags<>, TTAGS> and   //
                          have_getType_type_method<Self, RETURN>))
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept = delete;
 
     // MARK: getTypeOf
 
-    template <typename RETURN, typename... TTags, typename Self>
-        requires(have_getTypeTaged_method<Self, RETURN, TTags...>)
-    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTags...> signature) noexcept {
-        return self.template getTypeTaged<RETURN, TTags...>();
+    template <typename RETURN, isTag TTAGS, typename Self>
+        requires(have_getTypeTaged_method<Self, RETURN, TTAGS>)
+    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTAGS> signature) noexcept {
+        return self.template getTypeTaged<RETURN, TTAGS>();
     }
 
-    template <typename RETURN, typename... TTags, typename Self>
-    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTags...> signature) noexcept = delete;
+    template <typename RETURN, isTag TTAGS, typename Self>
+    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTAGS> signature) noexcept = delete;
+
+    template <typename RETURN, typename Self>
+        requires(have_getTypeTaged_method<Self, RETURN, Tags<>>)
+    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN> signature) noexcept {
+        return self.template getTypeTaged<RETURN, Tags<>>();
+    }
+
+    template <typename RETURN, typename Self>
+    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN> signature) noexcept = delete;
 
     // MARK: getTypeOfSignature
 
@@ -186,23 +195,23 @@ public:
 
     // MARK: getTaged
 
-    template <size_t SKIP, typename... TTags, typename Self>
+    template <size_t SKIP, isTag TTAGS = Tags<>, typename Self>
     constexpr decltype(auto) getTaged(this Self& self) noexcept {
         using type = std::conditional_t<
             std::is_const_v<std::remove_reference_t<Self>>,
             const T&,
             T&>;
 
-        if constexpr (have_getTaged_method<T, SKIP, TTags...>) {
-            return static_cast<type>(self).template getTaged<SKIP, TTags...>();  // skip - diffrent tags
-        } else if constexpr (std::same_as<list<>, list<TTags...>>) {
+        if constexpr (have_getTaged_method<T, SKIP, TTAGS>) {
+            return static_cast<type>(self).template getTaged<SKIP, TTAGS>();  // skip - diffrent tags
+        } else if constexpr (std::same_as<Tags<>, TTAGS>) {
             return self.template getBuildinTypes<SKIP>(types_ptr{});
         }
     }
 
-    template <typename... TTags, typename Self>
+    template <isTag TTAGS = Tags<>, typename Self>
     constexpr decltype(auto) getTaged(this Self& self) noexcept {
-        return self.template getTaged<0, TTags...>();
+        return self.template getTaged<0, TTAGS>();
     }
 
 private:

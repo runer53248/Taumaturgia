@@ -45,9 +45,9 @@ int main() {
         std::cout << "access 4b = " << type_4.getType<std::string>() << '\n';
         std::cout << "access 4c = " << type_4.getType<int>() << '\n';
         std::cout << "access 4d = " << type_4.getType<std::string, 1>() << '\n';                       // second std::string getter
-        std::cout << "access 4e = " << type_4.getTypeTaged<std::string, Empty>() << '\n';              // second std::string getter
-        std::cout << "access 4f = " << type_4.getTypeOfSignature<list<std::string, Empty>>() << '\n';  // second std::string getter
-        std::cout << "access 4g = " << type_4.getTaged<Empty>() << '\n'                                // second std::string getter
+        std::cout << "access 4e = " << type_4.getTypeTaged<std::string, Tags<Empty>>() << '\n';              // second std::string getter
+        std::cout << "access 4f = " << type_4.getTypeOfSignature<list<std::string, Tags<Empty>>>() << '\n';  // second std::string getter
+        std::cout << "access 4g = " << type_4.getTaged<Tags<Empty>>() << '\n'                                // second std::string getter
                   << '\n';
     }
     {  // 5 way of access

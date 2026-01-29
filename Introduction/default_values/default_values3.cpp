@@ -13,12 +13,12 @@ int main() {
     auto test1 =
         Base{}                                             //
         | With::user_property<Protection>                  //
-        | With::user_property<Protection, protection_tag>  //
+        | With::user_property<Protection, Tags<protection_tag>>  //
         | With::Protection                                 //
         | Create;
     auto test2 =
         Base{}                                             //
-        | With::user_property<Protection, protection_tag>  //
+        | With::user_property<Protection, Tags<protection_tag>>  //
         | With::user_property<Protection>                  //
         | With::Protection                                 //
         | Create;
@@ -26,11 +26,11 @@ int main() {
         Base{}                                             //
         | With::user_property<Protection>                  //
         | With::Protection                                 //
-        | With::user_property<Protection, protection_tag>  //
+        | With::user_property<Protection, Tags<protection_tag>>  //
         | Create;
     auto test4 =
         Base{}                                             //
-        | With::user_property<Protection, protection_tag>  //
+        | With::user_property<Protection, Tags<protection_tag>>  //
         | With::Protection                                 //
         | With::user_property<Protection>                  //
         | Create;
@@ -38,12 +38,12 @@ int main() {
         Base{}                                             //
         | With::Protection                                 //
         | With::user_property<Protection>                  //
-        | With::user_property<Protection, protection_tag>  //
+        | With::user_property<Protection, Tags<protection_tag>>  //
         | Create;
     auto test6 =
         Base{}                                             //
         | With::Protection                                 //
-        | With::user_property<Protection, protection_tag>  //
+        | With::user_property<Protection, Tags<protection_tag>>  //
         | With::user_property<Protection>                  //
         | Create;
     std::print("\n\n");
@@ -56,13 +56,13 @@ int main() {
 
     auto test7 =
         Base{}                                             //
-        | With::user_property<Protection, protection_tag>  //
+        | With::user_property<Protection, Tags<protection_tag>>  //
         | With::Protection                                 //
         | Create;
     auto test8 =
         Base{}                                             //
         | With::Protection                                 //
-        | With::user_property<Protection, protection_tag>  //
+        | With::user_property<Protection, Tags<protection_tag>>  //
         | Create;
     static_assert(std::same_as<
                   decltype(test7),

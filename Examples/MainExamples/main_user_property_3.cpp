@@ -25,12 +25,12 @@ using Type_nest_one = add_properties_ordered<Type_no_nest, UserPropertyAdapter<D
 using Type_nest_two = add_properties_ordered<Type_nest_one, UserPropertyAdapter<Damage>::once, UserPropertyAdapter<Damage>::once>;  // add_properties allow nest one level at the time
 
 template <typename T, typename TYPE = Damage, typename C = struct TOKEN>
-using UserProperty2 = UserProperty<TYPE, T, C, struct TEST, void>;
+using UserProperty2 = UserProperty<TYPE, T, Tags<C, struct TEST, void>>;
 using Type_complex = add_properties_ordered<MyType, UserProperty2>;          // add_properties allow nest one level at the time
 using Type_complex_2 = add_properties_ordered<Type_complex, UserProperty2>;  // add_properties allow nest one level at the time
 
 template <typename T>
-using UserProperty3 = UserProperty<Damage, T, struct TAG>;
+using UserProperty3 = UserProperty<Damage, T, Tags<struct TAG>>;
 using Type_tag_complex = add_properties_ordered<Type_complex, UserProperty3>;
 
 template <typename TYPE>
@@ -113,25 +113,25 @@ int main() {
     static_assert(&type6.getType<Damage, 1>() == &type6.getType<1>());
     std::cout << '\n';
 
-    using unlimited_nest_1 = impl::UserProperty_<Name, impl::UserProperty_<Name, MyType, int>, int>;
-    using unlimited_nest_2 = impl::UserProperty_<Damage, impl::UserProperty_<Damage, MyType, int>, int>;
+    using unlimited_nest_1 = impl::UserProperty_<Name, impl::UserProperty_<Name, MyType, Tags<int>>, Tags<int>>;
+    using unlimited_nest_2 = impl::UserProperty_<Damage, impl::UserProperty_<Damage, MyType, Tags<int>>, Tags<int>>;
 
     std::cout << "unlimited_nest_1            = " << name<unlimited_nest_1>() << '\n';
     std::cout << "unlimited_nest_2            = " << name<unlimited_nest_2>() << '\n';
     std::cout << "unlimited_nest_1 collapse   = " << name<add_properties_ordered<unlimited_nest_1>>() << '\n';
     std::cout << "unlimited_nest_2 collapse   = " << name<add_properties_ordered<unlimited_nest_2>>() << '\n';
     std::cout << '\n';
-    static_assert(std::same_as<add_properties_ordered<unlimited_nest_1>, impl::UserProperty_<Name, MyType, int>>);
-    static_assert(std::same_as<add_properties_ordered<unlimited_nest_2>, impl::UserProperty_<Damage, MyType, int>>);
+    static_assert(std::same_as<add_properties_ordered<unlimited_nest_1>, impl::UserProperty_<Name, MyType, Tags<int>>>);
+    static_assert(std::same_as<add_properties_ordered<unlimited_nest_2>, impl::UserProperty_<Damage, MyType, Tags<int>>>);
 
     using unlimited_nest_3 = Naming_impl<Naming_impl<MyType>>;
-    using unlimited_nest_4 = Damaging_impl<Damaging_impl<MyType, int>, int>;
+    using unlimited_nest_4 = Damaging_impl<Damaging_impl<MyType, Tags<int>>, Tags<int>>;
     std::cout << "unlimited_nest_3            = " << name<unlimited_nest_3>() << '\n';
     std::cout << "unlimited_nest_4            = " << name<unlimited_nest_4>() << '\n';
     std::cout << "unlimited_nest_3 collapse   = " << name<add_properties_ordered<unlimited_nest_3>>() << '\n';
     std::cout << "unlimited_nest_4 collapse   = " << name<add_properties_ordered<unlimited_nest_4>>() << '\n';
     static_assert(std::same_as<add_properties_ordered<unlimited_nest_3>, Naming_impl<MyType>>);
-    static_assert(std::same_as<add_properties_ordered<unlimited_nest_4>, Damaging_impl<MyType, int>>);
+    static_assert(std::same_as<add_properties_ordered<unlimited_nest_4>, Damaging_impl<MyType, Tags<int>>>);
 
     {
 #ifdef USES_ADD_PROPERTIES

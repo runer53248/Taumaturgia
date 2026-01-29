@@ -20,11 +20,11 @@ struct UserDefaultValue<Name> {
     static constexpr auto value = [] { return Name{"Name a"}; };
 };
 template <>
-struct UserDefaultValue<Name, name_t> {
+struct UserDefaultValue<Name, Tags<name_t>> {
     static constexpr auto value = [] { return Name{"Name b"}; };
 };
 template <>
-struct UserDefaultValue<int, int_t> {
+struct UserDefaultValue<int, Tags<int_t>> {
     static constexpr auto value = [] { return 133; };
 };
 
@@ -36,9 +36,9 @@ int main() {
     static_assert(trait_accessable<Type, Health>);
     static_assert(trait_accessable<Type, int>);
 
-    using property_health_x = Property_ordered<UserPropertyAdapter<Health, struct x>::apply>;
-    using property_name_name_t = Property_ordered<UserPropertyAdapter<Name, name_t>::apply>;
-    using property_int_int_t = Property_ordered<UserPropertyAdapter<int, int_t>::apply>;
+    using property_health_x = Property_ordered<UserPropertyAdapter<Health, Tags<struct x>>::apply>;
+    using property_name_name_t = Property_ordered<UserPropertyAdapter<Name, Tags<name_t>>::apply>;
+    using property_int_int_t = Property_ordered<UserPropertyAdapter<int, Tags<int_t>>::apply>;
     using property_name = Property_ordered<Naming_impl>;
     using property_protection = Property_ordered<Protecting_impl>;
 
@@ -70,8 +70,8 @@ int main() {
             static_assert(std::same_as<decltype(type.getTaged<1>()), Damage&>);
             static_assert(std::same_as<decltype(type.getTaged<2>()), Health&>);
             static_assert(std::same_as<decltype(type.getTaged<3>()), void>);  // !  int unreachable
-            static_assert(std::same_as<decltype(type.getTaged<x>()), void>);
-            static_assert(std::same_as<decltype(std::as_const(type).getTaged<x>()), void>);
+            static_assert(std::same_as<decltype(type.getTaged<Tags<x>>()), void>);
+            static_assert(std::same_as<decltype(std::as_const(type).getTaged<Tags<x>>()), void>);
             static_assert(std::same_as<decltype(std::as_const(type).getTaged()), const Name&>);
         }
 
@@ -134,9 +134,9 @@ int main() {
             // TODO: getTaged for eg. int
             static_assert(std::same_as<decltype(type2.getTaged()), Protection&>);
             static_assert(std::same_as<decltype(type2.getTaged<1>()), Name&>);
-            static_assert(std::same_as<decltype(type2.getTaged<x>()), Health&>);
-            static_assert(std::same_as<decltype(type2.getTaged<name_t>()), Name&>);
-            static_assert(std::same_as<decltype(type2.getTaged<int_t>()), int&>);
+            static_assert(std::same_as<decltype(type2.getTaged<Tags<x>>()), Health&>);
+            static_assert(std::same_as<decltype(type2.getTaged<Tags<name_t>>()), Name&>);
+            static_assert(std::same_as<decltype(type2.getTaged<Tags<int_t>>()), int&>);
             static_assert(std::same_as<decltype(type2.getTaged<2>()), Name&>);
             static_assert(std::same_as<decltype(type2.getTaged<3>()), Damage&>);
             static_assert(std::same_as<decltype(type2.getTaged<4>()), Health&>);
@@ -144,9 +144,9 @@ int main() {
 
             static_assert(std::same_as<decltype(std::as_const(type2).getTaged()), const Protection&>);
             static_assert(std::same_as<decltype(std::as_const(type2).getTaged<1>()), const Name&>);
-            static_assert(std::same_as<decltype(std::as_const(type2).getTaged<x>()), const Health&>);
-            static_assert(std::same_as<decltype(std::as_const(type2).getTaged<name_t>()), const Name&>);
-            static_assert(std::same_as<decltype(std::as_const(type2).getTaged<int_t>()), const int&>);
+            static_assert(std::same_as<decltype(std::as_const(type2).getTaged<Tags<x>>()), const Health&>);
+            static_assert(std::same_as<decltype(std::as_const(type2).getTaged<Tags<name_t>>()), const Name&>);
+            static_assert(std::same_as<decltype(std::as_const(type2).getTaged<Tags<int_t>>()), const int&>);
             static_assert(std::same_as<decltype(std::as_const(type2).getTaged<2>()), const Name&>);
             static_assert(std::same_as<decltype(std::as_const(type2).getTaged<3>()), const Damage&>);
             static_assert(std::same_as<decltype(std::as_const(type2).getTaged<4>()), const Health&>);
@@ -154,9 +154,9 @@ int main() {
 
             static_assert(&type2.getType<0>() == &type2.getTaged<>());
             static_assert(&type2.getType<1>() == &type2.getTaged<1>());
-            static_assert(&type2.getType<2>() == &type2.getTaged<x>());
-            static_assert(&type2.getType<3>() == &type2.getTaged<name_t>());
-            static_assert(&type2.getType<4>() == &type2.getTaged<int_t>());
+            static_assert(&type2.getType<2>() == &type2.getTaged<Tags<x>>());
+            static_assert(&type2.getType<3>() == &type2.getTaged<Tags<name_t>>());
+            static_assert(&type2.getType<4>() == &type2.getTaged<Tags<int_t>>());
             static_assert(&type2.getType<5>() == &type2.getTaged<2>());
             static_assert(&type2.getType<6>() == &type2.getTaged<3>());
             static_assert(&type2.getType<7>() == &type2.getTaged<4>());
@@ -207,9 +207,9 @@ int main() {
         {
             static_assert(std::same_as<decltype(type2.getTypeTaged<Protection>()), Protection&>);
             static_assert(std::same_as<decltype(type2.getTypeTaged<Name>()), Name&>);
-            static_assert(std::same_as<decltype(type2.getTypeTaged<Health, x>()), Health&>);
-            static_assert(std::same_as<decltype(type2.getTypeTaged<Name, name_t>()), Name&>);
-            static_assert(std::same_as<decltype(type2.getTypeTaged<int, int_t>()), int&>);
+            static_assert(std::same_as<decltype(type2.getTypeTaged<Health, Tags<x>>()), Health&>);
+            static_assert(std::same_as<decltype(type2.getTypeTaged<Name, Tags<name_t>>()), Name&>);
+            static_assert(std::same_as<decltype(type2.getTypeTaged<int, Tags<int_t>>()), int&>);
             // * second getTypeTaged<Name> - unreachable from getTypeTaged
             static_assert(std::same_as<decltype(type2.getTypeTaged<Damage>()), Damage&>);
             static_assert(std::same_as<decltype(type2.getTypeTaged<Health>()), Health&>);
@@ -219,9 +219,9 @@ int main() {
 
             static_assert(&type2.getType<0>() == &type2.getTypeTaged<Protection>());
             static_assert(&type2.getType<1>() == &type2.getTypeTaged<Name>());
-            static_assert(&type2.getType<2>() == &type2.getTypeTaged<Health, x>());
-            static_assert(&type2.getType<3>() == &type2.getTypeTaged<Name, name_t>());
-            static_assert(&type2.getType<4>() == &type2.getTypeTaged<int, int_t>());
+            static_assert(&type2.getType<2>() == &type2.getTypeTaged<Health, Tags<x>>());
+            static_assert(&type2.getType<3>() == &type2.getTypeTaged<Name, Tags<name_t>>());
+            static_assert(&type2.getType<4>() == &type2.getTypeTaged<int, Tags<int_t>>());
             // * 5 second Name - unreachable
             static_assert(&type2.getType<6>() == &type2.getTypeTaged<Damage>());
             static_assert(&type2.getType<7>() == &type2.getTypeTaged<Health>());
@@ -231,9 +231,9 @@ int main() {
         {
             static_assert(std::same_as<decltype(type2.getTypeOf(list<Protection>{})), Protection&>);
             static_assert(std::same_as<decltype(type2.getTypeOf(list<Name>{})), Name&>);
-            static_assert(std::same_as<decltype(type2.getTypeOf(list<Health, x>{})), Health&>);
-            static_assert(std::same_as<decltype(type2.getTypeOf(list<Name, name_t>{})), Name&>);
-            static_assert(std::same_as<decltype(type2.getTypeOf(list<int, int_t>{})), int&>);
+            static_assert(std::same_as<decltype(type2.getTypeOf(list<Health, Tags<x>>{})), Health&>);
+            static_assert(std::same_as<decltype(type2.getTypeOf(list<Name, Tags<name_t>>{})), Name&>);
+            static_assert(std::same_as<decltype(type2.getTypeOf(list<int, Tags<int_t>>{})), int&>);
             // * 5 second list<Name> - unreachable
             static_assert(std::same_as<decltype(type2.getTypeOf(list<Damage>{})), Damage&>);
             static_assert(std::same_as<decltype(type2.getTypeOf(list<Health>{})), Health&>);
@@ -243,9 +243,9 @@ int main() {
 
             static_assert(&type2.getType<0>() == &type2.getTypeOf(list<Protection>{}));
             static_assert(&type2.getType<1>() == &type2.getTypeOf(list<Name>{}));
-            static_assert(&type2.getType<2>() == &type2.getTypeOf(list<Health, x>{}));
-            static_assert(&type2.getType<3>() == &type2.getTypeOf(list<Name, name_t>{}));
-            static_assert(&type2.getType<4>() == &type2.getTypeOf(list<int, int_t>{}));
+            static_assert(&type2.getType<2>() == &type2.getTypeOf(list<Health, Tags<x>>{}));
+            static_assert(&type2.getType<3>() == &type2.getTypeOf(list<Name, Tags<name_t>>{}));
+            static_assert(&type2.getType<4>() == &type2.getTypeOf(list<int, Tags<int_t>>{}));
             // * 5 second Name - unreachable
             static_assert(&type2.getType<6>() == &type2.getTypeOf(list<Damage>{}));
             static_assert(&type2.getType<7>() == &type2.getTypeOf(list<Health>{}));
@@ -255,9 +255,9 @@ int main() {
         {
             static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<Protection>>()), Protection&>);
             static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<Name>>()), Name&>);
-            static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<Health, x>>()), Health&>);
-            static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<Name, name_t>>()), Name&>);
-            static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<int, int_t>>()), int&>);
+            static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<Health, Tags<x>>>()), Health&>);
+            static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<Name, Tags<name_t>>>()), Name&>);
+            static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<int, Tags<int_t>>>()), int&>);
             // * 5 second list<Name> - unreachable
             static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<Damage>>()), Damage&>);
             static_assert(std::same_as<decltype(type2.getTypeOfSignature<list<Health>>()), Health&>);
@@ -267,9 +267,9 @@ int main() {
 
             static_assert(&type2.getType<0>() == &type2.getTypeOfSignature<list<Protection>>());
             static_assert(&type2.getType<1>() == &type2.getTypeOfSignature<list<Name>>());
-            static_assert(&type2.getType<2>() == &type2.getTypeOfSignature<list<Health, x>>());
-            static_assert(&type2.getType<3>() == &type2.getTypeOfSignature<list<Name, name_t>>());
-            static_assert(&type2.getType<4>() == &type2.getTypeOfSignature<list<int, int_t>>());
+            static_assert(&type2.getType<2>() == &type2.getTypeOfSignature<list<Health, Tags<x>>>());
+            static_assert(&type2.getType<3>() == &type2.getTypeOfSignature<list<Name, Tags<name_t>>>());
+            static_assert(&type2.getType<4>() == &type2.getTypeOfSignature<list<int, Tags<int_t>>>());
             // * 5 second Name - unreachable
             static_assert(&type2.getType<6>() == &type2.getTypeOfSignature<list<Damage>>());
             static_assert(&type2.getType<7>() == &type2.getTypeOfSignature<list<Health>>());
@@ -299,13 +299,13 @@ int main() {
         std::println("taged 2 = {}\n", (std::string)type2.getTaged<2>());
 
         std::print("TypeTaged p  = {}\n", type2.getTypeTaged<Protection>().armorClass());
-        std::print("TypeTaged h1 = {}\n", type2.getTypeTaged<Health, x>().value());
+        std::print("TypeTaged h1 = {}\n", type2.getTypeTaged<Health, Tags<x>>().value());
         std::print("TypeTaged h2 = {}\n", type2.getTypeTaged<Health>().value());
         std::print("TypeTaged 1  = {}\n", (std::string)type2.getTypeTaged<Name>());
-        std::print("TypeTaged 2  = {}\n", (std::string)type2.getTypeTaged<Name, name_t>());
+        std::print("TypeTaged 2  = {}\n", (std::string)type2.getTypeTaged<Name, Tags<name_t>>());
 
-        std::print("{}\n", name<decltype(type2.getTaged<struct x>())>());
-        std::print("{}\n", name<decltype(std::as_const(type2).getTaged<struct x>())>());
+        std::print("{}\n", name<decltype(type2.getTaged<Tags<struct x>>())>());
+        std::print("{}\n", name<decltype(std::as_const(type2).getTaged<Tags<struct x>>())>());
         std::print("{}\n", name<decltype(type2.getTaged())>());
         std::println("{}\n", name<decltype(std::as_const(type2).getTaged())>());
 

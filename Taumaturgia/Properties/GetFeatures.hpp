@@ -2,6 +2,8 @@
 #include "Taumaturgia/Properties/Helpers/have_get_features.hpp"
 #include "Taumaturgia/Traits/Helpers/traits_helper.hpp"
 
+#include "Taumaturgia/Properties/Helpers/Tags.hpp"
+
 namespace impl {
 
 template <typename T, typename Base, size_t DIG>
@@ -15,17 +17,17 @@ using const_like_ref = std::conditional_t<
     const std::remove_reference_t<T>&,
     std::remove_reference_t<T>&>;
 
-template <typename TYPE, typename T, typename... Tags>
+template <typename TYPE, typename T, isTag TAGS>
 // requires(not std::is_reference_v<T>)
 class UserProperty_;
 
 template <typename T>
 class GetFeatures;
 
-template <typename TYPE, typename T, typename... Tags>
-class GetFeatures<UserProperty_<TYPE, T, Tags...>> {
+template <typename TYPE, typename T, isTag TAGS>
+class GetFeatures<UserProperty_<TYPE, T, TAGS>> {
 public:
-    using improvement_of = UserProperty_<TYPE, T, Tags...>;  // will act like same type if TYPE and Tags are same
+    using improvement_of = UserProperty_<TYPE, T, TAGS>;  // will act like same type if TYPE and Tags are same
 
     // MARK: getType<TYPE, size_t>
 
@@ -113,37 +115,46 @@ public:
 
     // MARK: getTypeTaged
 
-    template <typename RETURN, typename... TTags, typename Self>
-        requires std::same_as<list<RETURN, TTags...>, list<TYPE, Tags...>>
+    template <typename RETURN, isTag TTAGS = Tags<>, typename Self>
+        requires std::same_as<list<RETURN, TTAGS>, list<TYPE, TAGS>>
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept {
         return (self.type_);
     }
 
-    template <typename RETURN, typename... TTags, typename Self>
+    template <typename RETURN, isTag TTAGS = Tags<>, typename Self>
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept {
         using type = std::conditional_t<
             std::is_const_v<Self>,
             const T&,
             T&>;
 
-        return static_cast<type>(self).template getTypeTaged<RETURN, TTags...>();
+        return static_cast<type>(self).template getTypeTaged<RETURN, TTAGS>();
     }
 
-    template <typename RETURN, typename... TTags, typename Self>
-        requires(not have_getTypeTaged_method<T, RETURN, TTags...>  //
-                 and not std::same_as<list<RETURN, TTags...>, list<TYPE, Tags...>>)
+    template <typename RETURN, isTag TTAGS = Tags<>, typename Self>
+        requires(not have_getTypeTaged_method<T, RETURN, TTAGS>  //
+                 and not std::same_as<list<RETURN, TTAGS>, list<TYPE, TAGS>>)
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept = delete;
 
     // MARK: getTypeOf
 
-    template <typename RETURN, typename... TTags, typename Self>
-        requires have_getTypeTaged_method<Self, RETURN, TTags...>
-    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTags...> signature) noexcept {
-        return self.template getTypeTaged<RETURN, TTags...>();
+    template <typename RETURN, isTag TTAGS = Tags<>, typename Self>
+        requires have_getTypeTaged_method<Self, RETURN, TTAGS>
+    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTAGS> signature) noexcept {
+        return self.template getTypeTaged<RETURN, TTAGS>();
     }
 
-    template <typename RETURN, typename... TTags, typename Self>
-    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTags...> signature) noexcept = delete;
+    template <typename RETURN, isTag TTAGS = Tags<>, typename Self>
+    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTAGS> signature) noexcept = delete;
+
+    template <typename RETURN,  typename Self>
+        requires have_getTypeTaged_method<Self, RETURN, Tags<>>
+    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN> signature) noexcept {
+        return self.template getTypeTaged<RETURN, Tags<>>();
+    }
+
+    template <typename RETURN, typename Self>
+    constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN> signature) noexcept = delete;
 
     // MARK: getTypeOfSignature
 
@@ -155,39 +166,39 @@ public:
     template <typename Signature, typename Self>
     constexpr decltype(auto) getTypeOfSignature(this Self& self) noexcept = delete;
 
-    // MARK: getTaged<SKIP, TTags>
+    // MARK: getTaged<SKIP, TTAGS>
 
-    template <size_t SKIP, typename... TTags, typename Self>
-        requires(std::same_as<list<TTags...>, list<Tags...>>  //
+    template <size_t SKIP, isTag TTAGS = Tags<>, typename Self>
+        requires(std::same_as<list<TTAGS>, list<TAGS>>  //
                  and SKIP > 0                                 //
-                 and have_getTaged_method<const_like_ref<T, Self>, SKIP - 1, TTags...>)
+                 and have_getTaged_method<const_like_ref<T, Self>, SKIP - 1, TTAGS>)
     constexpr decltype(auto) getTaged(this Self& self) noexcept {
-        return static_cast<const_like_ref<T, Self>>(self).template getTaged<SKIP - 1, TTags...>();  // skip
+        return static_cast<const_like_ref<T, Self>>(self).template getTaged<SKIP - 1, TTAGS>();  // skip
     }
 
-    template <size_t SKIP, typename... TTags, typename Self>
-        requires(std::same_as<list<TTags...>, list<Tags...>>  //
+    template <size_t SKIP, isTag TTAGS = Tags<>, typename Self>
+        requires(std::same_as<TTAGS, TAGS>  //
                  and SKIP == 0                                //
-                 and have_getTypeTaged_method<Self, TYPE, TTags...>)
+                 and have_getTypeTaged_method<Self, TYPE, TTAGS>)
     constexpr decltype(auto) getTaged(this Self& self) noexcept {
-        return self.template getTypeTaged<TYPE, TTags...>();  // return by tags and current type
+        return self.template getTypeTaged<TYPE, TTAGS>();  // return by tags and current type
     }
 
-    template <size_t SKIP, typename... TTags, typename Self>
-        requires(not std::same_as<list<TTags...>, list<Tags...>>  //
-                 and have_getTaged_method<const_like_ref<T, Self>, SKIP, TTags...>)
+    template <size_t SKIP, isTag TTAGS = Tags<>, typename Self>
+        requires(not std::same_as<TTAGS, TAGS>  //
+                 and have_getTaged_method<const_like_ref<T, Self>, SKIP, TTAGS>)
     constexpr decltype(auto) getTaged(this Self& self) noexcept {
-        return static_cast<const_like_ref<T, Self>>(self).template getTaged<SKIP, TTags...>();  // skip - diffrent tags
+        return static_cast<const_like_ref<T, Self>>(self).template getTaged<SKIP, TTAGS>();  // skip - diffrent tags
     }
 
-    template <size_t SKIP, typename... TTags, typename Self>
+    template <size_t SKIP, isTag TTAGS = Tags<>, typename Self>
     constexpr decltype(auto) getTaged(this Self& self) noexcept = delete;
 
-    // MARK: getTaged<TTags...>
+    // MARK: getTaged<TTAGS>
 
-    template <typename... TTags, typename Self>
+    template <isTag TTAGS = Tags<>, typename Self>
     constexpr decltype(auto) getTaged(this Self& self) noexcept {
-        return self.template getTaged<0, TTags...>();
+        return self.template getTaged<0, TTAGS>();
     }
 };
 }  // namespace impl

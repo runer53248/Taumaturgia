@@ -1,6 +1,7 @@
 #pragma once
+#include "Taumaturgia/Properties/Helpers/Tags.hpp"
 
-template <typename T, typename... Tags>
+template <typename T, isTag TAGS = Tags<>>
 struct UserDefaultValue {
     static constexpr auto value = [] { return T{}; };
 };
@@ -15,7 +16,7 @@ struct buildin_defaults {
         value_ = value;
     }
     static void setAsUserDefault() {
-        value_ = UserDefaultValue<T>::value();
+        value_ = UserDefaultValue<T, Tags<>>::value();
     }
     static auto get() {
         return value_;

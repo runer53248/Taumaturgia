@@ -28,52 +28,52 @@ constexpr decltype(auto) getType(T&& el) noexcept = delete;
 
 // MARK: getTypeTaged
 
-template <typename TYPE, typename... Tags, typename T>
+template <typename TYPE, isTag TAGS = Tags<>, typename T>
 constexpr decltype(auto) getTypeTaged(T&& el) noexcept
-    requires have_getTypeTaged_method<T, TYPE, Tags...>
+    requires have_getTypeTaged_method<T, TYPE, TAGS>
 {
-    return el.template getTypeTaged<TYPE, Tags...>();
+    return el.template getTypeTaged<TYPE, TAGS>();
 }
-template <typename TYPE, typename... Tags, typename T>
+template <typename TYPE, isTag TAGS = Tags<>, typename T>
 constexpr decltype(auto) getTypeTaged(T&& el) noexcept
-    requires(not requires { el.template getTypeTaged<TYPE, Tags...>(); } and
-             sizeof...(Tags) == 0 and trait_accessable<                                                    //
+    requires(not requires { el.template getTypeTaged<TYPE, TAGS>(); } and
+             TAGS::size == 0 and trait_accessable<                                                    //
                                           typename helpers::Scheme_ordered<std::remove_cvref_t<T>>::base,  //
                                           TYPE>)
 {
     using base_type = helpers::Scheme_ordered<std::remove_cvref_t<T>>::base;  // most base type
     return trait<TYPE>::get(static_cast<base_type&>(el));
 }
-template <typename TYPE, typename... Tags, typename T>
+template <typename TYPE, isTag TAGS = Tags<>, typename T>
 constexpr decltype(auto) getTypeTaged(T&& el) noexcept = delete;
 
-template <typename T, typename Type, typename... Tags>
+template <typename T, typename Type, typename TAGS = Tags<>>
 concept is_getTypeTaged_valid = requires {
-    getTypeTaged<Type, Tags...>(std::declval<T&>());
+    getTypeTaged<Type, TAGS>(std::declval<T&>());
 };
 
 // MARK: getTaged
 
-template <typename... Tags, typename T>
+template <isTag TAGS = Tags<>, typename T>
 constexpr decltype(auto) getTaged(T&& el) noexcept
-    requires have_getTaged_method<T, 0, Tags...>
+    requires have_getTaged_method<T, 0, TAGS>
 {
-    return el.template getTaged<Tags...>();
+    return el.template getTaged<TAGS>();
 }
-template <typename... Tags, typename T>
+template <isTag TAGS = Tags<>, typename T>
 constexpr decltype(auto) getTaged(T&& el) noexcept = delete;
 
-template <size_t SKIP, typename... Tags, typename T>
+template <size_t SKIP, isTag TAGS = Tags<>, typename T>
 constexpr decltype(auto) getTaged(T&& el) noexcept
-    requires have_getTaged_method<T, SKIP, Tags...>
+    requires have_getTaged_method<T, SKIP, TAGS>
 {
-    return el.template getTaged<SKIP, Tags...>();
+    return el.template getTaged<SKIP, TAGS>();
 }
-template <size_t SKIP, typename... Tags, typename T>
+template <size_t SKIP, isTag TAGS = Tags<>, typename T>
 constexpr decltype(auto) getTaged(T&& el) noexcept = delete;
 
-template <typename T, typename... Tags>
+template <typename T, typename TAGS>
 concept is_getTaged_valid = requires {
-    getTaged<Tags...>(std::declval<T&>());
-    getTaged<0, Tags...>(std::declval<T&>());
+    getTaged<TAGS>(std::declval<T&>());
+    getTaged<0, TAGS>(std::declval<T&>());
 };

@@ -2,6 +2,8 @@
 #include "Examples/PreetyPrint/preety_print_types.hpp"
 #include "Usage/Properties.hpp"
 
+#include "Introduction/parse_type_name.hpp"
+
 struct EmptyType {};
 
 using Type_named = Naming<EmptyType>;
@@ -16,6 +18,9 @@ using Type_5 = add_properties_ordered<
     Damaging>;
 
 int main() {
+    std::cout << name<Type_5>() << "\n\n";
+    std::cout << parse_type_name<Type_5>() << "\n\n";
+
     {
         Type_5 type1{};  // all properties defaulted
         Type_5 type2{Name{"Valid"},
@@ -69,7 +74,7 @@ int main() {
 
         auto vec = std::vector<variant_type_1>{
             Health{125},
-            WearContainer{},
+            WearContainer{11},
             Damage{20, DamageType::Magical},
             Protection{3},
             CureHealth{1},

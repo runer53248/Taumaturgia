@@ -1,7 +1,7 @@
 #pragma once
 
-template <template <typename...> typename property, typename... Tags>
+template <template <typename...> typename property, isTag TAGS>
 struct Adapter {
     template <typename T>
-    using type = property<T, Tags...>;
+    using type = property<T, TAGS>;
 };

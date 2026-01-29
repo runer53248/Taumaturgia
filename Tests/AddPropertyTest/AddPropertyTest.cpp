@@ -14,14 +14,14 @@ struct with_health {
 struct tag_health {};
 
 template <typename T>
-using Living_taged = UserPropertyAdapter<Health, struct tag_health>::apply<T>;
+using Living_taged = UserPropertyAdapter<Health, Tags<struct tag_health>>::apply<T>;
 
 template <typename T>
-using Living_taged_once = UserPropertyAdapter<Health, struct tag_health>::once<T>;
+using Living_taged_once = UserPropertyAdapter<Health, Tags<struct tag_health>>::once<T>;
 
 namespace With {
-[[maybe_unused]] constexpr auto MyHealth = user_property<::Health, struct tag_health>;
-[[maybe_unused]] constexpr auto MyHealth_once = user_property_once<::Health, struct tag_health>;
+[[maybe_unused]] constexpr auto MyHealth = user_property<::Health, Tags<struct tag_health>>;
+[[maybe_unused]] constexpr auto MyHealth_once = user_property_once<::Health, Tags<struct tag_health>>;
 }  // namespace With
 
 static_assert(std::same_as<
@@ -113,8 +113,8 @@ TEST(AddPropertyTest, property_and_property_taged_access) {
     auto type3 = base{value_base} | With::MyHealth | Create;
     auto type4 = base{value_base} | list(With::MyHealth);
 
-    type3.getTaged<tag_health>() = value_taged;
-    type4.getTaged<tag_health>() = value_taged;
+    type3.getTaged<Tags<tag_health>>() = value_taged;
+    type4.getTaged<Tags<tag_health>>() = value_taged;
 
     auto v1 = trait<Health>::get(type1);
     auto v2 = trait<Health>::get(type2);
