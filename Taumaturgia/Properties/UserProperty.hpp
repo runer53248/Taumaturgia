@@ -22,7 +22,7 @@ struct PropertyFor {
 
 // MARK: UserProperty_ for T
 
-template <typename TYPE, typename T, isTag TAGS = Tags<>>
+template <typename TYPE, typename T, isTag TAGS = no_tag>
 // requires(not std::is_reference_v<T>)
 class UserProperty_ : public GetFeatures<UserProperty_<TYPE, T, TAGS>>,
                       public Constructors<UserProperty_<TYPE, T, TAGS>> {
@@ -64,14 +64,14 @@ static_assert(getType_able<tested_type, type>);
 
 #include "Helpers/derived_from_property.hpp"
 
-template <typename TYPE, typename T, isTag TAGS = Tags<>>
+template <typename TYPE, typename T, isTag TAGS = no_tag>
 using UserProperty = std::conditional_t<
     (trait_accessable<T, TYPE> and  //
      (is_getTypeTaged_valid<T, TYPE, TAGS>)),
     T,
     impl::UserProperty_<TYPE, T, TAGS>>;
 
-template <typename TYPE, isTag TAGS = Tags<>>
+template <typename TYPE, isTag TAGS = no_tag>
 struct UserPropertyAdapter {
     template <typename T>
     using apply = impl::UserProperty_<TYPE, T, TAGS>;

@@ -12,15 +12,19 @@
 struct y;
 struct empty {};
 
-struct Strenght : public impl::UserProperty_<int, Tags<empty, y>> {};
-struct Dexterity : public impl::UserProperty_<float, Tags<empty>> {};
+using empty_tag = Tags<empty>;
+using y_tag = Tags<y>;
+using empty_y_tag = Tags<empty, y>;
+
+struct Strenght : public impl::UserProperty_<int, empty_y_tag> {};
+struct Dexterity : public impl::UserProperty_<float, empty_tag> {};
 struct Constitution {};
 struct Inteligence {};
 struct Wisdom {};
 struct Charisma {};
 
 namespace With {
-[[maybe_unused]] constexpr auto integer = user_property<int, Tags<struct y>>;
+[[maybe_unused]] constexpr auto integer = user_property<int, y_tag>;
 
 [[maybe_unused]] constexpr auto Strenght = user_property<::Strenght>;
 [[maybe_unused]] constexpr auto Dexterity = user_property<::Dexterity>;
@@ -32,7 +36,7 @@ namespace With {
 
 template <typename T>
 using Tp = decltype(From::base<T>                           //
-                    | With::user_property<float, Tags<struct y>>  //
+                    | With::user_property<float, y_tag>  //
                     | With::integer                         //
                     | With::Name                            //
                     | With::Damage                          //
@@ -71,8 +75,8 @@ int main() {
         auto gt_int = tp_type.getType<int>();
         auto gt_float = tp_type.getType<float>();
 
-        auto gt_y0 = tp_type.getTaged<0, Tags<y>>();
-        auto gt_y1 = tp_type.getTaged<1, Tags<y>>();
+        auto gt_y0 = tp_type.getTaged<0, y_tag>();
+        auto gt_y1 = tp_type.getTaged<1, y_tag>();
 
         std::println("{}: {}", name<decltype(gt_y0)>(), gt_y0);
         std::println("{}: {}", name<decltype(gt_y1)>(), gt_y1);

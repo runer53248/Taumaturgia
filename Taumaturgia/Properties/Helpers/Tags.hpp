@@ -17,3 +17,5 @@ struct Tags : Tags<> {
 
 template <typename T>
 concept isTag = std::derived_from<T, Tags<>> or std::is_same_v<T, Tags<>>;
+
+using no_tag = Tags<>;

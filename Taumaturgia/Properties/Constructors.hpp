@@ -11,7 +11,7 @@ struct Data {
     T value;
 };
 
-template <isTag TAGS = Tags<>, typename T>
+template <isTag TAGS = no_tag, typename T>
 decltype(auto) forTags(T&& data) {
     return Data<T, TAGS>{std::forward<T>(data)};
 }

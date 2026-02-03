@@ -9,7 +9,7 @@ template <template <typename...> typename property>
     requires is_property<property>
 struct Property_unordered;
 
-template <template <typename...> typename property, typename T, isTag TAGS = Tags<>>
+template <template <typename...> typename property, typename T, isTag TAGS = no_tag>
 struct PropertyData {
     using ordered_property_type = Property_ordered<property>;
     using unordered_property_type = Property_unordered<property>;

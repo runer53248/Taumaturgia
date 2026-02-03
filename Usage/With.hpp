@@ -3,7 +3,7 @@
 
 namespace impl {
 
-template <template <typename, typename...> typename P, isTag TAGS = Tags<>>
+template <template <typename, typename...> typename P, isTag TAGS = no_tag>
     requires(not std::same_as<
              P<P<tag, TAGS>, TAGS>,
              P<tag, TAGS>>)  // is_property_forced
@@ -42,16 +42,16 @@ namespace With {
 template <template <typename> typename P>
 [[maybe_unused]] constexpr Property_ordered<P> property{};
 
-template <template <typename, typename> typename P, isTag TAGS = Tags<>>
+template <template <typename, typename> typename P, isTag TAGS = no_tag>
 [[maybe_unused]] constexpr Property_ordered<impl::ApplyTag<P, TAGS>::template apply> taged_property{};
 
 // template <template <typename, typename> typename P, typename... TAGS>
 // [[maybe_unused]] constexpr Property_ordered<impl::ApplyTag<P, TAGS...>::template apply_order> taged_property_once{};
 
-template <typename T, isTag TAGS = Tags<>>
+template <typename T, isTag TAGS = no_tag>
 [[maybe_unused]] constexpr Property_ordered<UserPropertyAdapter<T, TAGS>::template apply> user_property{};
 
-template <typename T, isTag TAGS = Tags<>>
+template <typename T, isTag TAGS = no_tag>
 [[maybe_unused]] constexpr Property_ordered<UserPropertyAdapter<T, TAGS>::template once> user_property_once{};
 
 namespace impl {
@@ -86,13 +86,13 @@ namespace WithUnordered {
 template <template <typename> typename P>
 [[maybe_unused]] constexpr Property_unordered<P> property{};
 
-template <template <typename, typename> typename P, isTag TAGS = Tags<>>
+template <template <typename, typename> typename P, isTag TAGS = no_tag>
 [[maybe_unused]] constexpr Property_unordered<impl::ApplyTag<P, TAGS>::template apply> taged_property{};
 
-template <typename T, isTag TAGS = Tags<>>
+template <typename T, isTag TAGS = no_tag>
 [[maybe_unused]] constexpr Property_unordered<UserPropertyAdapter<T, TAGS>::template apply> user_property{};
 
-template <typename T, isTag TAGS = Tags<>>
+template <typename T, isTag TAGS = no_tag>
 [[maybe_unused]] constexpr Property_unordered<UserPropertyAdapter<T, TAGS>::template once> user_property_once{};
 
 };  // namespace WithUnordered

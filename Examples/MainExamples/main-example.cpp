@@ -14,9 +14,11 @@ struct empty {};
 struct empty_next {};
 struct other {};
 
-struct Strenght : public impl::UserProperty_<int, empty, Tags<struct ignored_y>> {};            // ? ignore ignored_y token
-struct Strenght_next : public impl::UserProperty_<int, empty_next, Tags<struct ignored_y>> {};  // ? ignore ignored_y token , empty_next as base
-struct Dexterity : public impl::UserProperty_<float, empty, Tags<>> {};
+using tag_ignored_y = Tags<struct ignored_y>;
+
+struct Strenght : public impl::UserProperty_<int, empty, tag_ignored_y> {};            // ? ignore ignored_y token
+struct Strenght_next : public impl::UserProperty_<int, empty_next, tag_ignored_y> {};  // ? ignore ignored_y token , empty_next as base
+struct Dexterity : public impl::UserProperty_<float, empty> {};
 struct Constitution {};
 struct Inteligence {};
 struct Wisdom {};
@@ -52,20 +54,23 @@ public:
     constexpr decltype(auto) getType(this auto& self) = delete;
 };
 
+using tag_y = Tags<struct y>;
+using tag_other = Tags<struct other>;
+
 template <typename T>
 concept have_some_getters = requires(T t) {
     t.template getType<Dexterity>();
-    t.template getTypeTaged<Strenght, Tags<other>>();
+    t.template getTypeTaged<Strenght, tag_other>();
     t.template getType<0>();
 };
 
 namespace With {
-[[maybe_unused]] constexpr auto integer = user_property<int, Tags<struct y>>;
+[[maybe_unused]] constexpr auto integer = user_property<int, tag_y>;
 
 [[maybe_unused]] constexpr auto Strenght = user_property<::Strenght>;
-[[maybe_unused]] constexpr auto Strenght2 = user_property<::Strenght, Tags<struct other>>;
-[[maybe_unused]] constexpr auto Strenght2_once = user_property_once<::Strenght, Tags<struct other>>;
-[[maybe_unused]] constexpr auto Strenght_next_other = user_property<::Strenght_next, Tags<struct other>>;
+[[maybe_unused]] constexpr auto Strenght2 = user_property<::Strenght, tag_other>;
+[[maybe_unused]] constexpr auto Strenght2_once = user_property_once<::Strenght, tag_other>;
+[[maybe_unused]] constexpr auto Strenght_next_other = user_property<::Strenght_next, tag_other>;
 [[maybe_unused]] constexpr auto Dexterity = user_property<::Dexterity>;
 [[maybe_unused]] constexpr auto Constitution = user_property<::Constitution>;
 [[maybe_unused]] constexpr auto Inteligence = user_property<::Inteligence>;
@@ -94,7 +99,7 @@ int main() {
         auto gt3_ = type.template getType<Inteligence>();
         auto gt4_ = type.template getType<Wisdom>();
         auto gt5_ = type.template getType<Charisma>();
-        auto gt6_ = type.template getTypeTaged<Strenght, Tags<other>>();
+        auto gt6_ = type.template getTypeTaged<Strenght, tag_other>();
         auto gt7_ = type.template getType<int>();
 
         std::println("[] {} {}", name<decltype(gt0_)>(), gt0_.getType());
@@ -148,8 +153,8 @@ int main() {
              << '\n';
     }
     {
-        using Attrib_updated = impl::UserProperty_<Strenght, Attrib, Tags<other>>;                             // ? introduce <Strenght, other>
-        using Attrib_updated2 = add_properties_ordered<Attrib, UserPropertyAdapter<Strenght, Tags<other>>::apply>;   // ? introduce <Strenght, other>
+        using Attrib_updated = impl::UserProperty_<Strenght, Attrib, tag_other>;                             // ? introduce <Strenght, other>
+        using Attrib_updated2 = add_properties_ordered<Attrib, UserPropertyAdapter<Strenght, tag_other>::apply>;   // ? introduce <Strenght, other>
         using Attrib_updated3 = decltype(From::base<Attrib> | With::Strenght2 | With::Strenght)::result_type;  // ? introduce <Strenght, other>
         using Attrib_updated3b = decltype(Attrib{} | With::Strenght2 | With::Strenght | Create);               // ? introduce <Strenght, other>
 
@@ -157,14 +162,14 @@ int main() {
         static_assert(std::same_as<Attrib_updated, Attrib_updated3>);
         static_assert(std::same_as<Attrib_updated, Attrib_updated3b>);
 
-        using Attrib_updated4 = add_properties_ordered<Attrib, UserPropertyAdapter<Strenght, Tags<other>>::once>;  // * not introduce <Strenght, other>
+        using Attrib_updated4 = add_properties_ordered<Attrib, UserPropertyAdapter<Strenght, tag_other>::once>;  // * not introduce <Strenght, other>
         using Attrib_updated5 = decltype(From::base<Attrib> | With::Strenght2_once)::result_type;            // * not introduce <Strenght, other>
 
         static_assert(std::same_as<Attrib_updated4, Attrib_updated5>);
 
         {
             // if base of Strenght is diffrent
-            using Attrib_updated_a = add_properties_ordered<Attrib, UserPropertyAdapter<Strenght_next, Tags<other>>::apply>;  // ? introduce <Strenght_next, other>
+            using Attrib_updated_a = add_properties_ordered<Attrib, UserPropertyAdapter<Strenght_next, tag_other>::apply>;  // ? introduce <Strenght_next, other>
             using Attrib_updated_b = decltype(From::base<Attrib> | With::Strenght_next_other)::result_type;             // ? introduce <Strenght_next, other>
 
             static_assert(std::same_as<Attrib_updated_a, Attrib_updated_b>);

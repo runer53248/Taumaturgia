@@ -39,7 +39,7 @@ public:
         requires(S > 1)
     constexpr decltype(auto) getType(this Self& self) noexcept = delete;
 
-    template <typename Type, isTag TAGS = Tags<>, typename Self>
+    template <typename Type, isTag TAGS = no_tag, typename Self>
         requires((std::same_as<Type, Health> or std::same_as<Type, Damage>) and TAGS::size == 0)
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept {
         if constexpr (std::same_as<Type, Health>)
@@ -96,12 +96,12 @@ struct val {
 
 template <typename T, typename N>
 using member_getType = decltype(std::declval<T&>().template getType<N::value>());
-template <typename T, typename TYPE, isTag TAGS = Tags<>>
+template <typename T, typename TYPE, isTag TAGS = no_tag>
 using member_getTypeTaged = decltype(std::declval<T&>().template getTypeTaged<TYPE, TAGS>());
 
 template <typename T, typename N>
 using free_getType = decltype(getType<N::value>(std::declval<T&>()));
-template <typename T, typename TYPE, isTag TAGS = Tags<>>
+template <typename T, typename TYPE, isTag TAGS = no_tag>
 using free_getTypeTaged = decltype(getTypeTaged<TYPE, TAGS>(std::declval<T&>()));
 
 template <template <typename...> typename Fn, typename TARGET, typename... CONFIG>

@@ -141,7 +141,7 @@ public:
 
     // MARK: getTypeTaged
 
-    template <typename RETURN, isTag TTAGS = Tags<>, typename Self>
+    template <typename RETURN, isTag TTAGS = no_tag, typename Self>
         requires(std::same_as<list<Tags<>>, list<TTAGS>> and
                  have_getType_type_method<Self, RETURN>)
     constexpr decltype(auto) getTypeTaged(this Self& self) noexcept {
@@ -157,7 +157,7 @@ public:
 
         return static_cast<type>(self).template getTypeTaged<RETURN, TTAGS>();
     }
-    template <typename RETURN, isTag TTAGS = Tags<>, typename Self>
+    template <typename RETURN, isTag TTAGS = no_tag, typename Self>
         requires(not have_getTypeTaged_method<T, RETURN, TTAGS>  //
                  and not(std::same_as<Tags<>, TTAGS> and   //
                          have_getType_type_method<Self, RETURN>))
@@ -195,7 +195,7 @@ public:
 
     // MARK: getTaged
 
-    template <size_t SKIP, isTag TTAGS = Tags<>, typename Self>
+    template <size_t SKIP, isTag TTAGS = no_tag, typename Self>
     constexpr decltype(auto) getTaged(this Self& self) noexcept {
         using type = std::conditional_t<
             std::is_const_v<std::remove_reference_t<Self>>,
@@ -209,7 +209,7 @@ public:
         }
     }
 
-    template <isTag TTAGS = Tags<>, typename Self>
+    template <isTag TTAGS = no_tag, typename Self>
     constexpr decltype(auto) getTaged(this Self& self) noexcept {
         return self.template getTaged<0, TTAGS>();
     }

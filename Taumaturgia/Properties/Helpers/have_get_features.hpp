@@ -36,7 +36,7 @@ concept have_getType_type_num_method = requires(T t) {
     { std::as_const(t).template getType<TYPE, NUM>() } -> std::same_as<const TYPE&>;
 };
 
-template <typename T, typename TYPE, typename TAGS = Tags<>>
+template <typename T, typename TYPE, typename TAGS = no_tag>
 concept have_getTypeTaged_method = requires(T t) {
     t.template getTypeTaged<TYPE, TAGS>();
     { t.template getTypeTaged<TYPE, TAGS>() } -> not_void;
@@ -45,7 +45,7 @@ concept have_getTypeTaged_method = requires(T t) {
     { std::as_const(t).template getTypeTaged<TYPE, TAGS>() } -> not_void;
 };
 
-template <typename T, size_t SKIP, typename TAGS = Tags<>>
+template <typename T, size_t SKIP, typename TAGS = no_tag>
 concept have_getTaged_method = requires(T t) {
     t.template getTaged<SKIP, TAGS>();
     { t.template getTaged<SKIP, TAGS>() } -> not_void;

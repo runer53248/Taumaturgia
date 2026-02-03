@@ -6,18 +6,13 @@
 #include "Usage/With.hpp"
 
 struct extra_token {};
-struct other_token {};
-using extra_tag = Tags<extra_token, other_token>;
+using extra_tag = Tags<extra_token>;
 
 template <typename T, size_t N>
 concept get_limited = N < boost::pfr::tuple_size_v<std::remove_cvref_t<T>>;
 
-// MARK: Base
-
 struct Base {
-    Health hp{};
-    // Damage dmg{};
-    Data<int, extra_tag> type{};
+    Health hp;
 
     template <size_t DIG, get_limited<DIG> Self>
     decltype(auto) getType(this Self& self) {
@@ -62,7 +57,7 @@ auto to_tuple(T&& type) {
     }(std::make_index_sequence<count>{});
 };
 
-// MARK: for_each_impl
+//
 
 template <auto GET>
 using for_each_impl = decltype([]<typename T, typename Fn>(T&& type, Fn fn) {
@@ -73,23 +68,11 @@ using for_each_impl = decltype([]<typename T, typename Fn>(T&& type, Fn fn) {
     }(std::make_index_sequence<count>{});
 });
 
-// MARK: for_each_type
-
-auto for_each_type = for_each_impl<[]<size_t N, typename T>(T&& t) {
+auto for_template = for_each_impl<[]<size_t N, typename T>(T&& t) {
     if constexpr (requires { std::get<N>(std::declval<T>()); }) {
         return std::get<N>(std::forward<T>(t));
     } else if constexpr (requires { getType<N>(std::declval<T>()); }) {
         return getType<N>(std::forward<T>(t));
-    }
-}>{};
-
-// MARK: for_each_taged_type
-
-auto for_each_taged_type = for_each_impl<[]<size_t N, typename T>(T&& t) {
-    if constexpr (requires { getTaged<N, extra_tag>(std::declval<T>()); }) {
-        return getTaged<N, extra_tag>(std::forward<T>(t));
-    } else {
-        return std::monostate{};
     }
 }>{};
 
@@ -99,48 +82,24 @@ int main() {
         | With::CureHealth                                   //* reorder with priority
         | With::Damage                                       //
         | With::Health                                       //* skipped for Base
-        | With::user_property<Damage, extra_tag>     //
-        | With::user_property<Health, extra_tag>     //
-        | With::user_property<int, extra_tag>        //* similiar with Base::type
-        | With::user_property<Data<int, extra_tag>>  //* skipped for Base
+        | With::user_property<Damage, Tags<extra_token>>     //
         ;
 
-    auto entity = create_entity(
-        unordered,
-        forTags<>(Health{100}),
-        forTags<extra_tag>(Health{150}),
-        forTags<>(Damage{5}),
-        forTags<extra_tag>(Damage{150}),
-        CureHealth{15},  //* can mix with normal types
-        forTags<extra_tag>(25),
-        // Data<int, extra_tag>{15}, //! duplication of types if Base - Data is used as way to specify type in C-tor
-        forTags<>(Data<int, extra_tag>{15}));  //* walkaround - Data<Data<int, extra_tag>>
+    auto entity = create_entity(unordered,
+                                forTags<>(Damage{5}),
+                                forTags<>(Health{5}),
+                                forTags<>(CureHealth{5})
+                                //
+    );
 
-    static_assert(std::same_as<decltype(create_entity)::result_type, decltype(entity)>);
+    auto print = [](const auto& entry) { std::println("{:40}{}", name<decltype(entry)>(), entry); };
 
-    std::println("type:     {}{}{}", Color::Grey, name<decltype(entity)>(), Color::Reset);
-    std::println("as_tuple: {}{}{}", Color::Grey, name<as_tuple<decltype(entity)>>(), Color::Reset);
-    std::println("{}", parse_type_name<decltype(entity)>());
-
-    auto print = [](const auto& entry) {
-        if constexpr (not std::same_as<std::remove_cvref_t<decltype(entry)>, std::monostate>) {
-            std::println("{:30}{}", name<std::remove_cvref_t<decltype(entry)>>(), entry);
-        }
-    };
-
-    for_each_type(entity, print);
+    std::println("{}{}{}\n", Color::Grey, name<decltype(entity)>(), Color::Reset);
+    for_template(entity, print);
+    std::println();
 
     auto tp = to_tuple(entity);
+    std::println("{}{}{}\n", Color::Grey, name<decltype(tp)>(), Color::Reset);
+    for_template(tp, print);
     std::println();
-    for_each_type(tp, print);
-
-    auto tied_data = std::tie(
-        getTaged<0, extra_tag>(entity),
-        getTaged<1, extra_tag>(entity),
-        getTaged<2, extra_tag>(entity));
-    std::println();
-    for_each_type(tied_data, print);
-
-    std::println();
-    for_each_taged_type(entity, print);
 }

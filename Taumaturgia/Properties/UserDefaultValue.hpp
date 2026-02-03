@@ -1,7 +1,7 @@
 #pragma once
 #include "Taumaturgia/Properties/Helpers/Tags.hpp"
 
-template <typename T, isTag TAGS = Tags<>>
+template <typename T, isTag TAGS = no_tag>
 struct UserDefaultValue {
     static constexpr auto value = [] { return T{}; };
 };
