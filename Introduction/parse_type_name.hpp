@@ -106,16 +106,6 @@ auto type_name_result(std::string text = name<T>()) {
         }
     }
 
-    // what = ">>";
-    // into = ">,[]>";
-    // find_and_replace(text, what, into);
-    what = ">, Tags<>>";
-    into = ">, []>";
-    find_and_replace(text, what, into);
-    what = ">, Tags<extra_token>>";
-    into = ">, [extra_token]>";
-    find_and_replace(text, what, into);
-
     what = "\n\n";
     into = "\n";
     find_and_replace(text, what, into);
@@ -162,9 +152,6 @@ auto type_name_result(std::string text = name<T>()) {
     into = "";
     find_and_replace(token_text, what, into);
 
-    // what = ">>";
-    // into = ">,[]>";
-    // find_and_replace(token_text, what, into);
     what = ">>";
     into = ">";
     find_and_replace(token_text, what, into);
