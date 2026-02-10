@@ -173,12 +173,12 @@ int main() {
             static_assert(std::same_as<decltype(type2.getType<Damage>()), Damage&>);
             static_assert(std::same_as<decltype(type2.getType<Health, 1>()), Health&>);
             static_assert(std::same_as<decltype(type2.getType<int, 1>()), int&>);
-            static_assert(std::same_as<decltype(type2.getType<Name, 3>()), void>);  // non existing
+            // static_assert(std::same_as<decltype(type2.getType<Name, 3>()), void>);  // non existing
 
             static_assert(std::same_as<decltype(std::as_const(type2).getType<Name, 0>()), const Name&>);
             static_assert(std::same_as<decltype(std::as_const(type2).getType<Name, 1>()), const Name&>);
             static_assert(std::same_as<decltype(std::as_const(type2).getType<Name, 2>()), const Name&>);
-            static_assert(std::same_as<decltype(std::as_const(type2).getType<Name, 3>()), void>);  // non existing
+            // static_assert(std::same_as<decltype(std::as_const(type2).getType<Name, 3>()), void>);  // non existing
 
             static_assert(&type2.getType<0>() == &type2.getType<Protection>());
             static_assert(&type2.getType<1>() == &type2.getType<Name, 0>());

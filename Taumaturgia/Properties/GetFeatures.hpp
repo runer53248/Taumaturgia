@@ -32,38 +32,31 @@ public:
     // MARK: getType<TYPE, size_t>
 
     template <typename RETURN = TYPE, size_t DIG = 0, typename Self>
-        requires std::same_as<RETURN, TYPE>
+        requires(std::same_as<RETURN, TYPE> and DIG == 0)
+    constexpr decltype(auto) getType(this Self& self) noexcept {
+        return (self.type_);
+    }
+
+    template <typename RETURN, size_t DIG, typename Self>
+        requires(std::same_as<RETURN, TYPE> and getType_template_able<T, RETURN, void, DIG - 1>)
     constexpr decltype(auto) getType(this Self& self) noexcept {
         using type = std::conditional_t<
             std::is_const_v<Self>,
             const T&,
             T&>;
 
-        if constexpr (DIG) {
-            if constexpr (getType_template_able<T, RETURN>) {
-                return static_cast<type>(self).template getType<RETURN, DIG - 1>();
-            }
-        } else {
-            return (self.type_);
-        }
+        return static_cast<type>(self).template getType<RETURN, DIG - 1>();
     }
 
     template <typename RETURN, size_t DIG = 0, typename Self>
-        requires(not std::same_as<RETURN, TYPE> and getType_template_able<T, RETURN>)
+        requires(not std::same_as<RETURN, TYPE> and getType_template_able<T, RETURN, void, DIG>)
     constexpr decltype(auto) getType(this Self& self) noexcept {
         using type = std::conditional_t<
             std::is_const_v<Self>,
             const T&,
             T&>;
 
-        // if constexpr (trait_accessable<T, RETURN>) {
-        //     return trait<RETURN>::get(static_cast<type>(self));
-        // } else
-        if constexpr (getType_template_able<T, RETURN>) {
-            return static_cast<type>(self).template getType<RETURN, DIG>();
-        } else {
-            // static_assert(false, "WARNING: getType method tries to return void type");
-        }
+        return static_cast<type>(self).template getType<RETURN, DIG>();
     }
 
     template <typename RETURN, size_t DIG = 0, typename Self>
@@ -147,7 +140,7 @@ public:
     template <typename RETURN, isTag TTAGS = no_tag, typename Self>
     constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN, TTAGS> signature) noexcept = delete;
 
-    template <typename RETURN,  typename Self>
+    template <typename RETURN, typename Self>
         requires have_getTypeTaged_method<Self, RETURN, Tags<>>
     constexpr decltype(auto) getTypeOf(this Self& self, [[maybe_unused]] list<RETURN> signature) noexcept {
         return self.template getTypeTaged<RETURN, Tags<>>();
@@ -170,7 +163,7 @@ public:
 
     template <size_t SKIP, isTag TTAGS = no_tag, typename Self>
         requires(std::same_as<list<TTAGS>, list<TAGS>>  //
-                 and SKIP > 0                                 //
+                 and SKIP > 0                           //
                  and have_getTaged_method<const_like_ref<T, Self>, SKIP - 1, TTAGS>)
     constexpr decltype(auto) getTaged(this Self& self) noexcept {
         return static_cast<const_like_ref<T, Self>>(self).template getTaged<SKIP - 1, TTAGS>();  // skip
@@ -178,7 +171,7 @@ public:
 
     template <size_t SKIP, isTag TTAGS = no_tag, typename Self>
         requires(std::same_as<TTAGS, TAGS>  //
-                 and SKIP == 0                                //
+                 and SKIP == 0              //
                  and have_getTypeTaged_method<Self, TYPE, TTAGS>)
     constexpr decltype(auto) getTaged(this Self& self) noexcept {
         return self.template getTypeTaged<TYPE, TTAGS>();  // return by tags and current type
