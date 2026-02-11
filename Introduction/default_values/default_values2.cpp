@@ -7,8 +7,9 @@
 #include <functional>
 
 struct Base {};
-struct int_tag;
-struct protection_tag;
+
+using int_tag = Tags<struct IntTag>;
+using protection_tag = Tags<struct ProtectionTag>;
 
 constexpr auto default_int = 5;
 constexpr auto default_int2 = 33;
@@ -25,7 +26,7 @@ struct UserDefaultValue<int> {
     static constexpr auto value = [] { return default_int; };
 };
 template <>
-struct UserDefaultValue<int, Tags<int_tag>> {
+struct UserDefaultValue<int, int_tag> {
     static constexpr auto value = [] { return default_int2; };
 };
 
@@ -44,7 +45,7 @@ struct UserDefaultValue<Protection> {
 };
 
 template <>
-struct UserDefaultValue<Protection, Tags<protection_tag>> {
+struct UserDefaultValue<Protection, protection_tag> {
     static inline std::move_only_function<Protection()> value = [] { return default_protection_tag; };
 };
 
@@ -71,9 +72,9 @@ int main() {
         | With::Health                                     //
         | With::Damage                                     //
         | With::user_property<int>                         //
-        | With::user_property<int, Tags<int_tag>>                //! don't have trait access
+        | With::user_property<int, int_tag>                //! don't have trait access
         | With::user_property<Protection>                  //
-        | With::user_property<Protection, Tags<protection_tag>>  //! don't have trait access
+        | With::user_property<Protection, protection_tag>  //! don't have trait access
         | With::Protection                                 //
         // | With::user_property<bool>                       //
         // | With::user_property<bool,int_tag>                       //
@@ -97,9 +98,9 @@ int main() {
         decltype(auto) health = trait<Health>::get(test);
         decltype(auto) damage = trait<Damage>::get(test);
         decltype(auto) protecton = trait<Protection>::get(test);
-        decltype(auto) protection_2 = test.getTypeTaged<Protection, Tags<protection_tag>>();
+        decltype(auto) protection_2 = test.getTypeTaged<Protection, protection_tag>();
         decltype(auto) integer = trait<int>::get(test);
-        decltype(auto) integer_2 = test.getTypeTaged<int, Tags<int_tag>>();
+        decltype(auto) integer_2 = test.getTypeTaged<int, int_tag>();
 
         std::print("test.Health     = {}\n", health);
         std::print("test.Damage     = {}\n", damage);
