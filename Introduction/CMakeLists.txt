@@ -17,6 +17,13 @@ target_link_libraries(6_general_features_${addons} PRIVATE "-lstdc++exp")
 
 add_executable(forTags_${addons} main_forTags.cpp)
 target_link_libraries(forTags_${addons} PRIVATE "-lstdc++exp")
+add_executable(forTags2_${addons} main_forTags2.cpp)
+target_link_libraries(forTags2_${addons} PRIVATE "-lstdc++exp")
+add_executable(forTags3_${addons} main_forTags3.cpp)
+target_link_libraries(forTags3_${addons} PRIVATE "-lstdc++exp")
 
 add_executable(main_tripleInt_${addons} main_tripleInt.cpp)
 target_link_libraries(main_tripleInt_${addons} PRIVATE "-lstdc++exp")
+
+add_executable(main_sum_${addons} main_sum.cpp)
+target_link_libraries(main_sum_${addons} PRIVATE "-lstdc++exp")
