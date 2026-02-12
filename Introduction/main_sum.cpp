@@ -6,16 +6,29 @@
 #include "Usage/With.hpp"
 
 struct Core {
-    template <size_t S = 0>
+    template <size_t S = 0, typename Self>
         requires(S == 0)
-    decltype(auto) getType(this auto& self) {
+    decltype(auto) getType(this Self& self) {
+        std::print("[A]");
         return (self.type);
     }
-    template <typename T>
-    decltype(auto) getType(this auto& self) = delete;
+
+    template <size_t S = 0, typename Self>
+    decltype(auto) get_int(this Self& self) {
+        std::print("[B]");
+        return (self.type);
+    }
 
 private:
-    int type;
+    int type{};
+};
+
+template <typename T>
+    requires std::is_base_of_v<Core, T>
+struct traits::CustomAccessType<int, T> {
+    static constexpr decltype(auto) get(auto& el) {
+        return (el.get_int());
+    }
 };
 
 template <typename T1, typename T2>
@@ -40,19 +53,19 @@ template <auto T>
 using as_type = decltype(T)::result_type;
 
 int main() {
-    using type1 = as_type<From::base<Core>                       //
+    using type1 = as_type<From::base<Core>                        //
                           | With::CureHealth                      //
                           | With::Damage                          //
                           | With::user_property<int, Tags<void>>  //
                           | With::user_property<int, Tags<int>>   //
-                          | With::user_property<int>   //
+                          | With::user_property<int>              //
                           >;
-    using type2 = as_type<From::base<Core>                       //
+    using type2 = as_type<From::base<Core>                        //
                           | With::Health                          //
                           | With::Protection                      //
                           | With::user_property<int, Tags<int>>   //
                           | With::user_property<int, Tags<void>>  //
-                          | With::user_property<int>  //
+                          | With::user_property<int>              //
                           >;
 
     using result_type = sum_type<type1, type2>;
@@ -64,7 +77,12 @@ int main() {
                      forTags<Tags<void>>(25),
                      forTags<Tags<int>>(35)};
 
+    std::println();
     std::println("{}", getTypeTaged<int>(type));
     std::println("{}", getTypeTaged<int, Tags<void>>(type));
     std::println("{}", getTypeTaged<int, Tags<int>>(type));
+    std::println();
+    std::println("{}", type.getType<6>());
+    std::println();
+    std::println("{}", traits::accessType<int>::get(type));
 }
