@@ -13,7 +13,14 @@ struct Core {
         return (self.type);
     }
 
-    template <size_t S = 0, typename Self>
+    template <typename TYPE, size_t S, typename Self>
+        requires (std::same_as<TYPE, int> and S == 0)
+    decltype(auto) getType(this Self& self) {
+        std::print("[C]");
+        return (self.type);
+    }
+
+    template <typename Self>
     decltype(auto) get_int(this Self& self) {
         std::print("[B]");
         return (self.type);
@@ -78,11 +85,20 @@ int main() {
                      forTags<Tags<int>>(35)};
 
     std::println();
-    std::println("{}", getTypeTaged<int>(type));
-    std::println("{}", getTypeTaged<int, Tags<void>>(type));
-    std::println("{}", getTypeTaged<int, Tags<int>>(type));
+    std::println("[A] - Core::getType<0>");
+    std::println("[B] - traits::CustomAccessType<int, T>");
+    std::println("[C] - Core::getType<int, 0>");
     std::println();
-    std::println("{}", type.getType<6>());
+    std::println(" getTypeTaged<int>(type)             {}", getTypeTaged<int>(type));
+    std::println("[ ] getTypeTaged<int, Tags<void>>(type) {}", getTypeTaged<int, Tags<void>>(type));
+    std::println("[ ] getTypeTaged<int, Tags<int>(type)   {}", getTypeTaged<int, Tags<int>>(type));
     std::println();
-    std::println("{}", traits::accessType<int>::get(type));
+    std::println(" type.getType<6>()                   {}", type.getType<6>());
+    std::println(" getType<6>(type)                    {}", getType<6>(type));
+    std::println(" traits::accessType<int>::get(type)  {}", traits::accessType<int>::get(type));
+    std::println(" type.getType<int, 2>()              {}", type.getType<int, 2>());
+    std::println();
+
+    using tp = as_tuple<result_type>;
+    std::println("{}", name<tp>());
 }
