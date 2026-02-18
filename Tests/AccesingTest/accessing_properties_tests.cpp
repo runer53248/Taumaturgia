@@ -17,9 +17,14 @@ struct tag_wrong {};
 static_assert(Property_ordered<Living>::value < Property_ordered<Damaging>::value);
 
 struct with_health {
-    using hold_type = Health;
-
+    // using hold_type = Health;
     Health hp;
+};
+
+template <typename T>
+    requires std::is_base_of_v<with_health, T>
+struct HoldTypes<T> {
+    using types = list<Health>;
 };
 
 struct with_health_and_damage {

@@ -7,9 +7,15 @@
 struct empty {};
 
 struct with_health {
-    using hold_type = Health;
+    // using hold_type = Health;
     Health hp;
 };
+
+// template <typename T>
+//     requires std::is_base_of_v<with_health, T>
+// struct HoldTypes<T> {
+//     using types = list<Health>;
+// };
 
 struct tag_health {};
 
