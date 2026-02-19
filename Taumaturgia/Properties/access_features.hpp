@@ -3,12 +3,14 @@
 #include "Taumaturgia/Properties/Helpers/have_get_features.hpp"
 #include "Taumaturgia/Traits/trait.hpp"
 
-// MARK:
+// MARK: HoldTypes
 
 template <typename T>
 struct HoldTypes {
     using types = list<>;
 };
+
+// MARK: hold_type
 
 template <typename T, size_t N>
     requires requires {
@@ -19,34 +21,42 @@ using hold_type = boost::mp11::mp_front<
         typename HoldTypes<std::remove_cvref_t<T>>::types,
         N>>;
 
-// MARK: max_getType<T>
+// MARK: getType_index_limit <T>
 
+namespace impl {
 template <typename T, size_t S>
-struct max_getType_num {
+struct getType_index_limit_impl {
     static constexpr size_t index = S;
 };
 
 template <typename T, size_t S>
     requires have_getType_num_method<T, S>
-struct max_getType_num<T, S> {
-    static constexpr size_t index = max_getType_num<std::remove_cvref_t<T>, S + 1>::index;
+struct getType_index_limit_impl<T, S> {
+    static constexpr size_t index = getType_index_limit_impl<std::remove_cvref_t<T>, S + 1>::index;
 };
 
 template <typename T>
-struct max_getType_num<T, 0> {
-    static constexpr size_t index = max_getType_num<std::remove_cvref_t<T>, 1>::index;
+struct getType_index_limit_impl<T, 0> {
+    static constexpr size_t index = getType_index_limit_impl<std::remove_cvref_t<T>, 1>::index;
 };
 
 template <typename T>
     requires(not have_getType_num_method<T, 0>)
-struct max_getType_num<T, 0> {
+struct getType_index_limit_impl<T, 0> {
     static constexpr size_t index = 0;
 };
+}  // namespace impl
 
 template <typename T>
-constexpr size_t max_getType = max_getType_num<std::remove_cvref_t<T>, 0>::index;
+constexpr size_t getType_index_limit = impl::getType_index_limit_impl<std::remove_cvref_t<T>, 0>::index;
 
-// MARK: getType<size_t>
+template <typename T, size_t S>
+concept base_holds_types = requires {
+    typename hold_type<typename helpers::Scheme_ordered<std::remove_cvref_t<T>>::base,
+                       S>;
+};
+
+// MARK: getType <size_t>
 
 template <size_t S, typename T>
 constexpr decltype(auto) getType(T&& el) noexcept
@@ -58,28 +68,21 @@ template <size_t S, typename T>
 constexpr decltype(auto) getType(T&& el) noexcept
     requires(not have_getType_num_method<T, S> and
              (S == 0) and
-             requires {
-                 //  typename helpers::Scheme_ordered<std::remove_cvref_t<T>>::base::template hold_types<0>;
-                 typename hold_type<typename helpers::Scheme_ordered<std::remove_cvref_t<T>>::base, 0>;
-             })
+             base_holds_types<T, S>)
 {
     using base_type = helpers::Scheme_ordered<std::remove_cvref_t<T>>::base;  // most base type
-    // using hold_type = typename std::remove_cvref_t<base_type>::template hold_types<0>;
     using hold_type = hold_type<std::remove_cvref_t<base_type>, 0>;
 
     return trait<hold_type>::get(static_cast<base_type&>(el));
 }
 template <size_t S, typename T>
 constexpr decltype(auto) getType(T&& el) noexcept
-    requires((S >= max_getType<T> and S > 0) and
-             requires {
-                 //   typename helpers::Scheme_ordered<std::remove_cvref_t<T>>::base::template hold_types<S - max_getType<T>>;
-                 typename hold_type<typename helpers::Scheme_ordered<std::remove_cvref_t<T>>::base, S - max_getType<T>>;
-             })
+    requires(not have_getType_num_method<T, S> and
+             (S > 0 and S >= getType_index_limit<T>) and
+             base_holds_types<T, S - getType_index_limit<T>>)
 {
     using base_type = helpers::Scheme_ordered<std::remove_cvref_t<T>>::base;  // most base type
-    constexpr size_t N = S - max_getType<T>;
-    // using hold_type = typename std::remove_cvref_t<base_type>::template hold_types<N>;
+    constexpr size_t N = S - getType_index_limit<T>;
     using hold_type = hold_type<std::remove_cvref_t<base_type>, N>;
 
     return trait<hold_type>::get(static_cast<base_type&>(el));
@@ -87,7 +90,7 @@ constexpr decltype(auto) getType(T&& el) noexcept
 template <size_t S, typename T>
 constexpr decltype(auto) getType(T&& el) noexcept = delete;
 
-// MARK: getType<TYPE>
+// MARK: getType <TYPE>
 
 template <typename TYPE, size_t S = 0, typename T>
 constexpr decltype(auto) getType(T&& el) noexcept

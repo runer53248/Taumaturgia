@@ -44,11 +44,11 @@ private:
     float f{1.1f};
 };
 
-// template <typename T>
-//     requires std::is_base_of_v<Core, T>
-// struct HoldTypes<T> {
-//     using types = list<int, float>;
-// };
+template <typename T>
+    requires std::is_base_of_v<Core, T>
+struct HoldTypes<T> {
+    using types = list<int, float>;
+};
 
 template <typename TYPE, typename T>
     requires std::is_base_of_v<Core, T>
@@ -122,11 +122,11 @@ int main() {
     std::println("[ ] getTypeTaged<int, Tags<void>>(type)  {}", getTypeTaged<int, Tags<void>>(type));
     std::println("[ ] getTypeTaged<int, Tags<int>(type)    {}", getTypeTaged<int, Tags<int>>(type));
     std::println();
-    // std::println(" type.getType<6>()                    {}", type.getType<6>());
+    std::println(" type.getType<6>()                    {}", type.getType<6>());
     std::println(" getType<6>(type)                     {}", getType<6>(type));
     std::println(" getType<7>(type)                     {}", getType<7>(type));
     std::println("---");
-    // std::println(" type.getType<int, 2>()               {}", type.getType<int, 2>());
+    std::println(" type.getType<int, 2>()               {}", type.getType<int, 2>());
     std::println("[ ] getType<int, 0>(type)                {}", getType<int, 0>(type));
     std::println("[ ] getType<int, 1>(type)                {}", getType<int, 1>(type));
     std::println(" getType<int, 2>(type)                {}", getType<int, 2>(type));
@@ -141,15 +141,17 @@ int main() {
     std::println("as_tuple<result_type> : {}", name<tp>());
     std::println("as_tuple<Core>        : {}", name<as_tuple<Core>>());
     std::println("---");
-    std::println("max_getType<result_type> = {}", max_getType<result_type>);
-    std::println("std::tuple_size_v<tp>    = {}", std::tuple_size_v<tp>);
+    std::println("getType_index_limit<result_type> = {}", getType_index_limit<result_type>);
+    std::println("std::tuple_size_v<tp>            = {}", std::tuple_size_v<tp>);
     std::println();
 
     Core core{};
-    std::println("max_getType<Core>     :    {}", max_getType<Core>);
+    std::println("getType_index_limit<Core>  :    {}", getType_index_limit<Core>);
     std::println("---");
     std::println(" getType<0>(core)       {}", getType<0>(core));
     std::println(" getType<1>(core)       {}", getType<1>(core));
+    std::println(" getType<2>(core)       {}", getType<2>(core));
+    std::println(" getType<3>(core)       {}", getType<3>(core));
     std::println("---");
     std::println(" getType<int>(core)     {}", getType<int>(core));
     std::println(" getType<float>(core)   {}", getType<float>(core));
