@@ -50,11 +50,20 @@ struct getType_index_limit_impl<T, 0> {
 template <typename T>
 constexpr size_t getType_index_limit = impl::getType_index_limit_impl<std::remove_cvref_t<T>, 0>::index;
 
+// MARK: base_holds_types <T, size_t>
+
 template <typename T, size_t S>
 concept base_holds_types = requires {
     typename hold_type<typename helpers::Scheme_ordered<std::remove_cvref_t<T>>::base,
                        S>;
 };
+
+// MARK: have_custom_access <T, size_t>
+
+template <typename T, size_t S>
+concept have_custom_access =
+    (S >= getType_index_limit<T>) and
+    base_holds_types<T, S - getType_index_limit<T>>;
 
 // MARK: getType <size_t>
 
@@ -67,19 +76,7 @@ constexpr decltype(auto) getType(T&& el) noexcept
 template <size_t S, typename T>
 constexpr decltype(auto) getType(T&& el) noexcept
     requires(not have_getType_num_method<T, S> and
-             (S == 0) and
-             base_holds_types<T, S>)
-{
-    using base_type = helpers::Scheme_ordered<std::remove_cvref_t<T>>::base;  // most base type
-    using hold_type = hold_type<std::remove_cvref_t<base_type>, 0>;
-
-    return trait<hold_type>::get(static_cast<base_type&>(el));
-}
-template <size_t S, typename T>
-constexpr decltype(auto) getType(T&& el) noexcept
-    requires(not have_getType_num_method<T, S> and
-             (S > 0 and S >= getType_index_limit<T>) and
-             base_holds_types<T, S - getType_index_limit<T>>)
+             have_custom_access<T, S>)
 {
     using base_type = helpers::Scheme_ordered<std::remove_cvref_t<T>>::base;  // most base type
     constexpr size_t N = S - getType_index_limit<T>;
