@@ -75,8 +75,10 @@ constexpr decltype(auto) getType(T&& el) noexcept
 }
 template <size_t S, typename T>
 constexpr decltype(auto) getType(T&& el) noexcept
-    requires(not have_getType_num_method<T, S> and
-             have_custom_access<T, S>)
+    requires(
+        // not have_getType_num_method<T, S> and
+        getType_index_limit<typename helpers::Scheme_ordered<std::remove_cvref_t<T>>::base> == 0 and  // Base type dont have getType<N> method
+        have_custom_access<T, S>)
 {
     using base_type = helpers::Scheme_ordered<std::remove_cvref_t<T>>::base;  // most base type
     constexpr size_t N = S - getType_index_limit<T>;
@@ -87,7 +89,7 @@ constexpr decltype(auto) getType(T&& el) noexcept
 template <size_t S, typename T>
 constexpr decltype(auto) getType(T&& el) noexcept = delete;
 
-// MARK: getType <TYPE>
+// MARK: getType<TYPE, size_t>
 
 template <typename TYPE, size_t S = 0, typename T>
 constexpr decltype(auto) getType(T&& el) noexcept
