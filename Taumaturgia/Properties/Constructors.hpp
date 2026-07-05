@@ -12,7 +12,7 @@ struct Data {
 };
 
 template <isTag TAGS = no_tag, typename T>
-decltype(auto) forTags(T&& data) {
+constexpr decltype(auto) forTags(T&& data) {
     return Data<T, TAGS>{std::forward<T>(data)};
 }
 
@@ -64,26 +64,37 @@ public:
     template <typename TT, isTag TTAGS>
     constexpr Constructors(const Unordered&, Data<TT, TTAGS>&& arg) {
         using user_prop = UserProperty_<TYPE, T, TAGS>;
+        using type_TT = std::remove_cvref_t<TT>;
 
-        getTypeTaged<TT, TTAGS>(*static_cast<user_prop*>(this)) = arg.value;
+        getTypeTaged<type_TT, TTAGS>(*static_cast<user_prop*>(this)) = arg.value;
     }
 
     template <typename TT, isTag TTAGS, typename... Args>
     constexpr Constructors(const Unordered& u, Data<TT, TTAGS>&& arg, Args&&... args)
         : Constructors{u, std::forward<Args>(args)...} {
         using user_prop = UserProperty_<TYPE, T, TAGS>;
+        using type_TT = std::remove_cvref_t<TT>;
 
-        getTypeTaged<TT, TTAGS>(*static_cast<user_prop*>(this)) = arg.value;
+        getTypeTaged<type_TT, TTAGS>(*static_cast<user_prop*>(this)) = arg.value;
     }
+
+    template <typename TT, isTag TTAGS, typename... Args>
+        requires(not std::same_as<
+                    boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>,
+                    list<std::remove_cvref_t<Args>...>>)  // arguments are not of unique type
+    constexpr Constructors(const Unordered& u, Data<TT, TTAGS>&& arg, Args&&... args) = delete;
 
     // MARK: Unordered
 
     template <typename Arg>
     constexpr Constructors(const Unordered&, Arg&& arg) {
         using user_prop = UserProperty_<TYPE, T, TAGS>;
+        using type_Arg = std::remove_cvref_t<Arg>;
 
-        if constexpr (trait_accessable<user_prop, std::remove_cvref_t<Arg>>) {
-            trait<std::remove_cvref_t<Arg>>::get(*static_cast<user_prop*>(this)) = std::forward<Arg>(arg);
+        if constexpr (requires { getTypeTaged<type_Arg, no_tag>(*static_cast<user_prop*>(this)); }) {
+            getTypeTaged<type_Arg, no_tag>(*static_cast<user_prop*>(this)) = std::forward<Arg>(arg);
+        } else if constexpr (trait_accessable<user_prop, type_Arg>) {
+            trait<type_Arg>::get(*static_cast<user_prop*>(this)) = std::forward<Arg>(arg);
         } else {
             static_assert(false, "Unordered c-tor arguments contains type not accessable by traits.");
         }
@@ -93,19 +104,16 @@ public:
     constexpr Constructors(const Unordered& u, Arg&& arg, Args&&... args)
         : Constructors{u, std::forward<Args>(args)...} {
         using user_prop = UserProperty_<TYPE, T, TAGS>;
+        using type_Arg = std::remove_cvref_t<Arg>;
 
-        if constexpr (trait_accessable<user_prop, std::remove_cvref_t<Arg>>) {
-            trait<std::remove_cvref_t<Arg>>::get(*static_cast<user_prop*>(this)) = std::forward<Arg>(arg);
+        if constexpr (requires { getTypeTaged<type_Arg, no_tag>(*static_cast<user_prop*>(this)); }) {
+            getTypeTaged<type_Arg, no_tag>(*static_cast<user_prop*>(this)) = std::forward<Arg>(arg);
+        } else if constexpr (trait_accessable<user_prop, type_Arg>) {
+            trait<type_Arg>::get(*static_cast<user_prop*>(this)) = std::forward<Arg>(arg);
         } else {
             static_assert(false, "Unordered c-tor arguments contains type not accessable by traits.");
         }
     }
-
-    template <typename TT, isTag TTAGS, typename... Args>
-        requires(not std::same_as<
-                    boost::mp11::mp_unique<list<std::remove_cvref_t<Args>...>>,
-                    list<std::remove_cvref_t<Args>...>>)  // arguments are not of unique type
-    constexpr Constructors(const Unordered& u, Data<TT, TTAGS>&& arg, Args&&... args) = delete;
 
     template <typename Arg, typename... Args>
         requires(not std::same_as<
@@ -195,7 +203,6 @@ public:
         requires not_contains_type<TYPE, V...>
     constexpr Constructors([[maybe_unused]] const std::variant<V...>& type, Args&&... args)
         : T{std::forward<Args>(args)...} {}  //? skip type
-
 
 protected:
     hold_type type_ = UserDefaultValue<hold_type, TAGS>::value();  // specialization for default values
