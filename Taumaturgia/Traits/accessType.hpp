@@ -10,11 +10,6 @@ struct accessType {
     template <typename T>
     static constexpr bool is_accessable = helpers::accessable<T, accessType<TYPE, CONVERT_TYPE>, TYPE, CONVERT_TYPE>;
 
-    // template <type_able<TYPE> T>
-    // static constexpr decltype(auto) get(T& el) noexcept {
-    //     return (el.type);
-    // }
-
     template <type_or_getType_able<TYPE> T>
         requires(not(CustomAccessType_able<T, TYPE, CONVERT_TYPE> or getType_template_able<T, TYPE>))
     static constexpr decltype(auto) get(T& el) noexcept {
@@ -36,6 +31,9 @@ struct accessType {
     static constexpr decltype(auto) get(T& el) noexcept {
         return CustomAccessType<TYPE, std::remove_cvref_t<T>>::get(el);
     }
+
+    template <typename T>
+    static constexpr decltype(auto) get(T& el) noexcept = delete;
 
     //
 
