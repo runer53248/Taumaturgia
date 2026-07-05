@@ -7,10 +7,10 @@
 struct Base_aggregate {
     int x{};
     int y{};
-    Name name;
+    Name name{};
     // Damage dmg;
     // Health hp;
-    Protection protection;
+    Protection protection{};
     double type{};
 };
 
