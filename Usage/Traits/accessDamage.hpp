@@ -21,8 +21,8 @@ concept GetDamageAccessable = requires(std::remove_cvref_t<T> x) {
 
 namespace traits {
 
-struct accessDamage /*: public accessType<Damage>*/ {
-    using general_access_type = accessType<Damage>;  // composition
+struct accessDamage {
+    using general_access_type = accessType<Damage>;  //[x]:  composition accessType<Damage>
     template <typename T>
     static const bool general_accessable = general_access_type::is_accessable<T>;
 

@@ -21,7 +21,7 @@ concept GetRestoreEffectsAccessable = requires(std::remove_cvref_t<T> x) {
 
 namespace traits {
 
-struct accessRestoreEffects : public accessType<EffectTypeContainer> {  // inheritance
+struct accessRestoreEffects : public accessType<EffectTypeContainer> {  //[ ]:  inheritance accessType<EffectTypeContainer> 
     template <typename T>
     static const bool is_accessable = helpers::accessable<T, accessRestoreEffects, EffectTypeContainer>;
 

@@ -22,8 +22,9 @@ concept GetNameAccessable = requires(std::remove_cvref_t<T> x) {
 
 namespace traits {
 
-struct accessName /*: public accessType<Name, std::string>*/ {
-    using general_access_type = accessType<Name, std::string>;  // composition
+struct accessName {
+    using general_access_type = accessType<Name, std::string>;  //[x]:  composition accessType<Name, std::string>
+
     template <typename T>
     static const bool general_accessable = general_access_type::is_accessable<T>;
 
@@ -41,8 +42,6 @@ struct accessName /*: public accessType<Name, std::string>*/ {
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getName();
     }
-
-    // using accessType<Name, std::string>::get;
 
     template <typename T>
         requires((not(helpers::NameAccessable<T> or helpers::GetNameAccessable<T>) and general_accessable<T>) or CustomAccessType_able<T, Name, std::string>)

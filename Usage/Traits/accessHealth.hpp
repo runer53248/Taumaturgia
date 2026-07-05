@@ -21,7 +21,7 @@ concept GetHealthAccessable = requires(std::remove_cvref_t<T> x) {
 
 namespace traits {
 
-struct accessHealth : public accessType<Health> {  // inheritance
+struct accessHealth : public accessType<Health> {  //[ ]:  inheritance accessType<Health> 
     template <typename T>
     static const bool is_accessable = helpers::accessable<T, accessHealth, Health>;
 

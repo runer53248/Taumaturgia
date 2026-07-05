@@ -21,7 +21,7 @@ concept GetArmorWearAccessable = requires(std::remove_cvref_t<T> x) {
 
 namespace traits {
 
-struct accessArmorWear : public accessType<WearContainer> {  // inheritance
+struct accessArmorWear : public accessType<WearContainer> {  //[ ]: inheritance accessType<WearContainer>
     template <typename T>
     static const bool is_accessable = helpers::accessable<T, accessArmorWear, WearContainer>;
 

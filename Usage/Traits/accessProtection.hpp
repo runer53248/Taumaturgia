@@ -21,23 +21,32 @@ concept GetProtectionAccessable = requires(std::remove_cvref_t<T> x) {
 
 namespace traits {
 
-struct accessProtection : public accessType<Protection> {  // inheritance
+struct accessProtection {
+    using general_access_type = accessType<Protection>;  //[x]:  composition accessType<Protection>
+
     template <typename T>
-    static const bool is_accessable = helpers::accessable<T, accessProtection, Protection>;
+    static const bool general_accessable = general_access_type::is_accessable<T>;
+
+    template <typename T>
+    static const bool is_accessable = helpers::accessable<T, accessProtection, Protection> or general_accessable<T>;
 
     template <helpers::ProtectionAccessable T>
-        requires(not accessType<Protection>::is_accessable<T>)
+        requires(not(helpers::GetProtectionAccessable<T> or CustomAccessType_able<T, Protection>))  // prefer getProtection() when both protection and getProtection() are visible
     static constexpr decltype(auto) get(T& el) noexcept {
         return (el.protection);
     }
 
     template <helpers::GetProtectionAccessable T>
-        requires(not accessType<Protection>::is_accessable<T>)
+        requires(not CustomAccessType_able<T, Protection>)  // prefer custom access more
     static constexpr decltype(auto) get(T& el) noexcept {
         return el.getProtection();
     }
 
-    using accessType<Protection>::get;
+    template <typename T>
+        requires((not(helpers::ProtectionAccessable<T> or helpers::GetProtectionAccessable<T>) and general_accessable<T>) or CustomAccessType_able<T, Protection>)
+    static constexpr decltype(auto) get(T& el) noexcept {
+        return general_access_type::get(el);
+    }
 };
 
 }  // namespace traits
