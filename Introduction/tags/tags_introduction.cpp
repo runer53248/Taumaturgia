@@ -116,7 +116,7 @@ int main() {
         person.getType<std::string, 3>(),
         person.getType<std::string, 4>());
 
-    std::println("getTypeTaged<type, tags...>() - get property by type and it's tags");
+    std::println("getTypeTaged<type, Tags<tags...>>() - get property by type and it's tags");
     std::print(
         seven_types,
         person.getTypeTaged<int, Tags<name_tag>>(),
@@ -127,7 +127,7 @@ int main() {
         person.getTypeTaged<std::string, Tags<address_tag>>(),
         person.getTypeTaged<std::string>());
 
-    std::println("getTaged<tags...>() / getTagedSKIP<index, tags...>() - get property by it's tags alone (with skipping for access toother types under same ones)");
+    std::println("getTaged<Tags<tags...>>() / getTaged<index, Tags<tags...>>() - get property by it's tags alone (with skipping for access to other types under same ones)");
     std::print(
         seven_types,
         person.getTaged<0, Tags<name_tag>>(),  // same as: person.getTaged<name_tag>()
@@ -139,7 +139,7 @@ int main() {
         person.getTaged());
     static_assert(&person.getTaged<0, Tags<name_tag>>() == &person.getTaged<Tags<name_tag>>());  // same reference
 
-    std::println("getTypeLike(list<type, tags...>{{}}) - get property by it's building list object");
+    std::println("getTypeOf(list<type, Tags<tags...>>{{}}) - get property by it's building list object");
     std::print(
         seven_types,
         person.getTypeOf(int_name),
@@ -150,7 +150,7 @@ int main() {
         person.getTypeOf(address),
         person.getTypeOf(info));
 
-    std::println("getTypeLike<list<type, tags...>>() - get property by it's building list type");
+    std::println("getTypeOfSignature<list<type, Tags<tags...>>>() - get property by it's building list type");
     std::print(
         seven_types,
         person.getTypeOfSignature<Int_name>(),
