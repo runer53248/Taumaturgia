@@ -94,11 +94,11 @@ auto for_each_taged_type = for_each_impl<[]<size_t N, typename T>(T&& t) {
 }>{};
 
 int main() {
-    auto create_entity =                                     //
-        From::base<Base>                                     //
-        | With::CureHealth                                   //* reorder with priority
-        | With::Damage                                       //
-        | With::Health                                       //* skipped for Base
+    auto create_entity =                             //
+        From::base<Base>                             //
+        | With::CureHealth                           //* reorder with priority
+        | With::Damage                               //
+        | With::Health                               //* skipped for Base
         | With::user_property<Damage, extra_tag>     //
         | With::user_property<Health, extra_tag>     //
         | With::user_property<int, extra_tag>        //* similiar with Base::type
@@ -124,23 +124,27 @@ int main() {
 
     auto print = [](const auto& entry) {
         if constexpr (not std::same_as<std::remove_cvref_t<decltype(entry)>, std::monostate>) {
-            std::println("{:30}{}", name<std::remove_cvref_t<decltype(entry)>>(), entry);
+            std::println("{:45}{}", name<std::remove_cvref_t<decltype(entry)>>(), entry);
         }
     };
 
+    std::println("[for_each_type(entity, print)]");
     for_each_type(entity, print);
-
-    auto tp = to_tuple(entity);
     std::println();
-    for_each_type(tp, print);
 
+    std::println("[for_each_type(tp, print)]");
+    auto tp = to_tuple(entity);
+    for_each_type(tp, print);
+    std::println();
+
+    std::println("[for_each_type(tied_data, print)]");
     auto tied_data = std::tie(
         getTaged<0, extra_tag>(entity),
         getTaged<1, extra_tag>(entity),
         getTaged<2, extra_tag>(entity));
-    std::println();
     for_each_type(tied_data, print);
-
     std::println();
+
+    std::println("[for_each_taged_type(entity, print)]");
     for_each_taged_type(entity, print);
 }
