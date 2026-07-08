@@ -3,12 +3,12 @@
 #include "Introduction/parse_type_name.hpp"
 #include "Usage/With.hpp"
 
-// MARK: empty, tag_health, with_health
+#include "empty.hpp"
+#include "with_health.hpp"
+#include "with_health_and_damage.hpp"
 
-struct empty {
-    empty() = default;
-    empty(auto...) {}
-};
+// MARK: tags
+
 struct tag_health {};
 struct tag_health2 {};
 struct tag_damage {};
@@ -133,7 +133,11 @@ public:
 
     type obj_by_list = base{base_health} | (With::MyHealth | With::MyDamage | With::Damage | With::Health);           // set base value
     type obj_by_create = base{base_health} | With::MyHealth | With::MyDamage | With::Damage | With::Health | Create;  // set base value
-    type obj_by_creator{};
+    type obj_by_creator = (From::base<base> | With::MyHealth | With::MyDamage | With::Damage | With::Health)(unordered, base_health);
+
+    static_assert(std::same_as<type, decltype(obj_by_list)>);
+    static_assert(std::same_as<type, decltype(obj_by_create)>);
+    static_assert(std::same_as<type, decltype(obj_by_creator)>);
 
 protected:
     void SetUp() override {
@@ -164,15 +168,17 @@ protected:
         }
 
         trait<Health>::get(obj_by_list) = taged_health;  // set added value
-        if constexpr (not Livingable<base>)
-            obj_by_list.template getTypeTaged<Health>() = base_health;                 // set added value
+        if constexpr (not Livingable<base>) {
+            obj_by_list.template getTypeTaged<Health>() = base_health;  // set added value
+        }
         obj_by_list.template getTypeTaged<Health, Tags<tag_health>>() = taged_health;  // set added value
         obj_by_list.template getTypeTaged<Damage>() = base_damage;                     // set added value
         obj_by_list.template getTypeTaged<Damage, Tags<tag_damage>>() = taged_damage;  // set added value
 
         trait<Health>::get(obj_by_create) = taged_health;  // set added value
-        if constexpr (not Livingable<base>)
-            obj_by_create.template getTypeTaged<Health>() = base_health;                 // set added value
+        if constexpr (not Livingable<base>) {
+            obj_by_create.template getTypeTaged<Health>() = base_health;  // set added value
+        }
         obj_by_create.template getTypeTaged<Health, Tags<tag_health>>() = taged_health;  // set added value
         obj_by_create.template getTypeTaged<Damage>() = base_damage;                     // set added value
         obj_by_create.template getTypeTaged<Damage, Tags<tag_damage>>() = taged_damage;  // set added value
@@ -301,14 +307,16 @@ TEST(add_two_kind_of_property_to_same_type, base_builded) {
                   add_properties_ordered<type, MyDamaging, Damaging, Living_impl>>);
 
     std::cout << parse_type_name<type>() << '\n';
+
+    std::cout << "forced Living" << '\n';
     std::cout << parse_type_name<add_properties_ordered<type, Damaging, MyDamaging, Living_impl>>() << '\n';
 }
 
 auto print = []([[maybe_unused]] std::string_view text, [[maybe_unused]] auto value = empty{}) {
     if constexpr (std::same_as<empty, decltype(value)>) {
-        // std::cout << text << '\n';
+        std::cout << text << '\n';
     } else {
-        // std::cout << text << value.value() << "   [" << name<decltype(value)>() << "]\n";
+        std::cout << text << value.value() << "   [" << name<decltype(value)>() << "]\n";
     }
 };
 
@@ -318,6 +326,8 @@ auto check = []<typename type>(type& obj, std::string texted_type) {
     EXPECT_TRUE((detect<member_getType, type, val<0>>::value));
     EXPECT_TRUE((detect<member_getType, type, val<1>>::value));
     EXPECT_TRUE((detect<member_getType, type, val<2>>::value));
+    // EXPECT_TRUE((detect<member_getType, type, val<3>>::value));
+    EXPECT_FALSE((detect<member_getType, type, val<4>>::value));
     print("memb getType<0>: ", obj.template getType<0>());
     print("memb getType<1>: ", obj.template getType<1>());
     print("memb getType<2>: ", obj.template getType<2>());
@@ -325,6 +335,11 @@ auto check = []<typename type>(type& obj, std::string texted_type) {
         print("memb getType<3>: ", obj.template getType<3>());
     } else {
         print("memb getType<3>: unaccessable", empty{});  //? deleted method - base don't have getType
+    }
+    if constexpr ((detect<member_getType, type, val<4>>::value)) {
+        print("memb getType<4>: ", obj.template getType<4>());
+    } else {
+        print("memb getType<4>: unaccessable", empty{});  //? deleted function - out of range
     }
 
     EXPECT_TRUE((detect<free_getType, type, val<0>>::value));
@@ -336,7 +351,11 @@ auto check = []<typename type>(type& obj, std::string texted_type) {
     print("free getType<1>: ", getType<1>(obj));
     print("free getType<2>: ", getType<2>(obj));
     print("free getType<3>: ", getType<3>(obj));
-    // std::cout << "free2: " << getType<4>(obj).value() << '\n';  //? deleted function - out of range
+    if constexpr ((detect<free_getType, type, val<4>>::value)) {
+        print("free getType<4>: ", getType<4>(obj).value());
+    } else {
+        print("free getType<4>: unaccessable", empty{});  //? deleted function - out of range
+    }
 
     EXPECT_TRUE((detect<member_getTypeTaged, type, Health, Tags<tag_health>>::value));
     EXPECT_TRUE((detect<member_getTypeTaged, type, Damage, Tags<tag_damage>>::value));
@@ -375,22 +394,58 @@ TEST_F(Access_Fixture_empty, access_by_method_and_free_function) {
     std::cout << parse_type_name<type>() << '\n';
 
     check(obj_by_list, "by list");
-    check(obj_by_create, "by create");
-    check(obj_by_creator, "by creator");
+    // check(obj_by_create, "by create");
+    // check(obj_by_creator, "by creator");
 }
 
 TEST_F(Access_Fixture_with_health, access_by_method_and_free_function) {
+    std::cout << '\n';
+    std::cout << name<type>() << '\n';
     std::cout << parse_type_name<type>() << '\n';
 
     check(obj_by_list, "by list");
-    check(obj_by_create, "by create");
-    check(obj_by_creator, "by creator");
+    // check(obj_by_create, "by create");
+    // check(obj_by_creator, "by creator");
 }
 
 TEST_F(Access_Fixture_with_health_and_damage, access_by_method_and_free_function) {
+    std::cout << '\n';
+    std::cout << name<type>() << '\n';
     std::cout << parse_type_name<type>() << '\n';
 
     check(obj_by_list, "by list");
-    check(obj_by_create, "by create");
-    check(obj_by_creator, "by creator");
+    // check(obj_by_create, "by create");
+    // check(obj_by_creator, "by creator");
+}
+
+auto same_data = [](auto& first, auto& second) {
+    EXPECT_TRUE(getType<0>(first) == getType<0>(second));
+    EXPECT_TRUE(getType<1>(first) == getType<1>(second));
+    EXPECT_TRUE(getType<2>(first) == getType<2>(second));
+    EXPECT_TRUE(getType<3>(first) == getType<3>(second));
+
+    EXPECT_TRUE(getType<Health>(first) == getType<Health>(second));
+    EXPECT_TRUE(getType<Damage>(first) == getType<Damage>(second));
+    // EXPECT_TRUE(getType<Damage, 1>(first) == getType<Damage, 1>(second)); // TODO
+    // EXPECT_TRUE(getType<Health, 1>(first) == getType<Health, 1>(second));
+
+    EXPECT_TRUE(getTypeTaged<Health>(first) == getTypeTaged<Health>(second));
+    EXPECT_TRUE(getTypeTaged<Damage>(first) == getTypeTaged<Damage>(second));
+    EXPECT_TRUE((getTypeTaged<Damage, Tags<tag_damage>>(first) == getTypeTaged<Damage, Tags<tag_damage>>(second)));
+    EXPECT_TRUE((getTypeTaged<Health, Tags<tag_health>>(first) == getTypeTaged<Health, Tags<tag_health>>(second)));
+};
+
+TEST_F(Access_Fixture_empty, have_same_data) {
+    same_data(obj_by_list, obj_by_create);
+    same_data(obj_by_list, obj_by_creator);
+}
+
+TEST_F(Access_Fixture_with_health, have_same_data) {
+    same_data(obj_by_list, obj_by_create);
+    same_data(obj_by_list, obj_by_creator);
+}
+
+TEST_F(Access_Fixture_with_health_and_damage, have_same_data) {
+    same_data(obj_by_list, obj_by_create);
+    same_data(obj_by_list, obj_by_creator);
 }
