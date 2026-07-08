@@ -3,10 +3,10 @@
 #include "Taumaturgia/Properties/Helpers/have_get_features.hpp"
 #include "Taumaturgia/Traits/trait.hpp"
 
-// MARK:
+// MARK: hold_type
 
 template <typename T>
-struct HoldTypes {
+struct HoldTypes {  // TODO: document HoldTypes feature
     using types = list<>;
 };
 
