@@ -202,7 +202,7 @@ auto type_name_result(std::string text = name<T>()) {
     constexpr size_t count = std::tuple_size_v<TUPLE>;
 
     [&]<size_t... idx>(std::index_sequence<idx...>) {
-        auto fn = [&]<typename Tt>() {
+        [[maybe_unused]] auto fn = [&]<typename Tt>() {
             result.base += std::to_string(prop_index++);
             result.base += "  : " + name<Tt>() + "\n";
         };
