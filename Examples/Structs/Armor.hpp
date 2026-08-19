@@ -15,6 +15,8 @@ using ArmorBuild = add_properties_ordered<
 
 class Armor_Class {
 public:
+    Armor_Class() = default;
+
     Armor_Class(std::string name, Protection protection)
         : name{name}, protection{protection} {}
 
@@ -26,10 +28,25 @@ public:
         return protection;
     }
 
-    Name name;
+    //* for parse_type_name function to deduce types
+
+    template <size_t S = 0, typename Self>
+        requires(S < 2)
+    decltype(auto) getType(this Self&& self) {
+        if constexpr (S == 0) {
+            return (self.protection);
+        } else {
+            return (self.name);
+        }
+    }
+
+    template <size_t S = 0, typename Self>
+    decltype(auto) getType(this Self&& self) = delete;
+
+    property_t<Naming> name{};
 
 private:
-    Protection protection;
+    property_t<Protecting> protection{};
 };
 
 #ifdef WITH_ADD_PROPERTIES

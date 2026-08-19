@@ -7,6 +7,7 @@ using PotionBuild = add_properties_ordered<
     Naming>;
 
 struct PotionClass {
+    using hold_type = property_t<Naming>;
     property_t<Naming> name;
 };
 

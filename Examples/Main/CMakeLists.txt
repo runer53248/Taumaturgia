@@ -3,6 +3,8 @@ add_executable(main3_${addons} main3.cpp ${PROJECT_SOURCE_DIR}/Taumaturgia/Objec
 add_executable(main4_${addons} main4.cpp ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp)
 add_executable(main5_${addons} main5.cpp ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp)
 
+target_link_libraries(main3_${addons} PRIVATE "-lstdc++exp")
+
 # get_property(TGTS DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
 # foreach(TGT IN LISTS TGTS)
 #     message(STATUS "<> Target: ${TGT}")
