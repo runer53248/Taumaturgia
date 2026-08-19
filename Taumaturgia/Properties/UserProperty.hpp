@@ -28,8 +28,8 @@ public:
     using property_data = PropertyData<PropertyFor<TYPE, Tags...>::template type,
                                        T,
                                        Tags...>;             // ? should add TYPE into PropertyData?
-    using improvement_of = UserProperty_<TYPE, T, Tags...>;  // will act like same type if TYPE and Tags are same
-    using hold_type = TYPE;
+    using improvement_of = GetFeatures<UserProperty_<TYPE, T, Tags...>>::improvement_of;  // will act like same type if TYPE and Tags are same
+    using hold_type = Constructors<UserProperty_<TYPE, T, Tags...>>::hold_type;
 
     using GetFeatures<UserProperty_<TYPE, T, Tags...>>::getType;
     using GetFeatures<UserProperty_<TYPE, T, Tags...>>::haveTypeNum;
