@@ -15,8 +15,10 @@ target_link_libraries(5_default_values2_${addons} PRIVATE "-lstdc++exp")
 target_link_libraries(5_default_values3_${addons} PRIVATE "-lstdc++exp")
 target_link_libraries(6_general_features_${addons} PRIVATE "-lstdc++exp")
 
-add_executable(forTags_${addons} main_forTags.cpp)
-target_link_libraries(forTags_${addons} PRIVATE "-lstdc++exp")
+if(NOT DEFINED WITH_ADD_PROPERTIES) # ignore aP versions - not needed
+    add_executable(forTags_${addons} main_forTags.cpp)
+    target_link_libraries(forTags_${addons} PRIVATE "-lstdc++exp")
 
-add_executable(main_tripleInt_${addons} main_tripleInt.cpp)
-target_link_libraries(main_tripleInt_${addons} PRIVATE "-lstdc++exp")
+    add_executable(main_tripleInt_${addons} main_tripleInt.cpp)
+    target_link_libraries(main_tripleInt_${addons} PRIVATE "-lstdc++exp")
+endif()

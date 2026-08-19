@@ -18,6 +18,7 @@ if(NOT DEFINED WITH_ADD_PROPERTIES) # ignore aP versions - not needed
     target_link_libraries(1_main-example_${addons} PRIVATE "-lstdc++exp")
 
     add_executable(114_${addons} main-example2.cpp)
+    target_link_libraries(114_${addons} PRIVATE "-lstdc++exp")
 endif()
 
 message(STATUS "<--> SOURCE: ${CMAKE_CURRENT_SOURCE_DIR}")

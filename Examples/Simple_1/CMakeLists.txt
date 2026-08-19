@@ -4,6 +4,7 @@ add_executable(a_main_${addons} main.cpp ${PROJECT_SOURCE_DIR}/Taumaturgia/Objec
 if(NOT DEFINED WITH_ADD_PROPERTIES) # ignore aP versions - not needed
     add_executable(main_simple_1_${addons} main_simple_1.cpp ${PROJECT_SOURCE_DIR}/Taumaturgia/Object/Object.cpp)
     add_executable(a_main_part_${addons} main_part.cpp)
+    target_link_libraries(a_main_part_${addons} PRIVATE "-lstdc++exp")
 endif()
     
 # get_property(TGTS DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
