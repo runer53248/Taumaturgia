@@ -10,8 +10,10 @@
 
 template <typename T, typename... Tags>
 struct Data {
+    constexpr Data() = default;
     template <typename... Args>
-    Data(Args&&... args) : value{std::forward<Args>(args)...} {}
+        requires std::is_constructible_v<T, Args...>
+    constexpr Data(Args&&... args) : value{std::forward<Args>(args)...} {}
     T value{};
 };
 
