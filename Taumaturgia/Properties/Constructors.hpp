@@ -6,9 +6,13 @@
 #include "UserDefaultValue.hpp"
 #include "unordered_token.hpp"
 
+#define DATA_STRUCT_INCLUDED
+
 template <typename T, typename... Tags>
 struct Data {
-    T value;
+    template <typename... Args>
+    Data(Args&&... args) : value{std::forward<Args>(args)...} {}
+    T value{};
 };
 
 template <typename... Tags, typename T>
@@ -195,7 +199,6 @@ public:
         requires not_contains_type<TYPE, V...>
     constexpr Constructors([[maybe_unused]] const std::variant<V...>& type, Args&&... args)
         : T{std::forward<Args>(args)...} {}  //? skip type
-
 
 protected:
     hold_type type_ = UserDefaultValue<hold_type, Tags...>::value();  // specialization for default values
