@@ -5,6 +5,17 @@
 
 // MARK: getType
 
+template <typename TYPE, size_t S = 0, typename T>
+constexpr decltype(auto) getType(T&& el) noexcept
+    requires have_getType_type_num_method<T, TYPE, S>
+{
+    return el.template getType<TYPE, S>();
+}
+template <typename TYPE, size_t S = 0, typename T>
+constexpr decltype(auto) getType(T&& el) noexcept = delete;
+
+// MARK: getType
+
 template <size_t S, typename T>
 constexpr decltype(auto) getType(T&& el) noexcept
     requires have_getType_num_method<T, S>
