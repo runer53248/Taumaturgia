@@ -27,8 +27,6 @@ auto type_name_result(std::string text = name<T>()) {
         text.replace(target, what.size(), into);
     }
 
-    text.erase(std::remove(text.begin(), text.end(), ' '), text.end());
-
     auto find_and_replace = [](auto& text, const auto& what, const auto& into) {
         if (what == into) {
             return;
@@ -44,6 +42,8 @@ auto type_name_result(std::string text = name<T>()) {
     what = base_name;
     into = "Base";
     find_and_replace(text, what, into);
+
+    text.erase(std::remove(text.begin(), text.end(), ' '), text.end());
 
     into = "\n";
     what = ",impl::UserProperty_<";
