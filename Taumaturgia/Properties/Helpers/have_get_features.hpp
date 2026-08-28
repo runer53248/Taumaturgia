@@ -1,10 +1,7 @@
 #pragma once
 #include <cstddef>
 #include <utility>
-// #include "taged_list.hpp"
-
-template <typename... T>
-struct list;
+#include "taged_list.hpp"
 
 template <typename T>
 concept not_void = not std::same_as<T, void>;
@@ -30,10 +27,12 @@ concept have_getType_num_method = requires(T t) {
 template <typename T, typename TYPE, size_t NUM>
 concept have_getType_type_num_method = requires(T t) {
     { t.template getType<TYPE, NUM>() };
-    { t.template getType<TYPE, NUM>() } -> std::same_as<TYPE&>;
+    // { t.template getType<TYPE, NUM>() } -> std::same_as<TYPE&>;
+    { t.template getType<TYPE, NUM>() } -> not_void;
 
     { std::as_const(t).template getType<TYPE, NUM>() };
-    { std::as_const(t).template getType<TYPE, NUM>() } -> std::same_as<const TYPE&>;
+    // { std::as_const(t).template getType<TYPE, NUM>() } -> std::same_as<const TYPE&>;
+    { std::as_const(t).template getType<TYPE, NUM>() } -> not_void;
 };
 
 template <typename T, typename TYPE, typename... Tags>
@@ -63,23 +62,29 @@ concept have_getTypeOf_method = requires(T t, Signature s) {
     { std::as_const(t).getTypeOf(s) } -> not_void;
 };
 
+template <typename T, typename CONVERT_TYPE>
+concept convertible_to = std::convertible_to<T, CONVERT_TYPE> and not std::same_as<CONVERT_TYPE, void>;
+
 template <typename T, typename TYPE>
+concept same_as_result = std::same_as<T, TYPE> or convertible_to<T, TYPE>;
+
+template <typename T, typename TYPE, typename... Tags>
 concept have_all_get_features_for_type = requires(std::remove_cvref_t<T> x) {
-    { x.getType() } -> std::same_as<TYPE&>;
-    { x.template getType<TYPE>() } -> std::same_as<TYPE&>;
-    { x.template getType<TYPE, 0>() } -> std::same_as<TYPE&>;
-    { x.template getTypeTaged<TYPE>() } -> std::same_as<TYPE&>;
-    { x.getTaged() } -> std::same_as<TYPE&>;
-    { x.template getTaged<0>() } -> std::same_as<TYPE&>;
-    { x.getTypeOf(list<TYPE>{}) } -> std::same_as<TYPE&>;
-    { x.template getTypeOfSignature<list<TYPE>>() } -> std::same_as<TYPE&>;
-    
-    { std::as_const(x).getType() } -> std::same_as<const TYPE&>;
-    { std::as_const(x).template getType<TYPE>() } -> std::same_as<const TYPE&>;
-    { std::as_const(x).template getType<TYPE, 0>() } -> std::same_as<const TYPE&>;
-    { std::as_const(x).template getTypeTaged<TYPE>() } -> std::same_as<const TYPE&>;
-    { std::as_const(x).getTaged() } -> std::same_as<const TYPE&>;
-    { std::as_const(x).template getTaged<0>() } -> std::same_as<const TYPE&>;
-    { std::as_const(x).getTypeOf(list<TYPE>{}) } -> std::same_as<const TYPE&>;
-    { std::as_const(x).template getTypeOfSignature<list<TYPE>>() } -> std::same_as<const TYPE&>;
+    { x.getType() } -> same_as_result<TYPE&>;
+    { x.template getType<TYPE>() } -> same_as_result<TYPE&>;
+    { x.template getType<TYPE, 0>() } -> same_as_result<TYPE&>;
+    { x.template getTypeTaged<TYPE, Tags...>() } -> same_as_result<TYPE&>;
+    // { x.getTaged() } -> std::same_as<TYPE&>;
+    { x.template getTaged<0, Tags...>() } -> same_as_result<TYPE&>;
+    { x.getTypeOf(list<TYPE, Tags...>{}) } -> same_as_result<TYPE&>;
+    { x.template getTypeOfSignature<list<TYPE, Tags...>>() } -> same_as_result<TYPE&>;
+
+    { std::as_const(x).getType() } -> same_as_result<const TYPE&>;
+    { std::as_const(x).template getType<TYPE>() } -> same_as_result<const TYPE&>;
+    { std::as_const(x).template getType<TYPE, 0>() } -> same_as_result<const TYPE&>;
+    { std::as_const(x).template getTypeTaged<TYPE, Tags...>() } -> same_as_result<const TYPE&>;
+    // { std::as_const(x).getTaged() } -> std::same_as<const TYPE&>;
+    { std::as_const(x).template getTaged<0, Tags...>() } -> same_as_result<const TYPE&>;
+    { std::as_const(x).getTypeOf(list<TYPE, Tags...>{}) } -> same_as_result<const TYPE&>;
+    { std::as_const(x).template getTypeOfSignature<list<TYPE, Tags...>>() } -> same_as_result<const TYPE&>;
 };

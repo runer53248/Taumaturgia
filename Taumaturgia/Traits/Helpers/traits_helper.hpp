@@ -10,7 +10,7 @@ template <typename T, typename CONVERT_TYPE>
 concept convertible_to = std::convertible_to<T, CONVERT_TYPE> and not std::same_as<CONVERT_TYPE, void>;
 
 template <typename T, typename TYPE, typename CONVERT_TYPE>
-concept same_as_or_convertible_to = std::same_as<T, TYPE> or convertible_to<T, CONVERT_TYPE>;
+concept same_as_or_convertible_to = std::same_as<T, TYPE> or convertible_to<T, TYPE> or convertible_to<T, CONVERT_TYPE>;
 
 template <typename T, typename TRAIT, typename TYPE, typename CONVERT_TYPE = void>
 concept accessable = requires(std::remove_cvref_t<T> x) {
@@ -31,9 +31,12 @@ concept type_accessable = requires(std::remove_cvref_t<T> x) {
 };
 
 template <typename T, typename TYPE>
+concept same_as_result = std::same_as<T, TYPE> or convertible_to<T, TYPE>;
+
+template <typename T, typename TYPE>
 concept get_type_accessable = requires(std::remove_cvref_t<T> x) {
-    { x.getType() } -> std::same_as<TYPE&>;
-    { std::as_const(x).getType() } -> std::same_as<const TYPE&>;
+    { x.getType() } -> same_as_result<TYPE&>;
+    { std::as_const(x).getType() } -> same_as_result<const TYPE&>;
 };
 
 template <typename T, typename TYPE>
