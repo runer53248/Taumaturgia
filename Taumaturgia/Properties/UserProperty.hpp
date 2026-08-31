@@ -26,23 +26,27 @@ template <typename TYPE, typename T, isTag TAGS = no_tag>
 // requires(not std::is_reference_v<T>)
 class UserProperty_ : public GetFeatures<UserProperty_<TYPE, T, TAGS>>,
                       public Constructors<UserProperty_<TYPE, T, TAGS>> {
+private:
+    using features_type = GetFeatures<UserProperty_<TYPE, T, TAGS>>;
+    using constructors_type = Constructors<UserProperty_<TYPE, T, TAGS>>;
+
 public:
     using property_data = PropertyData<PropertyFor<TYPE, TAGS>::template type,
                                        T,
-                                       TAGS>;             // ? should add TYPE into PropertyData?
-    using improvement_of = UserProperty_<TYPE, T, TAGS>;  // will act like same type if TYPE and Tags are same
-    using hold_type = TYPE;
+                                       TAGS>;                                             // ? should add TYPE into PropertyData?
+    using improvement_of = features_type::improvement_of;  // will act like same type if TYPE and Tags are same
+    using hold_type = constructors_type::hold_type;
 
-    using GetFeatures<UserProperty_<TYPE, T, TAGS>>::getType;
-    using GetFeatures<UserProperty_<TYPE, T, TAGS>>::haveTypeNum;
-    using GetFeatures<UserProperty_<TYPE, T, TAGS>>::getTypeTaged;
-    using GetFeatures<UserProperty_<TYPE, T, TAGS>>::getTypeOf;
-    using GetFeatures<UserProperty_<TYPE, T, TAGS>>::getTypeOfSignature;
-    using GetFeatures<UserProperty_<TYPE, T, TAGS>>::getTaged;
+    using features_type::getType;
+    using features_type::haveTypeNum;
+    using features_type::getTypeTaged;
+    using features_type::getTypeOf;
+    using features_type::getTypeOfSignature;
+    using features_type::getTaged;
 
-    using Constructors<UserProperty_<TYPE, T, TAGS>>::Constructors;
+    using constructors_type::Constructors;
 
-    friend GetFeatures<UserProperty_<TYPE, T, TAGS>>;
+    friend features_type;
 };
 
 }  // namespace impl
