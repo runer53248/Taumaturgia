@@ -204,7 +204,11 @@ auto type_name_result(std::string text = name<T>()) {
     [&]<size_t... idx>(std::index_sequence<idx...>) {
         [[maybe_unused]] auto fn = [&]<typename Tt>() {
             result.base += std::to_string(prop_index++);
-            result.base += "  : " + name<Tt>() + "\n";
+            if (name<Tt>() == name<std::string>()) {
+                result.base += "  : std::string\n";
+            } else {
+                result.base += "  : " + name<Tt>() + "\n";
+            }
         };
 
         (..., fn.template operator()<std::remove_cvref_t<decltype(getType<idx>(std::declval<base_type>()))>>());
