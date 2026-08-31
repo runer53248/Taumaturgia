@@ -50,3 +50,32 @@ struct std::formatter<T> : std::formatter<std::string> {
         // return std::ranges::copy(std::move(o).str(), ctx.out()).out;
     }
 };
+
+#ifdef DATA_STRUCT_INCLUDED
+
+template <
+    preety_printed<
+        ActionStatus,
+        AliveStatus,
+        BodyLocation,
+        CureHealth,
+        Damage,
+        DamageType,
+        Duration,
+        EffectContainer,
+        EffectState,
+        EffectType,
+        EffectTypeContainer,
+        Health,
+        Name,
+        Protection,
+        WearContainer> T, typename... Args>
+struct std::formatter<Data<T, Args...>> : std::formatter<std::string> {
+    auto format(const Data<T, Args...>& t, [[maybe_unused]] std::format_context& ctx) const {
+        std::ostringstream o;
+        o << t.value;
+        return formatter<string>::format(std::move(o).str(), ctx);
+        // return std::ranges::copy(std::move(o).str(), ctx.out()).out;
+    }
+};
+#endif
