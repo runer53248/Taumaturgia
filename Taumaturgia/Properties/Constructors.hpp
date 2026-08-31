@@ -6,9 +6,15 @@
 #include "UserDefaultValue.hpp"
 #include "unordered_token.hpp"
 
+#define DATA_STRUCT_INCLUDED
+
 template <typename T, isTag TAGS>
 struct Data {
-    T value;
+    constexpr Data() = default;
+    template <typename... Args>
+        requires std::is_constructible_v<T, Args...>
+    constexpr Data(Args&&... args) : value{std::forward<Args>(args)...} {}
+    T value{};
 };
 
 template <isTag TAGS = no_tag, typename T>
