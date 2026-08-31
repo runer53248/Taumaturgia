@@ -129,6 +129,14 @@ constexpr decltype(auto) getTypeTaged(T&& el) noexcept
     using base_type = helpers::Scheme_ordered<std::remove_cvref_t<T>>::base;  // most base type
     return trait<TYPE>::get(static_cast<base_type&>(el));
 }
+#ifdef DATA_STRUCT_INCLUDED
+template <typename TYPE, isTag TAGS = no_tag, typename T>
+constexpr decltype(auto) getTypeTaged(T&& el) noexcept
+    requires have_getType_type_method<T, Data<TYPE, TAGS>>
+{
+    return el.template getType<Data<TYPE, TAGS>>();
+}
+#endif
 template <typename TYPE, isTag TAGS = no_tag, typename T>
 constexpr decltype(auto) getTypeTaged(T&& el) noexcept = delete;
 
